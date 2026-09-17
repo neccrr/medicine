@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { quizBanks, quizSubjects } from "../lib/content";
+import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { SubjectBadge } from "../components/SubjectBadge";
 import type { QuizAttempt } from "../types/content";
@@ -12,6 +12,7 @@ export function QuizSubjects() {
       <div className="card-grid">
         {quizSubjects.map((subject) => {
           const bank = quizBanks[subject.id];
+          const games = quizGames[subject.id];
           const history = readJSON<QuizAttempt[]>(
             STORAGE_KEYS.quizProgress(subject.id),
             [],
@@ -25,13 +26,19 @@ export function QuizSubjects() {
                 <h2>{subject.label}</h2>
               </div>
               <p>
-                {bank.length} questions
-                {last && (
+                {bank && (
                   <>
-                    {" "}
-                    · last score <strong>{last.score}/{last.total}</strong>
+                    {bank.length} questions
+                    {last && (
+                      <>
+                        {" "}
+                        · last score <strong>{last.score}/{last.total}</strong>
+                      </>
+                    )}
                   </>
                 )}
+                {bank && games && " · "}
+                {games && "Interactive quiz"}
               </p>
             </Link>
           );
