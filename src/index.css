@@ -60,6 +60,24 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   transition: background-color 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 180px 180px;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
 }
 
 h1, h2, h3 {
@@ -123,14 +141,16 @@ kbd, .mono {
   position: sticky;
   top: 0;
   z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 0.9rem 1.5rem;
   border-bottom: 1px solid var(--border);
   background: color-mix(in srgb, var(--surface) 88%, transparent);
   backdrop-filter: blur(10px);
-  flex-wrap: wrap;
+}
+
+.navbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
 }
 
@@ -168,7 +188,7 @@ kbd, .mono {
 .navbar-links {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .nav-link {
@@ -411,6 +431,21 @@ kbd, .mono {
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.25s ease;
+  z-index: 1;
+}
+
+.nav-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    280px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    var(--accent-soft),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .nav-card:hover {
@@ -421,6 +456,26 @@ kbd, .mono {
 
 .nav-card:hover::before {
   transform: scaleX(1);
+}
+
+.nav-card:hover::after {
+  opacity: 1;
+}
+
+.nav-card:active {
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-card,
+  .nav-card::after {
+    transition: none;
+  }
+}
+
+.nav-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .nav-card h2 {
@@ -525,6 +580,38 @@ kbd, .mono {
 .flashcard-empty {
   text-align: center;
   color: var(--text-muted);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--text-muted);
+}
+
+.empty-state-icon {
+  color: var(--accent);
+  opacity: 0.6;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.empty-state-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text);
+  margin: 0 0 0.4rem;
+}
+
+.empty-state-body {
+  max-width: 36ch;
+  margin: 0 auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.empty-state-action {
+  margin-top: 1rem;
 }
 
 .tag-row {
@@ -649,6 +736,10 @@ kbd, .mono {
 .quiz-option:not(:disabled):hover {
   border-color: var(--border-strong);
   background: var(--surface-2);
+}
+
+.quiz-option:not(:disabled):active {
+  transform: scale(0.99);
 }
 
 .quiz-option.selected {
@@ -830,6 +921,66 @@ kbd, .mono {
   gap: 0.5rem;
 }
 
+.nav-toggle {
+  display: none;
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease, padding 0.25s ease;
+}
+
+.mobile-nav-link {
+  padding: 0.7rem 0.1rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.mobile-nav-link:hover {
+  color: var(--text);
+}
+
+.mobile-nav-link.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (min-width: 921px) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+@media (max-width: 920px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .mobile-nav.open {
+    max-height: 480px;
+    padding-top: 0.5rem;
+  }
+}
+
+@media (max-width: 460px) {
+  .command-trigger kbd {
+    display: none;
+  }
+
+  .navbar-brand {
+    font-size: 1.05rem;
+  }
+}
+
 .icon-btn {
   display: inline-flex;
   align-items: center;
@@ -840,10 +991,15 @@ kbd, .mono {
   border-radius: 8px;
   padding: 0.4rem 0.55rem;
   cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .icon-btn:hover {
   background: var(--surface-2);
+}
+
+.icon-btn:active {
+  transform: scale(0.94);
 }
 
 kbd {
@@ -884,6 +1040,11 @@ kbd {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.session-summary .btn {
+  margin-top: 1.5rem;
 }
 
 .session-summary h2 {

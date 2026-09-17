@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { flashcardDecks } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
+import { EmptyState } from "../components/EmptyState";
 
 const GRADES = [
   { quality: 0, key: "1", label: "Blackout", hint: "No idea" },
@@ -79,7 +80,7 @@ export function FlashcardStudy() {
 
       {sessionDone ? (
         <div className="flashcard-empty">
-          {session.reviewed > 0 && (
+          {session.reviewed > 0 ? (
             <div className="session-summary">
               <h2>Session complete</h2>
               <div className="session-stats">
@@ -96,19 +97,33 @@ export function FlashcardStudy() {
                   <span>missed</span>
                 </div>
               </div>
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  setIndex(0);
+                  setExtraReview(true);
+                  setSession({ reviewed: 0, lapses: 0 });
+                }}
+              >
+                Review anyway
+              </button>
             </div>
+          ) : (
+            <EmptyState title="Nothing due right now">
+              You're all caught up on this deck — come back later, or review anyway.
+              <br />
+              <button
+                className="btn empty-state-action"
+                onClick={() => {
+                  setIndex(0);
+                  setExtraReview(true);
+                  setSession({ reviewed: 0, lapses: 0 });
+                }}
+              >
+                Review anyway
+              </button>
+            </EmptyState>
           )}
-          <p>Nothing due right now — nice work. Come back later, or review anyway.</p>
-          <button
-            className="btn"
-            onClick={() => {
-              setIndex(0);
-              setExtraReview(true);
-              setSession({ reviewed: 0, lapses: 0 });
-            }}
-          >
-            Review anyway
-          </button>
 
           {hardestCards.length > 0 && (
             <div className="hardest-cards">

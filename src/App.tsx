@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { CommandPalette } from "./components/CommandPalette";
+import { useCardSpotlight } from "./hooks/useCardSpotlight";
 import { Home } from "./pages/Home";
 import { FlashcardSubjects } from "./pages/FlashcardSubjects";
 import { FlashcardStudy } from "./pages/FlashcardStudy";
@@ -14,6 +15,8 @@ import { Search } from "./pages/Search";
 import { Progress } from "./pages/Progress";
 
 export default function App() {
+  useCardSpotlight();
+
   return (
     <BrowserRouter>
       <a href="#main-content" className="skip-link">

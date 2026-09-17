@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
 import { buildContentDocs } from "../lib/searchIndex";
+import { EmptyState } from "../components/EmptyState";
 
 export function Search() {
   const [query, setQuery] = useState("");
@@ -35,6 +36,19 @@ export function Search() {
         aria-label="Search flashcards and quizzes"
       />
 
+      {!query.trim() && (
+        <EmptyState title="Search across everything">
+          Try a symptom, a drug name, or a mechanism — results span every
+          flashcard and quiz question in every subject.
+        </EmptyState>
+      )}
+
+      {query.trim() && results.length === 0 && (
+        <EmptyState title={`No matches for "${query}"`}>
+          Try a shorter or more general term.
+        </EmptyState>
+      )}
+
       <ul className="search-results">
         {results.map((doc) => (
           <li key={`${doc.type}-${doc.id}`} className="search-result">
@@ -45,7 +59,6 @@ export function Search() {
             </Link>
           </li>
         ))}
-        {query.trim() && results.length === 0 && <p>No results.</p>}
       </ul>
     </section>
   );
