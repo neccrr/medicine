@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cardio-001",
+    "front": "What is the most common cause of mitral stenosis?",
+    "back": "Rheumatic heart disease (post-streptococcal).",
+    "tags": ["valvular", "rheumatic"]
+  },
+  {
+    "id": "cardio-002",
+    "front": "Which ECG finding is classic for acute pericarditis?",
+    "back": "Diffuse ST-segment elevation with PR-segment depression.",
+    "tags": ["ecg", "pericarditis"]
+  },
+  {
+    "id": "cardio-003",
+    "front": "What murmur is heard in aortic stenosis?",
+    "back": "Crescendo-decrescendo systolic ejection murmur, loudest at the right upper sternal border, radiating to the carotids.",
+    "tags": ["valvular", "murmur"]
+  },
+  {
+    "id": "cardio-004",
+    "front": "First-line pharmacologic treatment for stable angina?",
+    "back": "Beta-blockers (reduce myocardial oxygen demand); nitrates for acute symptom relief.",
+    "tags": ["pharm", "ischemia"]
+  },
+  {
+    "id": "cardio-005",
+    "front": "What is the Levine sign?",
+    "back": "A clenched fist held over the chest, classically described by patients experiencing angina/MI.",
+    "tags": ["physical exam", "ischemia"]
+  },
+  {
+    "id": "cardio-006",
+    "front": "Beck's triad is associated with which condition?",
+    "back": "Cardiac tamponade: hypotension, jugular venous distension, muffled heart sounds.",
+    "tags": ["emergency", "tamponade"]
+  },
+  {
+    "id": "cardio-007",
+    "front": "What is the target INR for a patient on warfarin with a mechanical mitral valve?",
+    "back": "2.5–3.5 (higher than the 2.0–3.0 range used for most other indications).",
+    "tags": ["anticoagulation", "valvular"]
+  },
+  {
+    "id": "cardio-008",
+    "front": "Which heart sound is associated with volume overload (e.g., heart failure)?",
+    "back": "S3 gallop, due to rapid ventricular filling.",
+    "tags": ["physical exam", "heart failure"]
+  }
+]

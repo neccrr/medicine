@@ -1,0 +1,62 @@
+[
+  {
+    "id": "q-cardio-001",
+    "question": "A 68-year-old man presents with crushing substernal chest pain radiating to the left arm. ECG shows ST elevation in leads II, III, and aVF. Which coronary artery is most likely occluded?",
+    "options": [
+      "Left anterior descending artery",
+      "Right coronary artery",
+      "Left circumflex artery",
+      "Left main coronary artery"
+    ],
+    "answer": 1,
+    "explanation": "ST elevation in II, III, aVF indicates an inferior MI, most commonly due to right coronary artery occlusion."
+  },
+  {
+    "id": "q-cardio-002",
+    "question": "Which physical exam finding is most specific for aortic regurgitation?",
+    "options": [
+      "Crescendo-decrescendo systolic murmur",
+      "Early diastolic decrescendo murmur at the left sternal border",
+      "Mid-diastolic rumble at the apex",
+      "Fixed split S2"
+    ],
+    "answer": 1,
+    "explanation": "Aortic regurgitation produces an early diastolic decrescendo murmur best heard at the left sternal border."
+  },
+  {
+    "id": "q-cardio-003",
+    "question": "What is the first-line treatment for stable, symptomatic Wolff-Parkinson-White syndrome with atrial fibrillation?",
+    "options": [
+      "IV adenosine",
+      "IV metoprolol",
+      "Electrical cardioversion or procainamide",
+      "Digoxin"
+    ],
+    "answer": 2,
+    "explanation": "AV nodal blockers (adenosine, beta-blockers, digoxin, calcium channel blockers) are contraindicated in WPW with AFib because they can promote conduction down the accessory pathway. Cardioversion or procainamide is preferred."
+  },
+  {
+    "id": "q-cardio-004",
+    "question": "A patient with heart failure with reduced ejection fraction (HFrEF) is being started on guideline-directed medical therapy. Which drug class has been shown to reduce mortality?",
+    "options": [
+      "Loop diuretics",
+      "Beta-blockers (e.g., carvedilol, metoprolol succinate, bisoprolol)",
+      "Calcium channel blockers",
+      "Short-acting nitrates"
+    ],
+    "answer": 1,
+    "explanation": "Beta-blockers, ACE inhibitors/ARBs/ARNI, mineralocorticoid receptor antagonists, and SGLT2 inhibitors reduce mortality in HFrEF; loop diuretics only manage symptoms."
+  },
+  {
+    "id": "q-cardio-005",
+    "question": "Which of the following best describes pulsus paradoxus?",
+    "options": [
+      "An exaggerated fall (>10 mmHg) in systolic blood pressure during inspiration",
+      "A widened pulse pressure seen in aortic regurgitation",
+      "Alternating strong and weak pulses seen in severe LV dysfunction",
+      "A delayed and diminished carotid upstroke"
+    ],
+    "answer": 0,
+    "explanation": "Pulsus paradoxus is an exaggerated inspiratory drop in systolic BP >10 mmHg, classically seen in cardiac tamponade."
+  }
+]
