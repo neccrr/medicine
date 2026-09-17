@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   ebookMeta,
@@ -15,10 +16,12 @@ import { tipOfDay } from "../lib/tipOfDay";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
+import { subjectAccent } from "../lib/subjectStyle";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { EmptyState } from "../components/EmptyState";
+import { BookIcon, CalendarIcon, CardsIcon, FlameIcon, QuizIcon, SummaryIcon } from "../components/icons";
 import type { CardStateMap, QuizAttempt, ReadingPosition } from "../types/content";
 
 interface ContinueItem {
@@ -33,6 +36,7 @@ interface SubjectFacet {
   label: string;
   detail: string;
   to: string;
+  icon: ReactNode;
 }
 
 function buildContinueItems(): ContinueItem[] {
@@ -128,6 +132,7 @@ function buildSubjectOverviews() {
           label: "Flashcards",
           detail: due > 0 ? `${deck.length} · ${due} due` : `${deck.length} cards`,
           to: `/flashcards/${id}`,
+          icon: <CardsIcon />,
         });
       }
 
@@ -144,6 +149,7 @@ function buildSubjectOverviews() {
               : `${bank.length} questions`
             : "Interactive",
           to: `/quizzes/${id}`,
+          icon: <QuizIcon />,
         });
       }
 
@@ -153,11 +159,17 @@ function buildSubjectOverviews() {
           label: "Ebook",
           detail: meta.chapters.length > 0 ? `${meta.chapters.length} chapters` : "Reference PDF",
           to: `/ebooks/${id}`,
+          icon: <BookIcon />,
         });
       }
 
       if (summaries[id]) {
-        facets.push({ label: "Summary", detail: "Written summary", to: `/summaries/${id}` });
+        facets.push({
+          label: "Summary",
+          detail: "Written summary",
+          to: `/summaries/${id}`,
+          icon: <SummaryIcon />,
+        });
       }
 
       return { id, label, facets };
@@ -205,18 +217,22 @@ export function Home() {
 
       <div className="streak-stats dashboard-stats">
         <div className="stat-tile">
+          <span className="stat-tile-icon"><FlameIcon /></span>
           <span className="stat-label">Streak</span>
           <span className="stat-value">{streak}</span>
         </div>
         <div className="stat-tile">
+          <span className="stat-tile-icon"><CardsIcon /></span>
           <span className="stat-label">Cards due</span>
           <span className="stat-value">{totalDue}</span>
         </div>
         <div className="stat-tile">
+          <span className="stat-tile-icon"><CalendarIcon /></span>
           <span className="stat-label">Study days</span>
           <span className="stat-value">{activityDays.length}</span>
         </div>
         <div className="stat-tile">
+          <span className="stat-tile-icon"><QuizIcon /></span>
           <span className="stat-label">Quiz attempts</span>
           <span className="stat-value">{totalQuizAttempts}</span>
         </div>
@@ -261,7 +277,11 @@ export function Home() {
             <h2 className="section-heading">Subjects</h2>
             <div className="subject-grid">
               {subjects.map((subject) => (
-                <div key={subject.id} className="subject-card">
+                <div
+                  key={subject.id}
+                  className="subject-card"
+                  style={{ borderLeftColor: subjectAccent(subject.id) }}
+                >
                   <div className="subject-card-head">
                     <SubjectBadge id={subject.id} label={subject.label} />
                     <h3>{subject.label}</h3>
@@ -269,8 +289,11 @@ export function Home() {
                   <div className="subject-links">
                     {subject.facets.map((facet) => (
                       <Link key={facet.to + facet.label} to={facet.to} className="subject-pill">
-                        <span className="subject-pill-label">{facet.label}</span>
-                        <span className="subject-pill-detail">{facet.detail}</span>
+                        <span className="subject-pill-icon">{facet.icon}</span>
+                        <span className="subject-pill-text">
+                          <span className="subject-pill-label">{facet.label}</span>
+                          <span className="subject-pill-detail">{facet.detail}</span>
+                        </span>
                       </Link>
                     ))}
                   </div>
