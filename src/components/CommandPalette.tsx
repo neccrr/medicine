@@ -14,7 +14,15 @@ export function CommandPalette() {
 
   const docs = useMemo(() => buildNavigationDocs(), []);
   const fuse = useMemo(
-    () => new Fuse(docs, { keys: ["title", "detail"], threshold: 0.4 }),
+    () =>
+      new Fuse(docs, {
+        keys: [
+          { name: "title", weight: 2 },
+          { name: "detail", weight: 1 },
+        ],
+        threshold: 0.4,
+        ignoreLocation: true,
+      }),
     [docs],
   );
 

@@ -83,13 +83,33 @@ function buildContinueItems(): ContinueItem[] {
       });
     });
 
+  const dueQuizSubjectIds = new Set<string>();
+  quizSubjects
+    .map((s) => ({
+      s,
+      due: readJSON<string[]>(STORAGE_KEYS.quizDue(s.id), []).length,
+    }))
+    .filter((x) => x.due > 0)
+    .sort((a, b) => b.due - a.due)
+    .slice(0, 2)
+    .forEach(({ s, due }) => {
+      dueQuizSubjectIds.add(s.id);
+      items.push({
+        to: `/quizzes/${s.id}`,
+        title: `${due} quiz question${due === 1 ? "" : "s"} due in ${s.label}`,
+        detail: "Missed in a past attempt",
+        subjectId: s.id,
+        subjectLabel: s.label,
+      });
+    });
+
   quizSubjects
     .map((s) => {
       const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(s.id), []);
       const last = history[history.length - 1];
       return last ? { s, last } : null;
     })
-    .filter((x): x is NonNullable<typeof x> => x !== null)
+    .filter((x): x is NonNullable<typeof x> => x !== null && !dueQuizSubjectIds.has(x.s.id))
     .sort((a, b) => b.last.date.localeCompare(a.last.date))
     .slice(0, 2)
     .forEach(({ s, last }) => {
@@ -141,12 +161,15 @@ function buildSubjectOverviews() {
       if (bank || games) {
         const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(id), []);
         const last = history[history.length - 1];
+        const due = readJSON<string[]>(STORAGE_KEYS.quizDue(id), []).length;
         facets.push({
           label: "Quiz",
           detail: bank
-            ? last
-              ? `${bank.length} · last ${last.score}/${last.total}`
-              : `${bank.length} questions`
+            ? due > 0
+              ? `${bank.length} · ${due} due`
+              : last
+                ? `${bank.length} · last ${last.score}/${last.total}`
+                : `${bank.length} questions`
             : "Interactive",
           to: `/quizzes/${id}`,
           icon: <QuizIcon />,

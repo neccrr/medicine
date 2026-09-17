@@ -1,12 +1,28 @@
 import { useRef, useState } from "react";
-import { exportAllProgress, importAllProgress } from "../lib/storage";
+import { Link } from "react-router-dom";
+import { exportAllProgress, importAllProgress, readJSON, STORAGE_KEYS } from "../lib/storage";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
+import { flashcardDecks, flashcardSubjects } from "../lib/content";
+import { rankGlobalHardestCards } from "../lib/hardestCards";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
+import { SubjectBadge } from "../components/SubjectBadge";
+import type { CardStateMap } from "../types/content";
+
+function buildGlobalHardestCards() {
+  const subjects = flashcardSubjects.map((s) => ({
+    id: s.id,
+    label: s.label,
+    deck: flashcardDecks[s.id],
+    stateMap: readJSON<CardStateMap>(STORAGE_KEYS.cardState(s.id), {}),
+  }));
+  return rankGlobalHardestCards(subjects, 8);
+}
 
 export function Progress() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState("");
   const [activityDays, setActivityDays] = useState<string[]>(() => getActivityDays());
+  const globalHardestCards = buildGlobalHardestCards();
 
   const handleExport = () => {
     const data = exportAllProgress();
@@ -68,6 +84,24 @@ export function Progress() {
       {activityDays.length > 0 && (
         <div className="heatmap-wrapper">
           <ActivityHeatmap days={activityDays} />
+        </div>
+      )}
+
+      {globalHardestCards.length > 0 && (
+        <div className="global-hardest-cards">
+          <h2>Your hardest cards, across every subject</h2>
+          <p className="subtitle">The flashcards you've lapsed on most — worth a targeted review.</p>
+          <ul>
+            {globalHardestCards.map(({ card, lapses, subjectId, subjectLabel }) => (
+              <li key={`${subjectId}-${card.id}`}>
+                <Link to={`/flashcards/${subjectId}`} className="global-hardest-card-link">
+                  <SubjectBadge id={subjectId} label={subjectLabel} />
+                  <span className="global-hardest-card-front">{card.front}</span>
+                  <span className="lapse-count">{lapses} lapse{lapses === 1 ? "" : "s"}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

@@ -1011,6 +1011,45 @@ kbd, .mono {
   color: var(--text-muted);
 }
 
+.tag-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.tag-toggle {
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.tag-toggle:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.tag-toggle.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.tag-filter-clear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0.15rem 0.3rem;
+}
+
+.tag-filter-clear:hover {
+  color: var(--text);
+}
+
 .grade-row {
   display: flex;
   gap: 0.5rem;
@@ -1461,6 +1500,11 @@ kbd {
   margin-bottom: 0.3rem;
 }
 
+.lapse-count {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
 /* Quiz extras: header/trend, feedback animation, retry row */
 
 .quiz-header {
@@ -1480,6 +1524,29 @@ kbd {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
+}
+
+.quiz-due-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius);
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1.25rem;
+}
+
+.quiz-due-banner p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.quiz-due-banner strong {
+  color: var(--text);
 }
 
 @keyframes pulse-correct {
@@ -1720,6 +1787,46 @@ kbd {
 .heatmap-wrapper {
   overflow-x: auto;
   margin-bottom: 2rem;
+}
+
+.global-hardest-cards {
+  margin-bottom: 2rem;
+}
+
+.global-hardest-cards h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.25rem;
+}
+
+.global-hardest-cards ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.global-hardest-card-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.15s ease;
+}
+
+.global-hardest-card-link:hover {
+  border-color: var(--border-strong);
+}
+
+.global-hardest-card-front {
+  flex: 1;
+  font-size: 0.9rem;
 }
 
 .heatmap {

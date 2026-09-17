@@ -17,10 +17,10 @@ export function getActivityDays(): string[] {
 }
 
 /** Current streak of consecutive study days, counting back from today (or yesterday, so today isn't required yet). */
-export function getCurrentStreak(days: string[] = getActivityDays()): number {
+export function getCurrentStreak(days: string[] = getActivityDays(), now: Date = new Date()): number {
   if (days.length === 0) return 0;
   const daySet = new Set(days);
-  const today = new Date();
+  const today = new Date(now);
   let cursor = new Date(today);
 
   if (!daySet.has(toDateKey(cursor))) {

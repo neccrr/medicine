@@ -12,8 +12,12 @@ export function Search() {
   const fuse = useMemo(
     () =>
       new Fuse(docs, {
-        keys: ["title", "detail"],
+        keys: [
+          { name: "title", weight: 2 },
+          { name: "detail", weight: 1 },
+        ],
         threshold: 0.35,
+        ignoreLocation: true,
       }),
     [docs],
   );
@@ -25,21 +29,22 @@ export function Search() {
   return (
     <section className="page">
       <h1>Search</h1>
-      <p className="subtitle">Search across every flashcard and quiz question.</p>
+      <p className="subtitle">Search across every flashcard, quiz question, summary, and ebook chapter.</p>
       <input
         className="search-input"
         type="search"
-        placeholder="Search flashcards & quizzes..."
+        placeholder="Search flashcards, quizzes, summaries, ebooks..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         autoFocus
-        aria-label="Search flashcards and quizzes"
+        aria-label="Search all content"
       />
 
       {!query.trim() && (
         <EmptyState title="Search across everything">
           Try a symptom, a drug name, or a mechanism — results span every
-          flashcard and quiz question in every subject.
+          flashcard, quiz question, summary section, and ebook chapter in
+          every subject.
         </EmptyState>
       )}
 

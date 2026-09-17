@@ -77,7 +77,12 @@ fallback — same treatment as ebook PDFs. A subject folder that *only* has an
 HTML game (no `bank.json`) still gets a quiz entry, titled from the folder
 name.
 
-`content/quizzes/histology` demonstrates an HTML-only quiz game.
+`content/quizzes/histology/Guess-the-Slide.html` is an HTML-only quiz game
+(image-ID with hints); `content/quizzes/cardiology/Rhythm-Strip-ID.html` and
+`content/quizzes/pharmacology/Mechanism-Match.html` pair a `bank.json` with
+a game, so each shows both the MCQ quiz and an "Also try: <game name> ↗"
+link. Game display names come straight from the filename (dashes become
+spaces), so name the file the way you want it to read in the UI.
 
 ## Client-side logic
 
@@ -85,19 +90,31 @@ name.
   (0–5 quality) returns a new `{ interval, easeFactor, dueDate, reps, lapses }`.
 - **`src/hooks/useSpacedRepetition.ts`** — wraps SM-2 with per-deck
   `localStorage` state, exposes due cards, a `grade(cardId, quality)`
-  function, and the deck's "hardest cards" (most lapses).
-- **`src/hooks/useQuizProgress.ts`** — scores a quiz submission against the
-  answer key and appends an attempt (`{ score, total, date, missedIds }`) to
-  `localStorage`, powering the "review missed only" flow and the score
-  history sparkline.
+  function, and the deck's "hardest cards" (most lapses, via `lib/hardestCards.ts`).
+- **`src/lib/hardestCards.ts`** — ranks cards by lapse count (ties broken by
+  ease factor); used both per-deck and, on the Progress page, merged across
+  every subject into a single global "hardest cards" list.
+- **`src/lib/quizScoring.ts`** — pure quiz-scoring functions: `scoreQuiz`
+  grades a submission against the answer key, and `updateDueIds` maintains a
+  cross-attempt "due for review" queue — a missed question joins the queue
+  and stays there until it's answered correctly in a later attempt.
+- **`src/hooks/useQuizProgress.ts`** — wraps `quizScoring.ts` with
+  `localStorage` state: appends each attempt (`{ score, total, date,
+  missedIds }`) to history and updates the due-questions queue, powering the
+  "review missed only" flow, the due-review banner, and the score history
+  sparkline.
 - **`src/lib/tipOfDay.ts`** — deterministic pick from `tips.json` based on
   the calendar date, so everyone sees the same tip on a given day without a
   server.
 - **`src/lib/activity.ts`** — logs a "study day" on any flashcard grade,
   quiz submission, or ebook chapter view; computes current/longest streaks
   for the navbar badge and the Progress page's calendar heatmap.
+- **`src/lib/textExtract.ts`** — strips markdown/HTML (including embedded
+  `<svg>` diagrams, which are pure coordinate noise) down to plain text;
+  used to index summaries and ebook chapters for search without polluting
+  results with diagram markup.
 - **`src/hooks/useTheme.ts`** — light/dark theme, defaults to the OS
-  preference, persisted and toggleable from the navbar.
+  preference, persisted and toggleable from the sidebar.
 - **`src/lib/storage.ts`** — thin `localStorage` JSON helpers, plus
   `exportAllProgress` / `importAllProgress` for the Progress page's backup
   flow (all `medicine:*` keys, whole state as one downloadable JSON file).
@@ -108,15 +125,15 @@ name.
 |-------------------------------|----------------------------------------------------|
 | `/`                          | Home, tip of the day, quick links                |
 | `/flashcards`                | Subject list with due-card counts                |
-| `/flashcards/:subjectId`     | SM-2 study session — flip animation, keyboard shortcuts (space to flip, 1–5 to grade), session summary, hardest-cards list |
-| `/quizzes`                   | Subject list with last score                     |
-| `/quizzes/:subjectId`        | Quiz with instant scoring, missed-only retry, score trend sparkline (or an embedded interactive HTML quiz game) |
+| `/flashcards/:subjectId`     | SM-2 study session — flip animation, keyboard shortcuts (space to flip, 1–5 to grade), tag filtering, session summary, hardest-cards list |
+| `/quizzes`                   | Subject list with last score and due-question counts |
+| `/quizzes/:subjectId`        | Quiz with instant scoring, missed-only retry, a cross-attempt due-questions banner, score trend sparkline — plus a link to the subject's interactive HTML game, if it has one |
 | `/ebooks`                    | Ebook list with resume position                  |
 | `/ebooks/:subjectId/:chapterId` | Chapter reader with table of contents, prev/next nav |
 | `/summaries`                 | Subject list                                     |
 | `/summaries/:subjectId`      | Rendered Markdown summary                        |
-| `/search`                    | Fuzzy search across every flashcard & quiz question |
-| `/progress`                  | Streak stats, activity heatmap, export/import as JSON |
+| `/search`                    | Fuzzy search across every flashcard, quiz question, summary section, and ebook chapter |
+| `/progress`                  | Streak stats, activity heatmap, global hardest-cards list, export/import as JSON |
 
 Press **⌘K / Ctrl+K** anywhere to open the command palette and jump to any
 page or subject.
@@ -142,14 +159,23 @@ retheme.
 - Per-subject accent color + initial badge, derived deterministically from
   the subject id
 - 3D flip animation on flashcards, keyboard-driven review (space/1–5)
+- Tag-based flashcard filtering — click any tag (on a card or in the filter
+  row) to drill a deck down to just that topic
+- Cross-attempt quiz due-questions queue: a missed question resurfaces on
+  your next visit until you get it right, the same way SM-2 resurfaces due
+  flashcards
+- A global "hardest cards" list on the Progress page, merged and ranked
+  across every subject's deck
 - Study streak tracking with a GitHub-style activity heatmap
+- A branded splash screen on first load (inlined critical CSS, fades out
+  once the app is ready — see `index.html`)
 - Command palette (⌘K) for fast navigation
 - Installable PWA with offline support (manifest + service worker,
-  PDFs included in the precache)
+  PDFs and quiz games included in the precache)
 - Accessibility: skip-to-content link, focus-visible outlines, ARIA
-  roles on the quiz radiogroup, `prefers-reduced-motion` respected
-  everywhere animation is used (pulse-line draw-in, card stagger, page
-  transitions, quiz feedback)
+  roles on the quiz radiogroup and tag-filter toggles, `prefers-reduced-motion`
+  respected everywhere animation is used (pulse-line draw-in, card stagger,
+  page transitions, quiz feedback, splash screen)
 
 ## Trade-offs
 
@@ -161,6 +187,17 @@ retheme.
 - No auth, no accounts — anyone with the URL sees the same content; only
   their own local progress is personal.
 
+## Testing
+
+Pure logic (SM-2, quiz scoring, streak math, search indexing, text
+extraction) is covered by Vitest unit tests in `src/lib/*.test.ts` — no
+DOM/component tests, just the algorithms that are easy to get subtly wrong.
+
+```bash
+npm run test        # run once
+npm run test:watch  # watch mode
+```
+
 ## Development
 
 ```bash
@@ -169,6 +206,7 @@ npm run dev       # http://localhost:5173
 npm run build     # type-checks, builds to dist/, generates the service worker
 npm run preview   # serve the production build locally
 npm run lint       # oxlint
+npm run test       # vitest
 ```
 
 ## Deploying to Vercel

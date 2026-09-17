@@ -3,6 +3,7 @@ import type { CardState, CardStateMap, Flashcard } from "../types/content";
 import { INITIAL_CARD_STATE, isDue, reviewCard } from "../lib/sm2";
 import { STORAGE_KEYS } from "../lib/storage";
 import { recordActivity } from "../lib/activity";
+import { rankHardestCards } from "../lib/hardestCards";
 import { useLocalStorage } from "./useLocalStorage";
 
 export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
@@ -38,19 +39,7 @@ export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
   }, [cards, stateMap, dueCards.length]);
 
   const hardestCards = useMemo(
-    () =>
-      cards
-        .filter((c) => (stateMap[c.id]?.lapses ?? 0) > 0)
-        .sort((a, b) => {
-          const lapseDiff =
-            (stateMap[b.id]?.lapses ?? 0) - (stateMap[a.id]?.lapses ?? 0);
-          if (lapseDiff !== 0) return lapseDiff;
-          return (
-            (stateMap[a.id]?.easeFactor ?? 2.5) -
-            (stateMap[b.id]?.easeFactor ?? 2.5)
-          );
-        })
-        .slice(0, 5),
+    () => rankHardestCards(cards, stateMap, 5),
     [cards, stateMap],
   );
 

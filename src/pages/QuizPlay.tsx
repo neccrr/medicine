@@ -9,13 +9,14 @@ export function QuizPlay() {
   const { subjectId = "" } = useParams();
   const fullBank = quizBanks[subjectId] ?? [];
   const games = quizGames[subjectId] ?? [];
-  const { history, recordAttempt } = useQuizProgress(subjectId);
+  const { history, dueIds, recordAttempt } = useQuizProgress(subjectId);
   const [missedOnlyBank, setMissedOnlyBank] = useState<QuizQuestion[] | null>(null);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState<QuizAttempt | null>(null);
 
   const bank = missedOnlyBank ?? fullBank;
+  const dueQuestions = fullBank.filter((q) => dueIds.includes(q.id));
 
   if (fullBank.length === 0 && games.length === 0) {
     return (
@@ -96,6 +97,18 @@ export function QuizPlay() {
               Also try: {game.name} ↗
             </a>
           ))}
+        </div>
+      )}
+
+      {!missedOnlyBank && !submitted && dueQuestions.length > 0 && (
+        <div className="quiz-due-banner">
+          <p>
+            <strong>{dueQuestions.length}</strong> question{dueQuestions.length === 1 ? "" : "s"} due
+            for review from past attempts.
+          </p>
+          <button className="btn btn-secondary" onClick={() => resetTo(dueQuestions)}>
+            Review due questions
+          </button>
         </div>
       )}
 
