@@ -31,8 +31,9 @@ no runtime fetch.
 content/
   flashcards/{subject}/deck.json   → Flashcard[]  { id, front, back, tags }
   quizzes/{subject}/bank.json      → QuizQuestion[] { id, question, options, answer, explanation }
-  ebooks/{subject}/meta.json       → { title, description, chapters: [{ id, title }] }
+  ebooks/{subject}/meta.json       → { title, description, chapters: [{id,title}], resources?: [{title,url}] }
   ebooks/{subject}/chapter-N.md    → Markdown, one file per chapter
+  ebooks/{subject}/*.pdf           → any PDF dropped here — no code changes needed
   summaries/{subject}.md           → Markdown, rendered client-side
   tips/tips.json                   → string[]
 ```
@@ -41,6 +42,27 @@ Adding a new subject is just adding a new folder + file — no code changes
 required; subject lists everywhere (Flashcards/Quizzes/Ebooks/Summaries,
 plus the search index and command palette) are derived automatically from
 what's present in `/content`.
+
+### Ebooks: chapters, PDFs, and external links
+
+An ebook subject can mix any combination of:
+
+- **Markdown chapters** (`chapter-N.md`) — rendered with a table-of-contents
+  sidebar, prev/next nav, and resume-where-you-left-off position tracking.
+- **PDFs** — drop any `.pdf` file into `content/ebooks/{subject}/` (e.g. after
+  pushing it to the repo on GitHub) and it's picked up automatically at
+  build time: bundled as a real static asset (never inlined, so large files
+  stay out of the JS bundle — see `assetsInlineLimit` in `vite.config.ts`),
+  listed in the sidebar, and rendered inline via an embedded viewer with an
+  "open in new tab" fallback. A subject folder that *only* has a PDF (no
+  `meta.json`) still gets a book entry — the title is derived from the
+  folder name.
+- **External links** — add a `resources: [{ title, url }]` array to
+  `meta.json` for a "Further reading" list in the sidebar (citations,
+  guideline pages, journal links, anything external), opened in a new tab.
+
+`content/ebooks/cardiology` demonstrates chapters + resources;
+`content/ebooks/pharmacology` demonstrates a PDF-only book.
 
 ## Client-side logic
 
@@ -84,6 +106,21 @@ what's present in `/content`.
 Press **⌘K / Ctrl+K** anywhere to open the command palette and jump to any
 page or subject.
 
+## Design
+
+**"Clinical Vitals"** — the app's visual identity is an EKG-pulse motif
+carried through consistently: a hand-drawn pulse trace as the logo (draws
+itself in on load) and hero decoration, a fine graph-paper grid texture on
+every surface, an editorial serif (**Fraunces**) for headings against a
+confident grotesk (**Archivo**) for UI text, and a monospace
+(**IBM Plex Mono**) reserved for anything that reads as data — streak
+counts, SM-2 stats, badges, kbd hints — so numbers look like an actual
+monitor read-out. Accent color is a phosphor teal (vital-monitor green)
+rather than another blue-gradient SaaS look. Fonts load from Google Fonts
+(see `index.html`); CSS custom properties in `src/index.css` define both
+the dark (default) and light (warm paper) themes — swap the values there to
+retheme.
+
 ## Polish
 
 - Light/dark theme (OS-aware default, persisted toggle)
@@ -92,9 +129,12 @@ page or subject.
 - 3D flip animation on flashcards, keyboard-driven review (space/1–5)
 - Study streak tracking with a GitHub-style activity heatmap
 - Command palette (⌘K) for fast navigation
-- Installable PWA with offline support (manifest + service worker)
+- Installable PWA with offline support (manifest + service worker,
+  PDFs included in the precache)
 - Accessibility: skip-to-content link, focus-visible outlines, ARIA
   roles on the quiz radiogroup, `prefers-reduced-motion` respected
+  everywhere animation is used (pulse-line draw-in, card stagger, page
+  transitions, quiz feedback)
 
 ## Trade-offs
 

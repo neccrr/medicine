@@ -25,6 +25,13 @@ const ebookChapterModules = import.meta.glob<string>(
   "../../content/ebooks/*/chapter-*.md",
   { eager: true, import: "default", query: "?raw" },
 );
+// PDFs dropped into a subject's folder are copied to the build output and exposed as a URL —
+// drop a file at content/ebooks/{subject}/anything.pdf and it shows up with no code changes.
+const ebookPdfModules = import.meta.glob<string>("../../content/ebooks/*/*.pdf", {
+  eager: true,
+  import: "default",
+  query: "?url",
+});
 
 function subjectFromPath(path: string): string {
   const match = path.match(/\/([^/]+)\/(deck|bank|meta)\.json$/);
@@ -39,6 +46,16 @@ function subjectFromMdPath(path: string): string {
 function ebookChapterKey(path: string): string {
   const match = path.match(/ebooks\/([^/]+)\/([^/]+)\.md$/);
   return match ? `${match[1]}/${match[2]}` : path;
+}
+
+function ebookPdfSubject(path: string): string {
+  const match = path.match(/ebooks\/([^/]+)\/[^/]+\.pdf$/);
+  return match ? match[1] : path;
+}
+
+function pdfName(path: string): string {
+  const match = path.match(/([^/]+)\.pdf$/);
+  return match ? match[1].replace(/[-_]/g, " ") : "PDF";
 }
 
 function labelize(id: string): string {
@@ -80,7 +97,7 @@ export const summarySubjects: Subject[] = Object.keys(summaries)
   .sort()
   .map((id) => ({ id, label: labelize(id) }));
 
-export const ebookMeta: Record<string, EbookMeta> = Object.fromEntries(
+const ebookMetaFromFiles: Record<string, EbookMeta> = Object.fromEntries(
   Object.entries(ebookMetaModules).map(([path, meta]) => [
     subjectFromPath(path),
     meta,
@@ -93,6 +110,33 @@ export const ebookChapters: Record<string, string> = Object.fromEntries(
     markdown,
   ]),
 );
+
+export interface EbookPdf {
+  name: string;
+  url: string;
+}
+
+export const ebookPdfs: Record<string, EbookPdf[]> = {};
+for (const [path, url] of Object.entries(ebookPdfModules)) {
+  const subjectId = ebookPdfSubject(path);
+  (ebookPdfs[subjectId] ??= []).push({ name: pdfName(path), url });
+}
+for (const list of Object.values(ebookPdfs)) {
+  list.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// A subject folder that only contains PDFs (no meta.json/chapters) still gets a book entry,
+// synthesized from the folder name — dropping a PDF in is enough on its own.
+export const ebookMeta: Record<string, EbookMeta> = { ...ebookMetaFromFiles };
+for (const subjectId of Object.keys(ebookPdfs)) {
+  if (!ebookMeta[subjectId]) {
+    ebookMeta[subjectId] = {
+      title: labelize(subjectId),
+      description: "PDF reference",
+      chapters: [],
+    };
+  }
+}
 
 export const ebookSubjects: Subject[] = Object.keys(ebookMeta)
   .sort()

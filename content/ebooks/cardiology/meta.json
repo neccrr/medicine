@@ -5,5 +5,10 @@
     { "id": "chapter-01", "title": "Approach to Chest Pain" },
     { "id": "chapter-02", "title": "Heart Failure Fundamentals" },
     { "id": "chapter-03", "title": "Arrhythmias at the Bedside" }
+  ],
+  "resources": [
+    { "title": "American Heart Association", "url": "https://www.heart.org" },
+    { "title": "American College of Cardiology", "url": "https://www.acc.org" },
+    { "title": "NIH — Heart, Lung, and Blood Institute", "url": "https://www.nhlbi.nih.gov" }
   ]
 }

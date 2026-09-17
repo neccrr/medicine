@@ -14,8 +14,8 @@ export default defineConfig({
         short_name: 'Medicine',
         description:
           'Flashcards, quizzes, ebooks, and summaries — fully offline, zero backend.',
-        theme_color: '#0f1115',
-        background_color: '#0f1115',
+        theme_color: '#0a0f0d',
+        background_color: '#0a0f0d',
         display: 'standalone',
         start_url: '/',
         icons: [
@@ -26,8 +26,11 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,pdf}'],
       },
     }),
   ],
+  build: {
+    assetsInlineLimit: (filePath) => (filePath.endsWith('.pdf') ? false : undefined),
+  },
 })

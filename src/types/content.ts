@@ -40,10 +40,16 @@ export interface EbookChapterMeta {
   title: string;
 }
 
+export interface EbookResource {
+  title: string;
+  url: string;
+}
+
 export interface EbookMeta {
   title: string;
   description: string;
   chapters: EbookChapterMeta[];
+  resources?: EbookResource[];
 }
 
 export interface ReadingPosition {

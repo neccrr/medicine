@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { StreakBadge } from "./StreakBadge";
+import { PulseLine } from "./PulseLine";
 import { OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
 
 const links = [
@@ -18,7 +19,10 @@ const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigat
 export function Navbar() {
   return (
     <header className="navbar">
-      <div className="navbar-brand">Medicine</div>
+      <div className="navbar-brand">
+        <PulseLine width={30} height={18} />
+        Medicine
+      </div>
       <nav className="navbar-links" aria-label="Primary">
         {links.map((link) => (
           <NavLink
