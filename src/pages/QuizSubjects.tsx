@@ -17,6 +17,7 @@ export function QuizSubjects() {
             STORAGE_KEYS.quizProgress(subject.id),
             [],
           );
+          const dueCount = readJSON<string[]>(STORAGE_KEYS.quizDue(subject.id), []).length;
           const last = history[history.length - 1];
 
           return (
@@ -29,6 +30,12 @@ export function QuizSubjects() {
                 {bank && (
                   <>
                     {bank.length} questions
+                    {dueCount > 0 && (
+                      <>
+                        {" "}
+                        · <strong>{dueCount} due</strong>
+                      </>
+                    )}
                     {last && (
                       <>
                         {" "}

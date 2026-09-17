@@ -58,5 +58,53 @@
     ],
     "answer": 1,
     "explanation": "Intercalated discs — specialized junctions containing gap junctions and desmosomes — electrically and mechanically couple cardiac fibers, which typically have one or two central nuclei, unlike skeletal muscle's peripheral, multinucleated pattern."
+  },
+  {
+    "id": "q-histo-006",
+    "question": "A gland secretes its product by exocytosis without any loss of cytoplasm, keeping the cell fully intact. What mode of secretion is this?",
+    "options": [
+      "Holocrine",
+      "Apocrine",
+      "Merocrine",
+      "Paracrine"
+    ],
+    "answer": 2,
+    "explanation": "Merocrine secretion releases product by exocytosis with the cell remaining intact — the mechanism used by eccrine sweat glands and the exocrine pancreas."
+  },
+  {
+    "id": "q-histo-007",
+    "question": "Which cell junction anchors intermediate (keratin) filaments between adjacent epidermal cells, providing mechanical strength against shearing forces?",
+    "options": [
+      "Tight junction",
+      "Gap junction",
+      "Desmosome",
+      "Hemidesmosome"
+    ],
+    "answer": 2,
+    "explanation": "Desmosomes are spot-like junctions that anchor intermediate filaments between neighboring cells; hemidesmosomes perform a similar role but anchor cells to the basement membrane, not to each other."
+  },
+  {
+    "id": "q-histo-008",
+    "question": "A tissue sample from a tendon shows densely packed collagen bundles running in a single parallel direction. What connective tissue type is this?",
+    "options": [
+      "Dense irregular connective tissue",
+      "Dense regular connective tissue",
+      "Loose (areolar) connective tissue",
+      "Reticular connective tissue"
+    ],
+    "answer": 1,
+    "explanation": "Dense regular connective tissue has collagen fibers aligned in parallel along the axis of mechanical stress, maximizing tensile strength — characteristic of tendons and ligaments."
+  },
+  {
+    "id": "q-histo-009",
+    "question": "What do goblet cells secrete, and what is their functional role in the respiratory and GI epithelium?",
+    "options": [
+      "Serous fluid, for enzymatic digestion",
+      "Mucin, which hydrates into a protective mucus layer",
+      "Surfactant, to reduce alveolar surface tension",
+      "Hydrochloric acid, for pathogen defense"
+    ],
+    "answer": 1,
+    "explanation": "Goblet cells are unicellular glands that secrete mucin, which absorbs water to form mucus — a protective, lubricating barrier on respiratory and GI epithelial surfaces."
   }
 ]

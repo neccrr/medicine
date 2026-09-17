@@ -46,5 +46,41 @@
     "front": "Which heart sound is associated with volume overload (e.g., heart failure)?",
     "back": "S3 gallop, due to rapid ventricular filling.",
     "tags": ["physical exam", "heart failure"]
+  },
+  {
+    "id": "cardio-009",
+    "front": "What ECG progression is classic for worsening hyperkalemia?",
+    "back": "Peaked T waves → PR prolongation and QRS widening → loss of P waves → sine-wave pattern → ventricular fibrillation/asystole.",
+    "tags": ["ecg", "electrolytes"]
+  },
+  {
+    "id": "cardio-010",
+    "front": "What visual symptom is classic for digoxin toxicity?",
+    "back": "Yellow-green halos around lights (xanthopsia), along with nausea, confusion, and arrhythmias.",
+    "tags": ["toxicity", "digoxin"]
+  },
+  {
+    "id": "cardio-011",
+    "front": "What electrolyte abnormality classically predisposes to torsades de pointes, and how is it treated acutely?",
+    "back": "Hypomagnesemia (often with hypokalemia); treat acutely with IV magnesium sulfate.",
+    "tags": ["arrhythmia", "electrolytes"]
+  },
+  {
+    "id": "cardio-012",
+    "front": "What is Dressler syndrome?",
+    "back": "An autoimmune pericarditis that develops weeks to months after an MI, presenting with fever, pleuritic chest pain, and pericardial friction rub.",
+    "tags": ["pericarditis", "post-MI"]
+  },
+  {
+    "id": "cardio-013",
+    "front": "What is Kussmaul sign and what condition is it associated with?",
+    "back": "A paradoxical rise in jugular venous pressure during inspiration, classically seen in constrictive pericarditis (also restrictive cardiomyopathy, severe right heart failure).",
+    "tags": ["physical exam", "pericarditis"]
+  },
+  {
+    "id": "cardio-014",
+    "front": "How is orthostatic hypotension defined?",
+    "back": "A drop in systolic BP ≥20 mmHg or diastolic BP ≥10 mmHg within 3 minutes of standing from a supine or seated position.",
+    "tags": ["physical exam", "autonomic"]
   }
 ]

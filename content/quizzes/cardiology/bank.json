@@ -58,5 +58,53 @@
     ],
     "answer": 0,
     "explanation": "Pulsus paradoxus is an exaggerated inspiratory drop in systolic BP >10 mmHg, classically seen in cardiac tamponade."
+  },
+  {
+    "id": "q-cardio-006",
+    "question": "A hemodialysis patient who missed his last session presents with peaked T waves on ECG. What is the most appropriate immediate treatment to stabilize the cardiac membrane?",
+    "options": [
+      "IV insulin with glucose",
+      "IV calcium gluconate",
+      "Sodium polystyrene sulfonate",
+      "Oral furosemide"
+    ],
+    "answer": 1,
+    "explanation": "IV calcium gluconate stabilizes the cardiac cell membrane immediately in hyperkalemia; insulin/glucose and other measures shift potassium intracellularly but don't protect the myocardium directly."
+  },
+  {
+    "id": "q-cardio-007",
+    "question": "A patient on digoxin reports seeing yellow-green halos around lights and feels nauseated. Which additional finding would most support digoxin toxicity?",
+    "options": [
+      "Hyperkalemia",
+      "Hypercalcemia",
+      "Prolonged QT interval",
+      "Bidirectional ventricular tachycardia"
+    ],
+    "answer": 3,
+    "explanation": "Bidirectional ventricular tachycardia is highly specific for digoxin toxicity. Digoxin toxicity is also worsened by hypokalemia (not hyperkalemia) and hypercalcemia."
+  },
+  {
+    "id": "q-cardio-008",
+    "question": "An elderly patient with a history of constrictive pericarditis has jugular venous pressure that paradoxically rises with inspiration. What is this finding called?",
+    "options": [
+      "Pulsus paradoxus",
+      "Kussmaul sign",
+      "Beck's triad",
+      "Levine sign"
+    ],
+    "answer": 1,
+    "explanation": "Kussmaul sign — a paradoxical rise in JVP during inspiration — reflects impaired right ventricular filling in constrictive pericarditis (the opposite of the normal inspiratory drop in JVP)."
+  },
+  {
+    "id": "q-cardio-009",
+    "question": "A patient develops torsades de pointes. Which electrolyte should be replaced immediately as first-line treatment, regardless of serum level?",
+    "options": [
+      "Potassium",
+      "Calcium",
+      "Magnesium",
+      "Phosphate"
+    ],
+    "answer": 2,
+    "explanation": "IV magnesium sulfate is first-line treatment for torsades de pointes, even before serum magnesium results return, because it stabilizes the myocardium and shortens the QT interval."
   }
 ]

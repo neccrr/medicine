@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Structure Labeler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f0d; --surface: #101613; --surface-2: #161f1b;
+    --border: #223029; --text: #eef4f1; --text-muted: #8ba39b;
+    --accent: #2dd4a7; --accent-dim: #1f9d7c; --accent-soft: rgba(45,212,167,0.14);
+    --accent-ink: #04140f; --red: #ff6b5e; --red-soft: rgba(255,107,94,0.14);
+    --amber: #f2b134; --radius: 12px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f2e8; --surface: #fffdf8; --surface-2: #efe9d7;
+      --border: #ddd4bc; --text: #16211b; --text-muted: #5f6a60;
+      --accent: #0f8f70; --accent-dim: #0c6e56; --accent-soft: rgba(15,143,112,0.1);
+      --accent-ink: #f5fffb; --red: #c8433a; --red-soft: rgba(200,67,58,0.1); --amber: #b3791b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; justify-content: center;
+    background-color: var(--bg);
+    background-image: linear-gradient(rgba(45,212,167,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,167,0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--text); font-family: 'Archivo', -apple-system, sans-serif;
+  }
+  #app { width: 100%; max-width: 700px; padding: 20px 16px 48px; }
+  .brandbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 18px;
+  }
+  .brandbar .tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .brandbar .title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; margin-top: 2px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px 22px; box-shadow: 0 8px 24px -12px rgba(0,0,0,0.3);
+  }
+  h1 { font-family: 'Fraunces', serif; font-size: 24px; margin: 0 0 10px; }
+  p.lead { font-size: 15px; line-height: 1.6; color: var(--text-muted); margin: 0 0 18px; }
+  .stat-row { display: flex; gap: 10px; margin: 18px 0; }
+  .stat { flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; }
+  .stat .num { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; color: var(--accent); display: block; }
+  .stat .lbl { font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  button { font-family: inherit; cursor: pointer; }
+  button.primary {
+    width: 100%; padding: 13px; margin-top: 10px; background: var(--accent); color: var(--accent-ink);
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+  }
+  button.secondary {
+    width: 100%; padding: 11px; margin-top: 10px; background: transparent; color: var(--accent);
+    border: 1.5px solid var(--accent); border-radius: 10px; font-size: 14px;
+  }
+  button.ghost {
+    padding: 7px 12px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 20px; font-size: 12px;
+  }
+  button.ghost.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .progress-bar { height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.25s ease; }
+  .cat-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); background: var(--accent-soft); padding: 3px 9px; border-radius: 999px; display: inline-block; margin-bottom: 10px; }
+  .diagram-wrap { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 14px; }
+  .diagram-wrap svg { display: block; width: 100%; height: auto; }
+  .q-prompt { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .hint-box { font-size: 13.5px; color: var(--text-muted); background: var(--surface-2); border-left: 2px solid var(--accent); padding: 8px 12px; border-radius: 6px; margin: 10px 0; display: none; }
+  .hint-box.show { display: block; }
+  input.answer {
+    width: 100%; padding: 12px 14px; font-size: 15px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: var(--bg); color: var(--text); margin-top: 6px;
+  }
+  input.answer:focus { outline: none; border-color: var(--accent); }
+  .btn-row { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-row button { flex: 1; }
+  .feedback { margin-top: 14px; padding: 12px 14px; border-radius: 10px; font-size: 14px; line-height: 1.5; display: none; }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+  .feedback.incorrect { background: var(--red-soft); border-left: 3px solid var(--red); }
+  .feedback b { display: block; margin-bottom: 4px; }
+  .skip-link-btn { display: block; text-align: center; width: 100%; background: none; border: none; color: var(--text-muted); font-size: 12.5px; margin-top: 10px; text-decoration: underline; }
+  .review-item { border-bottom: 1px solid var(--border); padding: 14px 0; }
+  .review-item:last-child { border-bottom: none; }
+  .review-item .r-prompt { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .review-item .r-status { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; display: inline-block; margin-bottom: 6px; }
+  .r-status.correct { background: var(--accent-soft); color: var(--accent); }
+  .r-status.wrong { background: var(--red-soft); color: var(--red); }
+  .r-status.skipped { background: var(--surface-2); color: var(--text-muted); }
+  .r-detail { font-size: 13px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="brandbar">
+    <div>
+      <div class="tag">Histology · Quiz Game</div>
+      <div class="title">Structure Labeler</div>
+    </div>
+  </div>
+  <div id="screen"></div>
+</div>
+<script>
+(function () {
+  "use strict";
+
+  function band(x, y, w, h, label) {
+    return { type: "band", x: x, y: y, w: w, h: h, label: label };
+  }
+
+  var DIAGRAMS = [
+    {
+      id: "skin", name: "Epidermis (Thin Skin)", viewBox: "0 0 400 210",
+      context: [
+        { x: 20, y: 20, w: 360, h: 130, note: null },
+        band(20, 20, 360, 22, null),
+        band(20, 42, 360, 18, null),
+        band(20, 60, 360, 48, null),
+        band(20, 108, 360, 14, null)
+      ],
+      dermisLabelY: 190,
+      points: [
+        { num: 1, x: 40, y: 31, name: "Stratum Corneum", answers: ["stratum corneum"], hint: "The outermost, dead, keratinized layer.", explain: "Stratum corneum: dead, anucleate, keratin-filled cells forming the outermost protective barrier." },
+        { num: 2, x: 40, y: 51, name: "Stratum Granulosum", answers: ["stratum granulosum"], hint: "Cells here fill with keratohyalin granules just before dying.", explain: "Stratum granulosum: cells accumulate keratohyalin granules as they flatten and begin to die." },
+        { num: 3, x: 40, y: 84, name: "Stratum Spinosum", answers: ["stratum spinosum"], hint: "The thickest layer — cells linked by abundant desmosomes.", explain: "Stratum spinosum: several cell layers thick, linked by desmosomes that give a 'spiny' look on fixed sections." },
+        { num: 4, x: 40, y: 115, name: "Stratum Basale", answers: ["stratum basale", "stratum germinativum"], hint: "A single row of dividing cells anchored to the basement membrane.", explain: "Stratum basale (germinativum): a single mitotically active layer that regenerates all layers above it." }
+      ]
+    },
+    {
+      id: "gi", name: "GI Tract Wall", viewBox: "0 0 400 210",
+      context: [
+        band(20, 20, 360, 50, null),
+        band(20, 70, 360, 30, null),
+        band(20, 100, 360, 60, null),
+        band(20, 160, 360, 25, null)
+      ],
+      points: [
+        { num: 1, x: 40, y: 45, name: "Mucosa", answers: ["mucosa"], hint: "Closest to the lumen — epithelium plus lamina propria.", explain: "The mucosa lines the lumen and includes the epithelium, lamina propria, and a thin muscularis mucosae." },
+        { num: 2, x: 40, y: 85, name: "Submucosa", answers: ["submucosa"], hint: "Dense connective tissue carrying larger vessels and Meissner's plexus.", explain: "The submucosa is dense connective tissue carrying larger vessels, lymphatics, and the submucosal (Meissner's) nerve plexus." },
+        { num: 3, x: 40, y: 130, name: "Muscularis Externa", answers: ["muscularis externa", "muscularis propria"], hint: "Inner circular + outer longitudinal smooth muscle — drives peristalsis.", explain: "The muscularis externa drives peristalsis; the myenteric (Auerbach's) plexus sits between its two muscle layers." },
+        { num: 4, x: 40, y: 172, name: "Serosa / Adventitia", answers: ["serosa", "adventitia", "serosa or adventitia"], hint: "The outermost covering.", explain: "The outermost layer is serosa (mesothelium-covered, intraperitoneal organs) or adventitia (fused to surrounding tissue)." }
+      ]
+    },
+    {
+      id: "osteon", name: "Osteon (Compact Bone)", viewBox: "0 0 300 300", isRadial: true,
+      points: [
+        { num: 1, x: 150, y: 150, name: "Central (Haversian) Canal", answers: ["central canal", "haversian canal"], hint: "Carries blood vessels and nerves through the middle.", explain: "The central (Haversian) canal runs through the core of the osteon, carrying blood vessels and nerves." },
+        { num: 2, x: 245, y: 150, name: "Lamellae", answers: ["lamellae"], hint: "The concentric rings of mineralized matrix.", explain: "Lamellae are concentric rings of mineralized collagen matrix surrounding the central canal." },
+        { num: 3, x: 199, y: 101, name: "Lacuna", answers: ["lacuna"], hint: "A small space that houses a single bone cell.", explain: "A lacuna is a small cavity housing an osteocyte, sitting between concentric lamellae." },
+        { num: 4, x: 172, y: 128, name: "Canaliculi", answers: ["canaliculi"], hint: "Tiny channels radiating outward, letting osteocytes communicate.", explain: "Canaliculi are thin channels connecting lacunae, letting osteocytes exchange nutrients and signals." }
+      ]
+    },
+    {
+      id: "lymphnode", name: "Lymph Node", viewBox: "0 0 320 260", isNode: true,
+      points: [
+        { num: 1, x: 160, y: 32, name: "Capsule", answers: ["capsule"], hint: "The dense connective tissue covering.", explain: "The capsule is the dense connective tissue covering that surrounds the lymph node." },
+        { num: 2, x: 95, y: 78, name: "Cortex (Follicles)", answers: ["cortex", "cortex/follicles", "cortex or follicles"], hint: "Contains B-cell follicles with germinal centers.", explain: "The cortex contains lymphoid follicles (with germinal centers where B cells proliferate) beneath the capsule." },
+        { num: 3, x: 160, y: 130, name: "Medulla", answers: ["medulla"], hint: "Contains medullary cords and sinuses, rich in plasma cells.", explain: "The medulla contains medullary cords (rich in plasma cells) and sinuses that drain lymph toward the hilum." },
+        { num: 4, x: 288, y: 130, name: "Hilum", answers: ["hilum"], hint: "Where the efferent lymphatic vessel and blood vessels enter/exit.", explain: "The hilum is the indented region where the efferent lymphatic vessel exits and blood vessels enter/leave the node." }
+      ]
+    }
+  ];
+
+  function diagramSVG(diagram, currentNum) {
+    var parts = ['<svg viewBox="' + diagram.viewBox + '" role="img" aria-label="' + diagram.name + ' diagram">'];
+
+    if (diagram.context) {
+      diagram.context.forEach(function (c, i) {
+        if (c.type === "band") {
+          var fill = i % 2 === 0 ? "var(--surface)" : "var(--accent-soft)";
+          parts.push('<rect x="' + c.x + '" y="' + c.y + '" width="' + c.w + '" height="' + c.h + '" fill="' + fill + '" stroke="var(--border)" stroke-width="1" />');
+        }
+      });
+      parts.push('<rect x="20" y="122" width="360" height="' + (diagram.dermisLabelY ? 78 : 60) + '" fill="var(--surface)" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 3" />');
+      parts.push('<text x="200" y="170" fill="var(--text-muted)" font-size="12" text-anchor="middle" font-style="italic">(Dermis / connective tissue)</text>');
+    } else if (diagram.isRadial) {
+      [110, 85, 60, 35].forEach(function (r) {
+        parts.push('<circle cx="150" cy="150" r="' + r + '" fill="none" stroke="var(--border)" stroke-width="1.5" />');
+      });
+      parts.push('<circle cx="150" cy="150" r="18" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.5" />');
+      parts.push('<circle cx="199" cy="101" r="4" fill="var(--text-muted)" />');
+      parts.push('<line x1="192" y1="108" x2="184" y2="116" stroke="var(--text-muted)" stroke-width="1" />');
+      parts.push('<line x1="206" y1="108" x2="214" y2="100" stroke="var(--text-muted)" stroke-width="1" />');
+      parts.push('<line x1="199" y1="94" x2="199" y2="84" stroke="var(--text-muted)" stroke-width="1" />');
+    } else if (diagram.isNode) {
+      parts.push('<ellipse cx="160" cy="130" rx="140" ry="100" fill="var(--surface)" stroke="var(--text)" stroke-width="2.5" />');
+      parts.push('<ellipse cx="160" cy="130" rx="115" ry="80" fill="var(--accent-soft)" stroke="var(--border)" stroke-width="1.5" />');
+      parts.push('<circle cx="100" cy="90" r="10" fill="none" stroke="var(--accent)" stroke-width="1.2" />');
+      parts.push('<circle cx="220" cy="95" r="8" fill="none" stroke="var(--accent)" stroke-width="1.2" />');
+      parts.push('<circle cx="160" cy="60" r="9" fill="none" stroke="var(--accent)" stroke-width="1.2" />');
+      parts.push('<ellipse cx="160" cy="130" rx="55" ry="40" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />');
+      parts.push('<path d="M296,110 Q280,130 296,150" fill="var(--bg)" stroke="var(--text)" stroke-width="2.5" />');
+      parts.push('<line x1="296" y1="130" x2="316" y2="130" stroke="var(--text-muted)" stroke-width="2" />');
+    }
+
+    diagram.points.forEach(function (p) {
+      var isCurrent = p.num === currentNum;
+      var r = isCurrent ? 13 : 10;
+      var fill = isCurrent ? "var(--accent)" : "var(--surface)";
+      var stroke = isCurrent ? "var(--accent)" : "var(--text-muted)";
+      var textColor = isCurrent ? "var(--accent-ink)" : "var(--text-muted)";
+      parts.push('<circle cx="' + p.x + '" cy="' + p.y + '" r="' + r + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.5"' + (isCurrent ? ' opacity="1"' : ' opacity="0.65"') + ' />');
+      parts.push('<text x="' + p.x + '" y="' + (p.y + 4) + '" fill="' + textColor + '" font-size="12" font-weight="700" text-anchor="middle">' + p.num + '</text>');
+    });
+
+    parts.push("</svg>");
+    return parts.join("");
+  }
+
+  var ALL_QUESTIONS = [];
+  DIAGRAMS.forEach(function (d) {
+    d.points.forEach(function (p) {
+      ALL_QUESTIONS.push({ diagram: d, point: p, cat: d.name });
+    });
+  });
+
+  var CATEGORIES = DIAGRAMS.map(function (d) { return d.name; });
+
+  var state = { selectedCats: CATEGORIES.slice(), pool: [], idx: 0, results: [], hintShown: false, answered: false };
+
+  function el(id) { return document.getElementById(id); }
+  function normalize(s) { return s.toLowerCase().trim().replace(/[^a-z0-9 /]/g, "").replace(/\s+/g, " "); }
+  function isCorrect(input, answers) {
+    var n = normalize(input);
+    if (!n) return false;
+    return answers.some(function (a) { return normalize(a) === n || n.indexOf(normalize(a)) !== -1 || normalize(a).indexOf(n) !== -1; });
+  }
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function renderStart() {
+    var savedBest = localStorage.getItem("labelergame:best");
+    el("screen").innerHTML =
+      '<div class="card">' +
+      '<h1>Structure Labeler</h1>' +
+      '<p class="lead">Four schematic diagrams, ' + ALL_QUESTIONS.length + ' numbered structures total — name each labeled point instead of guessing a whole slide at once.</p>' +
+      '<div class="stat-row">' +
+      '<div class="stat"><span class="num">' + ALL_QUESTIONS.length + '</span><span class="lbl">Points</span></div>' +
+      '<div class="stat"><span class="num">' + DIAGRAMS.length + '</span><span class="lbl">Diagrams</span></div>' +
+      '<div class="stat"><span class="num">' + (savedBest || '—') + '</span><span class="lbl">Best score</span></div>' +
+      '</div>' +
+      '<div class="chip-row" id="cat-chips"></div>' +
+      '<button class="primary" id="btn-start">Start quiz</button>' +
+      '</div>';
+    var chipRow = el("cat-chips");
+    CATEGORIES.forEach(function (cat) {
+      var b = document.createElement("button");
+      b.className = "ghost active";
+      b.textContent = cat;
+      b.addEventListener("click", function () {
+        var i = state.selectedCats.indexOf(cat);
+        if (i === -1) { state.selectedCats.push(cat); b.classList.add("active"); }
+        else { state.selectedCats.splice(i, 1); b.classList.remove("active"); }
+      });
+      chipRow.appendChild(b);
+    });
+    el("btn-start").addEventListener("click", startQuiz);
+  }
+
+  function startQuiz() {
+    var filtered = ALL_QUESTIONS.filter(function (q) { return state.selectedCats.indexOf(q.cat) !== -1; });
+    if (filtered.length === 0) filtered = ALL_QUESTIONS.slice();
+    // Group by diagram so points from the same diagram stay together, but shuffle diagram order and point order within each.
+    var byDiagram = {};
+    filtered.forEach(function (q) {
+      (byDiagram[q.diagram.id] = byDiagram[q.diagram.id] || []).push(q);
+    });
+    var diagramIds = shuffle(Object.keys(byDiagram));
+    var pool = [];
+    diagramIds.forEach(function (id) {
+      pool = pool.concat(shuffle(byDiagram[id]));
+    });
+    state.pool = pool;
+    state.idx = 0;
+    state.results = [];
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    state.hintShown = false;
+    state.answered = false;
+    var item = state.pool[state.idx];
+    var pct = Math.round((state.idx / state.pool.length) * 100);
+    el("screen").innerHTML =
+      '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="card">' +
+      '<span class="cat-tag">' + item.cat + ' · ' + (state.idx + 1) + ' / ' + state.pool.length + '</span>' +
+      '<div class="diagram-wrap">' + diagramSVG(item.diagram, item.point.num) + '</div>' +
+      '<p class="q-prompt">What is structure #' + item.point.num + '?</p>' +
+      '<button class="skip-link-btn" id="btn-hint" style="text-align:left;padding:0;margin:0 0 4px;">Show hint</button>' +
+      '<div class="hint-box" id="hint-box">' + item.point.hint + '</div>' +
+      '<form id="answer-form">' +
+      '<input class="answer" id="answer-input" type="text" autocomplete="off" placeholder="Type your answer..." />' +
+      '<div class="btn-row">' +
+      '<button type="button" class="secondary" id="btn-skip">Skip</button>' +
+      '<button type="submit" class="primary" id="btn-submit">Submit</button>' +
+      '</div>' +
+      '</form>' +
+      '<div class="feedback" id="feedback"></div>' +
+      '<button class="skip-link-btn" id="btn-next" style="display:none;">Next question →</button>' +
+      '</div>';
+
+    el("btn-hint").addEventListener("click", function () {
+      state.hintShown = true;
+      el("hint-box").classList.add("show");
+    });
+    el("btn-skip").addEventListener("click", function () { recordAnswer("", true); });
+    el("answer-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (state.answered) return;
+      recordAnswer(el("answer-input").value, false);
+    });
+    el("btn-next").addEventListener("click", advance);
+    setTimeout(function () { var i = el("answer-input"); if (i) i.focus(); }, 30);
+  }
+
+  function recordAnswer(value, skipped) {
+    if (state.answered) return;
+    state.answered = true;
+    var item = state.pool[state.idx];
+    var correct = !skipped && isCorrect(value, item.point.answers);
+    state.results.push({ item: item, userAnswer: value, status: skipped ? "skipped" : correct ? "correct" : "wrong" });
+
+    var fb = el("feedback");
+    fb.className = "feedback show " + (skipped ? "incorrect" : correct ? "correct" : "incorrect");
+    var label = correct ? "Correct!" : skipped ? "Skipped." : "Not quite.";
+    fb.innerHTML = "<b>" + label + "</b>" + (correct ? "" : "Expected: " + item.point.name + ". ") + item.point.explain;
+
+    el("btn-submit").disabled = true;
+    el("btn-skip").disabled = true;
+    el("answer-input").disabled = true;
+    el("btn-next").style.display = "block";
+    if (state.idx === state.pool.length - 1) {
+      el("btn-next").textContent = "See results →";
+    }
+  }
+
+  function advance() {
+    if (state.idx < state.pool.length - 1) {
+      state.idx++;
+      renderQuestion();
+    } else {
+      renderResults();
+    }
+  }
+
+  function renderResults() {
+    var correct = state.results.filter(function (r) { return r.status === "correct"; }).length;
+    var total = state.results.length;
+    var pct = Math.round((correct / total) * 100);
+    var best = parseInt(localStorage.getItem("labelergame:best") || "0", 10);
+    if (pct > best) localStorage.setItem("labelergame:best", String(pct));
+
+    el("screen").innerHTML =
+      '<div class="card">' +
+      '<h1>Results</h1>' +
+      '<div class="stat-row">' +
+      '<div class="stat"><span class="num">' + correct + '/' + total + '</span><span class="lbl">Correct</span></div>' +
+      '<div class="stat"><span class="num">' + pct + '%</span><span class="lbl">Score</span></div>' +
+      '</div>' +
+      '<button class="primary" id="btn-restart">Play again</button>' +
+      '<button class="secondary" id="btn-review">Review all answers</button>' +
+      '<div id="review-list"></div>' +
+      '</div>';
+    el("btn-restart").addEventListener("click", renderStart);
+    el("btn-review").addEventListener("click", function () {
+      var list = el("review-list");
+      list.innerHTML = state.results.map(function (r) {
+        return '<div class="review-item">' +
+          '<span class="r-status ' + r.status + '">' + r.status + '</span>' +
+          '<div class="r-prompt">' + r.item.cat + ' — structure #' + r.item.point.num + '</div>' +
+          '<div class="r-detail">' + (r.status !== "correct" ? "Your answer: " + (r.userAnswer || "(none)") + ". " : "") + "Expected: " + r.item.point.name + ". " + r.item.point.explain + '</div>' +
+          '</div>';
+      }).join("");
+    });
+  }
+
+  renderStart();
+})();
+</script>
+</body>
+</html>

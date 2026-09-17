@@ -23,3 +23,9 @@
 ## Arrhythmias
 - **Atrial fibrillation**: irregularly irregular rhythm, no discrete P waves. Manage with rate/rhythm control + stroke risk stratification (CHA₂DS₂-VASc).
 - **WPW syndrome**: delta wave, short PR interval. Avoid AV nodal blockers if AFib is present — risk of degeneration to VFib.
+- **Torsades de pointes**: polymorphic VT with a twisting QRS axis on a prolonged QT interval; first-line treatment is IV magnesium regardless of serum level.
+
+## Electrolyte & Toxicity Emergencies
+- **Hyperkalemia**: peaked T waves → PR/QRS widening → sine wave → arrest. IV calcium gluconate stabilizes the membrane immediately; insulin/glucose, albuterol, and kayexalate/patiromer shift or eliminate potassium afterward.
+- **Digoxin toxicity**: nausea, confusion, yellow-green visual halos (xanthopsia), bidirectional VT. Worsened by hypokalemia and hypercalcemia; treat with digoxin-specific antibody fragments (Digibind) if severe.
+- **Orthostatic hypotension**: SBP drop ≥20 mmHg or DBP drop ≥10 mmHg within 3 minutes of standing — screen for volume depletion, autonomic dysfunction, or medication effect.

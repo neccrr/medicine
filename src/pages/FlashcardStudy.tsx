@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { flashcardDecks } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
 import { EmptyState } from "../components/EmptyState";
+import type { Flashcard } from "../types/content";
 
 const GRADES = [
   { quality: 0, key: "1", label: "Blackout", hint: "No idea" },
@@ -12,16 +13,49 @@ const GRADES = [
   { quality: 5, key: "5", label: "Easy", hint: "Instant recall" },
 ];
 
+const EMPTY_DECK: Flashcard[] = [];
+
 export function FlashcardStudy() {
   const { subjectId = "" } = useParams();
-  const deck = flashcardDecks[subjectId] ?? [];
-  const { dueCards, grade, stats, hardestCards } = useSpacedRepetition(subjectId, deck);
+  const deck = flashcardDecks[subjectId] ?? EMPTY_DECK;
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [session, setSession] = useState({ reviewed: 0, lapses: 0 });
   const [extraReview, setExtraReview] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const queue = dueCards.length > 0 ? dueCards : deck;
+  const allTags = useMemo(
+    () => Array.from(new Set(deck.flatMap((c) => c.tags))).sort(),
+    [deck],
+  );
+  const filteredDeck = useMemo(
+    () =>
+      selectedTags.length === 0
+        ? deck
+        : deck.filter((c) => c.tags.some((t) => selectedTags.includes(t))),
+    [deck, selectedTags],
+  );
+
+  const { dueCards, grade, stats, hardestCards } = useSpacedRepetition(subjectId, filteredDeck);
+
+  const resetSession = () => {
+    setIndex(0);
+    setFlipped(false);
+    setExtraReview(false);
+    setSession({ reviewed: 0, lapses: 0 });
+  };
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
+    resetSession();
+  };
+
+  const clearTags = () => {
+    setSelectedTags([]);
+    resetSession();
+  };
+
+  const queue = dueCards.length > 0 ? dueCards : filteredDeck;
   const card = queue[index % queue.length];
   const sessionDone = dueCards.length === 0 && !extraReview;
 
@@ -76,9 +110,37 @@ export function FlashcardStudy() {
       <h1>{subjectId}</h1>
       <p className="subtitle">
         {stats.due} due · {stats.mastered}/{stats.total} mastered
+        {selectedTags.length > 0 && ` · filtered to ${filteredDeck.length} card${filteredDeck.length === 1 ? "" : "s"}`}
       </p>
 
-      {sessionDone ? (
+      {allTags.length > 0 && (
+        <div className="tag-filter-row">
+          {allTags.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              className={selectedTags.includes(tag) ? "tag tag-toggle active" : "tag tag-toggle"}
+              onClick={() => toggleTag(tag)}
+              aria-pressed={selectedTags.includes(tag)}
+            >
+              {tag}
+            </button>
+          ))}
+          {selectedTags.length > 0 && (
+            <button type="button" className="tag-filter-clear" onClick={clearTags}>
+              Clear
+            </button>
+          )}
+        </div>
+      )}
+
+      {filteredDeck.length === 0 ? (
+        <EmptyState title="No cards match those tags">
+          <button className="btn empty-state-action" onClick={clearTags}>
+            Clear filters
+          </button>
+        </EmptyState>
+      ) : sessionDone ? (
         <div className="flashcard-empty">
           {session.reviewed > 0 ? (
             <div className="session-summary">
@@ -129,8 +191,10 @@ export function FlashcardStudy() {
             <div className="hardest-cards">
               <h3>Your hardest cards</h3>
               <ul>
-                {hardestCards.map((c) => (
-                  <li key={c.id}>{c.front}</li>
+                {hardestCards.map(({ card: c, lapses }) => (
+                  <li key={c.id}>
+                    {c.front} <span className="lapse-count">{lapses} lapse{lapses === 1 ? "" : "s"}</span>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -161,9 +225,15 @@ export function FlashcardStudy() {
           {card.tags.length > 0 && (
             <div className="tag-row">
               {card.tags.map((tag) => (
-                <span key={tag} className="tag">
+                <button
+                  key={tag}
+                  type="button"
+                  className={selectedTags.includes(tag) ? "tag tag-toggle active" : "tag tag-toggle"}
+                  onClick={() => toggleTag(tag)}
+                  aria-pressed={selectedTags.includes(tag)}
+                >
                   {tag}
-                </span>
+                </button>
               ))}
             </div>
           )}

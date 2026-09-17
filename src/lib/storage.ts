@@ -19,6 +19,7 @@ export function writeJSON<T>(key: string, value: T): void {
 export const STORAGE_KEYS = {
   cardState: (deckId: string) => `medicine:flashcards:${deckId}`,
   quizProgress: (quizId: string) => `medicine:quiz:${quizId}`,
+  quizDue: (quizId: string) => `medicine:quizdue:${quizId}`,
   lastRead: (subjectId: string) => `medicine:lastread:${subjectId}`,
   ebookPosition: (subjectId: string) => `medicine:ebook:${subjectId}`,
   theme: "medicine:theme",

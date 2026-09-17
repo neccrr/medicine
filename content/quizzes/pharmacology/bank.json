@@ -48,5 +48,53 @@
     ],
     "answer": 0,
     "explanation": "Statins competitively inhibit HMG-CoA reductase, the rate-limiting enzyme in cholesterol synthesis."
+  },
+  {
+    "id": "q-pharm-006",
+    "question": "A patient goes into anaphylaxis after a bee sting. What is the first-line treatment and route?",
+    "options": [
+      "Diphenhydramine, oral",
+      "Epinephrine, intramuscular",
+      "Methylprednisolone, IV",
+      "Albuterol, nebulized"
+    ],
+    "answer": 1,
+    "explanation": "IM epinephrine (anterolateral thigh) is first-line for anaphylaxis — it reverses bronchoconstriction, hypotension, and mucosal edema faster and more reliably than antihistamines or steroids, which are adjuncts."
+  },
+  {
+    "id": "q-pharm-007",
+    "question": "Why is co-administration of grapefruit juice with certain statins and calcium channel blockers dangerous?",
+    "options": [
+      "It induces CYP3A4, lowering drug levels below therapeutic range",
+      "It inhibits intestinal CYP3A4, raising drug levels and toxicity risk",
+      "It chelates the drug, preventing absorption entirely",
+      "It alkalinizes urine, preventing renal excretion"
+    ],
+    "answer": 1,
+    "explanation": "Grapefruit juice inhibits intestinal (first-pass) CYP3A4 metabolism, increasing systemic bioavailability of CYP3A4 substrates and raising the risk of dose-dependent toxicity."
+  },
+  {
+    "id": "q-pharm-008",
+    "question": "A neonate treated with chloramphenicol develops cardiovascular collapse and an ashen-gray skin color. What is the underlying mechanism?",
+    "options": [
+      "Immature renal clearance of the drug",
+      "Immature hepatic glucuronidation leading to drug accumulation",
+      "An IgE-mediated hypersensitivity reaction",
+      "Direct cardiotoxicity unrelated to metabolism"
+    ],
+    "answer": 1,
+    "explanation": "Neonates have immature UDP-glucuronosyltransferase activity, impairing chloramphenicol glucuronidation and clearance, leading to drug accumulation and 'gray baby syndrome.'"
+  },
+  {
+    "id": "q-pharm-009",
+    "question": "Which class of oral diabetes medication stimulates pancreatic insulin release independent of glucose levels, carrying the highest hypoglycemia risk?",
+    "options": [
+      "Metformin",
+      "Sulfonylureas",
+      "SGLT2 inhibitors",
+      "GLP-1 receptor agonists"
+    ],
+    "answer": 1,
+    "explanation": "Sulfonylureas close pancreatic beta-cell K-ATP channels, triggering insulin release regardless of ambient glucose — the main reason they carry a meaningfully higher hypoglycemia risk than metformin, SGLT2 inhibitors, or GLP-1 agonists."
   }
 ]
