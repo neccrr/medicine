@@ -1,5 +1,6 @@
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 import { STORAGE_KEYS } from "../lib/storage";
+import { recordActivity } from "../lib/activity";
 import { useLocalStorage } from "./useLocalStorage";
 
 export function useQuizProgress(quizId: string) {
@@ -24,6 +25,7 @@ export function useQuizProgress(quizId: string) {
       missedIds,
     };
     setHistory((prev) => [...prev, attempt]);
+    recordActivity();
     return attempt;
   };
 

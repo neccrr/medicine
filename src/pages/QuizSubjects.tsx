@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { quizBanks, quizSubjects } from "../lib/content";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
+import { SubjectBadge } from "../components/SubjectBadge";
 import type { QuizAttempt } from "../types/content";
 
 export function QuizSubjects() {
@@ -19,7 +20,10 @@ export function QuizSubjects() {
 
           return (
             <Link key={subject.id} to={`/quizzes/${subject.id}`} className="nav-card">
-              <h2>{subject.label}</h2>
+              <div className="nav-card-header">
+                <SubjectBadge id={subject.id} label={subject.label} />
+                <h2>{subject.label}</h2>
+              </div>
               <p>
                 {bank.length} questions
                 {last && (

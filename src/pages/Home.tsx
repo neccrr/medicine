@@ -29,6 +29,10 @@ export function Home() {
           <h2>Quizzes</h2>
           <p>Multiple-choice question banks with instant scoring and explanations.</p>
         </Link>
+        <Link to="/ebooks" className="nav-card">
+          <h2>Ebooks</h2>
+          <p>Short, chaptered readers for deeper dives by subject.</p>
+        </Link>
         <Link to="/summaries" className="nav-card">
           <h2>Summaries</h2>
           <p>High-yield written summaries by subject.</p>

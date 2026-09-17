@@ -1,9 +1,12 @@
 import { useRef, useState } from "react";
 import { exportAllProgress, importAllProgress } from "../lib/storage";
+import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
+import { ActivityHeatmap } from "../components/ActivityHeatmap";
 
 export function Progress() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState("");
+  const [activityDays, setActivityDays] = useState<string[]>(() => getActivityDays());
 
   const handleExport = () => {
     const data = exportAllProgress();
@@ -27,6 +30,7 @@ export function Progress() {
       const text = await file.text();
       const data = JSON.parse(text);
       importAllProgress(data);
+      setActivityDays(getActivityDays());
       setMessage("Progress imported. Reload any open pages to see updated stats.");
     } catch {
       setMessage("Could not read that file — is it a valid export?");
@@ -35,6 +39,9 @@ export function Progress() {
     }
   };
 
+  const streak = getCurrentStreak(activityDays);
+  const longest = getLongestStreak(activityDays);
+
   return (
     <section className="page">
       <h1>Progress</h1>
@@ -42,6 +49,27 @@ export function Progress() {
         Everything lives in this browser's local storage — nothing is sent to a
         server. Export a backup, or move your progress to another device.
       </p>
+
+      <div className="streak-stats">
+        <div className="stat-tile">
+          <span className="stat-label">Current streak</span>
+          <span className="stat-value">{streak}</span>
+        </div>
+        <div className="stat-tile">
+          <span className="stat-label">Longest streak</span>
+          <span className="stat-value">{longest}</span>
+        </div>
+        <div className="stat-tile">
+          <span className="stat-label">Total study days</span>
+          <span className="stat-value">{activityDays.length}</span>
+        </div>
+      </div>
+
+      {activityDays.length > 0 && (
+        <div className="heatmap-wrapper">
+          <ActivityHeatmap days={activityDays} />
+        </div>
+      )}
 
       <div className="progress-actions">
         <button className="btn" onClick={handleExport}>

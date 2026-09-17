@@ -1,22 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { flashcardDecks } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
 
 const GRADES = [
-  { quality: 0, label: "Blackout", hint: "No idea" },
-  { quality: 2, label: "Hard", hint: "Barely recalled" },
-  { quality: 3, label: "Okay", hint: "Recalled with effort" },
-  { quality: 4, label: "Good", hint: "Recalled easily" },
-  { quality: 5, label: "Easy", hint: "Instant recall" },
+  { quality: 0, key: "1", label: "Blackout", hint: "No idea" },
+  { quality: 2, key: "2", label: "Hard", hint: "Barely recalled" },
+  { quality: 3, key: "3", label: "Okay", hint: "Recalled with effort" },
+  { quality: 4, key: "4", label: "Good", hint: "Recalled easily" },
+  { quality: 5, key: "5", label: "Easy", hint: "Instant recall" },
 ];
 
 export function FlashcardStudy() {
   const { subjectId = "" } = useParams();
   const deck = flashcardDecks[subjectId] ?? [];
-  const { dueCards, grade, stats } = useSpacedRepetition(subjectId, deck);
+  const { dueCards, grade, stats, hardestCards } = useSpacedRepetition(subjectId, deck);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [session, setSession] = useState({ reviewed: 0, lapses: 0 });
+  const [extraReview, setExtraReview] = useState(false);
+
+  const queue = dueCards.length > 0 ? dueCards : deck;
+  const card = queue[index % queue.length];
+  const sessionDone = dueCards.length === 0 && !extraReview;
+
+  const handleGrade = (quality: number) => {
+    grade(card.id, quality);
+    setSession((s) => ({
+      reviewed: s.reviewed + 1,
+      lapses: s.lapses + (quality < 3 ? 1 : 0),
+    }));
+    setFlipped(false);
+    setIndex((i) => i + 1);
+  };
+
+  useEffect(() => {
+    if (sessionDone) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLElement && ["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
+        return;
+      }
+      if (!flipped && (e.code === "Space" || e.key === "Enter")) {
+        e.preventDefault();
+        setFlipped(true);
+        return;
+      }
+      if (flipped) {
+        const matched = GRADES.find((g) => g.key === e.key);
+        if (matched) {
+          e.preventDefault();
+          handleGrade(matched.quality);
+        }
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flipped, sessionDone, card?.id]);
 
   if (deck.length === 0) {
     return (
@@ -26,16 +66,6 @@ export function FlashcardStudy() {
       </section>
     );
   }
-
-  const queue = dueCards.length > 0 ? dueCards : deck;
-  const card = queue[index % queue.length];
-  const sessionDone = dueCards.length === 0;
-
-  const handleGrade = (quality: number) => {
-    grade(card.id, quality);
-    setFlipped(false);
-    setIndex((i) => i + 1);
-  };
 
   return (
     <section className="page">
@@ -49,18 +79,68 @@ export function FlashcardStudy() {
 
       {sessionDone ? (
         <div className="flashcard-empty">
+          {session.reviewed > 0 && (
+            <div className="session-summary">
+              <h2>Session complete</h2>
+              <div className="session-stats">
+                <div>
+                  <strong>{session.reviewed}</strong>
+                  <span>reviewed</span>
+                </div>
+                <div>
+                  <strong>{session.reviewed - session.lapses}</strong>
+                  <span>recalled</span>
+                </div>
+                <div>
+                  <strong>{session.lapses}</strong>
+                  <span>missed</span>
+                </div>
+              </div>
+            </div>
+          )}
           <p>Nothing due right now — nice work. Come back later, or review anyway.</p>
-          <button className="btn" onClick={() => setIndex(0)}>
+          <button
+            className="btn"
+            onClick={() => {
+              setIndex(0);
+              setExtraReview(true);
+              setSession({ reviewed: 0, lapses: 0 });
+            }}
+          >
             Review anyway
           </button>
+
+          {hardestCards.length > 0 && (
+            <div className="hardest-cards">
+              <h3>Your hardest cards</h3>
+              <ul>
+                {hardestCards.map((c) => (
+                  <li key={c.id}>{c.front}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       ) : (
         <div className="flashcard-session">
-          <div className="flashcard" onClick={() => setFlipped((f) => !f)}>
-            <p className="flashcard-face">{flipped ? card.back : card.front}</p>
-            <span className="flashcard-hint">
-              {flipped ? "Answer" : "Tap to reveal"}
-            </span>
+          <div
+            className={flipped ? "flashcard flipped" : "flashcard"}
+            onClick={() => setFlipped((f) => !f)}
+            role="button"
+            tabIndex={0}
+            aria-pressed={flipped}
+            aria-label={flipped ? "Showing answer, click to show question" : "Showing question, click to reveal answer"}
+          >
+            <div className="flashcard-inner">
+              <div className="flashcard-face flashcard-front">
+                <p>{card.front}</p>
+                <span className="flashcard-hint">Space to reveal</span>
+              </div>
+              <div className="flashcard-face flashcard-back">
+                <p>{card.back}</p>
+                <span className="flashcard-hint">Answer</span>
+              </div>
+            </div>
           </div>
 
           {card.tags.length > 0 && (
@@ -80,9 +160,10 @@ export function FlashcardStudy() {
                   key={g.quality}
                   className="btn btn-grade"
                   onClick={() => handleGrade(g.quality)}
-                  title={g.hint}
+                  title={`${g.hint} (press ${g.key})`}
                 >
                   {g.label}
+                  <span className="key-hint">{g.key}</span>
                 </button>
               ))}
             </div>

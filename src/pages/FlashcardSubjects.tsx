@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { flashcardDecks, flashcardSubjects } from "../lib/content";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
+import { SubjectBadge } from "../components/SubjectBadge";
 import type { CardStateMap } from "../types/content";
 
 export function FlashcardSubjects() {
@@ -22,7 +23,10 @@ export function FlashcardSubjects() {
 
           return (
             <Link key={subject.id} to={`/flashcards/${subject.id}`} className="nav-card">
-              <h2>{subject.label}</h2>
+              <div className="nav-card-header">
+                <SubjectBadge id={subject.id} label={subject.label} />
+                <h2>{subject.label}</h2>
+              </div>
               <p>
                 {deck.length} cards · <strong>{due} due</strong>
               </p>

@@ -2,17 +2,21 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { quizBanks } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
-import type { QuizAttempt } from "../types/content";
+import { ScoreSparkline } from "../components/ScoreSparkline";
+import type { QuizAttempt, QuizQuestion } from "../types/content";
 
 export function QuizPlay() {
   const { subjectId = "" } = useParams();
-  const bank = quizBanks[subjectId] ?? [];
-  const { recordAttempt } = useQuizProgress(subjectId);
+  const fullBank = quizBanks[subjectId] ?? [];
+  const { history, recordAttempt } = useQuizProgress(subjectId);
+  const [missedOnlyBank, setMissedOnlyBank] = useState<QuizQuestion[] | null>(null);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState<QuizAttempt | null>(null);
 
-  if (bank.length === 0) {
+  const bank = missedOnlyBank ?? fullBank;
+
+  if (fullBank.length === 0) {
     return (
       <section className="page">
         <p>Unknown subject.</p>
@@ -32,18 +36,33 @@ export function QuizPlay() {
     setSubmitted(true);
   };
 
-  const handleRetry = () => {
+  const resetTo = (nextBank: QuizQuestion[] | null) => {
+    setMissedOnlyBank(nextBank);
     setAnswers({});
     setSubmitted(false);
     setResult(null);
   };
+
+  const missedQuestions = result
+    ? bank.filter((q) => result.missedIds.includes(q.id))
+    : [];
 
   return (
     <section className="page">
       <Link to="/quizzes" className="back-link">
         ← All quizzes
       </Link>
-      <h1>{subjectId}</h1>
+      <div className="quiz-header">
+        <div>
+          <h1>{subjectId}</h1>
+          {missedOnlyBank && <p className="subtitle">Reviewing missed questions only</p>}
+        </div>
+        {history.length >= 2 && !missedOnlyBank && (
+          <div className="quiz-trend" title="Score trend across recent attempts">
+            <ScoreSparkline history={history} />
+          </div>
+        )}
+      </div>
 
       {submitted && result && (
         <div className="quiz-result">
@@ -55,13 +74,14 @@ export function QuizPlay() {
         {bank.map((q, qi) => {
           const selected = answers[q.id];
           const isCorrect = selected === q.answer;
+          const questionLabelId = `question-${q.id}`;
 
           return (
             <li key={q.id} className="quiz-question">
-              <p className="quiz-question-text">
+              <p className="quiz-question-text" id={questionLabelId}>
                 {qi + 1}. {q.question}
               </p>
-              <div className="quiz-options">
+              <div className="quiz-options" role="radiogroup" aria-labelledby={questionLabelId}>
                 {q.options.map((opt, oi) => {
                   let cls = "quiz-option";
                   if (selected === oi) cls += " selected";
@@ -74,6 +94,8 @@ export function QuizPlay() {
                       className={cls}
                       onClick={() => selectAnswer(q.id, oi)}
                       disabled={submitted}
+                      role="radio"
+                      aria-checked={selected === oi}
                     >
                       {opt}
                     </button>
@@ -81,7 +103,7 @@ export function QuizPlay() {
                 })}
               </div>
               {submitted && (
-                <p className={`quiz-explanation ${isCorrect ? "correct" : "incorrect"}`}>
+                <p className={`quiz-explanation ${isCorrect ? "correct" : "incorrect"}`} role="status">
                   {isCorrect ? "Correct. " : "Missed. "}
                   {q.explanation}
                 </p>
@@ -100,9 +122,16 @@ export function QuizPlay() {
           Submit ({Object.keys(answers).length}/{bank.length} answered)
         </button>
       ) : (
-        <button className="btn" onClick={handleRetry}>
-          Retry
-        </button>
+        <div className="quiz-retry-row">
+          <button className="btn btn-secondary" onClick={() => resetTo(null)}>
+            Retry full quiz
+          </button>
+          {missedQuestions.length > 0 && (
+            <button className="btn" onClick={() => resetTo(missedQuestions)}>
+              Review missed only ({missedQuestions.length})
+            </button>
+          )}
+        </div>
       )}
     </section>
   );

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { summarySubjects } from "../lib/content";
+import { SubjectBadge } from "../components/SubjectBadge";
 
 export function Summaries() {
   return (
@@ -9,7 +10,10 @@ export function Summaries() {
       <div className="card-grid">
         {summarySubjects.map((subject) => (
           <Link key={subject.id} to={`/summaries/${subject.id}`} className="nav-card">
-            <h2>{subject.label}</h2>
+            <div className="nav-card-header">
+              <SubjectBadge id={subject.id} label={subject.label} />
+              <h2>{subject.label}</h2>
+            </div>
           </Link>
         ))}
       </div>

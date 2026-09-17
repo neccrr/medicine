@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { CardState, CardStateMap, Flashcard } from "../types/content";
 import { INITIAL_CARD_STATE, isDue, reviewCard } from "../lib/sm2";
 import { STORAGE_KEYS } from "../lib/storage";
+import { recordActivity } from "../lib/activity";
 import { useLocalStorage } from "./useLocalStorage";
 
 export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
@@ -24,6 +25,7 @@ export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
       ...prev,
       [cardId]: reviewCard(prev[cardId] ?? INITIAL_CARD_STATE, quality),
     }));
+    recordActivity();
   };
 
   const stats = useMemo(() => {
@@ -35,5 +37,22 @@ export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
     return { total, seen, mastered, due: dueCards.length };
   }, [cards, stateMap, dueCards.length]);
 
-  return { stateFor, dueCards, grade, stats };
+  const hardestCards = useMemo(
+    () =>
+      cards
+        .filter((c) => (stateMap[c.id]?.lapses ?? 0) > 0)
+        .sort((a, b) => {
+          const lapseDiff =
+            (stateMap[b.id]?.lapses ?? 0) - (stateMap[a.id]?.lapses ?? 0);
+          if (lapseDiff !== 0) return lapseDiff;
+          return (
+            (stateMap[a.id]?.easeFactor ?? 2.5) -
+            (stateMap[b.id]?.easeFactor ?? 2.5)
+          );
+        })
+        .slice(0, 5),
+    [cards, stateMap],
+  );
+
+  return { stateFor, dueCards, grade, stats, hardestCards };
 }

@@ -30,9 +30,25 @@ export interface QuizAttempt {
   missedIds: string[];
 }
 
-export type QuizProgressMap = Record<string, QuizAttempt>;
-
 export interface Subject {
   id: string;
   label: string;
 }
+
+export interface EbookChapterMeta {
+  id: string;
+  title: string;
+}
+
+export interface EbookMeta {
+  title: string;
+  description: string;
+  chapters: EbookChapterMeta[];
+}
+
+export interface ReadingPosition {
+  chapterId: string;
+  scroll: number;
+  updatedAt: string;
+}
+

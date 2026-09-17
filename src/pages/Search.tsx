@@ -1,41 +1,12 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
-import { flashcardDecks, quizBanks } from "../lib/content";
-
-interface SearchDoc {
-  type: "flashcard" | "quiz";
-  subjectId: string;
-  id: string;
-  title: string;
-  detail: string;
-}
+import { buildContentDocs } from "../lib/searchIndex";
 
 export function Search() {
   const [query, setQuery] = useState("");
 
-  const docs = useMemo<SearchDoc[]>(() => {
-    const flashcardDocs = Object.entries(flashcardDecks).flatMap(
-      ([subjectId, cards]) =>
-        cards.map((card) => ({
-          type: "flashcard" as const,
-          subjectId,
-          id: card.id,
-          title: card.front,
-          detail: card.back,
-        })),
-    );
-    const quizDocs = Object.entries(quizBanks).flatMap(([subjectId, bank]) =>
-      bank.map((q) => ({
-        type: "quiz" as const,
-        subjectId,
-        id: q.id,
-        title: q.question,
-        detail: q.explanation,
-      })),
-    );
-    return [...flashcardDocs, ...quizDocs];
-  }, []);
+  const docs = useMemo(() => buildContentDocs(), []);
 
   const fuse = useMemo(
     () =>
@@ -61,18 +32,13 @@ export function Search() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         autoFocus
+        aria-label="Search flashcards and quizzes"
       />
 
       <ul className="search-results">
         {results.map((doc) => (
           <li key={`${doc.type}-${doc.id}`} className="search-result">
-            <Link
-              to={
-                doc.type === "flashcard"
-                  ? `/flashcards/${doc.subjectId}`
-                  : `/quizzes/${doc.subjectId}`
-              }
-            >
+            <Link to={doc.to}>
               <span className="search-result-type">{doc.type}</span>
               <p className="search-result-title">{doc.title}</p>
               <p className="search-result-detail">{doc.detail}</p>

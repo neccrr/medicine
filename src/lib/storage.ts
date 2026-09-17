@@ -20,6 +20,9 @@ export const STORAGE_KEYS = {
   cardState: (deckId: string) => `medicine:flashcards:${deckId}`,
   quizProgress: (quizId: string) => `medicine:quiz:${quizId}`,
   lastRead: (subjectId: string) => `medicine:lastread:${subjectId}`,
+  ebookPosition: (subjectId: string) => `medicine:ebook:${subjectId}`,
+  theme: "medicine:theme",
+  activity: "medicine:activity",
 } as const;
 
 const PREFIX = "medicine:";
