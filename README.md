@@ -31,6 +31,7 @@ no runtime fetch.
 content/
   flashcards/{subject}/deck.json   → Flashcard[]  { id, front, back, tags }
   quizzes/{subject}/bank.json      → QuizQuestion[] { id, question, options, answer, explanation }
+  quizzes/{subject}/*.html         → any self-contained interactive quiz dropped here — no code changes needed
   ebooks/{subject}/meta.json       → { title, description, chapters: [{id,title}], resources?: [{title,url}] }
   ebooks/{subject}/chapter-N.md    → Markdown, one file per chapter
   ebooks/{subject}/*.pdf           → any PDF dropped here — no code changes needed
@@ -64,6 +65,20 @@ An ebook subject can mix any combination of:
 `content/ebooks/cardiology` demonstrates chapters + resources;
 `content/ebooks/pharmacology` demonstrates a PDF-only book.
 
+### Quizzes: question banks and interactive HTML games
+
+A quiz subject can be a `bank.json` (multiple-choice, scored and tracked by
+the app's own quiz engine), a self-contained interactive `.html` file (its
+own UI/scoring — e.g. an image-identification game), or both. Drop any
+`.html` file into `content/quizzes/{subject}/` and it's picked up
+automatically: bundled as a real static asset, listed on the Quizzes page,
+and rendered inline via an embedded iframe with an "open in new tab"
+fallback — same treatment as ebook PDFs. A subject folder that *only* has an
+HTML game (no `bank.json`) still gets a quiz entry, titled from the folder
+name.
+
+`content/quizzes/histology` demonstrates an HTML-only quiz game.
+
 ## Client-side logic
 
 - **`src/lib/sm2.ts`** — SM-2 spaced-repetition algorithm. Grading a card
@@ -95,7 +110,7 @@ An ebook subject can mix any combination of:
 | `/flashcards`                | Subject list with due-card counts                |
 | `/flashcards/:subjectId`     | SM-2 study session — flip animation, keyboard shortcuts (space to flip, 1–5 to grade), session summary, hardest-cards list |
 | `/quizzes`                   | Subject list with last score                     |
-| `/quizzes/:subjectId`        | Quiz with instant scoring, missed-only retry, score trend sparkline |
+| `/quizzes/:subjectId`        | Quiz with instant scoring, missed-only retry, score trend sparkline (or an embedded interactive HTML quiz game) |
 | `/ebooks`                    | Ebook list with resume position                  |
 | `/ebooks/:subjectId/:chapterId` | Chapter reader with table of contents, prev/next nav |
 | `/summaries`                 | Subject list                                     |

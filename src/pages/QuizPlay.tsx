@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { quizBanks } from "../lib/content";
+import { quizBanks, quizGames } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
 import { ScoreSparkline } from "../components/ScoreSparkline";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
@@ -8,6 +8,7 @@ import type { QuizAttempt, QuizQuestion } from "../types/content";
 export function QuizPlay() {
   const { subjectId = "" } = useParams();
   const fullBank = quizBanks[subjectId] ?? [];
+  const games = quizGames[subjectId] ?? [];
   const { history, recordAttempt } = useQuizProgress(subjectId);
   const [missedOnlyBank, setMissedOnlyBank] = useState<QuizQuestion[] | null>(null);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -16,11 +17,35 @@ export function QuizPlay() {
 
   const bank = missedOnlyBank ?? fullBank;
 
-  if (fullBank.length === 0) {
+  if (fullBank.length === 0 && games.length === 0) {
     return (
       <section className="page">
         <p>Unknown subject.</p>
         <Link to="/quizzes">Back to quizzes</Link>
+      </section>
+    );
+  }
+
+  if (fullBank.length === 0) {
+    return (
+      <section className="page">
+        <Link to="/quizzes" className="back-link">
+          ← All quizzes
+        </Link>
+        <div className="quiz-header">
+          <h1>{subjectId}</h1>
+        </div>
+        {games.map((game) => (
+          <div key={game.url} className="pdf-viewer">
+            <div className="pdf-viewer-bar">
+              <p>{game.name}</p>
+              <a href={game.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                Open in new tab
+              </a>
+            </div>
+            <iframe src={game.url} title={game.name} className="pdf-frame" />
+          </div>
+        ))}
       </section>
     );
   }

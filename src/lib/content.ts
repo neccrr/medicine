@@ -32,6 +32,13 @@ const ebookPdfModules = import.meta.glob<string>("../../content/ebooks/*/*.pdf",
   import: "default",
   query: "?url",
 });
+// Self-contained interactive HTML quizzes (their own UI/scoring, e.g. an image-ID game) dropped
+// into a subject's folder are exposed as a URL and embedded via iframe — no bank.json needed.
+const quizGameModules = import.meta.glob<string>("../../content/quizzes/*/*.html", {
+  eager: true,
+  import: "default",
+  query: "?url",
+});
 
 function subjectFromPath(path: string): string {
   const match = path.match(/\/([^/]+)\/(deck|bank|meta)\.json$/);
@@ -56,6 +63,16 @@ function ebookPdfSubject(path: string): string {
 function pdfName(path: string): string {
   const match = path.match(/([^/]+)\.pdf$/);
   return match ? match[1].replace(/[-_]/g, " ") : "PDF";
+}
+
+function quizGameSubject(path: string): string {
+  const match = path.match(/quizzes\/([^/]+)\/[^/]+\.html$/);
+  return match ? match[1] : path;
+}
+
+function htmlName(path: string): string {
+  const match = path.match(/([^/]+)\.html$/);
+  return match ? match[1].replace(/[-_]/g, " ") : "Quiz";
 }
 
 function labelize(id: string): string {
@@ -89,7 +106,23 @@ export const flashcardSubjects: Subject[] = Object.keys(flashcardDecks)
   .sort()
   .map((id) => ({ id, label: labelize(id) }));
 
-export const quizSubjects: Subject[] = Object.keys(quizBanks)
+export interface QuizGame {
+  name: string;
+  url: string;
+}
+
+export const quizGames: Record<string, QuizGame[]> = {};
+for (const [path, url] of Object.entries(quizGameModules)) {
+  const subjectId = quizGameSubject(path);
+  (quizGames[subjectId] ??= []).push({ name: htmlName(path), url });
+}
+for (const list of Object.values(quizGames)) {
+  list.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export const quizSubjects: Subject[] = Array.from(
+  new Set([...Object.keys(quizBanks), ...Object.keys(quizGames)]),
+)
   .sort()
   .map((id) => ({ id, label: labelize(id) }));
 
