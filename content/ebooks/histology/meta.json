@@ -1,0 +1,13 @@
+{
+  "title": "Histology Foundations",
+  "description": "A short primer on the four basic tissue types and how to recognize them under the microscope.",
+  "chapters": [
+    { "id": "chapter-01", "title": "Epithelial Tissue" },
+    { "id": "chapter-02", "title": "Connective Tissue & Blood" },
+    { "id": "chapter-03", "title": "Muscle & Nervous Tissue" }
+  ],
+  "resources": [
+    { "title": "SUNY Downstate Histology Guide", "url": "https://www.downstate.edu/directory/histology-images/" },
+    { "title": "University of Michigan Histology Atlas", "url": "https://histology.medicine.umich.edu/" }
+  ]
+}

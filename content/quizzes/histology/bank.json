@@ -1,0 +1,62 @@
+[
+  {
+    "id": "q-histo-001",
+    "question": "A biopsy shows a single layer of flattened, scale-like cells lining a blood vessel. What type of epithelium is this?",
+    "options": [
+      "Simple squamous epithelium",
+      "Simple cuboidal epithelium",
+      "Stratified squamous epithelium",
+      "Transitional epithelium"
+    ],
+    "answer": 0,
+    "explanation": "Simple squamous epithelium — a single layer of flat cells — lines blood vessels (where it's called endothelium) and body cavities, well suited for diffusion and filtration."
+  },
+  {
+    "id": "q-histo-002",
+    "question": "Which connective tissue cell releases histamine and heparin and is filled with metachromatic granules?",
+    "options": [
+      "Fibroblast",
+      "Macrophage",
+      "Mast cell",
+      "Plasma cell"
+    ],
+    "answer": 2,
+    "explanation": "Mast cells store histamine and heparin in cytoplasmic granules and degranulate during allergic and inflammatory responses."
+  },
+  {
+    "id": "q-histo-003",
+    "question": "On a peripheral smear, a cell shows a bilobed nucleus and large, deep-purple/basophilic granules. Which cell is this most likely to be?",
+    "options": [
+      "Neutrophil",
+      "Eosinophil",
+      "Basophil",
+      "Lymphocyte"
+    ],
+    "answer": 2,
+    "explanation": "Basophils are the rarest granulocyte, identified by coarse, densely basophilic (dark purple) granules that often obscure the bilobed nucleus."
+  },
+  {
+    "id": "q-histo-004",
+    "question": "Which epithelium type lines the urinary bladder and is specialized to stretch as the organ fills?",
+    "options": [
+      "Simple columnar epithelium",
+      "Pseudostratified columnar epithelium",
+      "Transitional epithelium (urothelium)",
+      "Stratified cuboidal epithelium"
+    ],
+    "answer": 2,
+    "explanation": "Transitional epithelium (urothelium) lines the renal pelvis, ureters, and bladder; its dome-shaped surface cells flatten out to accommodate distension."
+  },
+  {
+    "id": "q-histo-005",
+    "question": "What is the primary distinguishing microscopic feature of cardiac muscle compared to skeletal muscle?",
+    "options": [
+      "Cardiac muscle is non-striated",
+      "Cardiac muscle fibers have intercalated discs and typically one central nucleus",
+      "Cardiac muscle fibers are multinucleated with peripheral nuclei",
+      "Cardiac muscle lacks mitochondria"
+    ],
+    "answer": 1,
+    "explanation": "Intercalated discs — specialized junctions containing gap junctions and desmosomes — electrically and mechanically couple cardiac fibers, which typically have one or two central nuclei, unlike skeletal muscle's peripheral, multinucleated pattern."
+  }
+]

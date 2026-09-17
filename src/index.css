@@ -1431,6 +1431,13 @@ kbd {
   padding-top: 0.5rem;
 }
 
+.quiz-game-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
 @keyframes pulse-correct {
   0% {
     transform: scale(1);

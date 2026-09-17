@@ -1,0 +1,50 @@
+[
+  {
+    "id": "histo-001",
+    "front": "What distinguishes simple from stratified epithelium?",
+    "back": "Simple epithelium is a single layer of cells resting on the basement membrane; stratified epithelium has two or more layers, named for the shape of the surface (apical) layer.",
+    "tags": ["epithelium", "classification"]
+  },
+  {
+    "id": "histo-002",
+    "front": "Where is pseudostratified ciliated columnar epithelium classically found?",
+    "back": "The respiratory tract (trachea, bronchi) — it looks multilayered because nuclei sit at different heights, but every cell actually touches the basement membrane.",
+    "tags": ["epithelium", "respiratory"]
+  },
+  {
+    "id": "histo-003",
+    "front": "What are the three main types of cartilage, and one defining feature of each?",
+    "back": "Hyaline (glassy matrix, articular surfaces/trachea), elastic (elastic fibers, ear/epiglottis), fibrocartilage (dense collagen I, intervertebral discs/menisci — no perichondrium).",
+    "tags": ["connective tissue", "cartilage"]
+  },
+  {
+    "id": "histo-004",
+    "front": "Which blood cell has no nucleus and why does that matter for identification?",
+    "back": "The erythrocyte (red blood cell) — its biconcave, anucleate shape (~7.5 µm) makes it the easiest cell to spot on a peripheral smear.",
+    "tags": ["blood", "erythrocyte"]
+  },
+  {
+    "id": "histo-005",
+    "front": "What is the key structural difference between skeletal and cardiac muscle under the microscope?",
+    "back": "Both are striated, but skeletal muscle fibers are long, multinucleated, with peripheral nuclei, while cardiac fibers are shorter, branching, with one or two central nuclei and intercalated discs.",
+    "tags": ["muscle", "histology"]
+  },
+  {
+    "id": "histo-006",
+    "front": "What cell type is responsible for laying down bone matrix, and what is it called once it becomes trapped in that matrix?",
+    "back": "Osteoblasts secrete osteoid; once surrounded by mineralized matrix they mature into osteocytes, housed in lacunae and linked by canaliculi.",
+    "tags": ["bone", "connective tissue"]
+  },
+  {
+    "id": "histo-007",
+    "front": "What is the functional unit of a lymph node responsible for antibody production?",
+    "back": "The germinal center of a lymphoid follicle (cortex), where activated B cells proliferate and differentiate into plasma cells.",
+    "tags": ["lymphatic", "immune"]
+  },
+  {
+    "id": "histo-008",
+    "front": "Which granulocyte has bilobed nuclei and bright eosinophilic (red-orange) granules, and what is it associated with?",
+    "back": "The eosinophil — elevated counts are associated with parasitic infections and allergic/atopic reactions.",
+    "tags": ["blood", "granulocyte"]
+  }
+]

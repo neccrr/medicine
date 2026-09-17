@@ -89,6 +89,16 @@ export function QuizPlay() {
         )}
       </div>
 
+      {games.length > 0 && (
+        <div className="quiz-game-links">
+          {games.map((game) => (
+            <a key={game.url} href={game.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+              Also try: {game.name} ↗
+            </a>
+          ))}
+        </div>
+      )}
+
       {submitted && result && (
         <div className="quiz-result">
           Score: <strong>{result.score}/{result.total}</strong>
