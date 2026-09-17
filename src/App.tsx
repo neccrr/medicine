@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Navbar } from "./components/Navbar";
+import { Sidebar } from "./components/Sidebar";
 import { CommandPalette } from "./components/CommandPalette";
 import { useCardSpotlight } from "./hooks/useCardSpotlight";
 import { Home } from "./pages/Home";
@@ -22,24 +22,28 @@ export default function App() {
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <Navbar />
-      <CommandPalette />
-      <main className="main" id="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/flashcards" element={<FlashcardSubjects />} />
-          <Route path="/flashcards/:subjectId" element={<FlashcardStudy />} />
-          <Route path="/quizzes" element={<QuizSubjects />} />
-          <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
-          <Route path="/summaries" element={<Summaries />} />
-          <Route path="/summaries/:subjectId" element={<SummaryDetail />} />
-          <Route path="/ebooks" element={<EbookSubjects />} />
-          <Route path="/ebooks/:subjectId" element={<EbookReader />} />
-          <Route path="/ebooks/:subjectId/:chapterId" element={<EbookReader />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/progress" element={<Progress />} />
-        </Routes>
-      </main>
+      <div className="app-shell">
+        <Sidebar />
+        <div className="app-content">
+          <CommandPalette />
+          <main className="main" id="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/flashcards" element={<FlashcardSubjects />} />
+              <Route path="/flashcards/:subjectId" element={<FlashcardStudy />} />
+              <Route path="/quizzes" element={<QuizSubjects />} />
+              <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
+              <Route path="/summaries" element={<Summaries />} />
+              <Route path="/summaries/:subjectId" element={<SummaryDetail />} />
+              <Route path="/ebooks" element={<EbookSubjects />} />
+              <Route path="/ebooks/:subjectId" element={<EbookReader />} />
+              <Route path="/ebooks/:subjectId/:chapterId" element={<EbookReader />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/progress" element={<Progress />} />
+            </Routes>
+          </main>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }
