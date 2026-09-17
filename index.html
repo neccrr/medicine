@@ -17,9 +17,133 @@
       rel="stylesheet"
     />
     <title>Medicine — Study Tool</title>
+    <style>
+      /* Critical, inlined so the splash paints before any bundled CSS/JS loads. */
+      #app-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.9rem;
+        background-color: #0a0f0d;
+        background-image:
+          radial-gradient(ellipse 900px 520px at 12% -8%, rgba(45, 212, 167, 0.14), transparent 60%),
+          linear-gradient(rgba(45, 212, 167, 0.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(45, 212, 167, 0.07) 1px, transparent 1px);
+        background-size: auto, 32px 32px, 32px 32px;
+        color: #eef4f1;
+        font-family: "Archivo", -apple-system, "Segoe UI", sans-serif;
+        opacity: 1;
+        transition: opacity 0.4s ease;
+      }
+      @media (prefers-color-scheme: light) {
+        #app-splash {
+          background-color: #f5f2e8;
+          background-image:
+            radial-gradient(ellipse 900px 520px at 12% -8%, rgba(15, 143, 112, 0.1), transparent 60%),
+            linear-gradient(rgba(15, 143, 112, 0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(15, 143, 112, 0.08) 1px, transparent 1px);
+          color: #16211b;
+        }
+      }
+      #app-splash.app-splash-hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #app-splash svg {
+        color: #2dd4a7;
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        animation: app-splash-draw 1.1s ease-out 0.1s forwards;
+      }
+      @media (prefers-color-scheme: light) {
+        #app-splash svg {
+          color: #0f8f70;
+        }
+      }
+      #app-splash .app-splash-word {
+        font-family: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
+        font-weight: 600;
+        font-size: 1.3rem;
+        letter-spacing: -0.01em;
+        opacity: 0;
+        animation: app-splash-fade 0.5s ease 0.5s forwards;
+      }
+      #app-splash .app-splash-kicker {
+        font-family: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #2dd4a7;
+        opacity: 0;
+        animation: app-splash-fade 0.5s ease 0.65s forwards;
+      }
+      @media (prefers-color-scheme: light) {
+        #app-splash .app-splash-kicker {
+          color: #0f8f70;
+        }
+      }
+      @keyframes app-splash-draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes app-splash-fade {
+        to {
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #app-splash,
+        #app-splash svg,
+        #app-splash .app-splash-word,
+        #app-splash .app-splash-kicker {
+          animation: none !important;
+          transition: none !important;
+          opacity: 1 !important;
+          stroke-dashoffset: 0 !important;
+        }
+      }
+    </style>
   </head>
   <body>
+    <div id="app-splash" role="presentation" aria-hidden="true">
+      <svg viewBox="0 0 96 24" width="120" height="30" aria-hidden="true">
+        <path
+          d="M0 12h16l6-9 8 18 6-13 4 4h16l6-9 8 18 6-9h20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span class="app-splash-word">Medicine</span>
+      <span class="app-splash-kicker">Booting the monitor…</span>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (function () {
+        var start = Date.now();
+        var MIN_MS = 550;
+        function hide() {
+          var el = document.getElementById("app-splash");
+          if (!el) return;
+          var wait = Math.max(0, MIN_MS - (Date.now() - start));
+          setTimeout(function () {
+            el.classList.add("app-splash-hide");
+            setTimeout(function () {
+              el.remove();
+            }, 420);
+          }, wait);
+        }
+        if (document.readyState === "complete") hide();
+        else window.addEventListener("load", hide);
+      })();
+    </script>
   </body>
 </html>
