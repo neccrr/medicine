@@ -46,5 +46,41 @@
     "front": "Which granulocyte has bilobed nuclei and bright eosinophilic (red-orange) granules, and what is it associated with?",
     "back": "The eosinophil — elevated counts are associated with parasitic infections and allergic/atopic reactions.",
     "tags": ["blood", "granulocyte"]
+  },
+  {
+    "id": "histo-009",
+    "front": "What are the three modes of glandular secretion, and how do they differ?",
+    "back": "Merocrine (exocytosis, cell stays intact — e.g., eccrine sweat glands), apocrine (pinches off apical cytoplasm — e.g., mammary glands), and holocrine (whole cell ruptures and becomes the secretion — e.g., sebaceous glands).",
+    "tags": ["glands", "secretion"]
+  },
+  {
+    "id": "histo-010",
+    "front": "What is a desmosome and what is its function?",
+    "back": "A spot-like junction that anchors intermediate filaments (keratin) between adjacent cells, providing mechanical strength — abundant in tissues under mechanical stress like epidermis and cardiac muscle.",
+    "tags": ["cell junctions"]
+  },
+  {
+    "id": "histo-011",
+    "front": "What is a Kupffer cell?",
+    "back": "A resident macrophage of the liver sinusoids, part of the reticuloendothelial system, responsible for clearing pathogens and old red blood cells from portal blood.",
+    "tags": ["liver", "macrophage"]
+  },
+  {
+    "id": "histo-012",
+    "front": "What type of connective tissue makes up tendons, and how are its fibers arranged?",
+    "back": "Dense regular connective tissue — collagen fibers run in parallel bundles along the line of mechanical stress, maximizing tensile strength.",
+    "tags": ["connective tissue", "tendon"]
+  },
+  {
+    "id": "histo-013",
+    "front": "What do goblet cells secrete, and where are they found?",
+    "back": "Mucin (which hydrates into mucus); found scattered among columnar epithelial cells in the respiratory and GI tracts.",
+    "tags": ["epithelium", "secretion"]
+  },
+  {
+    "id": "histo-014",
+    "front": "What is the key histologic difference between exocrine and endocrine glands?",
+    "back": "Exocrine glands retain a duct that delivers secretions to an epithelial surface; endocrine glands lose their duct during development and secrete hormones directly into the bloodstream via surrounding capillaries.",
+    "tags": ["glands", "classification"]
   }
 ]

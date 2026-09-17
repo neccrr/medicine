@@ -1184,6 +1184,50 @@ kbd, .mono {
   color: var(--text);
 }
 
+.summary-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.summary-content th,
+.summary-content td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.summary-content th {
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.summary-content figure.diagram {
+  margin: 1.75rem 0;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.summary-content figure.diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.summary-content figure.diagram figcaption {
+  margin-top: 0.85rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
 .search-input {
   width: 100%;
   padding: 0.75rem 1rem;

@@ -46,5 +46,41 @@
     "front": "What lab test monitors warfarin therapy?",
     "back": "PT/INR.",
     "tags": ["anticoagulation", "monitoring"]
+  },
+  {
+    "id": "pharm-009",
+    "front": "What is the mechanism of beta-blockers in angina and heart failure?",
+    "back": "Block beta-1 adrenergic receptors, reducing heart rate, contractility, and myocardial oxygen demand.",
+    "tags": ["cardiovascular", "mechanism"]
+  },
+  {
+    "id": "pharm-010",
+    "front": "What is the first-line treatment for anaphylaxis, and why intramuscular?",
+    "back": "Intramuscular epinephrine (anterolateral thigh) — IM injection into the vastus lateralis achieves faster, more reliable absorption than subcutaneous dosing.",
+    "tags": ["emergency", "anaphylaxis"]
+  },
+  {
+    "id": "pharm-011",
+    "front": "Why does grapefruit juice interact with many drugs?",
+    "back": "It inhibits intestinal CYP3A4, increasing bioavailability of drugs like statins and calcium channel blockers — raising the risk of toxicity.",
+    "tags": ["pharmacokinetics", "interactions"]
+  },
+  {
+    "id": "pharm-012",
+    "front": "What is the mechanism of proton pump inhibitors (e.g., omeprazole)?",
+    "back": "Irreversible inhibition of the H+/K+ ATPase ('proton pump') on gastric parietal cells, suppressing acid secretion.",
+    "tags": ["GI", "mechanism"]
+  },
+  {
+    "id": "pharm-013",
+    "front": "Which antibiotic causes 'gray baby syndrome' in neonates, and why?",
+    "back": "Chloramphenicol — neonates lack sufficient glucuronidation capacity to clear it, leading to drug accumulation, cardiovascular collapse, and ashen-gray skin.",
+    "tags": ["antibiotics", "toxicity"]
+  },
+  {
+    "id": "pharm-014",
+    "front": "What is the antidote for acute iron overdose?",
+    "back": "Deferoxamine, an iron chelator.",
+    "tags": ["toxicology", "antidote"]
   }
 ]

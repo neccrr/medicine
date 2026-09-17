@@ -29,3 +29,9 @@
 - **Neurons**: large cell body (soma) with a prominent nucleolus, dendrites, and a single axon; Nissl bodies (rough ER) in the cytoplasm.
 - **Lymph node**: cortex (B-cell follicles with germinal centers) surrounds the medulla (plasma cells, macrophages); paracortex holds T cells.
 - **Spleen**: white pulp (lymphoid tissue around a central arteriole — immune surveillance) vs. red pulp (sinusoids — filters and recycles old erythrocytes).
+
+## Glands & Cell Junctions
+- **Secretion modes**: merocrine (exocytosis, cell intact — eccrine sweat glands), apocrine (pinches off apical cytoplasm — mammary glands), holocrine (whole cell ruptures — sebaceous glands).
+- **Exocrine vs. endocrine**: exocrine glands keep a duct to an epithelial surface; endocrine glands lose the duct and secrete hormones straight into surrounding capillaries.
+- **Cell junctions**: tight junctions seal the paracellular space; desmosomes anchor intermediate filaments between cells (mechanical strength); gap junctions allow direct ion/small-molecule passage (electrical coupling); hemidesmosomes anchor cells to the basement membrane.
+- **Kupffer cells**: liver-resident macrophages lining the sinusoids, part of the reticuloendothelial system.
