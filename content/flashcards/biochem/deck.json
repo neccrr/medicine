@@ -148,5 +148,125 @@
     "front": "What bond links successive nucleotides together to form the DNA backbone?",
     "back": "A phosphodiester bond — the phosphate group bridges the C3' of one sugar to the C5' of the next sugar's phosphate. (A separate phosphoester bond links the phosphate to its own sugar's C5' hydroxyl.)",
     "tags": ["nucleotides", "molecular-biology"]
+  },
+  {
+    "id": "bio-026",
+    "front": "What is the one gene–one enzyme hypothesis, and how was it later broadened?",
+    "back": "Beadle and Tatum's hypothesis: a gene is a segment of genetic material that codes for one enzyme. It was later broadened to one gene–one polypeptide, since many genes code for non-enzyme proteins, or for just one subunit of a multi-subunit protein.",
+    "tags": ["genetics", "molecular-biology"]
+  },
+  {
+    "id": "bio-027",
+    "front": "What are the four landmark structural regions of a chromosome?",
+    "back": "Telomeres (protective caps at both ends), the centromere (the pinch point), and the two arms it divides the chromosome into: the short p arm and the long q arm.",
+    "tags": ["chromosome", "genetics"]
+  },
+  {
+    "id": "bio-028",
+    "front": "What is the relationship between a gene, DNA, and a chromosome?",
+    "back": "A gene is a segment of DNA that carries genetic information — the gene itself is DNA. DNA is the full-length molecule, of which genes are only certain coding segments. A chromosome is one long, packaged DNA molecule carrying many genes. Genes are definitely DNA; DNA is not necessarily genes.",
+    "tags": ["genetics", "chromosome"]
+  },
+  {
+    "id": "bio-029",
+    "front": "How many chromosomes does a person with Down syndrome have, and with Turner syndrome?",
+    "back": "Down syndrome (trisomy 21): 47 chromosomes (an extra copy of chromosome 21). Turner syndrome (monosomy X): 45 chromosomes (only one X, no Y). Normal human karyotype is 46 (23 pairs).",
+    "tags": ["chromosome", "clinical"]
+  },
+  {
+    "id": "bio-030",
+    "front": "What is a nucleosome, and why does DNA need this kind of packaging?",
+    "back": "A nucleosome is one turn of DNA wound around a cluster of eight histone proteins (a histone octamer) — like a bead on a string. DNA needs this packaging because a single cell's total DNA, stretched out, is dramatically longer than the nucleus it has to fit inside.",
+    "tags": ["chromosome", "genetics"]
+  },
+  {
+    "id": "bio-031",
+    "front": "What is a genome, and approximately how large is the human genome?",
+    "back": "A genome is the total amount of genetic information in an individual — for humans, the total DNA in the body. The human genome is about 3×10⁹ base pairs. Genome size varies enormously across species, roughly from 3×10⁷ to 3×10¹¹ base pairs.",
+    "tags": ["genome", "genetics"]
+  },
+  {
+    "id": "bio-032",
+    "front": "Roughly how long is the DNA in a single human cell if stretched end to end, and how does that compare across the whole body?",
+    "back": "About 2 meters per cell. With roughly 10¹⁴ cells in an adult body, total DNA length is about 2×10¹¹ km — far longer than the Earth's circumference (4×10⁴ km) and about 8 times the Earth–Moon distance. This illustrates the extraordinary degree of DNA compaction inside cells.",
+    "tags": ["genome", "genetics"]
+  },
+  {
+    "id": "bio-033",
+    "front": "What are the two types of DNA in a human cell, and where is each found?",
+    "back": "Chromosomal (nuclear) DNA, found in the nucleus of nucleated cells, and mitochondrial DNA (mtDNA), a separate, much smaller genome inside mitochondria.",
+    "tags": ["genetics", "cell-biology"]
+  },
+  {
+    "id": "bio-034",
+    "front": "Describe human mitochondrial DNA: size, shape, copy number, and what fraction of mitochondrial proteins it actually encodes.",
+    "back": "16,569 base pairs, a circular duplex, with 2–10 copies per mitochondrion (up to hundreds in some differentiating embryonic cells). It codes for mitochondrial tRNAs, rRNAs, and only a few mitochondrial proteins — more than 95% of mitochondrial proteins are actually encoded by nuclear DNA.",
+    "tags": ["genetics", "cell-biology"]
+  },
+  {
+    "id": "bio-035",
+    "front": "Does a mature human red blood cell contain DNA? What about a bird's red blood cell?",
+    "back": "No — mature mammalian red blood cells lose their nucleus during maturation and contain no DNA (which is why human DNA testing uses white blood cells, not red ones). Bird red blood cells stay nucleated and do contain DNA, so avian blood can be used directly for DNA testing.",
+    "tags": ["genetics", "clinical"]
+  },
+  {
+    "id": "bio-036",
+    "front": "What is the difference between DNA replication and PCR?",
+    "back": "Replication is DNA copying itself in vivo, inside a living cell, using the cell's own enzymes. PCR (polymerase chain reaction) is DNA copying done in vitro, in a lab machine — used for diagnostics and research rather than by the cell itself.",
+    "tags": ["pcr", "molecular-biology"]
+  },
+  {
+    "id": "bio-037",
+    "front": "Name the three stages of one PCR cycle, and roughly how much does the DNA quantity increase after n cycles?",
+    "back": "Denaturation (heat opens the double helix), annealing (primers bind the single strands), and extension (DNA polymerase builds new complementary strands). After n cycles, DNA quantity increases roughly 2ⁿ-fold — e.g. about 2³⁰-fold after 30 cycles.",
+    "tags": ["pcr", "molecular-biology"]
+  },
+  {
+    "id": "bio-038",
+    "front": "How does RT-PCR test for an RNA virus like SARS-CoV-2, when PCR itself only copies DNA?",
+    "back": "RT-PCR adds a reverse transcription step first, converting the viral RNA genome into DNA (the reverse of transcription). That DNA copy can then be amplified by ordinary PCR — RNA → reverse transcription → DNA → PCR amplification → detectable signal.",
+    "tags": ["pcr", "clinical"]
+  },
+  {
+    "id": "bio-039",
+    "front": "Compare Southern blot DNA testing to PCR-based DNA testing.",
+    "back": "Southern blot (no amplification) needs a relatively large amount of intact DNA and takes longer. PCR-based testing needs only a small amount of DNA, doesn't require it to be fully intact, and gives a rapid result — which is why PCR has largely displaced non-amplified methods clinically.",
+    "tags": ["pcr", "molecular-biology"]
+  },
+  {
+    "id": "bio-040",
+    "front": "What happens during transcription, and where does it occur in a eukaryotic cell?",
+    "back": "Transcription converts DNA into mRNA. In eukaryotic cells it occurs in the nucleus. The immediate product is pre-mRNA, which still contains introns; splicing then removes the introns and joins the exons to form mature mRNA.",
+    "tags": ["transcription", "molecular-biology"]
+  },
+  {
+    "id": "bio-041",
+    "front": "What is splicing, and what is mature mRNA made of once splicing is complete?",
+    "back": "Splicing cuts introns (non-coding sequences) out of pre-mRNA and joins the exons (coding sequences) directly together. Mature mRNA ends up as nothing but a string of joined exons.",
+    "tags": ["transcription", "molecular-biology"]
+  },
+  {
+    "id": "bio-042",
+    "front": "What structural feature marks the 3' end of a mature mRNA, and what is it for?",
+    "back": "A long stretch of adenine nucleotides — the poly-A tail (AAAA...) — which helps identify and stabilize the mRNA molecule.",
+    "tags": ["transcription", "molecular-biology"]
+  },
+  {
+    "id": "bio-043",
+    "front": "What roles do mRNA and tRNA each play in translation?",
+    "back": "mRNA carries the codon (a 3-nucleotide sequence) and determines the amino acid sequence of the protein. tRNA carries the complementary anticodon and delivers the specific amino acid that codon specifies.",
+    "tags": ["translation", "molecular-biology"]
+  },
+  {
+    "id": "bio-044",
+    "front": "What is the start codon, which amino acid does it always specify, and how does translation end?",
+    "back": "AUG is the start codon, and it always specifies methionine as the first amino acid of a new protein. Translation ends when the ribosome reaches a stop codon.",
+    "tags": ["translation", "molecular-biology"]
+  },
+  {
+    "id": "bio-045",
+    "front": "What are the three sub-phases shared by transcription, translation, and protein synthesis as a whole?",
+    "back": "Initiation, elongation, and termination — the same three phases that antibiotic inhibitors of protein synthesis (Chapter 4) target individually.",
+    "tags": ["translation", "protein-synthesis"]
   }
 ]
