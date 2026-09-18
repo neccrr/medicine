@@ -62,8 +62,10 @@ An ebook subject can mix any combination of:
   `meta.json` for a "Further reading" list in the sidebar (citations,
   guideline pages, journal links, anything external), opened in a new tab.
 
-`content/ebooks/cardiology` demonstrates chapters + resources;
-`content/ebooks/pharmacology` demonstrates a PDF-only book.
+`content/ebooks/histology` and `content/ebooks/biochem` demonstrate
+chapters + resources; drop a PDF into a subject folder (with or without a
+`meta.json`) to get a PDF-only or PDF-plus-chapters book, no code changes
+needed.
 
 ### Quizzes: question banks and interactive HTML games
 
@@ -78,11 +80,12 @@ HTML game (no `bank.json`) still gets a quiz entry, titled from the folder
 name.
 
 `content/quizzes/histology/Guess-the-Slide.html` is an HTML-only quiz game
-(image-ID with hints); `content/quizzes/cardiology/Rhythm-Strip-ID.html` and
-`content/quizzes/pharmacology/Mechanism-Match.html` pair a `bank.json` with
-a game, so each shows both the MCQ quiz and an "Also try: <game name> ↗"
-link. Game display names come straight from the filename (dashes become
-spaces), so name the file the way you want it to read in the UI.
+(image-ID with hints); `content/quizzes/histology/Structure-Labeler.html`
+and `content/quizzes/biochem/Amino-Acid-Fates.html` each pair a `bank.json`
+with a game, so those subjects show both the MCQ quiz and an "Also try:
+<game name> ↗" link. Game display names come straight from the filename
+(dashes become spaces), so name the file the way you want it to read in
+the UI.
 
 ## Client-side logic
 
