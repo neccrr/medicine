@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amino Acid Fates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f0d; --surface: #101613; --surface-2: #161f1b;
+    --border: #223029; --text: #eef4f1; --text-muted: #8ba39b;
+    --accent: #2dd4a7; --accent-dim: #1f9d7c; --accent-soft: rgba(45,212,167,0.14);
+    --accent-ink: #04140f; --red: #ff6b5e; --red-soft: rgba(255,107,94,0.14);
+    --amber: #f2b134; --radius: 12px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f2e8; --surface: #fffdf8; --surface-2: #efe9d7;
+      --border: #ddd4bc; --text: #16211b; --text-muted: #5f6a60;
+      --accent: #0f8f70; --accent-dim: #0c6e56; --accent-soft: rgba(15,143,112,0.1);
+      --accent-ink: #f5fffb; --red: #c8433a; --red-soft: rgba(200,67,58,0.1); --amber: #b3791b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; justify-content: center;
+    background-color: var(--bg);
+    background-image: linear-gradient(rgba(45,212,167,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(45,212,167,0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: var(--text); font-family: 'Archivo', -apple-system, sans-serif;
+  }
+  #app { width: 100%; max-width: 700px; padding: 20px 16px 48px; }
+  .brandbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 18px;
+  }
+  .brandbar .tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+  .brandbar .title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px; margin-top: 2px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px 22px; box-shadow: 0 8px 24px -12px rgba(0,0,0,0.3);
+  }
+  h1 { font-family: 'Fraunces', serif; font-size: 24px; margin: 0 0 10px; }
+  p.lead { font-size: 15px; line-height: 1.6; color: var(--text-muted); margin: 0 0 18px; }
+  .stat-row { display: flex; gap: 10px; margin: 18px 0; }
+  .stat { flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; }
+  .stat .num { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; color: var(--accent); display: block; }
+  .stat .lbl { font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  button { font-family: inherit; cursor: pointer; }
+  button.primary {
+    width: 100%; padding: 13px; margin-top: 10px; background: var(--accent); color: var(--accent-ink);
+    border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+  }
+  button.secondary {
+    width: 100%; padding: 11px; margin-top: 10px; background: transparent; color: var(--accent);
+    border: 1.5px solid var(--accent); border-radius: 10px; font-size: 14px;
+  }
+  button.ghost {
+    padding: 7px 12px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 20px; font-size: 12px;
+  }
+  button.ghost.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .progress-bar { height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.25s ease; }
+  .cat-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); background: var(--accent-soft); padding: 3px 9px; border-radius: 999px; display: inline-block; margin-bottom: 10px; }
+  .icon-wrap { display: flex; align-items: center; justify-content: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 22px; margin-bottom: 14px; color: var(--accent); }
+  .icon-wrap svg { width: 56px; height: 56px; }
+  .q-prompt { font-size: 16px; font-weight: 600; margin-bottom: 4px; line-height: 1.5; }
+  .hint-box { font-size: 13.5px; color: var(--text-muted); background: var(--surface-2); border-left: 2px solid var(--accent); padding: 8px 12px; border-radius: 6px; margin: 10px 0; display: none; }
+  .hint-box.show { display: block; }
+  input.answer {
+    width: 100%; padding: 12px 14px; font-size: 15px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: var(--bg); color: var(--text); margin-top: 6px;
+  }
+  input.answer:focus { outline: none; border-color: var(--accent); }
+  .btn-row { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-row button { flex: 1; }
+  .feedback { margin-top: 14px; padding: 12px 14px; border-radius: 10px; font-size: 14px; line-height: 1.5; display: none; }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--accent-soft); border-left: 3px solid var(--accent); }
+  .feedback.incorrect { background: var(--red-soft); border-left: 3px solid var(--red); }
+  .feedback b { display: block; margin-bottom: 4px; }
+  .skip-link-btn { display: block; text-align: center; width: 100%; background: none; border: none; color: var(--text-muted); font-size: 12.5px; margin-top: 10px; text-decoration: underline; }
+  .review-item { border-bottom: 1px solid var(--border); padding: 14px 0; }
+  .review-item:last-child { border-bottom: none; }
+  .review-item .r-prompt { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .review-item .r-status { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; display: inline-block; margin-bottom: 6px; }
+  .r-status.correct { background: var(--accent-soft); color: var(--accent); }
+  .r-status.wrong { background: var(--red-soft); color: var(--red); }
+  .r-status.skipped { background: var(--surface-2); color: var(--text-muted); }
+  .r-detail { font-size: 13px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="brandbar">
+    <div>
+      <div class="tag">Biochemistry · Quiz Game</div>
+      <div class="title">Amino Acid Fates</div>
+    </div>
+  </div>
+  <div id="screen"></div>
+</div>
+<script>
+(function () {
+  "use strict";
+
+  var ICONS = {
+    "Branched-chain": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11M12 11 6 5M12 11l6-6M6 5V3M18 5V3"/></svg>',
+    "Aromatic": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 20 7v10l-8 4.5L4 17V7Z"/><path d="M12 7v10M7.5 9.5l9 5M7.5 14.5l9-5"/></svg>',
+    "Acidic & amide": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>',
+    "Basic": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>',
+    "Sulfur-containing": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="9" stroke-dasharray="2 3"/><circle cx="19.5" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>',
+    "Hydroxyl / small": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"/></svg>',
+    "Imino / cyclic": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3 20.5 9.3 17.3 19.2H6.7L3.5 9.3Z"/></svg>'
+  };
+
+  var ALL_QUESTIONS = [
+    { cat: "Branched-chain", aa: "Leucine", prompt: "Is leucine glucogenic, ketogenic, or both?", answers: ["ketogenic"], hint: "One of only two purely ketogenic amino acids.", explain: "Leucine is purely ketogenic — it's degraded to acetyl-CoA and acetoacetyl-CoA and cannot be used to make new glucose." },
+    { cat: "Branched-chain", aa: "Isoleucine", prompt: "Is isoleucine glucogenic, ketogenic, or both?", answers: ["both"], hint: "Its carbon skeleton splits between two different products.", explain: "Isoleucine is both glucogenic and ketogenic — part of its carbon skeleton becomes succinyl-CoA (glucogenic), and part becomes acetyl-CoA (ketogenic)." },
+    { cat: "Branched-chain", aa: "Valine", prompt: "Is valine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "Unlike its two branched-chain relatives, it has only one fate.", explain: "Valine is purely glucogenic, degraded to succinyl-CoA, a TCA-cycle intermediate that can be used for gluconeogenesis." },
+    { cat: "Aromatic", aa: "Phenylalanine", prompt: "Is phenylalanine glucogenic, ketogenic, or both?", answers: ["both"], hint: "It's first hydroxylated into another aromatic amino acid on this list.", explain: "Phenylalanine is both glucogenic and ketogenic — after conversion to tyrosine, its carbon skeleton splits into fumarate (glucogenic) and acetoacetate (ketogenic)." },
+    { cat: "Aromatic", aa: "Tyrosine", prompt: "Is tyrosine glucogenic, ketogenic, or both?", answers: ["both"], hint: "Made from phenylalanine, and shares its metabolic fate.", explain: "Tyrosine is both glucogenic and ketogenic, degraded to fumarate and acetoacetate, just like the phenylalanine it's derived from." },
+    { cat: "Aromatic", aa: "Tryptophan", prompt: "Is tryptophan glucogenic, ketogenic, or both?", answers: ["both"], hint: "It has the most complex degradation pathway of any amino acid.", explain: "Tryptophan is both glucogenic and ketogenic — its ring is degraded to alanine/pyruvate (glucogenic) and acetoacetyl-CoA (ketogenic)." },
+    { cat: "Acidic & amide", aa: "Aspartate", prompt: "Is aspartate glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It transaminates directly into a four-carbon TCA intermediate.", explain: "Aspartate is purely glucogenic, converted directly to oxaloacetate by transamination." },
+    { cat: "Acidic & amide", aa: "Asparagine", prompt: "Is asparagine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It's hydrolyzed to the acidic amino acid right next to it alphabetically.", explain: "Asparagine is purely glucogenic — asparaginase converts it to aspartate, which feeds into oxaloacetate." },
+    { cat: "Acidic & amide", aa: "Glutamate", prompt: "Is glutamate glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "Its transamination product is a five-carbon TCA-cycle intermediate.", explain: "Glutamate is purely glucogenic, converted by transamination to α-ketoglutarate, a TCA-cycle intermediate." },
+    { cat: "Acidic & amide", aa: "Glutamine", prompt: "Is glutamine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It's hydrolyzed to the acidic amino acid right next to it alphabetically.", explain: "Glutamine is purely glucogenic — glutaminase converts it to glutamate, which feeds into α-ketoglutarate." },
+    { cat: "Basic", aa: "Arginine", prompt: "Is arginine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It funnels into the same TCA intermediate as glutamate.", explain: "Arginine is purely glucogenic, ultimately converted to glutamate and then α-ketoglutarate." },
+    { cat: "Basic", aa: "Histidine", prompt: "Is histidine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It also funnels into the same TCA intermediate as glutamate.", explain: "Histidine is purely glucogenic, degraded through glutamate to α-ketoglutarate." },
+    { cat: "Basic", aa: "Lysine", prompt: "Is lysine glucogenic, ketogenic, or both?", answers: ["ketogenic"], hint: "The second of only two purely ketogenic amino acids.", explain: "Lysine is purely ketogenic — like leucine, it's degraded entirely to acetyl-CoA/acetoacetyl-CoA with no glucogenic route." },
+    { cat: "Sulfur-containing", aa: "Methionine", prompt: "Is methionine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It's degraded via the same succinyl-CoA route as valine.", explain: "Methionine is purely glucogenic, degraded (via propionyl-CoA) to succinyl-CoA." },
+    { cat: "Sulfur-containing", aa: "Cysteine", prompt: "Is cysteine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "Its carbon skeleton ends up as the simplest glycolytic/gluconeogenic intermediate.", explain: "Cysteine is purely glucogenic, converted to pyruvate after its sulfur is removed." },
+    { cat: "Hydroxyl / small", aa: "Serine", prompt: "Is serine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It converts directly to the three-carbon product of glycolysis.", explain: "Serine is purely glucogenic, converted directly to pyruvate." },
+    { cat: "Hydroxyl / small", aa: "Threonine", prompt: "Is threonine glucogenic, ketogenic, or both?", answers: ["both"], hint: "It can be split to glycine plus a two-carbon fragment.", explain: "Threonine is both glucogenic and ketogenic — it can be converted to pyruvate/succinyl-CoA (glucogenic) or contribute acetyl-CoA (ketogenic) depending on the pathway used." },
+    { cat: "Hydroxyl / small", aa: "Glycine", prompt: "Is glycine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "The simplest amino acid, closely related to serine.", explain: "Glycine is purely glucogenic, interconverted with serine and ultimately feeding into pyruvate." },
+    { cat: "Hydroxyl / small", aa: "Alanine", prompt: "Is alanine glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "Its name gives away its direct transamination product.", explain: "Alanine is purely glucogenic — transamination converts it directly to pyruvate, the classic link between muscle protein breakdown and hepatic gluconeogenesis (the glucose-alanine cycle)." },
+    { cat: "Imino / cyclic", aa: "Proline", prompt: "Is proline glucogenic, ketogenic, or both?", answers: ["glucogenic"], hint: "It funnels into the same TCA intermediate as glutamate and arginine.", explain: "Proline is purely glucogenic, oxidized through glutamate to α-ketoglutarate." }
+  ];
+
+  var CATEGORIES = [];
+  ALL_QUESTIONS.forEach(function (item) { if (CATEGORIES.indexOf(item.cat) === -1) CATEGORIES.push(item.cat); });
+
+  var state = { selectedCats: CATEGORIES.slice(), pool: [], idx: 0, results: [], hintShown: false, answered: false };
+
+  var SAVE_KEY = "aminofategame:progress";
+  function saveProgress() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        selectedCats: state.selectedCats,
+        poolIndices: state.pool.map(function (item) { return ALL_QUESTIONS.indexOf(item); }),
+        idx: state.idx,
+        results: state.results.map(function (r) {
+          return { qIndex: ALL_QUESTIONS.indexOf(r.item), userAnswer: r.userAnswer, status: r.status };
+        })
+      }));
+    } catch (e) { /* ignore */ }
+  }
+  function loadProgress() {
+    try {
+      var raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return null;
+      var saved = JSON.parse(raw);
+      if (!saved || !saved.poolIndices || saved.idx >= saved.poolIndices.length) return null;
+      return saved;
+    } catch (e) { return null; }
+  }
+  function clearProgress() {
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
+  }
+  function resumeQuiz(saved) {
+    state.selectedCats = saved.selectedCats;
+    state.pool = saved.poolIndices.map(function (i) { return ALL_QUESTIONS[i]; });
+    state.idx = saved.idx;
+    state.results = saved.results.map(function (r) {
+      return { item: ALL_QUESTIONS[r.qIndex], userAnswer: r.userAnswer, status: r.status };
+    });
+    renderQuestion();
+  }
+
+  function el(id) { return document.getElementById(id); }
+  function normalize(s) { return s.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " "); }
+  function isCorrect(input, answers) {
+    var n = normalize(input);
+    if (!n) return false;
+    return answers.some(function (a) { return normalize(a) === n || n.indexOf(normalize(a)) !== -1 || normalize(a).indexOf(n) !== -1; });
+  }
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function renderStart() {
+    var savedBest = localStorage.getItem("aminofategame:best");
+    var savedProgress = loadProgress();
+    el("screen").innerHTML =
+      '<div class="card">' +
+      '<h1>Amino Acid Fates</h1>' +
+      '<p class="lead">All 20 standard amino acids, grouped by side chain — call each one’s metabolic fate: glucogenic, ketogenic, or both.</p>' +
+      '<div class="stat-row">' +
+      '<div class="stat"><span class="num">' + ALL_QUESTIONS.length + '</span><span class="lbl">Amino acids</span></div>' +
+      '<div class="stat"><span class="num">' + CATEGORIES.length + '</span><span class="lbl">Groups</span></div>' +
+      '<div class="stat"><span class="num">' + (savedBest || '—') + '</span><span class="lbl">Best score</span></div>' +
+      '</div>' +
+      '<div class="chip-row" id="cat-chips"></div>' +
+      (savedProgress ? '<button class="secondary" id="btn-resume">Resume where you left off (' + (savedProgress.idx + 1) + ' / ' + savedProgress.poolIndices.length + ')</button>' : '') +
+      '<button class="primary" id="btn-start">Start quiz</button>' +
+      '</div>';
+    var chipRow = el("cat-chips");
+    CATEGORIES.forEach(function (cat) {
+      var b = document.createElement("button");
+      b.className = "ghost active";
+      b.textContent = cat;
+      b.dataset.cat = cat;
+      b.addEventListener("click", function () {
+        var i = state.selectedCats.indexOf(cat);
+        if (i === -1) { state.selectedCats.push(cat); b.classList.add("active"); }
+        else { state.selectedCats.splice(i, 1); b.classList.remove("active"); }
+      });
+      chipRow.appendChild(b);
+    });
+    if (savedProgress) {
+      el("btn-resume").addEventListener("click", function () { resumeQuiz(savedProgress); });
+    }
+    el("btn-start").addEventListener("click", startQuiz);
+  }
+
+  function startQuiz() {
+    clearProgress();
+    var filtered = ALL_QUESTIONS.filter(function (q) { return state.selectedCats.indexOf(q.cat) !== -1; });
+    if (filtered.length === 0) filtered = ALL_QUESTIONS.slice();
+    state.pool = shuffle(filtered);
+    state.idx = 0;
+    state.results = [];
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    state.hintShown = false;
+    state.answered = false;
+    var item = state.pool[state.idx];
+    var pct = Math.round((state.idx / state.pool.length) * 100);
+    el("screen").innerHTML =
+      '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="card">' +
+      '<span class="cat-tag">' + item.cat + ' · ' + (state.idx + 1) + ' / ' + state.pool.length + '</span>' +
+      '<div class="icon-wrap">' + ICONS[item.cat] + '</div>' +
+      '<p class="q-prompt">' + item.prompt + '</p>' +
+      '<button class="skip-link-btn" id="btn-hint" style="text-align:left;padding:0;margin:0 0 4px;">Show hint</button>' +
+      '<div class="hint-box" id="hint-box">' + item.hint + '</div>' +
+      '<form id="answer-form">' +
+      '<input class="answer" id="answer-input" type="text" autocomplete="off" placeholder="glucogenic, ketogenic, or both..." />' +
+      '<div class="btn-row">' +
+      '<button type="button" class="secondary" id="btn-skip">Skip</button>' +
+      '<button type="submit" class="primary" id="btn-submit">Submit</button>' +
+      '</div>' +
+      '</form>' +
+      '<div class="feedback" id="feedback"></div>' +
+      '<button class="skip-link-btn" id="btn-next" style="display:none;">Next question →</button>' +
+      '</div>';
+
+    el("btn-hint").addEventListener("click", function () {
+      state.hintShown = true;
+      el("hint-box").classList.add("show");
+    });
+    el("btn-skip").addEventListener("click", function () { recordAnswer("", true); });
+    el("answer-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (state.answered) return;
+      recordAnswer(el("answer-input").value, false);
+    });
+    el("btn-next").addEventListener("click", advance);
+    setTimeout(function () { var i = el("answer-input"); if (i) i.focus(); }, 30);
+  }
+
+  function recordAnswer(value, skipped) {
+    if (state.answered) return;
+    state.answered = true;
+    var item = state.pool[state.idx];
+    var correct = !skipped && isCorrect(value, item.answers);
+    state.results.push({ item: item, userAnswer: value, status: skipped ? "skipped" : correct ? "correct" : "wrong" });
+    saveProgress();
+
+    var fb = el("feedback");
+    fb.className = "feedback show " + (skipped ? "incorrect" : correct ? "correct" : "incorrect");
+    var label = correct ? "Correct!" : skipped ? "Skipped." : "Not quite.";
+    fb.innerHTML = "<b>" + label + "</b>" + (correct ? "" : "Expected: " + item.answers[0] + ". ") + item.explain;
+
+    el("btn-submit").disabled = true;
+    el("btn-skip").disabled = true;
+    el("answer-input").disabled = true;
+    el("btn-next").style.display = "block";
+    if (state.idx === state.pool.length - 1) {
+      el("btn-next").textContent = "See results →";
+    }
+  }
+
+  function advance() {
+    if (state.idx < state.pool.length - 1) {
+      state.idx++;
+      saveProgress();
+      renderQuestion();
+    } else {
+      renderResults();
+    }
+  }
+
+  function renderResults() {
+    clearProgress();
+    var correct = state.results.filter(function (r) { return r.status === "correct"; }).length;
+    var total = state.results.length;
+    var pct = Math.round((correct / total) * 100);
+    var best = parseInt(localStorage.getItem("aminofategame:best") || "0", 10);
+    if (pct > best) localStorage.setItem("aminofategame:best", String(pct));
+
+    el("screen").innerHTML =
+      '<div class="card">' +
+      '<h1>Results</h1>' +
+      '<div class="stat-row">' +
+      '<div class="stat"><span class="num">' + correct + '/' + total + '</span><span class="lbl">Correct</span></div>' +
+      '<div class="stat"><span class="num">' + pct + '%</span><span class="lbl">Score</span></div>' +
+      '</div>' +
+      '<button class="primary" id="btn-restart">Play again</button>' +
+      '<button class="secondary" id="btn-review">Review all answers</button>' +
+      '<div id="review-list"></div>' +
+      '</div>';
+    el("btn-restart").addEventListener("click", renderStart);
+    el("btn-review").addEventListener("click", function () {
+      var list = el("review-list");
+      list.innerHTML = state.results.map(function (r) {
+        return '<div class="review-item">' +
+          '<span class="r-status ' + r.status + '">' + r.status + '</span>' +
+          '<div class="r-prompt">' + r.item.aa + ': ' + r.item.prompt + '</div>' +
+          '<div class="r-detail">' + (r.status !== "correct" ? "Your answer: " + (r.userAnswer || "(none)") + ". " : "") + "Expected: " + r.item.answers[0] + ". " + r.item.explain + '</div>' +
+          '</div>';
+      }).join("");
+    });
+  }
+
+  renderStart();
+})();
+</script>
+</body>
+</html>
