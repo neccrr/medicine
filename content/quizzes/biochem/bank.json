@@ -1,0 +1,158 @@
+[
+  {
+    "id": "q-bio-001",
+    "question": "Which three macromolecules are the body's only calorie-yielding nutrients?",
+    "options": [
+      "Carbohydrate, protein, and lipid",
+      "Carbohydrate, protein, and water",
+      "Protein, vitamins, and minerals",
+      "Lipid, vitamins, and water"
+    ],
+    "answer": 0,
+    "explanation": "Carbohydrate, protein, and lipid are the only macromolecules that yield calories on catabolism. Water is essential for metabolism but contributes no calories, and vitamins/minerals are micronutrient cofactors, not fuel sources."
+  },
+  {
+    "id": "q-bio-002",
+    "question": "An amino acid is catabolized down to acetyl-CoA and cannot be used to synthesize new glucose. What is this amino acid classified as?",
+    "options": [
+      "Glucogenic",
+      "Ketogenic",
+      "Essential",
+      "Nonpolar"
+    ],
+    "answer": 1,
+    "explanation": "Ketogenic amino acids (like leucine and lysine) are degraded to acetyl-CoA or acetoacetyl-CoA, precursors for ketone bodies and fat, not glucose. Glucogenic amino acids instead feed into pyruvate or TCA-cycle intermediates, which can be used for gluconeogenesis."
+  },
+  {
+    "id": "q-bio-003",
+    "question": "Which level of protein structure describes the linear sequence of amino acids in a polypeptide chain?",
+    "options": [
+      "Primary structure",
+      "Secondary structure",
+      "Tertiary structure",
+      "Quaternary structure"
+    ],
+    "answer": 0,
+    "explanation": "Primary structure is simply the amino acid sequence. Secondary structure describes local folding (α-helix/β-sheet), tertiary is the full 3D fold of one chain, and quaternary describes how multiple folded chains assemble together."
+  },
+  {
+    "id": "q-bio-004",
+    "question": "What small molecule is released when two amino acids join by a peptide bond?",
+    "options": [
+      "ATP",
+      "CO2",
+      "H2O",
+      "NH3"
+    ],
+    "answer": 2,
+    "explanation": "Peptide bond formation is a condensation (dehydration) reaction: the -COOH of one amino acid reacts with the -NH2 of the next, releasing one molecule of water as the amide bond forms."
+  },
+  {
+    "id": "q-bio-005",
+    "question": "Roughly what fraction of the cell membrane's mass is made up of protein?",
+    "options": [
+      "About 8%",
+      "About 25%",
+      "About 49%",
+      "About 90%"
+    ],
+    "answer": 2,
+    "explanation": "The plasma membrane is roughly 49% protein, 43% lipid (including cholesterol), and 8% carbohydrate — the carbohydrate exists as chains attached to outer-leaflet lipids and proteins (glycolipids/glycoproteins)."
+  },
+  {
+    "id": "q-bio-006",
+    "question": "A membrane protein spans the full width of the lipid bilayer, with domains exposed on both the extracellular and cytoplasmic sides. What type of membrane protein is this?",
+    "options": [
+      "Peripheral protein",
+      "Integral (transmembrane) protein",
+      "Glycolipid",
+      "Cholesterol-anchored protein"
+    ],
+    "answer": 1,
+    "explanation": "Integral membrane proteins are embedded in — and often span — the lipid bilayer; many, including most receptors and channels, are transmembrane. Peripheral proteins only attach loosely to the membrane surface."
+  },
+  {
+    "id": "q-bio-007",
+    "question": "The SARS-CoV-2 spike (S) protein binds ACE2 on the surface of human airway, lung, and gut cells. In receptor biology terms, what role does ACE2 play?",
+    "options": [
+      "It is the viral ligand",
+      "It is the host-cell receptor",
+      "It is a secreted antibody",
+      "It is a peripheral membrane protein"
+    ],
+    "answer": 1,
+    "explanation": "ACE2 is a membrane-bound host enzyme that the viral spike protein (the ligand) binds as its entry receptor. TMPRSS2 then proteolytically activates the spike protein, triggering membrane fusion and viral entry into the cell."
+  },
+  {
+    "id": "q-bio-008",
+    "question": "Which functional category of protein includes actin and myosin?",
+    "options": [
+      "Structural protein",
+      "Transport protein",
+      "Contractile protein",
+      "Protective protein"
+    ],
+    "answer": 2,
+    "explanation": "Actin and myosin are contractile proteins, responsible for generating mechanical force in muscle and other motile cells. Structural proteins (collagen, keratin, tubulin) instead provide shape and support."
+  },
+  {
+    "id": "q-bio-009",
+    "question": "On serum protein electrophoresis, which plasma protein produces the band that migrates farthest (fastest) toward the anode?",
+    "options": [
+      "Fibrinogen",
+      "Gamma globulin",
+      "Albumin",
+      "Beta globulin"
+    ],
+    "answer": 2,
+    "explanation": "Albumin has the smallest molecular weight of the major plasma proteins, so it migrates fastest in the electric field and its band sits farthest from the origin; larger globulins migrate more slowly and stay closer to the origin."
+  },
+  {
+    "id": "q-bio-010",
+    "question": "A patient with nephrotic syndrome has heavy albuminuria, leading to hypoalbuminemia. What is the direct mechanism by which this causes edema?",
+    "options": [
+      "Increased plasma hydrostatic pressure pushes fluid into tissue",
+      "Decreased plasma oncotic pressure fails to hold fluid in vessels",
+      "Increased plasma viscosity blocks capillary flow",
+      "Increased globulin concentration draws fluid into tissue"
+    ],
+    "answer": 1,
+    "explanation": "Albumin is the main driver of plasma oncotic (colloid osmotic) pressure, which normally pulls fluid back into capillaries against hydrostatic pressure. When albumin falls, oncotic pressure drops, hydrostatic pressure dominates, and fluid leaks into tissue as edema (or ascites/pleural effusion)."
+  },
+  {
+    "id": "q-bio-011",
+    "question": "Which immunoglobulin class is a pentamer and rises first in an acute infection?",
+    "options": [
+      "IgA",
+      "IgG",
+      "IgE",
+      "IgM"
+    ],
+    "answer": 3,
+    "explanation": "IgM, assembled as a pentamer, is the first antibody produced in an acute/early immune response. IgG follows later and dominates the chronic/late response — it's also the only class that crosses the placenta."
+  },
+  {
+    "id": "q-bio-012",
+    "question": "Tetracycline inhibits bacterial protein synthesis by which mechanism?",
+    "options": [
+      "Inhibiting DNA transcription in the nucleus",
+      "Binding the 30S ribosomal subunit and blocking aminoacyl-tRNA binding",
+      "Binding the 50S ribosomal subunit and inhibiting peptidyl transferase",
+      "Directly degrading mRNA"
+    ],
+    "answer": 1,
+    "explanation": "Tetracycline binds the bacterial 30S ribosomal subunit and blocks aminoacyl-tRNA from binding the A site, halting elongation. Chloramphenicol instead binds the 50S subunit and inhibits peptidyl transferase activity."
+  },
+  {
+    "id": "q-bio-013",
+    "question": "What is the name of the bond that links the phosphate of one nucleotide to the sugar of the next nucleotide, forming the DNA backbone?",
+    "options": [
+      "Glycosidic bond",
+      "Peptide bond",
+      "Phosphodiester bond",
+      "Hydrogen bond"
+    ],
+    "answer": 2,
+    "explanation": "Successive nucleotides are linked by phosphodiester bonds, which bridge the 3' carbon of one sugar to the 5' carbon of the next sugar's phosphate group, forming the sugar-phosphate backbone of DNA/RNA."
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "id": "bio-001",
+    "front": "What are the six major macromolecule/micromolecule categories in the body, and which three are the only calorie-yielding ones?",
+    "back": "Protein, carbohydrate, lipid, vitamins, minerals, and water. Only carbohydrate, protein, and lipid yield calories — water is essential but contributes none.",
+    "tags": ["macromolecules", "metabolism"]
+  },
+  {
+    "id": "bio-002",
+    "front": "What is the monomeric building block of each major macromolecule: protein, carbohydrate, and lipid?",
+    "back": "Protein → amino acids. Carbohydrate → monosaccharides. Lipid → fatty acids and glycerol.",
+    "tags": ["macromolecules", "building-blocks"]
+  },
+  {
+    "id": "bio-003",
+    "front": "In the catabolism/anabolism cycle, what energy currency links the two pathways?",
+    "back": "ATP. Catabolism breaks down nutrients (carbohydrate, lipid, protein) into low-energy end products (CO2, H2O, NH3) and releases chemical energy as ATP; anabolism uses that ATP to build macromolecules from small starting molecules (amino acids, sugars, fatty acids).",
+    "tags": ["metabolism", "atp"]
+  },
+  {
+    "id": "bio-004",
+    "front": "What are the three stages of catabolism of the major energy nutrients, from macromolecule to final small products?",
+    "back": "Stage I: proteins, polysaccharides, and lipids are broken into their building-block units (amino acids, glucose, fatty acids/glycerol). Stage II: those units converge on common degradation products, chiefly pyruvate and acetyl-CoA. Stage III: acetyl-CoA enters the citric acid (TCA) cycle, ending in CO2, H2O, and NH3.",
+    "tags": ["metabolism", "catabolism"]
+  },
+  {
+    "id": "bio-005",
+    "front": "What distinguishes a glucogenic amino acid from a ketogenic one?",
+    "back": "Glucogenic amino acids are catabolized to pyruvate or a TCA-cycle intermediate (oxaloacetate, α-ketoglutarate, succinyl-CoA, fumarate) and can be used to make glucose. Ketogenic amino acids are catabolized to acetyl-CoA or acetoacetyl-CoA and can only form ketone bodies/fat. Leucine and lysine are purely ketogenic; most amino acids are glucogenic, and several (e.g. isoleucine, phenylalanine, tyrosine, tryptophan, threonine) are both.",
+    "tags": ["metabolism", "amino-acids", "tca-cycle"]
+  },
+  {
+    "id": "bio-006",
+    "front": "What is the basic structural formula of an amino acid?",
+    "back": "A central α-carbon bonded to four groups: an amino group (+NH3), a carboxyl group (-COO−), a hydrogen atom, and a variable side chain (R group) that gives each amino acid its distinct identity.",
+    "tags": ["protein", "amino-acids"]
+  },
+  {
+    "id": "bio-007",
+    "front": "How does a peptide bond form between two amino acids, and what small molecule is released?",
+    "back": "The carboxyl group (-COOH) of one amino acid condenses with the amino group (-NH2) of the next, forming an amide (peptide) bond and releasing one molecule of H2O — a dehydration/condensation reaction.",
+    "tags": ["protein", "peptide-bond"]
+  },
+  {
+    "id": "bio-008",
+    "front": "Name the four levels of protein structure and what each describes.",
+    "back": "Primary: the linear sequence of amino acids. Secondary: local folding into α-helices or β-sheets, stabilized by hydrogen bonds along the backbone. Tertiary: the overall 3D folding of a single polypeptide chain. Quaternary: the arrangement of multiple folded polypeptide subunits into one functional complex (e.g. hemoglobin's four subunits).",
+    "tags": ["protein", "structure"]
+  },
+  {
+    "id": "bio-009",
+    "front": "What three macromolecule classes make up the cell membrane, and roughly in what proportion?",
+    "back": "Protein (~49%), lipid (~43%, including cholesterol), and carbohydrate (~8%) — carbohydrate chains project from the outer (extracellular) leaflet as glycoproteins and glycolipids.",
+    "tags": ["membrane", "cell-biology"]
+  },
+  {
+    "id": "bio-010",
+    "front": "What three lipid types make up the membrane's lipid bilayer?",
+    "back": "Phospholipids, glycolipids, and cholesterol — arranged with hydrophilic (polar) heads facing the aqueous cytoplasm and extracellular fluid, and hydrophobic (nonpolar) fatty-acid tails facing each other in the bilayer's core.",
+    "tags": ["membrane", "lipids"]
+  },
+  {
+    "id": "bio-011",
+    "front": "What is the functional difference between an integral membrane protein and a peripheral membrane protein?",
+    "back": "Integral proteins span or embed within the lipid bilayer itself (many are transmembrane, e.g. receptors and channels). Peripheral proteins attach loosely to the membrane surface (often to integral proteins or lipid head groups) without inserting into the bilayer.",
+    "tags": ["membrane", "protein"]
+  },
+  {
+    "id": "bio-012",
+    "front": "List the three broad functions of the cell membrane described in this lecture.",
+    "back": "(1) Maintains and preserves cell shape. (2) Protects the cell and lets it withstand mechanical stress in small vessels/capillaries by deforming without changing composition. (3) Transports substances in and out of the cell, via passive transport (diffusion, osmosis) or active transport (ion pumps).",
+    "tags": ["membrane", "cell-biology"]
+  },
+  {
+    "id": "bio-013",
+    "front": "The SARS-CoV-2 spike (S) protein and the human ACE2 receptor illustrate what general biochemical principle?",
+    "back": "Ligand–receptor specificity: a virus's surface protein (ligand) must molecularly fit a receptor protein already present on the host cell membrane. ACE2 is itself a membrane-bound enzyme expressed on cells of the airway, lung, gut, heart, and kidney; TMPRSS2 then proteolytically activates the spike protein to trigger membrane fusion and viral entry.",
+    "tags": ["membrane", "receptor", "clinical"]
+  },
+  {
+    "id": "bio-014",
+    "front": "Name seven functional categories of proteins in the body, with one example each.",
+    "back": "1) Regulator/bioregulator — hormones. 2) Biocatalyst — enzymes. 3) Transport — hemoglobin, albumin, lipoprotein, transferrin. 4) Contractile — actin and myosin. 5) Structural — collagen, tubulin, keratin, glycoprotein. 6) Protective/defense — immunoglobulins, interferon, perforin, interleukins. 7) Receptor — membrane receptors (can be beneficial, e.g. hormone receptors, or exploited, e.g. ACE2 in COVID-19).",
+    "tags": ["protein", "function"]
+  },
+  {
+    "id": "bio-015",
+    "front": "What are the three major plasma protein fractions, and their approximate normal blood concentrations?",
+    "back": "Albumin (35–50 g/L, ~3.5–5.0 g/dL), globulins (65–85 g/L total, split into α1, α2, β, and γ fractions), and fibrinogen (2–4 g/L). Albumin is the single most abundant plasma protein (~58% of total).",
+    "tags": ["plasma-proteins", "albumin", "globulin"]
+  },
+  {
+    "id": "bio-016",
+    "front": "What are albumin's two main physiological roles?",
+    "back": "(1) Maintaining plasma oncotic (colloid osmotic) pressure, which keeps fluid inside blood vessels rather than leaking into tissue. (2) Transporting ligands through the blood — endogenous ligands like bilirubin and fatty acids, and exogenous ligands like drugs (e.g. metadon, propranolol, furosemide, methotrexate).",
+    "tags": ["albumin", "plasma-proteins"]
+  },
+  {
+    "id": "bio-017",
+    "front": "Why does hypoalbuminemia cause edema, ascites, or pleural effusion?",
+    "back": "Albumin is the main contributor to plasma oncotic pressure, which normally pulls fluid back into capillaries against hydrostatic pressure. When albumin falls (normal range ~3.5–5.2 g/dL), oncotic pressure drops, hydrostatic pressure dominates, and fluid leaks out of vessels into interstitial spaces (edema), the peritoneal cavity (ascites), or the pleural space (pleural effusion).",
+    "tags": ["albumin", "hypoalbuminemia", "clinical"]
+  },
+  {
+    "id": "bio-018",
+    "front": "Name four clinical causes of hypoalbuminemia mentioned in this lecture.",
+    "back": "Nephrotic syndrome (albuminuria → hypoalbuminemia → edema/ascites/pleural effusion, plus hypercholesterolemia and lipiduria), cirrhosis (CH — reduced hepatic synthesis), kwashiorkor (severe protein malnutrition), and pre-eclampsia.",
+    "tags": ["albumin", "hypoalbuminemia", "clinical"]
+  },
+  {
+    "id": "bio-019",
+    "front": "On serum protein electrophoresis, which protein band migrates fastest and ends up farthest from the origin — albumin or globulin — and why?",
+    "back": "Albumin, because it has the smallest molecular weight of the major plasma proteins: smaller proteins run faster in the electric field and their band sits lower (farther from the loading point), while larger globulins run slower and their band stays higher, closer to the origin.",
+    "tags": ["albumin", "globulin", "electrophoresis"]
+  },
+  {
+    "id": "bio-020",
+    "front": "What is gamma globulin, and what are its five immunoglobulin (Ig) classes with one distinguishing feature each?",
+    "back": "Gamma globulin is the antibody fraction of plasma protein. IgA: mucosal immunity (secretions). IgD: B-cell receptor, function still not fully defined. IgE: allergic reactions and anti-parasite (helminth) defense. IgG: the dominant antibody of the chronic/late immune response, and the only one to cross the placenta. IgM: the first antibody of the acute/early response, formed as a pentamer.",
+    "tags": ["globulin", "immunoglobulins"]
+  },
+  {
+    "id": "bio-021",
+    "front": "In a new infection, which immunoglobulin rises first, and which follows?",
+    "back": "IgM rises first (acute/early phase marker), followed later by IgG (chronic/late phase, and the class responsible for durable/long-term immunity). This IgM-then-IgG pattern is used clinically, e.g. in COVID-19 serology.",
+    "tags": ["globulin", "immunoglobulins", "clinical"]
+  },
+  {
+    "id": "bio-022",
+    "front": "What are the two steps of protein synthesis from a gene, and where in the cell does each occur?",
+    "back": "Transcription: DNA is copied into mRNA, in the nucleus. Translation: mRNA is read by ribosomes to build a polypeptide chain, in the cytoplasm — itself divided into initiation, elongation, and termination.",
+    "tags": ["protein-synthesis", "molecular-biology"]
+  },
+  {
+    "id": "bio-023",
+    "front": "Name an antibiotic that inhibits bacterial translation initiation, one that blocks the 30S ribosomal subunit, and one that blocks the 50S subunit.",
+    "back": "Initiation/misreading: streptomycin and other aminoglycosides. 30S subunit (blocks aminoacyl-tRNA binding): tetracycline. 50S subunit (blocks peptidyl transferase activity): chloramphenicol. (Erythromycin also binds the 50S subunit, blocking translocation.)",
+    "tags": ["protein-synthesis", "pharmacology", "antibiotics"]
+  },
+  {
+    "id": "bio-024",
+    "front": "What are the three components of a nucleotide, and what is the bond between the nitrogenous base and the sugar called?",
+    "back": "A nucleotide = a nitrogenous base (purine or pyrimidine) + a five-carbon sugar (ribose or deoxyribose) + one or more phosphate groups. The base attaches to the sugar's C1' carbon via a β-N-glycosidic bond.",
+    "tags": ["nucleotides", "molecular-biology"]
+  },
+  {
+    "id": "bio-025",
+    "front": "What bond links successive nucleotides together to form the DNA backbone?",
+    "back": "A phosphodiester bond — the phosphate group bridges the C3' of one sugar to the C5' of the next sugar's phosphate. (A separate phosphoester bond links the phosphate to its own sugar's C5' hydroxyl.)",
+    "tags": ["nucleotides", "molecular-biology"]
+  }
+]
