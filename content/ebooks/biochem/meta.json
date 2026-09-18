@@ -1,12 +1,14 @@
 {
   "title": "Cellular Biochemistry Foundations",
-  "description": "Macromolecules and metabolism, protein structure and function, the cell membrane, and plasma proteins — albumin and globulin in depth.",
+  "description": "Macromolecules and metabolism, protein structure and function, the cell membrane, plasma proteins, and the central dogma — genes, chromosomes, replication, transcription, and translation.",
   "chapters": [
     { "id": "chapter-01", "title": "Macromolecules & Metabolism Overview" },
     { "id": "chapter-02", "title": "Protein Structure, Peptide Bonds & Function" },
     { "id": "chapter-03", "title": "The Cell Membrane" },
     { "id": "chapter-04", "title": "Plasma Proteins — Albumin & Globulin" },
-    { "id": "chapter-05", "title": "Nucleotides & the DNA Backbone" }
+    { "id": "chapter-05", "title": "Nucleotides & the DNA Backbone" },
+    { "id": "chapter-06", "title": "Genes, Chromosomes & the Genome" },
+    { "id": "chapter-07", "title": "Replication, Transcription & Translation" }
   ],
   "resources": [
     { "title": "NCBI Bookshelf — Biochemistry & molecular biology texts", "url": "https://www.ncbi.nlm.nih.gov/books/" },
