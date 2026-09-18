@@ -20,9 +20,19 @@ export function EbookSubjects() {
           const chapterIndex = position
             ? meta.chapters.findIndex((c) => c.id === position.chapterId)
             : -1;
+          const completedCount = readJSON<string[]>(
+            STORAGE_KEYS.ebookCompleted(subject.id),
+            [],
+          ).length;
 
           const parts: string[] = [];
-          if (meta.chapters.length > 0) parts.push(`${meta.chapters.length} chapters`);
+          if (meta.chapters.length > 0) {
+            parts.push(
+              completedCount > 0
+                ? `${completedCount}/${meta.chapters.length} chapters complete`
+                : `${meta.chapters.length} chapters`,
+            );
+          }
           if (pdfs.length > 0) parts.push(pdfs.length === 1 ? "PDF" : `${pdfs.length} PDFs`);
           if (meta.resources?.length) parts.push(`${meta.resources.length} links`);
 

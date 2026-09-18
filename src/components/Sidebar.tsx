@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { StreakBadge } from "./StreakBadge";
+import { QuizDueBadge } from "./QuizDueBadge";
 import { PulseLine } from "./PulseLine";
 import { OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
 import { BookIcon, CardsIcon, HomeIcon, ProgressIcon, QuizIcon, SearchIcon, SummaryIcon } from "./icons";
@@ -62,6 +63,7 @@ export function Sidebar() {
 
           <div className="topbar-actions">
             <StreakBadge />
+            <QuizDueBadge />
             <button
               type="button"
               className="icon-btn"
@@ -102,7 +104,10 @@ export function Sidebar() {
         </nav>
 
         <div className="sidebar-footer">
-          <StreakBadge />
+          <div className="sidebar-badges">
+            <StreakBadge />
+            <QuizDueBadge />
+          </div>
           <div className="sidebar-footer-actions">
             <button
               type="button"

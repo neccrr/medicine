@@ -82,5 +82,12 @@
     "front": "What is the key histologic difference between exocrine and endocrine glands?",
     "back": "Exocrine glands retain a duct that delivers secretions to an epithelial surface; endocrine glands lose their duct during development and secrete hormones directly into the bloodstream via surrounding capillaries.",
     "tags": ["glands", "classification"]
+  },
+  {
+    "id": "histo-015",
+    "front": "Name the five layers of the epidermis shown here, from superficial to deep.",
+    "back": "Stratum corneum, lucidum, granulosum, spinosum, basale (mnemonic: 'Californians Like Girls In String Bikinis'). Lucidum is only present in thick skin (palms/soles).",
+    "tags": ["skin", "epithelium"],
+    "image": "<svg viewBox=\"0 0 260 150\" width=\"260\" height=\"150\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"40\" y1=\"6\" x2=\"40\" y2=\"140\" stroke=\"var(--border)\" stroke-width=\"1\" /><rect x=\"40\" y=\"6\" width=\"180\" height=\"12\" fill=\"var(--border)\" /><text x=\"32\" y=\"15\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Corneum</text><rect x=\"40\" y=\"18\" width=\"180\" height=\"8\" fill=\"var(--grid-line)\" /><text x=\"32\" y=\"25\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Lucidum</text><rect x=\"40\" y=\"26\" width=\"180\" height=\"20\" fill=\"var(--accent)\" opacity=\"0.25\" /><text x=\"32\" y=\"39\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Granulosum</text><rect x=\"40\" y=\"46\" width=\"180\" height=\"34\" fill=\"var(--accent)\" opacity=\"0.45\" /><text x=\"32\" y=\"66\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Spinosum</text><rect x=\"40\" y=\"80\" width=\"180\" height=\"16\" fill=\"var(--accent)\" /><text x=\"32\" y=\"91\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text)\">Basale</text><rect x=\"40\" y=\"96\" width=\"180\" height=\"40\" fill=\"none\" stroke=\"var(--border)\" stroke-width=\"1\" /><text x=\"32\" y=\"119\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Dermis</text></svg>"
   }
 ]

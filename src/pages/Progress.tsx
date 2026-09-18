@@ -1,11 +1,14 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { exportAllProgress, importAllProgress, readJSON, STORAGE_KEYS } from "../lib/storage";
+import { exportAllProgress, importAllProgress, readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
 import { flashcardDecks, flashcardSubjects } from "../lib/content";
 import { rankGlobalHardestCards } from "../lib/hardestCards";
+import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
+import { generateStudyPlan } from "../lib/studyPlan";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { BackupNudge } from "../components/BackupNudge";
 import type { CardStateMap } from "../types/content";
 
 function buildGlobalHardestCards() {
@@ -18,11 +21,45 @@ function buildGlobalHardestCards() {
   return rankGlobalHardestCards(subjects, 8);
 }
 
+function buildDeckStats(subjectId: string) {
+  const deck = flashcardDecks[subjectId] ?? [];
+  const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(subjectId), {});
+  const total = deck.length;
+  const mastered = deck.filter((c) => (stateMap[c.id]?.interval ?? 0) >= 21).length;
+  const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
+  return { total, mastered, due };
+}
+
 export function Progress() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState("");
   const [activityDays, setActivityDays] = useState<string[]>(() => getActivityDays());
   const globalHardestCards = buildGlobalHardestCards();
+
+  const [planSubjectId, setPlanSubjectId] = useState(flashcardSubjects[0]?.id ?? "");
+  const [examDate, setExamDate] = useState<string>(() =>
+    readJSON<string>(STORAGE_KEYS.examDate(planSubjectId), ""),
+  );
+
+  const handlePlanSubjectChange = (id: string) => {
+    setPlanSubjectId(id);
+    setExamDate(readJSON<string>(STORAGE_KEYS.examDate(id), ""));
+  };
+
+  const handleExamDateChange = (value: string) => {
+    setExamDate(value);
+    writeJSON(STORAGE_KEYS.examDate(planSubjectId), value);
+  };
+
+  const planDeckStats = buildDeckStats(planSubjectId);
+  const studyPlan = generateStudyPlan({
+    examDate: examDate || null,
+    totalCards: planDeckStats.total,
+    masteredCards: planDeckStats.mastered,
+    dueCards: planDeckStats.due,
+  });
+
+  const [, setExportedAt] = useState<string | null>(null);
 
   const handleExport = () => {
     const data = exportAllProgress();
@@ -35,6 +72,10 @@ export function Progress() {
     a.download = `medicine-progress-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
+
+    const now = new Date().toISOString();
+    writeJSON(STORAGE_KEYS.lastExport, now);
+    setExportedAt(now);
   };
 
   const handleImportClick = () => fileInput.current?.click();
@@ -66,6 +107,8 @@ export function Progress() {
         server. Export a backup, or move your progress to another device.
       </p>
 
+      <BackupNudge showLink={false} />
+
       <div className="streak-stats">
         <div className="stat-tile">
           <span className="stat-label">Current streak</span>
@@ -84,6 +127,35 @@ export function Progress() {
       {activityDays.length > 0 && (
         <div className="heatmap-wrapper">
           <ActivityHeatmap days={activityDays} />
+        </div>
+      )}
+
+      {flashcardSubjects.length > 0 && (
+        <div className="study-plan">
+          <h2>Study plan</h2>
+          <p className="subtitle">Set an exam date and get a daily review pace to clear the deck in time.</p>
+          <div className="study-plan-controls">
+            <select
+              className="form-select"
+              value={planSubjectId}
+              onChange={(e) => handlePlanSubjectChange(e.target.value)}
+              aria-label="Subject"
+            >
+              {flashcardSubjects.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+            <input
+              type="date"
+              className="form-input"
+              value={examDate}
+              onChange={(e) => handleExamDateChange(e.target.value)}
+              aria-label="Exam date"
+            />
+          </div>
+          <p className={`study-plan-message study-plan-${studyPlan.status}`}>{studyPlan.message}</p>
         </div>
       )}
 

@@ -201,6 +201,7 @@
       <div class="stat"><span class="num">34</span><span class="lbl">Unique Images</span></div>
       <div class="stat"><span class="num">4</span><span class="lbl">Q per Image</span></div>
     </div>
+    <button class="secondary hidden" id="btn-resume">Resume where you left off</button>
     <button class="primary" id="btn-start">Start Guessing!</button>
     <p class="note">Images are cropped directly from the course's own histology slide decks (Histology Laboratory, FK UNS 2024) rather than pulled from the open web, so every picture here is a real, reliably-licensed lab specimen.</p>
   </div>
@@ -272,6 +273,36 @@ const IMAGES = {"basophil": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/
     kindStats: {}, // breakdown by Type / Name / Distribution / Function
     reviewFilter: 'all'
   };
+
+  const SAVE_KEY = 'guessslide:progress';
+
+  function saveProgress() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        ids: state.QUESTIONS.map(q => q.id),
+        current: state.current,
+        score: state.score,
+        log: state.log,
+        catStats: state.catStats,
+        kindStats: state.kindStats
+      }));
+    } catch (e) { /* storage unavailable — resume just won't be offered */ }
+  }
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return null;
+      const saved = JSON.parse(raw);
+      if (!saved || !Array.isArray(saved.ids) || saved.ids.length === 0) return null;
+      if (typeof saved.current !== 'number' || saved.current >= saved.ids.length) return null;
+      return saved;
+    } catch (e) { return null; }
+  }
+
+  function clearProgress() {
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
+  }
 
   function shuffleArray(arr) {
     const a = arr.slice();
@@ -348,6 +379,7 @@ const IMAGES = {"basophil": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/
   }
 
   function startQuiz() {
+    clearProgress();
     el('screen-start').classList.add('hidden');
     el('screen-result').classList.add('hidden');
     el('screen-review').classList.add('hidden');
@@ -366,6 +398,26 @@ const IMAGES = {"basophil": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/
       if (!state.kindStats[q.qkind]) state.kindStats[q.qkind] = { correct: 0, total: 0 };
       state.kindStats[q.qkind].total++;
     });
+    renderQuestion();
+  }
+
+  function resumeQuiz() {
+    const saved = loadProgress();
+    if (!saved) { startQuiz(); return; }
+    const byId = {};
+    ALL_QUESTIONS.forEach(q => { byId[q.id] = q; });
+    const restored = saved.ids.map(id => byId[id]).filter(Boolean);
+    if (restored.length !== saved.ids.length) { startQuiz(); return; }
+    el('screen-start').classList.add('hidden');
+    el('screen-result').classList.add('hidden');
+    el('screen-review').classList.add('hidden');
+    el('screen-quiz').classList.remove('hidden');
+    state.QUESTIONS = restored;
+    state.current = saved.current;
+    state.score = saved.score;
+    state.log = saved.log;
+    state.catStats = saved.catStats;
+    state.kindStats = saved.kindStats;
     renderQuestion();
   }
 
@@ -446,6 +498,7 @@ const IMAGES = {"basophil": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/
     }
 
     state.log.push({ q: q, status: status, userAnswer: userText, hintUsed: state.hintUsed });
+    saveProgress();
 
     const feedbackArea = el('feedback-area');
     let tagHtml, extraLine = '';
@@ -475,6 +528,7 @@ const IMAGES = {"basophil": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/
     if (state.current >= state.QUESTIONS.length) {
       showResult();
     } else {
+      saveProgress();
       renderQuestion();
     }
   }
@@ -511,6 +565,7 @@ const IMAGES = {"basophil": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/
   }
 
   function showResult() {
+    clearProgress();
     el('screen-quiz').classList.add('hidden');
     el('screen-review').classList.add('hidden');
     el('screen-result').classList.remove('hidden');
@@ -585,6 +640,13 @@ const IMAGES = {"basophil": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/
   }
 
   function bindEvents() {
+    const saved = loadProgress();
+    if (saved) {
+      const resumeBtn = el('btn-resume');
+      resumeBtn.textContent = 'Resume where you left off (' + (saved.current + 1) + ' / ' + saved.ids.length + ')';
+      resumeBtn.classList.remove('hidden');
+      resumeBtn.addEventListener('click', resumeQuiz);
+    }
     el('btn-start').addEventListener('click', startQuiz);
     el('btn-hint').addEventListener('click', showHint);
     el('answer-form').addEventListener('submit', submitAnswer);
