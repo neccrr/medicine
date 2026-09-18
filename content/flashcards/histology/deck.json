@@ -89,5 +89,101 @@
     "back": "Stratum corneum, lucidum, granulosum, spinosum, basale (mnemonic: 'Californians Like Girls In String Bikinis'). Lucidum is only present in thick skin (palms/soles).",
     "tags": ["skin", "epithelium"],
     "image": "<svg viewBox=\"0 0 260 150\" width=\"260\" height=\"150\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"40\" y1=\"6\" x2=\"40\" y2=\"140\" stroke=\"var(--border)\" stroke-width=\"1\" /><rect x=\"40\" y=\"6\" width=\"180\" height=\"12\" fill=\"var(--border)\" /><text x=\"32\" y=\"15\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Corneum</text><rect x=\"40\" y=\"18\" width=\"180\" height=\"8\" fill=\"var(--grid-line)\" /><text x=\"32\" y=\"25\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Lucidum</text><rect x=\"40\" y=\"26\" width=\"180\" height=\"20\" fill=\"var(--accent)\" opacity=\"0.25\" /><text x=\"32\" y=\"39\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Granulosum</text><rect x=\"40\" y=\"46\" width=\"180\" height=\"34\" fill=\"var(--accent)\" opacity=\"0.45\" /><text x=\"32\" y=\"66\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Spinosum</text><rect x=\"40\" y=\"80\" width=\"180\" height=\"16\" fill=\"var(--accent)\" /><text x=\"32\" y=\"91\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text)\">Basale</text><rect x=\"40\" y=\"96\" width=\"180\" height=\"40\" fill=\"none\" stroke=\"var(--border)\" stroke-width=\"1\" /><text x=\"32\" y=\"119\" text-anchor=\"end\" font-size=\"10\" fill=\"var(--text-muted)\">Dermis</text></svg>"
+  },
+  {
+    "id": "histo-016",
+    "front": "What are the three criteria used to classify epithelial tissue?",
+    "back": "(1) Number of cell layers — simple or stratified/complex. (2) Surface cell shape — squamous, cuboidal, or columnar. (3) Surface specialization — plain, ciliated, or keratinized/cornified.",
+    "tags": ["epithelium", "classification"]
+  },
+  {
+    "id": "histo-017",
+    "front": "What are the three functionally distinct surfaces of an epithelial cell?",
+    "back": "Apical (faces the lumen or external surface — site of microvilli/cilia/stereocilia), lateral (faces the neighboring cell — site of the junctional complex), and basal (faces the basement membrane — anchored by hemidesmosomes).",
+    "tags": ["epithelium", "cell junctions"]
+  },
+  {
+    "id": "histo-018",
+    "front": "What does a tight junction (zonula occludens) do?",
+    "back": "It seals the paracellular space between adjacent epithelial cells, controlling what can pass between (rather than through) cells — the apical-most component of the junctional complex.",
+    "tags": ["cell junctions"]
+  },
+  {
+    "id": "histo-019",
+    "front": "What is a zonula adherens, and where does it sit relative to the tight junction?",
+    "back": "A belt-like junction just below the tight junction that anchors the actin cytoskeleton of neighboring cells together.",
+    "tags": ["cell junctions"]
+  },
+  {
+    "id": "histo-020",
+    "front": "How does a gap junction work, and what size cutoff limits what can pass through it?",
+    "back": "Channels called connexons — each built from six transmembrane connexin proteins — bridge a 2–4 nm gap between adjacent cells. Small molecules and inorganic ions up to about 1.5 nm can pass directly from one cell's cytoplasm to the next; larger molecules and negatively charged ions cannot.",
+    "tags": ["cell junctions"]
+  },
+  {
+    "id": "histo-021",
+    "front": "How does a hemidesmosome differ from a desmosome?",
+    "back": "A desmosome is a cell-to-cell junction on the lateral surface, anchoring intermediate filaments between two neighboring cells. A hemidesmosome instead sits on the basal surface only, anchoring the cell to the basement membrane rather than to another cell.",
+    "tags": ["cell junctions"]
+  },
+  {
+    "id": "histo-022",
+    "front": "What are microvilli, and by roughly how much do they increase a cell's absorptive surface area?",
+    "back": "Finger-like projections of the apical plasma membrane, 0.5–1.0 µm long, that increase apical surface area roughly 30-fold — the defining feature of absorptive epithelium like the small intestine's brush border.",
+    "tags": ["epithelium", "surface specialization"]
+  },
+  {
+    "id": "histo-023",
+    "front": "What are stereocilia, and where are they classically found?",
+    "back": "Unusually long, immobile microvilli, easily seen with a light microscope. Found in small numbers in the male reproductive tract, classically the epididymis, where they assist absorption.",
+    "tags": ["epithelium", "surface specialization", "reproductive"]
+  },
+  {
+    "id": "histo-024",
+    "front": "Roughly how many cilia can a single ciliated epithelial cell carry, and how long can each one be?",
+    "back": "Up to about 300 cilia per cell, each up to 10 µm long — roughly half the cell's height. They beat in a synchronized, wave-like rhythm that moves fluid or mucus in one consistent direction.",
+    "tags": ["epithelium", "surface specialization", "respiratory"]
+  },
+  {
+    "id": "histo-025",
+    "front": "What is the '9+2' arrangement inside a motile cilium?",
+    "back": "Nine peripheral microtubule doublets arranged in a ring around two central single microtubules (the axoneme) — the core structural motif shared by every motile cilium in the body.",
+    "tags": ["surface specialization"]
+  },
+  {
+    "id": "histo-026",
+    "front": "How are exocrine glands classified by structure, separate from their secretion mechanism?",
+    "back": "By duct branching — simple (one unbranched duct) or compound (a branching duct system) — and by the shape of the secretory unit: tubular, alveolar/acinar, or a tubuloalveolar mix.",
+    "tags": ["glands", "classification"]
+  },
+  {
+    "id": "histo-027",
+    "front": "Where is transitional epithelium found, and why is it well suited to that location?",
+    "back": "The lower urinary tract — renal pelvis, ureters, bladder, and urethra. Its dome-shaped surface cells can flatten out as the organ distends, letting the epithelium stretch without tearing.",
+    "tags": ["epithelium", "urinary"]
+  },
+  {
+    "id": "histo-028",
+    "front": "What type of epithelium lines the parietal layer of Bowman's capsule?",
+    "back": "Simple squamous epithelium — a classic example used to teach simple squamous identification, since it wraps around the glomerulus inside each renal corpuscle.",
+    "tags": ["epithelium", "urinary"]
+  },
+  {
+    "id": "histo-029",
+    "front": "What is unusual about the epithelium lining the male urethra's pars cavernosa?",
+    "back": "It's stratified columnar epithelium — one of the few places in the body where a stratified columnar arrangement is the normal, expected finding.",
+    "tags": ["epithelium", "urinary", "reproductive"]
+  },
+  {
+    "id": "histo-030",
+    "front": "What shape are the follicular cells that line thyroid follicles?",
+    "back": "Simple cuboidal epithelium — the same general cell shape seen lining kidney tubules, but here arranged around a colloid-filled follicle as part of an endocrine (ductless) gland.",
+    "tags": ["epithelium", "endocrine"]
+  },
+  {
+    "id": "histo-031",
+    "front": "What type of epithelium lines the fallopian tube, and what is its function there?",
+    "back": "Simple ciliated columnar epithelium. Its cilia beat to help move the ovum from the ovary toward the uterus.",
+    "tags": ["epithelium", "surface specialization", "reproductive"]
   }
 ]

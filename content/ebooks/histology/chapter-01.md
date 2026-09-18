@@ -32,6 +32,14 @@ shape are the surface cells?
   polarity. Lines the GI tract (with microvilli for absorption) and, in
   its pseudostratified ciliated form, the airway.
 
+## Step 3 — check for a surface specialization
+
+Layers and shape are usually enough to identify a slide, but a complete
+description adds a third detail: is the surface **plain**, **ciliated**,
+or **keratinized/cornified**? Chapter 5 covers this axis in depth, along
+with the junctions that hold epithelial sheets together, microvilli and
+stereocilia, and how epithelium folds into glands.
+
 ## Putting it together
 
 A slide description like "simple cuboidal epithelium" or "stratified
