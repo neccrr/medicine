@@ -1,12 +1,110 @@
 # Medicine — static study tool
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-2dd4a7.svg)](./LICENSE)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-installable-2dd4a7)
+![No backend](https://img.shields.io/badge/backend-none-lightgrey)
+
 A fully static, zero-backend study app: flashcards (SM-2 spaced repetition),
-multiple-choice quizzes, chaptered ebooks, written summaries, and
-client-side search — installable as an offline-capable PWA. All content
-ships as JSON/Markdown in the repo; all progress lives in the browser's
-`localStorage`. No accounts, no database, no server round-trip — free to
-host forever on Vercel's hobby tier (static hosting only, no serverless
-invocations).
+multiple-choice quizzes and interactive quiz games, chaptered ebooks,
+written summaries, and client-side search — installable as an
+offline-capable PWA. All content ships as JSON/Markdown in the repo; all
+progress lives in the browser's `localStorage`. No accounts, no database,
+no server round-trip — free to host forever on Vercel's hobby tier (static
+hosting only, no serverless invocations).
+
+It's open source under the MIT license — clone it, point `/content` at
+your own material, and it's your own study app.
+
+## Screenshots
+
+<table>
+<tr>
+<td width="50%">
+
+![Home dashboard, dark theme](docs/screenshots/home-dark.png)
+Home dashboard, dark theme — streaks, due counts, continue-where-you-left-off
+
+</td>
+<td width="50%">
+
+![Home dashboard, light theme](docs/screenshots/home-light.png)
+Same page, light theme — OS-aware default, toggle anytime
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+![Flashcard review](docs/screenshots/flashcard-dark.png)
+Flashcard review — flip animation, tag filters, keyboard grading
+
+</td>
+<td width="50%">
+
+![Quiz](docs/screenshots/quiz-light.png)
+Quiz — instant scoring, plus a link to the subject's interactive game
+
+</td>
+</tr>
+</table>
+
+<details>
+<summary>Ebook chapter &amp; Progress page</summary>
+
+![Ebook chapter](docs/screenshots/ebook-dark.png)
+Ebook chapter — original diagrams, reading controls, resume position
+
+![Progress page](docs/screenshots/progress-light.png)
+Progress — streak stats, activity heatmap, study-plan generator
+
+</details>
+
+## Features
+
+- **SM-2 spaced repetition** for flashcards — due-card queue, tag
+  filtering, session summaries, and a per-deck (plus global, cross-subject)
+  "hardest cards" list ranked by lapse count
+- **Quizzes** — instant scoring, a "review missed only" retry flow, a
+  cross-attempt due-questions queue, a score-trend sparkline, and support
+  for self-contained interactive HTML quiz games alongside the MCQ bank
+- **Ebooks** — chaptered Markdown readers with a table of contents,
+  prev/next nav, resume-where-you-left-off position tracking, adjustable
+  font size, an accessible-font toggle, print/export styling, and
+  optional PDFs
+- **Full-text search** — fuzzy search (Fuse.js) across every flashcard,
+  quiz question, summary, and ebook chapter, plus a **⌘K / Ctrl+K**
+  command palette
+- **Progress tracking** — study-streak counter, a GitHub-style activity
+  heatmap, a study-plan generator (set an exam date, get a daily review
+  pace), and one-click export/import of all progress as JSON
+- **Installable PWA** — offline-capable after first load (service worker
+  precaches the app, PDFs, and quiz games); a backup-reminder nudge
+  prompts an export if it's been a while
+- **Light/dark theme**, OS-aware by default, with a distinct per-subject
+  accent color and initial badge
+- **Zero backend** — no accounts, no database, no server round-trip;
+  every byte of progress stays in the browser's `localStorage`
+
+## Quick start
+
+```bash
+git clone https://github.com/neccrr/medicine.git
+cd medicine
+npm install
+npm run dev       # http://localhost:5173
+```
+
+No environment variables, no API keys, no database to set up — it just
+runs.
+
+## Add your own content
+
+Content lives in `/content` and is auto-discovered at build time — **drop
+a folder in, no code changes required.** See
+[Content structure](#content-structure) below for the exact file layout.
 
 ## Stack
 
@@ -106,18 +204,24 @@ the UI.
   missedIds }`) to history and updates the due-questions queue, powering the
   "review missed only" flow, the due-review banner, and the score history
   sparkline.
+- **`src/lib/studyPlan.ts`** — pure function that turns an exam date plus a
+  deck's stats into a daily review pace ("N cards/day clears the deck in
+  M days"), powering the Progress page's study-plan generator.
 - **`src/lib/tipOfDay.ts`** — deterministic pick from `tips.json` based on
   the calendar date, so everyone sees the same tip on a given day without a
   server.
 - **`src/lib/activity.ts`** — logs a "study day" on any flashcard grade,
   quiz submission, or ebook chapter view; computes current/longest streaks
-  for the navbar badge and the Progress page's calendar heatmap.
+  for the sidebar badge and the Progress page's calendar heatmap.
 - **`src/lib/textExtract.ts`** — strips markdown/HTML (including embedded
   `<svg>` diagrams, which are pure coordinate noise) down to plain text;
   used to index summaries and ebook chapters for search without polluting
   results with diagram markup.
 - **`src/hooks/useTheme.ts`** — light/dark theme, defaults to the OS
   preference, persisted and toggleable from the sidebar.
+- **`src/hooks/useReadingPrefs.ts`** — persisted font-scale and
+  accessible-font (Atkinson Hyperlegible) preferences, shared by the ebook
+  reader and summary pages.
 - **`src/lib/storage.ts`** — thin `localStorage` JSON helpers, plus
   `exportAllProgress` / `importAllProgress` for the Progress page's backup
   flow (all `medicine:*` keys, whole state as one downloadable JSON file).
@@ -128,15 +232,15 @@ the UI.
 |-------------------------------|----------------------------------------------------|
 | `/`                          | Home, tip of the day, quick links                |
 | `/flashcards`                | Subject list with due-card counts                |
-| `/flashcards/:subjectId`     | SM-2 study session — flip animation, keyboard shortcuts (space to flip, 1–5 to grade), tag filtering, session summary, hardest-cards list |
+| `/flashcards/:subjectId`     | SM-2 study session — flip animation, keyboard shortcuts (space to flip, 1–5 to grade), tag filtering, session summary, hardest-cards list, read-aloud |
 | `/quizzes`                   | Subject list with last score and due-question counts |
 | `/quizzes/:subjectId`        | Quiz with instant scoring, missed-only retry, a cross-attempt due-questions banner, score trend sparkline — plus a link to the subject's interactive HTML game, if it has one |
 | `/ebooks`                    | Ebook list with resume position                  |
-| `/ebooks/:subjectId/:chapterId` | Chapter reader with table of contents, prev/next nav |
+| `/ebooks/:subjectId/:chapterId` | Chapter reader with table of contents, prev/next nav, font-size/accessible-font controls, print button |
 | `/summaries`                 | Subject list                                     |
 | `/summaries/:subjectId`      | Rendered Markdown summary                        |
-| `/search`                    | Fuzzy search across every flashcard, quiz question, summary section, and ebook chapter |
-| `/progress`                  | Streak stats, activity heatmap, global hardest-cards list, export/import as JSON |
+| `/search`                    | Fuzzy search across every flashcard, quiz question, summary section, and ebook chapter, with type/subject filters |
+| `/progress`                  | Streak stats, activity heatmap, study-plan generator, global hardest-cards list, export/import as JSON |
 
 Press **⌘K / Ctrl+K** anywhere to open the command palette and jump to any
 page or subject.
@@ -161,7 +265,8 @@ retheme.
 - Light/dark theme (OS-aware default, persisted toggle)
 - Per-subject accent color + initial badge, derived deterministically from
   the subject id
-- 3D flip animation on flashcards, keyboard-driven review (space/1–5)
+- 3D flip animation on flashcards, keyboard-driven review (space/1–5),
+  optional read-aloud via the Web Speech API
 - Tag-based flashcard filtering — click any tag (on a card or in the filter
   row) to drill a deck down to just that topic
 - Cross-attempt quiz due-questions queue: a missed question resurfaces on
@@ -170,6 +275,10 @@ retheme.
 - A global "hardest cards" list on the Progress page, merged and ranked
   across every subject's deck
 - Study streak tracking with a GitHub-style activity heatmap
+- A study-plan generator: set an exam date, get a daily review pace
+- A backup-reminder nudge if it's been a while since your last progress export
+- Adjustable ebook/summary font size and an accessible-font (Atkinson
+  Hyperlegible) toggle, plus print-friendly styling
 - A branded splash screen on first load (inlined critical CSS, fades out
   once the app is ready — see `index.html`)
 - Command palette (⌘K) for fast navigation
@@ -193,8 +302,9 @@ retheme.
 ## Testing
 
 Pure logic (SM-2, quiz scoring, streak math, search indexing, text
-extraction) is covered by Vitest unit tests in `src/lib/*.test.ts` — no
-DOM/component tests, just the algorithms that are easy to get subtly wrong.
+extraction, study-plan pacing, backup-reminder timing) is covered by
+Vitest unit tests in `src/lib/*.test.ts` — no DOM/component tests, just the
+algorithms that are easy to get subtly wrong.
 
 ```bash
 npm run test        # run once
@@ -218,3 +328,27 @@ This repo includes `vercel.json` (build command, `dist` output dir, and an
 SPA rewrite so client-side routes work on refresh/deep-link). Import the
 repo in Vercel — no environment variables or serverless functions are
 needed; it's served as pure static assets on the hobby tier.
+
+## Contributing
+
+Contributions are welcome — this is a small, readable codebase on purpose.
+
+- **Adding content** (flashcards, quizzes, ebook chapters, summaries) needs
+  no code changes at all — see [Content structure](#content-structure) and
+  drop files into `/content`.
+- **Bug fixes / features**: fork the repo, make your change, and run the
+  full check before opening a PR:
+
+  ```bash
+  npm run lint && npm run test && npm run build
+  ```
+- Keep pure logic in `src/lib/*.ts` covered by a Vitest test in the
+  matching `*.test.ts` file — see [Testing](#testing).
+- Open an issue first for anything that changes the data model
+  (`src/types/content.ts`) or the content file layout, so the approach can
+  be discussed before the work is done.
+
+## License
+
+[MIT](./LICENSE) — use it, fork it, retheme it, point it at your own
+content. Attribution is appreciated but not required.

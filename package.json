@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "A fully static, zero-backend study app — flashcards, quizzes, ebooks, and summaries, installable offline as a PWA.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neccrr/medicine"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
