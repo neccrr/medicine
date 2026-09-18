@@ -2,8 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { flashcardDecks } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { STORAGE_KEYS } from "../lib/storage";
 import { EmptyState } from "../components/EmptyState";
+import { SpeakerIcon } from "../components/icons";
 import type { Flashcard } from "../types/content";
+
+function speak(text: string) {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+}
 
 const GRADES = [
   { quality: 0, key: "1", label: "Blackout", hint: "No idea" },
@@ -22,7 +31,7 @@ export function FlashcardStudy() {
   const [flipped, setFlipped] = useState(false);
   const [session, setSession] = useState({ reviewed: 0, lapses: 0 });
   const [extraReview, setExtraReview] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useLocalStorage<string[]>(STORAGE_KEYS.tagFilter(subjectId), []);
 
   const allTags = useMemo(
     () => Array.from(new Set(deck.flatMap((c) => c.tags))).sort(),
@@ -92,6 +101,16 @@ export function FlashcardStudy() {
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flipped, sessionDone, card?.id]);
+
+  useEffect(() => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  }, [card?.id]);
+
+  useEffect(() => {
+    return () => {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    };
+  }, []);
 
   if (deck.length === 0) {
     return (
@@ -212,10 +231,37 @@ export function FlashcardStudy() {
           >
             <div className="flashcard-inner">
               <div className="flashcard-face flashcard-front">
+                <button
+                  type="button"
+                  className="icon-btn flashcard-speak-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speak(card.front);
+                  }}
+                  aria-label="Read question aloud"
+                  title="Read aloud"
+                >
+                  <SpeakerIcon />
+                </button>
+                {card.image && (
+                  <div className="flashcard-image" dangerouslySetInnerHTML={{ __html: card.image }} />
+                )}
                 <p>{card.front}</p>
                 <span className="flashcard-hint">Space to reveal</span>
               </div>
               <div className="flashcard-face flashcard-back">
+                <button
+                  type="button"
+                  className="icon-btn flashcard-speak-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speak(card.back);
+                  }}
+                  aria-label="Read answer aloud"
+                  title="Read aloud"
+                >
+                  <SpeakerIcon />
+                </button>
                 <p>{card.back}</p>
                 <span className="flashcard-hint">Answer</span>
               </div>

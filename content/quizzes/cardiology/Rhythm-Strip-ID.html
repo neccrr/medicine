@@ -280,6 +280,41 @@
 
   var state = { selectedCats: CATEGORIES.slice(), pool: [], idx: 0, results: [], hintShown: false, answered: false };
 
+  var SAVE_KEY = "rhythmgame:progress";
+  function saveProgress() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        selectedCats: state.selectedCats,
+        poolIndices: state.pool.map(function (item) { return ALL_QUESTIONS.indexOf(item); }),
+        idx: state.idx,
+        results: state.results.map(function (r) {
+          return { qIndex: ALL_QUESTIONS.indexOf(r.item), userAnswer: r.userAnswer, status: r.status };
+        })
+      }));
+    } catch (e) { /* ignore */ }
+  }
+  function loadProgress() {
+    try {
+      var raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return null;
+      var saved = JSON.parse(raw);
+      if (!saved || !saved.poolIndices || saved.idx >= saved.poolIndices.length) return null;
+      return saved;
+    } catch (e) { return null; }
+  }
+  function clearProgress() {
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
+  }
+  function resumeQuiz(saved) {
+    state.selectedCats = saved.selectedCats;
+    state.pool = saved.poolIndices.map(function (i) { return ALL_QUESTIONS[i]; });
+    state.idx = saved.idx;
+    state.results = saved.results.map(function (r) {
+      return { item: ALL_QUESTIONS[r.qIndex], userAnswer: r.userAnswer, status: r.status };
+    });
+    renderQuestion();
+  }
+
   function el(id) { return document.getElementById(id); }
   function normalize(s) { return s.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " "); }
   function isCorrect(input, answers) {
@@ -298,6 +333,7 @@
 
   function renderStart() {
     var savedBest = localStorage.getItem("rhythmgame:best");
+    var savedProgress = loadProgress();
     el("screen").innerHTML =
       '<div class="card">' +
       '<h1>Rhythm Strip ID</h1>' +
@@ -308,6 +344,7 @@
       '<div class="stat"><span class="num">' + (savedBest || '—') + '</span><span class="lbl">Best score</span></div>' +
       '</div>' +
       '<div class="chip-row" id="cat-chips"></div>' +
+      (savedProgress ? '<button class="secondary" id="btn-resume">Resume where you left off (' + (savedProgress.idx + 1) + ' / ' + savedProgress.poolIndices.length + ')</button>' : '') +
       '<button class="primary" id="btn-start">Start quiz</button>' +
       '</div>';
     var chipRow = el("cat-chips");
@@ -323,10 +360,14 @@
       });
       chipRow.appendChild(b);
     });
+    if (savedProgress) {
+      el("btn-resume").addEventListener("click", function () { resumeQuiz(savedProgress); });
+    }
     el("btn-start").addEventListener("click", startQuiz);
   }
 
   function startQuiz() {
+    clearProgress();
     var filtered = ALL_QUESTIONS.filter(function (q) { return state.selectedCats.indexOf(q.cat) !== -1; });
     if (filtered.length === 0) filtered = ALL_QUESTIONS.slice();
     state.pool = shuffle(filtered);
@@ -385,6 +426,7 @@
     var item = state.pool[state.idx];
     var correct = !skipped && isCorrect(value, item.answers);
     state.results.push({ item: item, userAnswer: value, status: skipped ? "skipped" : correct ? "correct" : "wrong" });
+    saveProgress();
 
     var fb = el("feedback");
     fb.className = "feedback show " + (skipped ? "incorrect" : correct ? "correct" : "incorrect");
@@ -403,6 +445,7 @@
   function advance() {
     if (state.idx < state.pool.length - 1) {
       state.idx++;
+      saveProgress();
       renderQuestion();
     } else {
       renderResults();
@@ -410,6 +453,7 @@
   }
 
   function renderResults() {
+    clearProgress();
     var correct = state.results.filter(function (r) { return r.status === "correct"; }).length;
     var total = state.results.length;
     var pct = Math.round((correct / total) * 100);

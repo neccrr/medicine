@@ -3,6 +3,7 @@ export interface Flashcard {
   front: string;
   back: string;
   tags: string[];
+  image?: string;
 }
 
 export interface QuizQuestion {

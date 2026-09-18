@@ -21,6 +21,7 @@ import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { EmptyState } from "../components/EmptyState";
+import { BackupNudge } from "../components/BackupNudge";
 import { BookIcon, CalendarIcon, CardsIcon, FlameIcon, QuizIcon, SummaryIcon } from "../components/icons";
 import type { CardStateMap, QuizAttempt, ReadingPosition } from "../types/content";
 
@@ -178,9 +179,15 @@ function buildSubjectOverviews() {
 
       const meta = ebookMeta[id];
       if (meta) {
+        const completedCount = readJSON<string[]>(STORAGE_KEYS.ebookCompleted(id), []).length;
         facets.push({
           label: "Ebook",
-          detail: meta.chapters.length > 0 ? `${meta.chapters.length} chapters` : "Reference PDF",
+          detail:
+            meta.chapters.length > 0
+              ? completedCount > 0
+                ? `${completedCount}/${meta.chapters.length} complete`
+                : `${meta.chapters.length} chapters`
+              : "Reference PDF",
           to: `/ebooks/${id}`,
           icon: <BookIcon />,
         });
@@ -237,6 +244,8 @@ export function Home() {
           Your progress lives in this browser. No account, no server round-trip.
         </p>
       </div>
+
+      <BackupNudge />
 
       <div className="streak-stats dashboard-stats">
         <div className="stat-tile">

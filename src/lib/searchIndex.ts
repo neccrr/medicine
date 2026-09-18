@@ -19,6 +19,7 @@ export interface SearchDoc {
   title: string;
   detail: string;
   to: string;
+  subjectId?: string;
 }
 
 const staticPages: SearchDoc[] = [
@@ -72,6 +73,7 @@ function contentDocs(): SearchDoc[] {
       title: card.front,
       detail: card.back,
       to: `/flashcards/${subjectId}`,
+      subjectId,
     })),
   );
   const quizDocs = Object.entries(quizBanks).flatMap(([subjectId, bank]) =>
@@ -81,6 +83,7 @@ function contentDocs(): SearchDoc[] {
       title: q.question,
       detail: q.explanation,
       to: `/quizzes/${subjectId}`,
+      subjectId,
     })),
   );
   const summaryDocs = Object.entries(summaries).flatMap(([subjectId, markdown]) => {
@@ -96,6 +99,7 @@ function contentDocs(): SearchDoc[] {
           title: `${label} summary`,
           detail: truncate(markdownToPlainText(markdown), EXCERPT_LENGTH),
           to,
+          subjectId,
         },
       ];
     }
@@ -107,6 +111,7 @@ function contentDocs(): SearchDoc[] {
         title: `${label}: ${section.heading}`,
         detail: truncate(markdownToPlainText(section.body), EXCERPT_LENGTH),
         to,
+        subjectId,
       }))
       .filter((doc) => doc.detail.length > 0);
   });
@@ -125,6 +130,7 @@ function contentDocs(): SearchDoc[] {
           title: chapterTitle,
           detail: truncate(markdownToPlainText(markdown), EXCERPT_LENGTH),
           to,
+          subjectId,
         },
       ];
     }
@@ -136,6 +142,7 @@ function contentDocs(): SearchDoc[] {
         title: `${chapterTitle}: ${section.heading}`,
         detail: truncate(markdownToPlainText(section.body), EXCERPT_LENGTH),
         to,
+        subjectId,
       }))
       .filter((doc) => doc.detail.length > 0);
   });

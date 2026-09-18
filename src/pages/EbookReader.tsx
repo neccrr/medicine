@@ -4,6 +4,9 @@ import { marked } from "marked";
 import { ebookChapters, ebookMeta, ebookPdfs } from "../lib/content";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { recordActivity } from "../lib/activity";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useReadingPrefs } from "../hooks/useReadingPrefs";
+import { ReadingControls } from "../components/ReadingControls";
 import type { ReadingPosition } from "../types/content";
 
 function ExternalIcon() {
@@ -21,6 +24,21 @@ function ExternalIcon() {
   );
 }
 
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+      <path
+        d="M5 12.5 10 17 19 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function EbookReader() {
   const { subjectId = "", chapterId } = useParams();
   const meta = ebookMeta[subjectId];
@@ -31,6 +49,19 @@ export function EbookReader() {
     STORAGE_KEYS.ebookPosition(subjectId),
     null,
   );
+  const [completedChapters, setCompletedChapters] = useLocalStorage<string[]>(
+    STORAGE_KEYS.ebookCompleted(subjectId),
+    [],
+  );
+  const [readingPrefs, setReadingPrefs] = useReadingPrefs();
+  const isComplete = chapterId ? completedChapters.includes(chapterId) : false;
+
+  const toggleComplete = () => {
+    if (!chapterId) return;
+    setCompletedChapters((prev) =>
+      prev.includes(chapterId) ? prev.filter((id) => id !== chapterId) : [...prev, chapterId],
+    );
+  };
 
   useEffect(() => {
     if (!meta) return;
@@ -88,6 +119,11 @@ export function EbookReader() {
                 aria-current={c.id === chapterId ? "page" : undefined}
               >
                 {i + 1}. {c.title}
+                {completedChapters.includes(c.id) && (
+                  <span className="ebook-toc-check" title="Completed">
+                    <CheckIcon />
+                  </span>
+                )}
               </Link>
             </li>
           ))}
@@ -139,10 +175,24 @@ export function EbookReader() {
         <div className="ebook-content">
           {hasChapters && markdown ? (
             <>
+              <ReadingControls prefs={readingPrefs} onChange={setReadingPrefs} />
               <div
                 className="summary-content"
+                style={{
+                  fontSize: `${readingPrefs.fontScale}rem`,
+                  fontFamily: readingPrefs.accessibleFont ? "var(--font-reading-accessible)" : undefined,
+                }}
                 dangerouslySetInnerHTML={{ __html: marked.parse(markdown, { async: false }) }}
               />
+              <button
+                type="button"
+                className={isComplete ? "btn btn-secondary mark-complete-btn active" : "btn btn-secondary mark-complete-btn"}
+                onClick={toggleComplete}
+                aria-pressed={isComplete}
+              >
+                <CheckIcon />
+                {isComplete ? "Completed" : "Mark chapter complete"}
+              </button>
               <div className="ebook-nav">
                 {prevChapter ? (
                   <Link
