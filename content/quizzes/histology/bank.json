@@ -106,5 +106,113 @@
     ],
     "answer": 1,
     "explanation": "Goblet cells are unicellular glands that secrete mucin, which absorbs water to form mucus — a protective, lubricating barrier on respiratory and GI epithelial surfaces."
+  },
+  {
+    "id": "q-histo-010",
+    "question": "Which junction, positioned apical-most in the junctional complex, seals the paracellular space between epithelial cells?",
+    "options": [
+      "Gap junction",
+      "Tight junction (zonula occludens)",
+      "Zonula adherens",
+      "Hemidesmosome"
+    ],
+    "answer": 1,
+    "explanation": "The tight junction (zonula occludens) sits closest to the apical surface and seals the space between adjacent cells, controlling paracellular passage."
+  },
+  {
+    "id": "q-histo-011",
+    "question": "Gap junction channels (connexons) allow which of the following to pass directly between adjacent cells' cytoplasm?",
+    "options": [
+      "Only large signaling proteins",
+      "Small molecules and inorganic ions up to about 1.5 nm",
+      "Whole organelles",
+      "Nothing — gap junctions are purely mechanical anchors"
+    ],
+    "answer": 1,
+    "explanation": "Each connexon is built from six connexin proteins and forms a channel that permits small molecules and inorganic ions (roughly up to 1.5 nm) to pass directly from one cell's cytoplasm to the next; larger molecules cannot pass."
+  },
+  {
+    "id": "q-histo-012",
+    "question": "Roughly how much do microvilli increase an absorptive epithelial cell's apical surface area?",
+    "options": [
+      "About 2-fold",
+      "About 10-fold",
+      "About 30-fold",
+      "About 100-fold"
+    ],
+    "answer": 2,
+    "explanation": "Microvilli — finger-like apical projections 0.5–1.0 µm long — increase absorptive surface area roughly 30-fold, the defining feature of brush-border epithelium like the small intestine."
+  },
+  {
+    "id": "q-histo-013",
+    "question": "What is the classic location of stereocilia in the body?",
+    "options": [
+      "Trachea",
+      "Epididymis",
+      "Fallopian tube",
+      "Small intestine"
+    ],
+    "answer": 1,
+    "explanation": "Stereocilia — unusually long, immobile microvilli — are found in small numbers in the male reproductive tract, classically the epididymis, where they assist absorption."
+  },
+  {
+    "id": "q-histo-014",
+    "question": "What is the classic '9+2' arrangement seen in cross-section through a motile cilium?",
+    "options": [
+      "9 central microtubules surrounded by 2 peripheral doublets",
+      "9 peripheral microtubule doublets surrounding 2 central single microtubules",
+      "9 connexons surrounding 2 desmosomes",
+      "9 actin filaments surrounding 2 keratin filaments"
+    ],
+    "answer": 1,
+    "explanation": "The ciliary axoneme has nine peripheral microtubule doublets arranged in a ring around a central pair of single microtubules — the core motile machinery shared by every cilium in the body."
+  },
+  {
+    "id": "q-histo-015",
+    "question": "Structurally (independent of secretion mechanism), how are exocrine glands classified?",
+    "options": [
+      "By hormone type only",
+      "By duct branching (simple vs. compound) and secretory unit shape (tubular, alveolar, or tubuloalveolar)",
+      "By the number of nuclei per cell",
+      "By whether they are vascularized"
+    ],
+    "answer": 1,
+    "explanation": "Structurally, exocrine glands are classified by whether their duct is simple (unbranched) or compound (branched), and by the shape of the secretory unit — tubular, alveolar/acinar, or a tubuloalveolar mix. This is separate from classification by secretion mechanism (merocrine/apocrine/holocrine)."
+  },
+  {
+    "id": "q-histo-016",
+    "question": "What type of epithelium lines the parietal layer of Bowman's capsule around the renal glomerulus?",
+    "options": [
+      "Simple cuboidal epithelium",
+      "Simple squamous epithelium",
+      "Transitional epithelium",
+      "Pseudostratified columnar epithelium"
+    ],
+    "answer": 1,
+    "explanation": "The parietal layer of Bowman's capsule is lined by simple squamous epithelium — a classic teaching example of this epithelium type."
+  },
+  {
+    "id": "q-histo-017",
+    "question": "Which of the following is an unusual site where stratified columnar epithelium is the normal finding?",
+    "options": [
+      "Esophagus",
+      "Male urethra, pars cavernosa",
+      "Stomach",
+      "Trachea"
+    ],
+    "answer": 1,
+    "explanation": "The pars cavernosa of the male urethra is one of the few normal sites lined by stratified columnar epithelium, an otherwise uncommon epithelium type in the body."
+  },
+  {
+    "id": "q-histo-018",
+    "question": "Thyroid follicular cells, which secrete thyroid hormone into a colloid-filled follicle, are what type of epithelium?",
+    "options": [
+      "Simple squamous",
+      "Simple cuboidal",
+      "Stratified columnar",
+      "Transitional"
+    ],
+    "answer": 1,
+    "explanation": "Thyroid follicular cells are simple cuboidal epithelium arranged around a colloid-filled follicle — the same basic cell shape seen lining renal tubules, but here functioning as an endocrine (ductless) gland."
   }
 ]
