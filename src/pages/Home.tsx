@@ -19,6 +19,7 @@ import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { subjectAccent } from "../lib/subjectStyle";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { RadialGauge } from "../components/RadialGauge";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { EmptyState } from "../components/EmptyState";
 import { BackupNudge } from "../components/BackupNudge";
@@ -155,11 +156,16 @@ function buildSubjectOverviews() {
         id;
 
       const facets: SubjectFacet[] = [];
+      let activityScore = 0;
+      let mastery: number | null = null;
 
       const deck = flashcardDecks[id];
       if (deck) {
         const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(id), {});
         const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
+        const masteredCount = deck.filter((c) => (stateMap[c.id]?.interval ?? 0) >= 21).length;
+        mastery = deck.length > 0 ? (masteredCount / deck.length) * 100 : 0;
+        activityScore += due;
         facets.push({
           label: "Flashcards",
           detail: due > 0 ? `${deck.length} · ${due} due` : `${deck.length} cards`,
@@ -174,6 +180,7 @@ function buildSubjectOverviews() {
         const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(id), []);
         const last = history[history.length - 1];
         const due = readJSON<string[]>(STORAGE_KEYS.quizDue(id), []).length;
+        activityScore += due;
         facets.push({
           label: "Quiz",
           detail: bank
@@ -213,7 +220,7 @@ function buildSubjectOverviews() {
         });
       }
 
-      return { id, label, facets };
+      return { id, label, facets, activityScore, mastery };
     });
 }
 
@@ -237,6 +244,10 @@ export function Home() {
 
   const continueItems = buildContinueItems();
   const subjects = buildSubjectOverviews();
+  const featuredId =
+    subjects.length > 1
+      ? subjects.reduce((top, s) => (s.activityScore > top.activityScore ? s : top), subjects[0]).id
+      : null;
 
   const heroTitle = streak > 0
     ? `${streak}-day streak. Keep it going.`
@@ -280,6 +291,8 @@ export function Home() {
           <span className="stat-value">{totalQuizAttempts}</span>
         </div>
       </div>
+
+      <hr className="section-divider" />
 
       <div className="dashboard-layout">
         <div className="dashboard-main">
@@ -328,7 +341,9 @@ export function Home() {
               {subjects.map((subject) => (
                 <div
                   key={subject.id}
-                  className="subject-card"
+                  className={
+                    subject.id === featuredId ? "subject-card subject-card-featured" : "subject-card"
+                  }
                   style={
                     {
                       borderLeftColor: subjectAccent(subject.id),
@@ -339,6 +354,12 @@ export function Home() {
                   <div className="subject-card-head">
                     <SubjectBadge id={subject.id} label={subject.label} />
                     <h3>{subject.label}</h3>
+                    {subject.mastery !== null && (
+                      <RadialGauge
+                        percent={subject.mastery}
+                        label={`${Math.round(subject.mastery)}% of ${subject.label} flashcards mastered`}
+                      />
+                    )}
                   </div>
                   <div className="subject-links">
                     {subject.facets.map((facet) => (
