@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
 import { ScoreSparkline } from "../components/ScoreSparkline";
+import { subjectHueStyle } from "../lib/subjectStyle";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
@@ -43,7 +44,7 @@ export function QuizPlay() {
 
   if (fullBank.length === 0) {
     return (
-      <section className="page">
+      <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
         <Link to="/quizzes" className="back-link">
           ← All quizzes
         </Link>
@@ -98,7 +99,7 @@ export function QuizPlay() {
   const missedQuestions = result ? bank.filter((q) => result.missedIds.includes(q.id)) : [];
 
   return (
-    <section className="page">
+    <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
       <Link to="/quizzes" className="back-link">
         ← All quizzes
       </Link>

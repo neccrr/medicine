@@ -10,6 +10,7 @@ import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { RadialGauge } from "../components/RadialGauge";
 import { BackupNudge } from "../components/BackupNudge";
+import { useCountUp } from "../hooks/useCountUp";
 import type { CardStateMap } from "../types/content";
 
 function buildGlobalHardestCards() {
@@ -99,6 +100,9 @@ export function Progress() {
 
   const streak = getCurrentStreak(activityDays);
   const longest = getLongestStreak(activityDays);
+  const streakCount = useCountUp(streak);
+  const longestCount = useCountUp(longest);
+  const studyDaysCount = useCountUp(activityDays.length);
 
   return (
     <section className="page">
@@ -113,15 +117,15 @@ export function Progress() {
       <div className="streak-stats">
         <div className="stat-tile">
           <span className="stat-label">Current streak</span>
-          <span className="stat-value">{streak}</span>
+          <span className="stat-value">{streakCount}</span>
         </div>
         <div className="stat-tile">
           <span className="stat-label">Longest streak</span>
-          <span className="stat-value">{longest}</span>
+          <span className="stat-value">{longestCount}</span>
         </div>
         <div className="stat-tile">
           <span className="stat-label">Total study days</span>
-          <span className="stat-value">{activityDays.length}</span>
+          <span className="stat-value">{studyDaysCount}</span>
         </div>
       </div>
 

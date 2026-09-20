@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { marked } from "marked";
 import { summaries } from "../lib/content";
 import { writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { useReadingPrefs } from "../hooks/useReadingPrefs";
 import { ReadingControls } from "../components/ReadingControls";
+import { subjectHueStyle } from "../lib/subjectStyle";
 
 export function SummaryDetail() {
   const { subjectId = "" } = useParams();
@@ -27,7 +28,7 @@ export function SummaryDetail() {
   }
 
   return (
-    <section className="page">
+    <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
       <Link to="/summaries" className="back-link">
         ← All summaries
       </Link>

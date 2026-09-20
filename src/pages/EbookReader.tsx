@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type CSSProperties } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { marked } from "marked";
 import { ebookChapters, ebookMeta, ebookPdfs } from "../lib/content";
@@ -7,6 +7,7 @@ import { recordActivity } from "../lib/activity";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useReadingPrefs } from "../hooks/useReadingPrefs";
 import { ReadingControls } from "../components/ReadingControls";
+import { subjectHueStyle } from "../lib/subjectStyle";
 import type { ReadingPosition } from "../types/content";
 
 function ExternalIcon() {
@@ -165,7 +166,7 @@ export function EbookReader() {
   );
 
   return (
-    <section className="page ebook-page">
+    <section className="page ebook-page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
       <Link to="/ebooks" className="back-link">
         ← All ebooks
       </Link>
