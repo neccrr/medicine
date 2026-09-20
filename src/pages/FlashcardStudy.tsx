@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { flashcardDecks } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
@@ -6,6 +6,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
 import { EmptyState } from "../components/EmptyState";
 import { SpeakerIcon } from "../components/icons";
+import { subjectHueStyle } from "../lib/subjectStyle";
 import type { Flashcard } from "../types/content";
 
 function speak(text: string) {
@@ -122,7 +123,7 @@ export function FlashcardStudy() {
   }
 
   return (
-    <section className="page">
+    <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
       <Link to="/flashcards" className="back-link">
         ← All subjects
       </Link>

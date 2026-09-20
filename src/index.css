@@ -10,6 +10,8 @@
   --accent-dim: #1f9d7c;
   --accent-soft: rgba(45, 212, 167, 0.14);
   --accent-ink: #04140f;
+  --accent-2: #a78bfa;
+  --accent-3: #f2b134;
   --grid-line: rgba(45, 212, 167, 0.07);
   --green: #2dd4a7;
   --red: #ff6b5e;
@@ -37,12 +39,33 @@
   --accent-dim: #0c6e56;
   --accent-soft: rgba(15, 143, 112, 0.1);
   --accent-ink: #f5fffb;
+  --accent-2: #7c5cdb;
+  --accent-3: #b3791b;
   --grid-line: rgba(15, 143, 112, 0.08);
   --green: #0f8f70;
   --red: #c8433a;
   --red-soft: rgba(200, 67, 58, 0.1);
   --amber: #b3791b;
   color-scheme: light;
+}
+
+/*
+ * Per-subject color scoping: a page (or card) sets --subject-hue to a hue
+ * angle (see subjectHue() in lib/subjectStyle.ts) and picks up this class;
+ * every element beneath it that already reads var(--accent)/--accent-dim/
+ * --accent-soft — buttons, links, progress bars, gauges — recolors to that
+ * subject's hue for free, no per-component CSS needed.
+ */
+.subject-tinted {
+  --accent: hsl(var(--subject-hue) 72% 58%);
+  --accent-dim: hsl(var(--subject-hue) 72% 46%);
+  --accent-soft: hsl(var(--subject-hue) 72% 58% / 18%);
+}
+
+:root[data-theme="light"] .subject-tinted {
+  --accent: hsl(var(--subject-hue) 62% 40%);
+  --accent-dim: hsl(var(--subject-hue) 62% 30%);
+  --accent-soft: hsl(var(--subject-hue) 62% 40% / 14%);
 }
 
 * {
@@ -53,11 +76,10 @@ body {
   margin: 0;
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse 900px 520px at 12% -8%, var(--accent-soft), transparent 60%),
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: auto, 32px 32px, 32px 32px;
-  background-attachment: fixed, fixed, fixed;
+  background-size: 32px 32px, 32px 32px;
+  background-attachment: fixed, fixed;
   color: var(--text);
   font-family: var(--font-body);
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -74,6 +96,41 @@ body::before {
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   background-size: 180px 180px;
+}
+
+/* Slowly drifting color blobs — the ambient "alive" layer behind every page. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -15%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+  filter: blur(70px);
+  background-image:
+    radial-gradient(38% 30% at 18% 22%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 70%),
+    radial-gradient(34% 28% at 84% 16%, color-mix(in srgb, var(--accent-2) 50%, transparent), transparent 70%),
+    radial-gradient(40% 34% at 70% 88%, color-mix(in srgb, var(--accent-3) 45%, transparent), transparent 70%);
+  animation: drift-blobs 75s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes drift-blobs {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(2%, -3%) scale(1.06);
+  }
+  100% {
+    transform: translate(-2%, 2%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+  }
 }
 
 #root {
@@ -1217,10 +1274,11 @@ kbd, .mono {
 }
 
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
   color: var(--accent-ink);
   border: none;
   border-radius: 8px;
@@ -1230,16 +1288,35 @@ kbd, .mono {
   cursor: pointer;
   font-size: 0.9rem;
   letter-spacing: 0.01em;
-  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.35) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 0.5s ease;
 }
 
 .btn:hover {
-  background: var(--accent-dim);
-  box-shadow: 0 8px 20px -8px var(--accent-soft);
+  box-shadow: 0 10px 24px -8px var(--accent-soft);
+}
+
+.btn:hover::before {
+  transform: translateX(120%);
 }
 
 .btn:active {
   transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::before {
+    display: none;
+  }
 }
 
 .btn:disabled {

@@ -16,10 +16,11 @@ import { tipOfDay } from "../lib/tipOfDay";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
-import { subjectAccent } from "../lib/subjectStyle";
+import { subjectAccent, subjectHueStyle } from "../lib/subjectStyle";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { RadialGauge } from "../components/RadialGauge";
+import { useCountUp } from "../hooks/useCountUp";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { EmptyState } from "../components/EmptyState";
 import { BackupNudge } from "../components/BackupNudge";
@@ -255,6 +256,11 @@ export function Home() {
       ? "Welcome back."
       : "Study like the data's on a monitor.";
 
+  const streakCount = useCountUp(streak);
+  const dueCount = useCountUp(totalDue);
+  const studyDaysCount = useCountUp(activityDays.length);
+  const quizAttemptsCount = useCountUp(totalQuizAttempts);
+
   return (
     <section className="page dashboard">
       <div className="hero">
@@ -273,22 +279,22 @@ export function Home() {
         <div className="stat-tile">
           <span className="stat-tile-icon"><FlameIcon /></span>
           <span className="stat-label">Streak</span>
-          <span className="stat-value">{streak}</span>
+          <span className="stat-value">{streakCount}</span>
         </div>
         <div className="stat-tile">
           <span className="stat-tile-icon"><CardsIcon /></span>
           <span className="stat-label">Cards due</span>
-          <span className="stat-value">{totalDue}</span>
+          <span className="stat-value">{dueCount}</span>
         </div>
         <div className="stat-tile">
           <span className="stat-tile-icon"><CalendarIcon /></span>
           <span className="stat-label">Study days</span>
-          <span className="stat-value">{activityDays.length}</span>
+          <span className="stat-value">{studyDaysCount}</span>
         </div>
         <div className="stat-tile">
           <span className="stat-tile-icon"><QuizIcon /></span>
           <span className="stat-label">Quiz attempts</span>
-          <span className="stat-value">{totalQuizAttempts}</span>
+          <span className="stat-value">{quizAttemptsCount}</span>
         </div>
       </div>
 
@@ -342,12 +348,15 @@ export function Home() {
                 <div
                   key={subject.id}
                   className={
-                    subject.id === featuredId ? "subject-card subject-card-featured" : "subject-card"
+                    subject.id === featuredId
+                      ? "subject-card subject-card-featured subject-tinted"
+                      : "subject-card subject-tinted"
                   }
                   style={
                     {
                       borderLeftColor: subjectAccent(subject.id),
                       "--subject-glow": subjectAccent(subject.id),
+                      ...subjectHueStyle(subject.id),
                     } as CSSProperties
                   }
                 >
