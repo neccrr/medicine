@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   ebookMeta,
@@ -22,7 +22,18 @@ import { SubjectBadge } from "../components/SubjectBadge";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { EmptyState } from "../components/EmptyState";
 import { BackupNudge } from "../components/BackupNudge";
-import { BookIcon, CalendarIcon, CardsIcon, FlameIcon, QuizIcon, SummaryIcon } from "../components/icons";
+import {
+  AtomIcon,
+  BookIcon,
+  CalendarIcon,
+  CardsIcon,
+  FlameIcon,
+  LinkIcon,
+  PlayCircleIcon,
+  QuizIcon,
+  SearchIcon,
+  SummaryIcon,
+} from "../components/icons";
 import type { CardStateMap, QuizAttempt, ReadingPosition } from "../types/content";
 
 interface ContinueItem {
@@ -273,7 +284,10 @@ export function Home() {
       <div className="dashboard-layout">
         <div className="dashboard-main">
           <div className="dashboard-section">
-            <h2 className="section-heading">Continue</h2>
+            <h2 className="section-heading">
+              <PlayCircleIcon />
+              Continue
+            </h2>
             {continueItems.length > 0 ? (
               <div className="continue-list">
                 {continueItems.map((item) => (
@@ -306,13 +320,21 @@ export function Home() {
           </div>
 
           <div className="dashboard-section">
-            <h2 className="section-heading">Subjects</h2>
+            <h2 className="section-heading">
+              <AtomIcon />
+              Subjects
+            </h2>
             <div className="subject-grid">
               {subjects.map((subject) => (
                 <div
                   key={subject.id}
                   className="subject-card"
-                  style={{ borderLeftColor: subjectAccent(subject.id) }}
+                  style={
+                    {
+                      borderLeftColor: subjectAccent(subject.id),
+                      "--subject-glow": subjectAccent(subject.id),
+                    } as CSSProperties
+                  }
                 >
                   <div className="subject-card-head">
                     <SubjectBadge id={subject.id} label={subject.label} />
@@ -347,7 +369,10 @@ export function Home() {
           )}
 
           <div className="dashboard-widget">
-            <h2 className="section-heading">Activity</h2>
+            <h2 className="section-heading">
+              <CalendarIcon />
+              Activity
+            </h2>
             <div className="mini-stats">
               <div>
                 <span className="stat-value">{streak}</span>
@@ -369,14 +394,30 @@ export function Home() {
           </div>
 
           <div className="dashboard-widget">
-            <h2 className="section-heading">Quick links</h2>
+            <h2 className="section-heading">
+              <LinkIcon />
+              Quick links
+            </h2>
             <nav className="quick-links">
               <Link to="/search">
-                Search
+                <span className="quick-links-label">
+                  <SearchIcon />
+                  Search
+                </span>
                 <kbd>⌘K</kbd>
               </Link>
-              <Link to="/ebooks">Ebooks</Link>
-              <Link to="/summaries">Summaries</Link>
+              <Link to="/ebooks">
+                <span className="quick-links-label">
+                  <BookIcon />
+                  Ebooks
+                </span>
+              </Link>
+              <Link to="/summaries">
+                <span className="quick-links-label">
+                  <SummaryIcon />
+                  Summaries
+                </span>
+              </Link>
             </nav>
           </div>
         </aside>

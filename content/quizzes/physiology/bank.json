@@ -3,38 +3,52 @@
     "id": "q-phys-001",
     "question": "The α-globin and β-globin gene clusters are located on which chromosomes, respectively?",
     "options": [
-      "Chromosome 16 (α) and chromosome 11 (β)",
+      "Chromosome 16 (α) and chromosome 13 (β)",
       "Chromosome 11 (α) and chromosome 16 (β)",
       "Chromosome 6 (α) and chromosome 11 (β)",
-      "Chromosome 16 (α) and chromosome 13 (β)"
+      "Chromosome 16 (α) and chromosome 6 (β)",
+      "Chromosome 16 (α) and chromosome 11 (β)"
     ],
-    "answer": 0,
+    "answer": 4,
     "explanation": "The α-globin gene cluster sits on chromosome 16 (16p13.3); the β-globin gene cluster sits on chromosome 11 (11p15.5)."
   },
   {
     "id": "q-phys-002",
     "question": "Adult hemoglobin (Hb A) is a tetramer built from how many α and β chains?",
     "options": [
-      "2 α chains and 2 β chains",
-      "4 α chains and 0 β chains",
+      "3 α chains and 1 β chain",
       "1 α chain and 3 β chains",
-      "3 α chains and 1 β chain"
+      "4 α chains and 0 β chains",
+      "0 α chains and 4 β chains",
+      "2 α chains and 2 β chains"
     ],
-    "answer": 0,
+    "answer": 4,
     "explanation": "Hb A is an α2β2 tetramer — two identical α-globin chains and two identical β-globin chains, each carrying its own heme group."
   },
   {
     "id": "q-phys-003",
     "question": "How many amino acids make up a normal α-globin chain?",
-    "options": ["141", "146", "172", "136"],
-    "answer": 0,
+    "options": [
+      "136",
+      "172",
+      "141",
+      "146",
+      "151"
+    ],
+    "answer": 2,
     "explanation": "The α-globin polypeptide is 141 amino acids long; the β-globin chain is 146."
   },
   {
     "id": "q-phys-004",
     "question": "How many amino acids make up a normal β-globin chain?",
-    "options": ["146", "141", "151", "172"],
-    "answer": 0,
+    "options": [
+      "151",
+      "172",
+      "146",
+      "136",
+      "141"
+    ],
+    "answer": 2,
     "explanation": "β-globin is 146 amino acids long, five residues longer than the 141-residue α chain."
   },
   {
@@ -42,9 +56,10 @@
     "question": "A complete, functional hemoglobin molecule contains how many heme groups and globin chains?",
     "options": [
       "4 heme groups and 4 globin chains",
+      "2 heme groups and 2 globin chains",
+      "4 heme groups and 2 globin chains",
       "2 heme groups and 4 globin chains",
-      "1 heme group and 4 globin chains",
-      "4 heme groups and 2 globin chains"
+      "1 heme group and 4 globin chains"
     ],
     "answer": 0,
     "explanation": "Each of the four globin subunits binds exactly one heme group, so a complete tetramer carries 4 heme groups bound to 4 globin chains — each heme's iron can bind one O2 molecule."
@@ -52,29 +67,53 @@
   {
     "id": "q-phys-006",
     "question": "Embryonic hemoglobin synthesis begins in yolk-sac erythrocytes at approximately what gestational age?",
-    "options": ["3 weeks", "8 weeks", "12 weeks", "16 weeks"],
-    "answer": 0,
+    "options": [
+      "12 weeks",
+      "8 weeks",
+      "3 weeks",
+      "16 weeks",
+      "20 weeks"
+    ],
+    "answer": 2,
     "explanation": "Yolk-sac hematopoiesis and embryonic hemoglobin (Gower-1, Gower-2, Portland) production begin around the 3rd week of gestation."
   },
   {
     "id": "q-phys-007",
     "question": "Which of the following is a normal embryonic hemoglobin?",
-    "options": ["Hb Portland", "Hb A2", "Hb Bart's", "Hb H"],
+    "options": [
+      "Hb Portland",
+      "Hb H",
+      "Hb A2",
+      "Hb Bart's",
+      "Hb S"
+    ],
     "answer": 0,
     "explanation": "Normal embryonic hemoglobins are Hb Gower-1, Hb Gower-2, and Hb Portland (ζ2γ2). Hb Bart's (γ4) and Hb H (β4) are abnormal tetramers seen in α-thalassemia, not normal embryonic stages."
   },
   {
     "id": "q-phys-008",
     "question": "Fetal hemoglobin (Hb F) synthesis begins in the fetal liver at approximately what gestational age?",
-    "options": ["6–8 weeks", "12 weeks", "16 weeks", "24 weeks"],
-    "answer": 0,
+    "options": [
+      "3 weeks",
+      "12 weeks",
+      "16 weeks",
+      "6–8 weeks",
+      "24 weeks"
+    ],
+    "answer": 3,
     "explanation": "As hematopoiesis shifts from the yolk sac to the liver, Hb F (α2γ2) production begins around 6–8 weeks of gestation, replacing the embryonic hemoglobins."
   },
   {
     "id": "q-phys-009",
     "question": "By 12 weeks of gestation, which hemoglobin has become the dominant type in the fetus?",
-    "options": ["Hb F", "Hb Gower-1", "Hb Portland", "Hb A"],
-    "answer": 0,
+    "options": [
+      "Hb Bart's",
+      "Hb F",
+      "Hb Gower-1",
+      "Hb A",
+      "Hb Portland"
+    ],
+    "answer": 1,
     "explanation": "By week 12, the embryonic hemoglobins have been fully replaced by Hb F, which remains dominant until birth, when a gradual switch to Hb A begins."
   },
   {
@@ -82,9 +121,10 @@
     "question": "Hb Bart's hydrops fetalis results from what α-globin gene deletion pattern?",
     "options": [
       "Deletion of all 4 α genes (--/--)",
-      "Deletion of 3 of 4 α genes (--/-α)",
+      "Deletion of 1 α gene (-α/αα)",
       "Deletion of 2 α genes (-α/-α)",
-      "Deletion of 1 α gene (-α/αα)"
+      "Deletion of 3 of 4 α genes (--/-α)",
+      "No α-globin genes are affected"
     ],
     "answer": 0,
     "explanation": "Hydrops fetalis is caused by loss of all four α-globin genes (--/--), so no α chains can be made at all — the most severe form of α-thalassemia."
@@ -92,27 +132,40 @@
   {
     "id": "q-phys-011",
     "question": "With no α chains available, which hemoglobin dominates in Hb Bart's hydrops fetalis?",
-    "options": ["Hb Bart's (γ4)", "Hb H (β4)", "Hb A (α2β2)", "Hb F (α2γ2)"],
-    "answer": 0,
+    "options": [
+      "Hb F (α2γ2)",
+      "Hb H (β4)",
+      "Hb Bart's (γ4)",
+      "Hb A (α2β2)",
+      "Hb Portland"
+    ],
+    "answer": 2,
     "explanation": "Without α chains, excess γ chains form γ4 tetramers called Hb Bart's, which make up roughly 80–100% of the hemoglobin produced."
   },
   {
     "id": "q-phys-012",
     "question": "What percentage of Hb A is present in Hb Bart's hydrops fetalis?",
-    "options": ["0%", "20%", "50%", "80%"],
-    "answer": 0,
+    "options": [
+      "50%",
+      "80%",
+      "0%",
+      "20%",
+      "100%"
+    ],
+    "answer": 2,
     "explanation": "Since Hb A (α2β2) requires α chains, and none are produced, Hb A is 0% in hydrops fetalis."
   },
   {
     "id": "q-phys-013",
     "question": "Hemoglobin H disease results from deletion of how many α-globin genes, and what abnormal tetramer forms as a result?",
     "options": [
-      "3 of 4 genes (--/-α), forming β4 (Hb H)",
       "4 of 4 genes (--/--), forming γ4",
       "2 of 4 genes (-α/-α), forming β4",
-      "1 of 4 genes (-α/αα), no abnormal tetramer"
+      "1 of 4 genes (-α/αα), no abnormal tetramer",
+      "3 of 4 genes (--/-α), forming β4 (Hb H)",
+      "3 of 4 genes (--/-α), forming γ4 (Hb Bart's)"
     ],
-    "answer": 0,
+    "answer": 3,
     "explanation": "Hb H disease results from loss of 3 of the 4 α-globin genes. The resulting α-chain shortage leaves excess β chains, which assemble into β4 tetramers known as Hb H."
   },
   {
@@ -121,8 +174,9 @@
     "options": [
       "1 gene deleted (-α/αα); asymptomatic with near-normal Hb A",
       "2 genes deleted (-α/-α); mild anemia",
+      "4 genes deleted (--/--); fatal in utero",
       "3 genes deleted (--/-α); moderate anemia",
-      "4 genes deleted (--/--); fatal in utero"
+      "2 genes deleted (-α/-α); asymptomatic with near-normal Hb A"
     ],
     "answer": 0,
     "explanation": "A silent carrier has lost only 1 of the 4 α-globin genes (-α/αα). The remaining 3 genes still produce enough α chain to keep Hb A near-normal (~98–100%), so the person is clinically asymptomatic."
@@ -131,48 +185,52 @@
     "id": "q-phys-015",
     "question": "α-thalassemia trait (minor) involves loss of how many α-globin genes, and in what configurations can this occur?",
     "options": [
+      "1 gene, in either configuration",
       "2 genes, either in trans (-α/-α) or cis (--/αα)",
-      "2 genes, only in cis (--/αα)",
+      "3 genes, either in trans or cis",
       "3 genes, only in trans",
-      "1 gene, in either configuration"
+      "2 genes, only in cis (--/αα)"
     ],
-    "answer": 0,
+    "answer": 1,
     "explanation": "α-thalassemia trait/minor involves 2-gene deletions, which can occur in trans (one gene lost from each chromosome: -α/-α) or in cis (both genes lost from the same chromosome: --/αα) — the cis form is clinically more important because it can combine with another cis deletion in offspring to produce hydrops fetalis."
   },
   {
     "id": "q-phys-016",
     "question": "The first step of heme synthesis condenses succinyl-CoA with glycine to form which compound, and which enzyme catalyzes it?",
     "options": [
-      "δ-aminolevulinic acid (ALA), via ALA synthase",
-      "Porphobilinogen, via ALA dehydratase",
+      "Uroporphyrinogen, via uroporphyrinogen synthase",
       "Protoporphyrin IX, via ferrochelatase",
-      "Uroporphyrinogen, via uroporphyrinogen synthase"
+      "Protoporphyrinogen IX, via protoporphyrinogen oxidase",
+      "δ-aminolevulinic acid (ALA), via ALA synthase",
+      "Porphobilinogen, via ALA dehydratase"
     ],
-    "answer": 0,
+    "answer": 3,
     "explanation": "In mitochondria, ALA synthase catalyzes the condensation of succinyl-CoA and glycine to form δ-aminolevulinic acid (ALA), the first and rate-limiting step of heme biosynthesis."
   },
   {
     "id": "q-phys-017",
     "question": "Two molecules of ALA condense in the cytosol to form porphobilinogen. Which enzyme catalyzes this step?",
     "options": [
+      "Porphobilinogen deaminase",
       "ALA dehydratase",
       "ALA synthase",
       "Ferrochelatase",
       "Uroporphyrinogen III synthase"
     ],
-    "answer": 0,
+    "answer": 1,
     "explanation": "ALA dehydratase condenses two ALA molecules into one molecule of porphobilinogen (PBG), the pyrrole ring that becomes heme's building block."
   },
   {
     "id": "q-phys-018",
     "question": "The final step of heme synthesis inserts Fe2+ into protoporphyrin IX. Which enzyme performs this step?",
     "options": [
-      "Ferrochelatase",
       "ALA synthase",
+      "Porphobilinogen deaminase",
+      "Uroporphyrinogen decarboxylase",
       "ALA dehydratase",
-      "Porphobilinogen deaminase"
+      "Ferrochelatase"
     ],
-    "answer": 0,
+    "answer": 4,
     "explanation": "Ferrochelatase, the terminal enzyme of the heme pathway, inserts a ferrous iron ion (Fe2+) into protoporphyrin IX to complete heme synthesis."
   },
   {
@@ -180,9 +238,10 @@
     "question": "Sickle cell hemoglobin (Hb S) results from what mutation?",
     "options": [
       "β-chain codon 6: glutamic acid → valine",
-      "β-chain codon 6: glutamic acid → lysine",
+      "β-chain codon 6: valine → glutamic acid",
+      "α-chain stop codon read-through",
       "β-chain codon 26: glutamic acid → lysine",
-      "α-chain stop codon read-through"
+      "β-chain codon 6: glutamic acid → lysine"
     ],
     "answer": 0,
     "explanation": "Hb S arises from a single β-globin gene mutation (GAG→GTG) that substitutes valine for glutamic acid at codon 6, causing Hb S to polymerize and sickle red cells when deoxygenated."
@@ -191,12 +250,13 @@
     "id": "q-phys-020",
     "question": "Hemoglobin C results from what β-globin mutation?",
     "options": [
-      "Codon 6: glutamic acid → lysine",
       "Codon 6: glutamic acid → valine",
-      "Codon 26: glutamic acid → lysine",
-      "A stop-codon mutation extending the chain"
+      "A stop-codon mutation extending the chain",
+      "Codon 6: glutamic acid → lysine",
+      "Codon 26: glutamic acid → valine",
+      "Codon 26: glutamic acid → lysine"
     ],
-    "answer": 0,
+    "answer": 2,
     "explanation": "Hb C results from a different substitution at the same codon 6 position as Hb S — here glutamic acid is replaced by lysine rather than valine."
   },
   {
@@ -204,9 +264,10 @@
     "question": "Hemoglobin E results from what β-globin mutation?",
     "options": [
       "Codon 26: glutamic acid → lysine",
-      "Codon 6: glutamic acid → valine",
+      "A 31-amino-acid C-terminal extension",
       "Codon 6: glutamic acid → lysine",
-      "A 31-amino-acid C-terminal extension"
+      "Codon 6: glutamic acid → valine",
+      "Codon 26: glutamic acid → valine"
     ],
     "answer": 0,
     "explanation": "Hb E is caused by a glutamic acid-to-lysine substitution at codon 26 of the β-globin gene (β26 Glu→Lys) — common in Southeast Asia and often mild on its own."
@@ -215,24 +276,26 @@
     "id": "q-phys-022",
     "question": "Hb Constant Spring, an α-chain variant of 172 amino acids instead of the normal 141, arises from what kind of mutation?",
     "options": [
-      "A stop-codon point mutation that allows translation to continue",
-      "A frameshift deletion in the promoter region",
       "A splice-site mutation removing an intron",
-      "A duplication of the entire α-globin gene"
+      "A duplication of the entire α-globin gene",
+      "A missense mutation in the initiator codon",
+      "A stop-codon point mutation that allows translation to continue",
+      "A frameshift deletion in the promoter region"
     ],
-    "answer": 0,
+    "answer": 3,
     "explanation": "A point mutation in the α2 stop codon (UAA→CAA) lets the ribosome read through into the 3' untranslated region, adding 31 extra amino acids and producing a 172-residue α chain."
   },
   {
     "id": "q-phys-023",
     "question": "Hb M variants are characterized by stabilization of methemoglobin (Fe3+) and what functional consequence?",
     "options": [
-      "Decreased oxygen-binding affinity",
-      "Increased oxygen-binding affinity",
       "Loss of the ability to bind heme at all",
+      "No change in oxygen affinity",
+      "Increased oxygen-binding affinity",
+      "Decreased oxygen-binding affinity",
       "Increased polymerization when deoxygenated"
     ],
-    "answer": 0,
+    "answer": 3,
     "explanation": "Hb M variants stabilize iron in its oxidized, ferric (Fe3+) methemoglobin state, which cannot bind oxygen effectively — significantly reducing overall oxygen-carrying capacity."
   },
   {
@@ -240,9 +303,10 @@
     "question": "In β-thalassemia, what distinguishes a β+ mutation from a β0 mutation?",
     "options": [
       "β+ allows partial β-chain synthesis; β0 produces none",
-      "β+ produces none; β0 allows partial synthesis",
       "β+ affects the α gene; β0 affects the β gene",
-      "There is no functional difference between them"
+      "β+ produces none; β0 allows partial synthesis",
+      "There is no functional difference between them",
+      "β+ and β0 both eliminate synthesis completely"
     ],
     "answer": 0,
     "explanation": "A β+ mutation reduces but does not eliminate β-globin synthesis (roughly 10–50% of normal, depending on the specific allele), while a β0 mutation abolishes β-chain production entirely (0%)."
@@ -250,8 +314,14 @@
   {
     "id": "q-phys-025",
     "question": "δβ-thalassemia (including Hb Lepore) heterozygotes typically show what Hb F level?",
-    "options": ["15–25%", "under 2%", "50–60%", "80–100%"],
-    "answer": 0,
+    "options": [
+      "80–100%",
+      "50–60%",
+      "under 2%",
+      "15–25%",
+      "5–10%"
+    ],
+    "answer": 3,
     "explanation": "δβ-thalassemia results from deletions spanning both the δ- and β-globin genes. Because γ-chain (Hb F) production compensates, heterozygotes carry persistently elevated Hb F, typically 15–25%."
   },
   {
@@ -259,9 +329,10 @@
     "question": "During translation of globin mRNA, which codon initiates protein synthesis and which amino acid does it encode?",
     "options": [
       "AUG, encoding methionine",
-      "AUG, encoding alanine",
+      "GUG, encoding valine",
       "UAA, encoding methionine",
-      "GUG, encoding valine"
+      "UGA, encoding a stop signal",
+      "AUG, encoding alanine"
     ],
     "answer": 0,
     "explanation": "AUG is the universal start codon and encodes methionine, the first amino acid incorporated (and typically cleaved) during translation of essentially every protein, including globin chains."
