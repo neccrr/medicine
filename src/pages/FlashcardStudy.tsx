@@ -6,8 +6,12 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
 import { EmptyState } from "../components/EmptyState";
 import { SpeakerIcon } from "../components/icons";
-import { subjectHueStyle } from "../lib/subjectStyle";
+import { subjectHue, subjectHueStyle } from "../lib/subjectStyle";
 import type { Flashcard } from "../types/content";
+
+function tagHueStyle(tag: string): CSSProperties {
+  return { "--tag-hue": String(subjectHue(tag)) } as CSSProperties;
+}
 
 function speak(text: string) {
   if (!("speechSynthesis" in window)) return;
@@ -139,7 +143,8 @@ export function FlashcardStudy() {
             <button
               key={tag}
               type="button"
-              className={selectedTags.includes(tag) ? "tag tag-toggle active" : "tag tag-toggle"}
+              className={selectedTags.includes(tag) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
+              style={tagHueStyle(tag)}
               onClick={() => toggleTag(tag)}
               aria-pressed={selectedTags.includes(tag)}
             >
@@ -275,7 +280,8 @@ export function FlashcardStudy() {
                 <button
                   key={tag}
                   type="button"
-                  className={selectedTags.includes(tag) ? "tag tag-toggle active" : "tag tag-toggle"}
+                  className={selectedTags.includes(tag) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
+                  style={tagHueStyle(tag)}
                   onClick={() => toggleTag(tag)}
                   aria-pressed={selectedTags.includes(tag)}
                 >

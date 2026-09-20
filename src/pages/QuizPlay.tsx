@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
 import { ScoreSparkline } from "../components/ScoreSparkline";
+import { ConfettiBurst } from "../components/ConfettiBurst";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 
@@ -198,6 +199,7 @@ export function QuizPlay() {
         result && (
           <div className="quiz-results">
             <div className={`quiz-score-hero${result.score === result.total ? " perfect" : ""}`}>
+              {result.score === result.total && <ConfettiBurst />}
               <p className="quiz-score-value">
                 {result.score}
                 <span className="quiz-score-total">/{result.total}</span>

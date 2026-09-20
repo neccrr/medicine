@@ -372,7 +372,11 @@ export function Home() {
                   </div>
                   <div className="subject-links">
                     {subject.facets.map((facet) => (
-                      <Link key={facet.to + facet.label} to={facet.to} className="subject-pill">
+                      <Link
+                        key={facet.to + facet.label}
+                        to={facet.to}
+                        className={`subject-pill subject-pill-${facet.label.toLowerCase()}`}
+                      >
                         <span className="subject-pill-icon">{facet.icon}</span>
                         <span className="subject-pill-text">
                           <span className="subject-pill-label">{facet.label}</span>

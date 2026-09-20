@@ -1,10 +1,11 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
 import { buildContentDocs, type SearchDoc } from "../lib/searchIndex";
 import { ebookSubjects, flashcardSubjects, quizSubjects, summarySubjects } from "../lib/content";
 import { EmptyState } from "../components/EmptyState";
 import { HighlightText } from "../components/HighlightText";
+import { subjectHue } from "../lib/subjectStyle";
 
 const TYPE_LABELS: Record<string, string> = {
   flashcard: "Flashcards",
@@ -12,6 +13,17 @@ const TYPE_LABELS: Record<string, string> = {
   summary: "Summaries",
   ebook: "Ebooks",
 };
+
+const TYPE_CLASS: Record<string, string> = {
+  flashcard: "tag-type-flashcard",
+  quiz: "tag-type-quiz",
+  summary: "tag-type-summary",
+  ebook: "tag-type-ebook",
+};
+
+function tagHueStyle(id: string): CSSProperties {
+  return { "--tag-hue": String(subjectHue(id)) } as CSSProperties;
+}
 
 function subjectLabel(id: string): string {
   return (
@@ -135,7 +147,11 @@ export function Search() {
               <button
                 key={type}
                 type="button"
-                className={activeTypes.includes(type) ? "tag tag-toggle active" : "tag tag-toggle"}
+                className={
+                  activeTypes.includes(type)
+                    ? `tag tag-toggle active ${TYPE_CLASS[type] ?? ""}`
+                    : `tag tag-toggle ${TYPE_CLASS[type] ?? ""}`
+                }
                 onClick={() => toggleType(type)}
                 aria-pressed={activeTypes.includes(type)}
               >
@@ -148,7 +164,8 @@ export function Search() {
               <button
                 key={s.id}
                 type="button"
-                className={activeSubjects.includes(s.id) ? "tag tag-toggle active" : "tag tag-toggle"}
+                className={activeSubjects.includes(s.id) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
+                style={tagHueStyle(s.id)}
                 onClick={() => toggleSubject(s.id)}
                 aria-pressed={activeSubjects.includes(s.id)}
               >
