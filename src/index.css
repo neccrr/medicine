@@ -650,12 +650,21 @@ kbd, .mono {
 }
 
 .section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted);
   margin: 0 0 0.85rem;
+}
+
+.section-heading svg {
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
 }
 
 .continue-list {
@@ -718,11 +727,42 @@ kbd, .mono {
 }
 
 .subject-card {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
   border-left-width: 3px;
   border-radius: var(--radius);
   padding: 1.1rem 1.25rem;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.subject-card::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -30%;
+  width: 60%;
+  height: 140%;
+  background: radial-gradient(circle, var(--subject-glow, transparent), transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.subject-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: 0 16px 32px -20px rgba(0, 0, 0, 0.5);
+}
+
+.subject-card > * {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subject-card {
+    transition: none;
+  }
 }
 
 .subject-card-head {
@@ -857,6 +897,21 @@ kbd, .mono {
 }
 
 .quick-links a:hover {
+  color: var(--accent);
+}
+
+.quick-links-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.quick-links-label svg {
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.quick-links a:hover .quick-links-label svg {
   color: var(--accent);
 }
 
@@ -1663,16 +1718,19 @@ kbd, .mono {
 
 .subject-badge {
   flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
   color: var(--accent-ink);
+  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.45);
+}
+
+.subject-badge svg {
+  width: 19px;
+  height: 19px;
 }
 
 /* Icon buttons: theme toggle, streak, command palette trigger */
