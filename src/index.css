@@ -1601,6 +1601,13 @@ kbd, .mono {
   margin-bottom: 1.5rem;
 }
 
+.search-result-count {
+  margin: -0.75rem 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 .search-results {
   list-style: none;
   padding: 0;
@@ -1618,11 +1625,21 @@ kbd, .mono {
   padding: 0.9rem 1.1rem;
   text-decoration: none;
   color: var(--text);
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.search-result a:hover {
-  border-color: var(--border-strong);
+.search-result a:hover,
+.search-result a.active {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+
+.search-result mark,
+.command-item mark {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 3px;
+  padding: 0 0.1em;
 }
 
 .search-result-type {

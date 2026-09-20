@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
-import { buildContentDocs } from "../lib/searchIndex";
+import { buildContentDocs, type SearchDoc } from "../lib/searchIndex";
 import { ebookSubjects, flashcardSubjects, quizSubjects, summarySubjects } from "../lib/content";
 import { EmptyState } from "../components/EmptyState";
+import { HighlightText } from "../components/HighlightText";
 
 const TYPE_LABELS: Record<string, string> = {
   flashcard: "Flashcards",
@@ -22,10 +23,18 @@ function subjectLabel(id: string): string {
   );
 }
 
+interface RankedDoc {
+  doc: SearchDoc;
+  titleRanges?: readonly (readonly [number, number])[];
+  detailRanges?: readonly (readonly [number, number])[];
+}
+
 export function Search() {
   const [query, setQuery] = useState("");
   const [activeTypes, setActiveTypes] = useState<string[]>([]);
   const [activeSubjects, setActiveSubjects] = useState<string[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const resultRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   const docs = useMemo(() => buildContentDocs(), []);
 
@@ -44,26 +53,61 @@ export function Search() {
         keys: [
           { name: "title", weight: 2 },
           { name: "detail", weight: 1 },
+          { name: "keywords", weight: 0.5 },
         ],
         threshold: 0.35,
         ignoreLocation: true,
+        minMatchCharLength: 2,
+        includeMatches: true,
       }),
     [docs],
   );
 
   const toggleType = (type: string) => {
     setActiveTypes((prev) => (prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]));
+    setActiveIndex(0);
   };
   const toggleSubject = (id: string) => {
     setActiveSubjects((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
+    setActiveIndex(0);
   };
 
-  const rawResults = query.trim() ? fuse.search(query).map((r) => r.item) : [];
+  const rawResults: RankedDoc[] = query.trim()
+    ? fuse.search(query).map((r) => ({
+        doc: r.item,
+        titleRanges: r.matches?.find((m) => m.key === "title")?.indices,
+        detailRanges: r.matches?.find((m) => m.key === "detail")?.indices,
+      }))
+    : [];
   const results = rawResults
-    .filter((doc) => activeTypes.length === 0 || activeTypes.includes(doc.type))
-    .filter((doc) => activeSubjects.length === 0 || (doc.subjectId && activeSubjects.includes(doc.subjectId)))
+    .filter((r) => activeTypes.length === 0 || activeTypes.includes(r.doc.type))
+    .filter((r) => activeSubjects.length === 0 || (r.doc.subjectId && activeSubjects.includes(r.doc.subjectId)))
     .slice(0, 25);
   const filtersActive = activeTypes.length > 0 || activeSubjects.length > 0;
+  const clampedIndex = Math.min(activeIndex, Math.max(results.length - 1, 0));
+
+  const onQueryChange = (value: string) => {
+    setQuery(value);
+    setActiveIndex(0);
+  };
+
+  const onInputKeyDown = (e: React.KeyboardEvent) => {
+    if (results.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = Math.min(clampedIndex + 1, results.length - 1);
+      setActiveIndex(next);
+      resultRefs.current[next]?.scrollIntoView({ block: "nearest" });
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const next = Math.max(clampedIndex - 1, 0);
+      setActiveIndex(next);
+      resultRefs.current[next]?.scrollIntoView({ block: "nearest" });
+    } else if (e.key === "Enter") {
+      const link = resultRefs.current[clampedIndex];
+      link?.click();
+    }
+  };
 
   return (
     <section className="page">
@@ -74,9 +118,14 @@ export function Search() {
         type="search"
         placeholder="Search flashcards, quizzes, summaries, ebooks..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => onQueryChange(e.target.value)}
+        onKeyDown={onInputKeyDown}
         autoFocus
         aria-label="Search all content"
+        role="combobox"
+        aria-expanded={results.length > 0}
+        aria-controls="search-results-list"
+        aria-activedescendant={results.length > 0 ? `search-result-${clampedIndex}` : undefined}
       />
 
       {query.trim() && (
@@ -126,7 +175,8 @@ export function Search() {
         <EmptyState title="Search across everything">
           Try a symptom, a drug name, or a mechanism — results span every
           flashcard, quiz question, summary section, and ebook chapter in
-          every subject.
+          every subject. Use ↑↓ and Enter to jump to a result without
+          touching the mouse.
         </EmptyState>
       )}
 
@@ -136,13 +186,33 @@ export function Search() {
         </EmptyState>
       )}
 
-      <ul className="search-results">
-        {results.map((doc) => (
-          <li key={`${doc.type}-${doc.id}`} className="search-result">
-            <Link to={doc.to}>
-              <span className="search-result-type">{doc.type}</span>
-              <p className="search-result-title">{doc.title}</p>
-              <p className="search-result-detail">{doc.detail}</p>
+      {query.trim() && results.length > 0 && (
+        <p className="search-result-count">
+          {results.length} result{results.length === 1 ? "" : "s"} for &ldquo;{query}&rdquo;
+        </p>
+      )}
+
+      <ul className="search-results" id="search-results-list" role="listbox">
+        {results.map((r, i) => (
+          <li key={`${r.doc.type}-${r.doc.id}`} className="search-result" role="presentation">
+            <Link
+              id={`search-result-${i}`}
+              to={r.doc.to}
+              ref={(el) => {
+                resultRefs.current[i] = el;
+              }}
+              className={i === clampedIndex ? "active" : undefined}
+              role="option"
+              aria-selected={i === clampedIndex}
+              onMouseEnter={() => setActiveIndex(i)}
+            >
+              <span className="search-result-type">{TYPE_LABELS[r.doc.type] ?? r.doc.type}</span>
+              <p className="search-result-title">
+                <HighlightText text={r.doc.title} ranges={r.titleRanges} />
+              </p>
+              <p className="search-result-detail">
+                <HighlightText text={r.doc.detail} ranges={r.detailRanges} />
+              </p>
             </Link>
           </li>
         ))}

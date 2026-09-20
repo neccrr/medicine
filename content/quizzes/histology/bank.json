@@ -3,69 +3,75 @@
     "id": "q-histo-001",
     "question": "A biopsy shows a single layer of flattened, scale-like cells lining a blood vessel. What type of epithelium is this?",
     "options": [
+      "Stratified squamous epithelium",
       "Simple squamous epithelium",
       "Simple cuboidal epithelium",
-      "Stratified squamous epithelium",
+      "Pseudostratified columnar epithelium",
       "Transitional epithelium"
     ],
-    "answer": 0,
+    "answer": 1,
     "explanation": "Simple squamous epithelium — a single layer of flat cells — lines blood vessels (where it's called endothelium) and body cavities, well suited for diffusion and filtration."
   },
   {
     "id": "q-histo-002",
     "question": "Which connective tissue cell releases histamine and heparin and is filled with metachromatic granules?",
     "options": [
-      "Fibroblast",
-      "Macrophage",
       "Mast cell",
-      "Plasma cell"
+      "Eosinophil",
+      "Fibroblast",
+      "Plasma cell",
+      "Macrophage"
     ],
-    "answer": 2,
+    "answer": 0,
     "explanation": "Mast cells store histamine and heparin in cytoplasmic granules and degranulate during allergic and inflammatory responses."
   },
   {
     "id": "q-histo-003",
     "question": "On a peripheral smear, a cell shows a bilobed nucleus and large, deep-purple/basophilic granules. Which cell is this most likely to be?",
     "options": [
-      "Neutrophil",
-      "Eosinophil",
       "Basophil",
+      "Eosinophil",
+      "Neutrophil",
+      "Monocyte",
       "Lymphocyte"
     ],
-    "answer": 2,
+    "answer": 0,
     "explanation": "Basophils are the rarest granulocyte, identified by coarse, densely basophilic (dark purple) granules that often obscure the bilobed nucleus."
   },
   {
     "id": "q-histo-004",
     "question": "Which epithelium type lines the urinary bladder and is specialized to stretch as the organ fills?",
     "options": [
-      "Simple columnar epithelium",
-      "Pseudostratified columnar epithelium",
       "Transitional epithelium (urothelium)",
-      "Stratified cuboidal epithelium"
+      "Simple columnar epithelium",
+      "Stratified cuboidal epithelium",
+      "Simple squamous epithelium",
+      "Pseudostratified columnar epithelium"
     ],
-    "answer": 2,
+    "answer": 0,
     "explanation": "Transitional epithelium (urothelium) lines the renal pelvis, ureters, and bladder; its dome-shaped surface cells flatten out to accommodate distension."
   },
   {
     "id": "q-histo-005",
     "question": "What is the primary distinguishing microscopic feature of cardiac muscle compared to skeletal muscle?",
     "options": [
+      "Cardiac muscle fibers form a functional syncytium with no cell membranes between cells",
       "Cardiac muscle is non-striated",
       "Cardiac muscle fibers have intercalated discs and typically one central nucleus",
       "Cardiac muscle fibers are multinucleated with peripheral nuclei",
       "Cardiac muscle lacks mitochondria"
     ],
-    "answer": 1,
+    "answer": 2,
     "explanation": "Intercalated discs — specialized junctions containing gap junctions and desmosomes — electrically and mechanically couple cardiac fibers, which typically have one or two central nuclei, unlike skeletal muscle's peripheral, multinucleated pattern."
   },
   {
     "id": "q-histo-006",
     "question": "A gland secretes its product by exocytosis without any loss of cytoplasm, keeping the cell fully intact. What mode of secretion is this?",
     "options": [
-      "Holocrine",
       "Apocrine",
+      "Holocrine",
       "Merocrine",
+      "Endocrine",
       "Paracrine"
     ],
     "answer": 2,
@@ -76,81 +82,88 @@
     "question": "Which cell junction anchors intermediate (keratin) filaments between adjacent epidermal cells, providing mechanical strength against shearing forces?",
     "options": [
       "Tight junction",
-      "Gap junction",
       "Desmosome",
-      "Hemidesmosome"
+      "Hemidesmosome",
+      "Gap junction",
+      "Zonula adherens (adherens junction)"
     ],
-    "answer": 2,
+    "answer": 1,
     "explanation": "Desmosomes are spot-like junctions that anchor intermediate filaments between neighboring cells; hemidesmosomes perform a similar role but anchor cells to the basement membrane, not to each other."
   },
   {
     "id": "q-histo-008",
     "question": "A tissue sample from a tendon shows densely packed collagen bundles running in a single parallel direction. What connective tissue type is this?",
     "options": [
+      "Loose (areolar) connective tissue",
       "Dense irregular connective tissue",
       "Dense regular connective tissue",
-      "Loose (areolar) connective tissue",
+      "Elastic connective tissue",
       "Reticular connective tissue"
     ],
-    "answer": 1,
+    "answer": 2,
     "explanation": "Dense regular connective tissue has collagen fibers aligned in parallel along the axis of mechanical stress, maximizing tensile strength — characteristic of tendons and ligaments."
   },
   {
     "id": "q-histo-009",
     "question": "What do goblet cells secrete, and what is their functional role in the respiratory and GI epithelium?",
     "options": [
-      "Serous fluid, for enzymatic digestion",
-      "Mucin, which hydrates into a protective mucus layer",
       "Surfactant, to reduce alveolar surface tension",
-      "Hydrochloric acid, for pathogen defense"
+      "Lysozyme, for antibacterial defense",
+      "Hydrochloric acid, for pathogen defense",
+      "Serous fluid, for enzymatic digestion",
+      "Mucin, which hydrates into a protective mucus layer"
     ],
-    "answer": 1,
+    "answer": 4,
     "explanation": "Goblet cells are unicellular glands that secrete mucin, which absorbs water to form mucus — a protective, lubricating barrier on respiratory and GI epithelial surfaces."
   },
   {
     "id": "q-histo-010",
     "question": "Which junction, positioned apical-most in the junctional complex, seals the paracellular space between epithelial cells?",
     "options": [
-      "Gap junction",
       "Tight junction (zonula occludens)",
-      "Zonula adherens",
-      "Hemidesmosome"
+      "Desmosome",
+      "Hemidesmosome",
+      "Gap junction",
+      "Zonula adherens"
     ],
-    "answer": 1,
+    "answer": 0,
     "explanation": "The tight junction (zonula occludens) sits closest to the apical surface and seals the space between adjacent cells, controlling paracellular passage."
   },
   {
     "id": "q-histo-011",
     "question": "Gap junction channels (connexons) allow which of the following to pass directly between adjacent cells' cytoplasm?",
     "options": [
-      "Only large signaling proteins",
-      "Small molecules and inorganic ions up to about 1.5 nm",
       "Whole organelles",
-      "Nothing — gap junctions are purely mechanical anchors"
+      "Nothing — gap junctions are purely mechanical anchors",
+      "Water and dissolved gases only, not ions",
+      "Only large signaling proteins",
+      "Small molecules and inorganic ions up to about 1.5 nm"
     ],
-    "answer": 1,
+    "answer": 4,
     "explanation": "Each connexon is built from six connexin proteins and forms a channel that permits small molecules and inorganic ions (roughly up to 1.5 nm) to pass directly from one cell's cytoplasm to the next; larger molecules cannot pass."
   },
   {
     "id": "q-histo-012",
     "question": "Roughly how much do microvilli increase an absorptive epithelial cell's apical surface area?",
     "options": [
-      "About 2-fold",
-      "About 10-fold",
       "About 30-fold",
-      "About 100-fold"
+      "About 2-fold",
+      "About 100-fold",
+      "About 500-fold",
+      "About 10-fold"
     ],
-    "answer": 2,
+    "answer": 0,
     "explanation": "Microvilli — finger-like apical projections 0.5–1.0 µm long — increase absorptive surface area roughly 30-fold, the defining feature of brush-border epithelium like the small intestine."
   },
   {
     "id": "q-histo-013",
     "question": "What is the classic location of stereocilia in the body?",
     "options": [
-      "Trachea",
+      "Small intestine",
       "Epididymis",
-      "Fallopian tube",
-      "Small intestine"
+      "Trachea",
+      "Vas deferens",
+      "Fallopian tube"
     ],
     "answer": 1,
     "explanation": "Stereocilia — unusually long, immobile microvilli — are found in small numbers in the male reproductive tract, classically the epididymis, where they assist absorption."
@@ -159,24 +172,26 @@
     "id": "q-histo-014",
     "question": "What is the classic '9+2' arrangement seen in cross-section through a motile cilium?",
     "options": [
+      "9 actin filaments surrounding 2 keratin filaments",
       "9 central microtubules surrounded by 2 peripheral doublets",
       "9 peripheral microtubule doublets surrounding 2 central single microtubules",
-      "9 connexons surrounding 2 desmosomes",
-      "9 actin filaments surrounding 2 keratin filaments"
+      "9 peripheral single microtubules surrounding 2 central doublets",
+      "9 connexons surrounding 2 desmosomes"
     ],
-    "answer": 1,
+    "answer": 2,
     "explanation": "The ciliary axoneme has nine peripheral microtubule doublets arranged in a ring around a central pair of single microtubules — the core motile machinery shared by every cilium in the body."
   },
   {
     "id": "q-histo-015",
     "question": "Structurally (independent of secretion mechanism), how are exocrine glands classified?",
     "options": [
-      "By hormone type only",
       "By duct branching (simple vs. compound) and secretory unit shape (tubular, alveolar, or tubuloalveolar)",
-      "By the number of nuclei per cell",
-      "By whether they are vascularized"
+      "By whether they are vascularized",
+      "By whether secretion is constitutive or regulated",
+      "By hormone type only",
+      "By the number of nuclei per cell"
     ],
-    "answer": 1,
+    "answer": 0,
     "explanation": "Structurally, exocrine glands are classified by whether their duct is simple (unbranched) or compound (branched), and by the shape of the secretory unit — tubular, alveolar/acinar, or a tubuloalveolar mix. This is separate from classification by secretion mechanism (merocrine/apocrine/holocrine)."
   },
   {
@@ -186,33 +201,36 @@
       "Simple cuboidal epithelium",
       "Simple squamous epithelium",
       "Transitional epithelium",
+      "Fenestrated simple squamous epithelium",
       "Pseudostratified columnar epithelium"
     ],
     "answer": 1,
-    "explanation": "The parietal layer of Bowman's capsule is lined by simple squamous epithelium — a classic teaching example of this epithelium type."
+    "explanation": "The parietal layer of Bowman's capsule is lined by simple squamous epithelium — a classic teaching example of this epithelium type. Fenestrated (pore-bearing) endothelium instead lines the glomerular capillaries themselves."
   },
   {
     "id": "q-histo-017",
     "question": "Which of the following is an unusual site where stratified columnar epithelium is the normal finding?",
     "options": [
-      "Esophagus",
       "Male urethra, pars cavernosa",
-      "Stomach",
-      "Trachea"
+      "Anal canal",
+      "Esophagus",
+      "Trachea",
+      "Stomach"
     ],
-    "answer": 1,
+    "answer": 0,
     "explanation": "The pars cavernosa of the male urethra is one of the few normal sites lined by stratified columnar epithelium, an otherwise uncommon epithelium type in the body."
   },
   {
     "id": "q-histo-018",
     "question": "Thyroid follicular cells, which secrete thyroid hormone into a colloid-filled follicle, are what type of epithelium?",
     "options": [
+      "Transitional",
       "Simple squamous",
       "Simple cuboidal",
       "Stratified columnar",
-      "Transitional"
+      "Simple columnar"
     ],
-    "answer": 1,
+    "answer": 2,
     "explanation": "Thyroid follicular cells are simple cuboidal epithelium arranged around a colloid-filled follicle — the same basic cell shape seen lining renal tubules, but here functioning as an endocrine (ductless) gland."
   }
 ]

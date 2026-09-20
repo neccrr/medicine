@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
 import { buildNavigationDocs, type SearchDoc } from "../lib/searchIndex";
+import { HighlightText } from "./HighlightText";
 
 export const OPEN_COMMAND_PALETTE_EVENT = "medicine:open-command-palette";
 
@@ -22,13 +23,23 @@ export function CommandPalette() {
         ],
         threshold: 0.4,
         ignoreLocation: true,
+        minMatchCharLength: 2,
+        includeMatches: true,
       }),
     [docs],
   );
 
-  const results: SearchDoc[] = query.trim()
-    ? fuse.search(query).slice(0, 8).map((r) => r.item)
-    : docs.filter((d) => d.type === "page").slice(0, 8);
+  interface RankedDoc {
+    doc: SearchDoc;
+    titleRanges?: readonly (readonly [number, number])[];
+  }
+
+  const results: RankedDoc[] = query.trim()
+    ? fuse
+        .search(query)
+        .slice(0, 8)
+        .map((r) => ({ doc: r.item, titleRanges: r.matches?.find((m) => m.key === "title")?.indices }))
+    : docs.filter((d) => d.type === "page").slice(0, 8).map((doc) => ({ doc }));
 
   const openPalette = () => {
     setQuery("");
@@ -79,7 +90,7 @@ export function CommandPalette() {
       setActiveIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (results[activeIndex]) go(results[activeIndex]);
+      if (results[activeIndex]) go(results[activeIndex].doc);
     }
   };
 
@@ -104,7 +115,7 @@ export function CommandPalette() {
           aria-label="Command palette search"
         />
         <ul className="command-results">
-          {results.map((doc, i) => (
+          {results.map(({ doc, titleRanges }, i) => (
             <li key={`${doc.type}-${doc.id}`}>
               <button
                 className={i === activeIndex ? "command-item active" : "command-item"}
@@ -112,7 +123,9 @@ export function CommandPalette() {
                 onMouseEnter={() => setActiveIndex(i)}
               >
                 <span className="command-item-type">{doc.type}</span>
-                <span className="command-item-title">{doc.title}</span>
+                <span className="command-item-title">
+                  <HighlightText text={doc.title} ranges={titleRanges} />
+                </span>
               </button>
             </li>
           ))}
