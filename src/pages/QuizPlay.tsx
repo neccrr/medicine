@@ -196,7 +196,7 @@ export function QuizPlay() {
       ) : (
         result && (
           <div className="quiz-results">
-            <div className="quiz-score-hero">
+            <div className={`quiz-score-hero${result.score === result.total ? " perfect" : ""}`}>
               <p className="quiz-score-value">
                 {result.score}
                 <span className="quiz-score-total">/{result.total}</span>

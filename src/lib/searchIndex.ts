@@ -20,6 +20,8 @@ export interface SearchDoc {
   detail: string;
   to: string;
   subjectId?: string;
+  /** Extra matchable text not shown in results (flashcard tags, quiz option text) — broadens recall. */
+  keywords?: string;
 }
 
 const staticPages: SearchDoc[] = [
@@ -74,6 +76,7 @@ function contentDocs(): SearchDoc[] {
       detail: card.back,
       to: `/flashcards/${subjectId}`,
       subjectId,
+      keywords: card.tags.join(" "),
     })),
   );
   const quizDocs = Object.entries(quizBanks).flatMap(([subjectId, bank]) =>
@@ -84,6 +87,7 @@ function contentDocs(): SearchDoc[] {
       detail: q.explanation,
       to: `/quizzes/${subjectId}`,
       subjectId,
+      keywords: q.options.join(" "),
     })),
   );
   const summaryDocs = Object.entries(summaries).flatMap(([subjectId, markdown]) => {

@@ -8,6 +8,7 @@ import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { generateStudyPlan } from "../lib/studyPlan";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { RadialGauge } from "../components/RadialGauge";
 import { BackupNudge } from "../components/BackupNudge";
 import type { CardStateMap } from "../types/content";
 
@@ -127,6 +128,34 @@ export function Progress() {
       {activityDays.length > 0 && (
         <div className="heatmap-wrapper">
           <ActivityHeatmap days={activityDays} />
+        </div>
+      )}
+
+      {flashcardSubjects.length > 0 && (
+        <div className="mastery-by-subject">
+          <h2>Mastery by subject</h2>
+          <p className="subtitle">Cards with a 21+ day review interval count as mastered.</p>
+          <ul className="mastery-list">
+            {flashcardSubjects.map((s) => {
+              const stats = buildDeckStats(s.id);
+              const percent = stats.total > 0 ? (stats.mastered / stats.total) * 100 : 0;
+              return (
+                <li key={s.id}>
+                  <Link to={`/flashcards/${s.id}`} className="mastery-row">
+                    <RadialGauge percent={percent} size={40} label={`${Math.round(percent)}% of ${s.label} mastered`} />
+                    <SubjectBadge id={s.id} label={s.label} />
+                    <span className="mastery-row-body">
+                      <span className="mastery-row-label">{s.label}</span>
+                      <span className="mastery-row-detail">
+                        {stats.mastered}/{stats.total} mastered
+                        {stats.due > 0 ? ` · ${stats.due} due` : ""}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
 
