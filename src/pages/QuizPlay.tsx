@@ -1,21 +1,35 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { quizBanks, quizGames } from "../lib/content";
+import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
 import { ScoreSparkline } from "../components/ScoreSparkline";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
+
+const OPTION_LETTERS = "ABCDEFGH";
+
+function scoreMessage(score: number, total: number): string {
+  const pct = total === 0 ? 0 : score / total;
+  if (pct === 1) return "Perfect score.";
+  if (pct >= 0.9) return "Excellent work.";
+  if (pct >= 0.75) return "Great work.";
+  if (pct >= 0.5) return "Solid effort — a bit more practice will lock it in.";
+  return "Worth another pass — review the explanations below.";
+}
 
 export function QuizPlay() {
   const { subjectId = "" } = useParams();
   const fullBank = quizBanks[subjectId] ?? [];
   const games = quizGames[subjectId] ?? [];
+  const subjectLabel = quizSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
   const { history, dueIds, recordAttempt } = useQuizProgress(subjectId);
-  const [missedOnlyBank, setMissedOnlyBank] = useState<QuizQuestion[] | null>(null);
+  const [activeBank, setActiveBank] = useState<QuizQuestion[] | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [submitted, setSubmitted] = useState(false);
+  const [finished, setFinished] = useState(false);
   const [result, setResult] = useState<QuizAttempt | null>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
 
-  const bank = missedOnlyBank ?? fullBank;
+  const bank = activeBank ?? fullBank;
   const dueQuestions = fullBank.filter((q) => dueIds.includes(q.id));
 
   if (fullBank.length === 0 && games.length === 0) {
@@ -34,7 +48,7 @@ export function QuizPlay() {
           ← All quizzes
         </Link>
         <div className="quiz-header">
-          <h1>{subjectId}</h1>
+          <h1>{subjectLabel}</h1>
         </div>
         {games.map((game) => (
           <div key={game.url} className="pdf-viewer">
@@ -51,27 +65,37 @@ export function QuizPlay() {
     );
   }
 
-  const selectAnswer = (questionId: string, optionIndex: number) => {
-    if (submitted) return;
-    setAnswers((prev) => ({ ...prev, [questionId]: optionIndex }));
+  const currentQuestion = bank[currentIndex];
+  const selected = answers[currentQuestion.id];
+  const revealed = selected !== undefined;
+  const isLast = currentIndex === bank.length - 1;
+  const answeredCount = currentIndex + (revealed ? 1 : 0);
+
+  const selectAnswer = (optionIndex: number) => {
+    if (revealed) return;
+    setAnswers((prev) => ({ ...prev, [currentQuestion.id]: optionIndex }));
   };
 
-  const handleSubmit = () => {
+  const goNext = () => {
+    if (!isLast) {
+      setCurrentIndex((i) => i + 1);
+      return;
+    }
     const attempt = recordAttempt(bank, answers);
     setResult(attempt);
-    setSubmitted(true);
+    setFinished(true);
   };
 
-  const resetTo = (nextBank: QuizQuestion[] | null) => {
-    setMissedOnlyBank(nextBank);
+  const startBank = (nextBank: QuizQuestion[] | null) => {
+    setActiveBank(nextBank);
+    setCurrentIndex(0);
     setAnswers({});
-    setSubmitted(false);
+    setFinished(false);
     setResult(null);
+    setReviewOpen(false);
   };
 
-  const missedQuestions = result
-    ? bank.filter((q) => result.missedIds.includes(q.id))
-    : [];
+  const missedQuestions = result ? bank.filter((q) => result.missedIds.includes(q.id)) : [];
 
   return (
     <section className="page">
@@ -80,10 +104,10 @@ export function QuizPlay() {
       </Link>
       <div className="quiz-header">
         <div>
-          <h1>{subjectId}</h1>
-          {missedOnlyBank && <p className="subtitle">Reviewing missed questions only</p>}
+          <h1>{subjectLabel}</h1>
+          {activeBank && <p className="subtitle">Reviewing {activeBank === dueQuestions ? "due" : "missed"} questions only</p>}
         </div>
-        {history.length >= 2 && !missedOnlyBank && (
+        {history.length >= 2 && !activeBank && (
           <div className="quiz-trend" title="Score trend across recent attempts">
             <ScoreSparkline history={history} />
           </div>
@@ -100,86 +124,139 @@ export function QuizPlay() {
         </div>
       )}
 
-      {!missedOnlyBank && !submitted && dueQuestions.length > 0 && (
+      {!activeBank && !finished && dueQuestions.length > 0 && (
         <div className="quiz-due-banner">
           <p>
             <strong>{dueQuestions.length}</strong> question{dueQuestions.length === 1 ? "" : "s"} due
             for review from past attempts.
           </p>
-          <button className="btn btn-secondary" onClick={() => resetTo(dueQuestions)}>
+          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions)}>
             Review due questions
           </button>
         </div>
       )}
 
-      {submitted && result && (
-        <div className="quiz-result">
-          Score: <strong>{result.score}/{result.total}</strong>
-        </div>
-      )}
+      {!finished ? (
+        <div className="quiz-card">
+          <div className="quiz-progress">
+            <div className="quiz-progress-track">
+              <div
+                className="quiz-progress-fill"
+                style={{ width: `${(answeredCount / bank.length) * 100}%` }}
+              />
+            </div>
+            <span className="quiz-progress-label">
+              Question {currentIndex + 1} of {bank.length}
+            </span>
+          </div>
 
-      <ol className="quiz-list">
-        {bank.map((q, qi) => {
-          const selected = answers[q.id];
-          const isCorrect = selected === q.answer;
-          const questionLabelId = `question-${q.id}`;
+          <p className="quiz-question-text">{currentQuestion.question}</p>
 
-          return (
-            <li key={q.id} className="quiz-question">
-              <p className="quiz-question-text" id={questionLabelId}>
-                {qi + 1}. {q.question}
+          <div className="quiz-options" role="radiogroup" aria-label={currentQuestion.question}>
+            {currentQuestion.options.map((opt, oi) => {
+              let cls = "quiz-option";
+              if (revealed) {
+                if (oi === currentQuestion.answer) cls += " correct";
+                else if (oi === selected) cls += " incorrect";
+              } else if (selected === oi) {
+                cls += " selected";
+              }
+
+              return (
+                <button
+                  key={oi}
+                  className={cls}
+                  onClick={() => selectAnswer(oi)}
+                  disabled={revealed}
+                  role="radio"
+                  aria-checked={selected === oi}
+                >
+                  <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
+                  <span className="quiz-option-text">{opt}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {revealed && (
+            <div className={`quiz-feedback ${selected === currentQuestion.answer ? "correct" : "incorrect"}`} role="status">
+              <p className="quiz-feedback-verdict">
+                {selected === currentQuestion.answer ? "Correct" : "Not quite"}
               </p>
-              <div className="quiz-options" role="radiogroup" aria-labelledby={questionLabelId}>
-                {q.options.map((opt, oi) => {
-                  let cls = "quiz-option";
-                  if (selected === oi) cls += " selected";
-                  if (submitted && oi === q.answer) cls += " correct";
-                  if (submitted && selected === oi && oi !== q.answer) cls += " incorrect";
+              <p className="quiz-feedback-explanation">{currentQuestion.explanation}</p>
+            </div>
+          )}
 
-                  return (
-                    <button
-                      key={oi}
-                      className={cls}
-                      onClick={() => selectAnswer(q.id, oi)}
-                      disabled={submitted}
-                      role="radio"
-                      aria-checked={selected === oi}
-                    >
-                      {opt}
-                    </button>
-                  );
-                })}
-              </div>
-              {submitted && (
-                <p className={`quiz-explanation ${isCorrect ? "correct" : "incorrect"}`} role="status">
-                  {isCorrect ? "Correct. " : "Missed. "}
-                  {q.explanation}
-                </p>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-
-      {!submitted ? (
-        <button
-          className="btn"
-          onClick={handleSubmit}
-          disabled={Object.keys(answers).length !== bank.length}
-        >
-          Submit ({Object.keys(answers).length}/{bank.length} answered)
-        </button>
-      ) : (
-        <div className="quiz-retry-row">
-          <button className="btn btn-secondary" onClick={() => resetTo(null)}>
-            Retry full quiz
-          </button>
-          {missedQuestions.length > 0 && (
-            <button className="btn" onClick={() => resetTo(missedQuestions)}>
-              Review missed only ({missedQuestions.length})
+          {revealed && (
+            <button className="btn quiz-next-btn" onClick={goNext}>
+              {isLast ? "See results" : "Next question"}
             </button>
           )}
         </div>
+      ) : (
+        result && (
+          <div className="quiz-results">
+            <div className="quiz-score-hero">
+              <p className="quiz-score-value">
+                {result.score}
+                <span className="quiz-score-total">/{result.total}</span>
+              </p>
+              <p className="quiz-score-caption">{scoreMessage(result.score, result.total)}</p>
+            </div>
+
+            <div className="quiz-retry-row">
+              <button className="btn btn-secondary" onClick={() => startBank(null)}>
+                Retry full quiz
+              </button>
+              {missedQuestions.length > 0 && (
+                <button className="btn" onClick={() => startBank(missedQuestions)}>
+                  Review missed only ({missedQuestions.length})
+                </button>
+              )}
+            </div>
+
+            <button
+              className="btn btn-secondary quiz-review-toggle"
+              onClick={() => setReviewOpen((v) => !v)}
+              aria-expanded={reviewOpen}
+            >
+              {reviewOpen ? "Hide full review ▲" : "Show full review ▼"}
+            </button>
+
+            {reviewOpen && (
+              <ol className="quiz-review-list">
+                {bank.map((q, qi) => {
+                  const chosen = answers[q.id];
+                  const wasCorrect = chosen === q.answer;
+                  return (
+                    <li key={q.id} className="quiz-review-item">
+                      <p className="quiz-question-text">
+                        {qi + 1}. {q.question}
+                      </p>
+                      <div className="quiz-options quiz-options-static">
+                        {q.options.map((opt, oi) => {
+                          let cls = "quiz-option";
+                          if (oi === q.answer) cls += " correct";
+                          else if (oi === chosen) cls += " incorrect";
+                          return (
+                            <div key={oi} className={cls}>
+                              <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
+                              <span className="quiz-option-text">{opt}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <p className={`quiz-feedback-explanation quiz-review-explanation ${wasCorrect ? "correct" : "incorrect"}`}>
+                        {wasCorrect ? "Correct. " : "Missed. "}
+                        {q.explanation}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+          </div>
+        )
       )}
     </section>
   );
