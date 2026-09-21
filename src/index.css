@@ -764,6 +764,12 @@ kbd, .mono {
   line-height: 1.5;
 }
 
+/* Title-only card (no badge above it) needs more breathing room below the heading than the
+   badge+h2 combo does — otherwise the meta line reads as glued to the title. */
+.exam-package-card h2 {
+  margin-bottom: 0.65rem;
+}
+
 /* Home dashboard */
 
 .dashboard-stats {

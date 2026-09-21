@@ -10,20 +10,37 @@ import { registerSW } from "virtual:pwa-register";
 export function useServiceWorkerUpdate() {
   const [needRefresh, setNeedRefresh] = useState(false);
   const updateRef = useRef<((reloadPage?: boolean) => Promise<void>) | null>(null);
+  const registrationRef = useRef<ServiceWorkerRegistration | null>(null);
 
   useEffect(() => {
     updateRef.current = registerSW({
       onNeedRefresh() {
         setNeedRefresh(true);
       },
-      // Re-check periodically so a tab left open overnight still notices a
-      // deploy — the browser's own SW update check alone is too infrequent.
       onRegisteredSW(_url, registration) {
-        if (!registration) return;
-        const CHECK_INTERVAL_MS = 60 * 60 * 1000;
-        window.setInterval(() => registration.update(), CHECK_INTERVAL_MS);
+        registrationRef.current = registration ?? null;
       },
     });
+
+    const checkForUpdate = () => registrationRef.current?.update();
+
+    // The browser's own SW update check only fires on a full navigation — a PWA that's
+    // reopened from the background (or a tab that's just been left open) needs its own
+    // nudge, so re-check on a shorter poll and whenever the app regains focus/visibility.
+    const CHECK_INTERVAL_MS = 30 * 60 * 1000;
+    const intervalId = window.setInterval(checkForUpdate, CHECK_INTERVAL_MS);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") checkForUpdate();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("focus", checkForUpdate);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("focus", checkForUpdate);
+    };
   }, []);
 
   const applyUpdate = () => {

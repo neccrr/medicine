@@ -41,7 +41,7 @@ function CheckIcon() {
 }
 
 export function EbookReader() {
-  const { subjectId = "", chapterId } = useParams();
+  const { blockId = "", subjectId = "", chapterId } = useParams();
   const meta = ebookMeta[subjectId];
   const pdfs = ebookPdfs[subjectId] ?? [];
   const hasChapters = (meta?.chapters.length ?? 0) > 0;
@@ -88,7 +88,7 @@ export function EbookReader() {
 
   if (!chapterId && hasChapters) {
     const resumeChapter = position?.chapterId ?? meta.chapters[0]?.id;
-    return <Navigate to={`/ebooks/${subjectId}/${resumeChapter}`} replace />;
+    return <Navigate to={`/ebooks/${blockId}/${subjectId}/${resumeChapter}`} replace />;
   }
 
   const chapterIndex = hasChapters ? meta.chapters.findIndex((c) => c.id === chapterId) : -1;
@@ -115,7 +115,7 @@ export function EbookReader() {
           {meta.chapters.map((c, i) => (
             <li key={c.id}>
               <Link
-                to={`/ebooks/${subjectId}/${c.id}`}
+                to={`/ebooks/${blockId}/${subjectId}/${c.id}`}
                 className={c.id === chapterId ? "ebook-toc-link active" : "ebook-toc-link"}
                 aria-current={c.id === chapterId ? "page" : undefined}
               >
@@ -197,7 +197,7 @@ export function EbookReader() {
               <div className="ebook-nav">
                 {prevChapter ? (
                   <Link
-                    to={`/ebooks/${subjectId}/${prevChapter.id}`}
+                    to={`/ebooks/${blockId}/${subjectId}/${prevChapter.id}`}
                     className="btn btn-secondary"
                   >
                     ← {prevChapter.title}
@@ -206,7 +206,7 @@ export function EbookReader() {
                   <span />
                 )}
                 {nextChapter ? (
-                  <Link to={`/ebooks/${subjectId}/${nextChapter.id}`} className="btn">
+                  <Link to={`/ebooks/${blockId}/${subjectId}/${nextChapter.id}`} className="btn">
                     {nextChapter.title} →
                   </Link>
                 ) : (

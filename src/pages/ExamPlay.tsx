@@ -225,10 +225,8 @@ export function ExamPlay() {
             const pkgHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(`${blockId}/${pkg.id}`), []);
             const pkgLast = pkgHistory[pkgHistory.length - 1];
             return (
-              <Link key={pkg.id} to={`/exam/${blockId}/${pkg.id}`} className="nav-card">
-                <div className="nav-card-header">
-                  <h2>{pkg.name}</h2>
-                </div>
+              <Link key={pkg.id} to={`/exam/${blockId}/${pkg.id}`} className="nav-card exam-package-card">
+                <h2>{pkg.name}</h2>
                 <p>
                   {pkgFormat.questionCount} questions · {Math.round(pkgFormat.timeLimitSec / 60)} min
                   {pkgLast && (

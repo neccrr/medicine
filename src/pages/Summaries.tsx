@@ -16,7 +16,7 @@ export function Summaries() {
           <h2 className="block-section-heading">{block.label}</h2>
           <div className="card-grid">
             {subjects.map((subject) => (
-              <Link key={subject.id} to={`/summaries/${subject.id}`} className="nav-card">
+              <Link key={subject.id} to={`/summaries/${block.id}/${subject.id}`} className="nav-card">
                 <div className="nav-card-header">
                   <SubjectBadge id={subject.id} label={subject.label} />
                   <h2>{subject.label}</h2>

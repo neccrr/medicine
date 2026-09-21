@@ -44,7 +44,7 @@ export function EbookSubjects() {
               if (meta.resources?.length) parts.push(`${meta.resources.length} links`);
 
               return (
-                <Link key={subject.id} to={`/ebooks/${subject.id}`} className="nav-card">
+                <Link key={subject.id} to={`/ebooks/${block.id}/${subject.id}`} className="nav-card">
                   <div className="nav-card-header">
                     <SubjectBadge id={subject.id} label={meta.title} />
                     <h2>{meta.title}</h2>

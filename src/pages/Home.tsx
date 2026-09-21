@@ -19,7 +19,7 @@ import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/acti
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { subjectAccent, subjectHueStyle } from "../lib/subjectStyle";
-import { groupByBlock, studyBlocks } from "../lib/blocks";
+import { blockIdForSubject, groupByBlock } from "../lib/blocks";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { RadialGauge } from "../components/RadialGauge";
@@ -74,7 +74,7 @@ function buildContinueItems(): ContinueItem[] {
     const { s, meta, position } = resumes[0];
     const chapter = meta.chapters.find((c) => c.id === position.chapterId);
     items.push({
-      to: `/ebooks/${s.id}/${position.chapterId}`,
+      to: `/ebooks/${blockIdForSubject(s.id)}/${s.id}/${position.chapterId}`,
       title: `Continue "${meta.title}"`,
       detail: chapter ? chapter.title : "Resume reading",
       subjectId: s.id,
@@ -94,7 +94,7 @@ function buildContinueItems(): ContinueItem[] {
     .slice(0, 2)
     .forEach(({ s, due }) => {
       items.push({
-        to: `/flashcards/${s.id}`,
+        to: `/flashcards/${blockIdForSubject(s.id)}/${s.id}`,
         title: `${due} card${due === 1 ? "" : "s"} due in ${s.label}`,
         detail: "Spaced-repetition review",
         subjectId: s.id,
@@ -114,7 +114,7 @@ function buildContinueItems(): ContinueItem[] {
     .forEach(({ s, due }) => {
       dueQuizSubjectIds.add(s.id);
       items.push({
-        to: `/quizzes/${s.id}`,
+        to: `/quizzes/${blockIdForSubject(s.id)}/${s.id}`,
         title: `${due} quiz question${due === 1 ? "" : "s"} due in ${s.label}`,
         detail: "Missed in a past attempt",
         subjectId: s.id,
@@ -133,7 +133,7 @@ function buildContinueItems(): ContinueItem[] {
     .slice(0, 2)
     .forEach(({ s, last }) => {
       items.push({
-        to: `/quizzes/${s.id}`,
+        to: `/quizzes/${blockIdForSubject(s.id)}/${s.id}`,
         title: `Retake ${s.label} quiz`,
         detail: `Last score ${last.score}/${last.total}`,
         subjectId: s.id,
@@ -165,6 +165,8 @@ function buildSubjectOverviews() {
       let activityScore = 0;
       let mastery: number | null = null;
 
+      const blockId = blockIdForSubject(id);
+
       const deck = flashcardDecks[id];
       if (deck) {
         const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(id), {});
@@ -175,7 +177,7 @@ function buildSubjectOverviews() {
         facets.push({
           label: "Flashcards",
           detail: due > 0 ? `${deck.length} · ${due} due` : `${deck.length} cards`,
-          to: `/flashcards/${id}`,
+          to: `/flashcards/${blockId}/${id}`,
           icon: <CardsIcon />,
         });
       }
@@ -196,7 +198,7 @@ function buildSubjectOverviews() {
                 ? `${bank.length} · last ${last.score}/${last.total}`
                 : `${bank.length} questions`
             : "Interactive",
-          to: `/quizzes/${id}`,
+          to: `/quizzes/${blockId}/${id}`,
           icon: <QuizIcon />,
         });
       }
@@ -212,7 +214,7 @@ function buildSubjectOverviews() {
                 ? `${completedCount}/${meta.chapters.length} complete`
                 : `${meta.chapters.length} chapters`
               : "Reference PDF",
-          to: `/ebooks/${id}`,
+          to: `/ebooks/${blockId}/${id}`,
           icon: <BookIcon />,
         });
       }
@@ -221,12 +223,11 @@ function buildSubjectOverviews() {
         facets.push({
           label: "Summary",
           detail: "Written summary",
-          to: `/summaries/${id}`,
+          to: `/summaries/${blockId}/${id}`,
           icon: <SummaryIcon />,
         });
       }
 
-      const blockId = studyBlocks.find((b) => b.subjectIds.includes(id))?.id;
       const modulePdfs = blockId ? modulesByBlockSubject[`${blockId}/${id}`] : undefined;
       if (blockId && modulePdfs) {
         facets.push({

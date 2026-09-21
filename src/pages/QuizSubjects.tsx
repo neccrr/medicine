@@ -25,7 +25,7 @@ export function QuizSubjects() {
               const last = history[history.length - 1];
 
               return (
-                <Link key={subject.id} to={`/quizzes/${subject.id}`} className="nav-card">
+                <Link key={subject.id} to={`/quizzes/${block.id}/${subject.id}`} className="nav-card">
                   <div className="nav-card-header">
                     <SubjectBadge id={subject.id} label={subject.label} />
                     <h2>{subject.label}</h2>

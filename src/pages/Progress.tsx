@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { exportAllProgress, importAllProgress, readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
 import { flashcardDecks, flashcardSubjects } from "../lib/content";
-import { groupByBlock } from "../lib/blocks";
+import { blockIdForSubject, groupByBlock } from "../lib/blocks";
 import { rankGlobalHardestCards } from "../lib/hardestCards";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { generateStudyPlan } from "../lib/studyPlan";
@@ -150,7 +150,7 @@ export function Progress() {
                     const percent = stats.total > 0 ? (stats.mastered / stats.total) * 100 : 0;
                     return (
                       <li key={s.id}>
-                        <Link to={`/flashcards/${s.id}`} className="mastery-row">
+                        <Link to={`/flashcards/${block.id}/${s.id}`} className="mastery-row">
                           <RadialGauge
                             percent={percent}
                             size={40}
@@ -217,7 +217,7 @@ export function Progress() {
           <ul>
             {globalHardestCards.map(({ card, lapses, subjectId, subjectLabel }) => (
               <li key={`${subjectId}-${card.id}`}>
-                <Link to={`/flashcards/${subjectId}`} className="global-hardest-card-link">
+                <Link to={`/flashcards/${blockIdForSubject(subjectId)}/${subjectId}`} className="global-hardest-card-link">
                   <SubjectBadge id={subjectId} label={subjectLabel} />
                   <span className="global-hardest-card-front">{card.front}</span>
                   <span className="lapse-count">{lapses} lapse{lapses === 1 ? "" : "s"}</span>

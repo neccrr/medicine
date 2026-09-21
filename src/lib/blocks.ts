@@ -31,6 +31,11 @@ export function blockById(blockId: string): StudyBlock | undefined {
   return studyBlocks.find((b) => b.id === blockId);
 }
 
+/** Which study block a subject belongs to — used to build block-sectioned routes (/flashcards/:blockId/:subjectId, etc). */
+export function blockIdForSubject(subjectId: string): string | undefined {
+  return studyBlocks.find((b) => b.subjectIds.includes(subjectId))?.id;
+}
+
 export interface BlockGroup<T> {
   block: StudyBlock;
   subjects: T[];

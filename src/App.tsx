@@ -60,19 +60,19 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/flashcards" element={<FlashcardSubjects />} />
-          <Route path="/flashcards/:subjectId" element={<FlashcardStudy />} />
+          <Route path="/flashcards/:blockId/:subjectId" element={<FlashcardStudy />} />
           <Route path="/quizzes" element={<QuizSubjects />} />
-          <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
+          <Route path="/quizzes/:blockId/:subjectId" element={<QuizPlay />} />
           <Route path="/exam" element={<ExamBlocks />} />
           <Route path="/exam/:blockId" element={<ExamPlay />} />
           <Route path="/exam/:blockId/:packageId" element={<ExamPlay />} />
           <Route path="/modules" element={<Modules />} />
           <Route path="/modules/:blockId/:subjectId" element={<ModuleViewer />} />
           <Route path="/summaries" element={<Summaries />} />
-          <Route path="/summaries/:subjectId" element={<SummaryDetail />} />
+          <Route path="/summaries/:blockId/:subjectId" element={<SummaryDetail />} />
           <Route path="/ebooks" element={<EbookSubjects />} />
-          <Route path="/ebooks/:subjectId" element={<EbookReader />} />
-          <Route path="/ebooks/:subjectId/:chapterId" element={<EbookReader />} />
+          <Route path="/ebooks/:blockId/:subjectId" element={<EbookReader />} />
+          <Route path="/ebooks/:blockId/:subjectId/:chapterId" element={<EbookReader />} />
           <Route path="/search" element={<Search />} />
           <Route path="/progress" element={<Progress />} />
         </Routes>

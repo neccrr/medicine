@@ -24,7 +24,7 @@ export function FlashcardSubjects() {
               const due = deck.filter((card) => isDue(stateMap[card.id] ?? INITIAL_CARD_STATE)).length;
 
               return (
-                <Link key={subject.id} to={`/flashcards/${subject.id}`} className="nav-card">
+                <Link key={subject.id} to={`/flashcards/${block.id}/${subject.id}`} className="nav-card">
                   <div className="nav-card-header">
                     <SubjectBadge id={subject.id} label={subject.label} />
                     <h2>{subject.label}</h2>
