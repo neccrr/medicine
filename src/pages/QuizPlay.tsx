@@ -78,6 +78,7 @@ export function QuizPlay() {
     const idSet = new Set(fullBank.map((q) => q.id));
     const ok =
       !!saved &&
+      Array.isArray(saved.bank) &&
       saved.total === fullBank.length &&
       saved.currentIndex < saved.total &&
       saved.bank.length === fullBank.length &&
