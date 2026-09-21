@@ -3,18 +3,22 @@ import { Link, useParams } from "react-router-dom";
 import { examBanks, quizBanks } from "../lib/content";
 import { blockById } from "../lib/blocks";
 import { useExamHistory } from "../hooks/useExamHistory";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { buildSessionBank } from "../lib/quizShuffle";
 import { buildExamFormat } from "../lib/examFormat";
 import { ConfettiBurst } from "../components/ConfettiBurst";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { FlagIcon, TimerIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
+import { STORAGE_KEYS } from "../lib/storage";
 import type { ExamAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
 const EMPTY_BANK: QuizQuestion[] = [];
 /** Timer switches to its "running low" styling inside the last 2 minutes. */
 const LOW_TIME_THRESHOLD_SEC = 120;
+
+type ExamMode = "real" | "feedback";
 
 function formatClock(totalSec: number): string {
   const sec = Math.max(0, Math.round(totalSec));
@@ -43,6 +47,7 @@ export function ExamPlay() {
   );
   const format = useMemo(() => buildExamFormat(pool.length), [pool]);
   const { lastAttempt, recordAttempt } = useExamHistory(blockId);
+  const [mode, setMode] = useLocalStorage<ExamMode>(STORAGE_KEYS.examMode, "real");
 
   const [started, setStarted] = useState(false);
   const [examBank, setExamBank] = useState<QuizQuestion[]>(EMPTY_BANK);
@@ -109,6 +114,7 @@ export function ExamPlay() {
 
   const selectAnswer = (optionIndex: number) => {
     if (!currentQuestion) return;
+    if (mode === "feedback" && answers[currentQuestion.id] !== undefined) return;
     setAnswers((prev) => ({ ...prev, [currentQuestion.id]: optionIndex }));
   };
 
@@ -216,7 +222,11 @@ export function ExamPlay() {
             <SubjectBadge id={block.id} label={block.label} />
           </div>
           <h1>{block.label}</h1>
-          <p className="subtitle">Timed block exam — answers aren't revealed until you submit.</p>
+          <p className="subtitle">
+            {mode === "real"
+              ? "Timed block exam — answers aren't revealed until you submit."
+              : "Timed block exam — see if you're right after each question."}
+          </p>
           <p className="exam-format-note">
             {format.questionCount} questions · {Math.round(format.timeLimitSec / 60)} minutes ·{" "}
             {examBanks[blockId]
@@ -230,6 +240,29 @@ export function ExamPlay() {
               {formatClock(lastAttempt.timeTakenSec)}
             </p>
           )}
+
+          <div className="exam-mode-toggle" role="radiogroup" aria-label="Exam mode">
+            <button
+              type="button"
+              className={mode === "real" ? "exam-mode-btn active" : "exam-mode-btn"}
+              onClick={() => setMode("real")}
+              role="radio"
+              aria-checked={mode === "real"}
+            >
+              <span className="exam-mode-name">Real exam mode</span>
+              <span className="exam-mode-desc">No feedback until you submit — like the real thing.</span>
+            </button>
+            <button
+              type="button"
+              className={mode === "feedback" ? "exam-mode-btn active" : "exam-mode-btn"}
+              onClick={() => setMode("feedback")}
+              role="radio"
+              aria-checked={mode === "feedback"}
+            >
+              <span className="exam-mode-name">Instant feedback mode</span>
+              <span className="exam-mode-desc">See the correct answer and explanation after each question.</span>
+            </button>
+          </div>
 
           <div className="quiz-start-actions">
             <button className="btn quiz-start-btn" onClick={startExam}>
@@ -249,7 +282,12 @@ export function ExamPlay() {
       <div className="quiz-header">
         <div>
           <h1>{block.label}</h1>
-          {!finished && <p className="subtitle">{examBank.length}-question block exam</p>}
+          {!finished && (
+            <p className="subtitle">
+              {examBank.length}-question block exam
+              {mode === "feedback" ? " · instant feedback mode" : " · real exam mode"}
+            </p>
+          )}
         </div>
         {!finished && (
           <div className={secondsLeft <= LOW_TIME_THRESHOLD_SEC ? "exam-timer exam-timer-low" : "exam-timer"} role="timer">
@@ -272,9 +310,12 @@ export function ExamPlay() {
 
           <div className="quiz-nav-strip" ref={navScrollRef}>
             {examBank.map((q, qi) => {
+              const ans = answers[q.id];
               let cls = "quiz-nav-pill";
               if (qi === currentIndex) cls += " current";
-              if (answers[q.id] !== undefined) cls += " answered";
+              if (ans !== undefined) {
+                cls += mode === "feedback" ? (ans === q.answer ? " correct" : " incorrect") : " answered";
+              }
               if (flagged.has(q.id)) cls += " flagged";
               return (
                 <button
@@ -309,22 +350,54 @@ export function ExamPlay() {
             <div className="quiz-question-image" dangerouslySetInnerHTML={{ __html: currentQuestion.image }} />
           )}
 
-          <div className="quiz-options" role="radiogroup" aria-label={currentQuestion.question}>
-            {currentQuestion.options.map((opt, oi) => (
-              <button
-                key={oi}
-                className={answers[currentQuestion.id] === oi ? "quiz-option selected" : "quiz-option"}
-                onClick={() => selectAnswer(oi)}
-                role="radio"
-                aria-checked={answers[currentQuestion.id] === oi}
-              >
-                <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
-                <span className="quiz-option-text">{opt}</span>
-              </button>
-            ))}
-          </div>
+          {(() => {
+            const selected = answers[currentQuestion.id];
+            const revealed = mode === "feedback" && selected !== undefined;
+            return (
+              <>
+                <div className="quiz-options" role="radiogroup" aria-label={currentQuestion.question}>
+                  {currentQuestion.options.map((opt, oi) => {
+                    let cls = "quiz-option";
+                    if (revealed) {
+                      if (oi === currentQuestion.answer) cls += " correct";
+                      else if (oi === selected) cls += " incorrect";
+                    } else if (selected === oi) {
+                      cls += " selected";
+                    }
+                    return (
+                      <button
+                        key={oi}
+                        className={cls}
+                        onClick={() => selectAnswer(oi)}
+                        disabled={revealed}
+                        role="radio"
+                        aria-checked={selected === oi}
+                      >
+                        <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
+                        <span className="quiz-option-text">{opt}</span>
+                      </button>
+                    );
+                  })}
+                </div>
 
-          <p className="quiz-keyboard-hint">Tip: press a letter to answer · ← → to move between questions</p>
+                <p className="quiz-keyboard-hint">
+                  {revealed ? "Tip: ← → to move between questions" : "Tip: press a letter to answer · ← → to move between questions"}
+                </p>
+
+                {revealed && (
+                  <div
+                    className={`quiz-feedback ${selected === currentQuestion.answer ? "correct" : "incorrect"}`}
+                    role="status"
+                  >
+                    <p className="quiz-feedback-verdict">
+                      {selected === currentQuestion.answer ? "Correct" : "Not quite"}
+                    </p>
+                    <p className="quiz-feedback-explanation">{currentQuestion.explanation}</p>
+                  </div>
+                )}
+              </>
+            );
+          })()}
 
           <div className="quiz-nav-buttons">
             <button type="button" className="btn btn-secondary quiz-prev-btn" onClick={goPrev} disabled={currentIndex === 0}>

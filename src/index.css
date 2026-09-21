@@ -1686,6 +1686,51 @@ kbd, .mono {
   margin-top: 1.5rem;
 }
 
+.exam-mode-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.exam-mode-btn {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  color: var(--text);
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.exam-mode-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.exam-mode-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.exam-mode-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.exam-mode-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 .quiz-question-head {
   display: flex;
   align-items: flex-start;

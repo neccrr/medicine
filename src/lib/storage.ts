@@ -23,6 +23,7 @@ export const STORAGE_KEYS = {
   quizDue: (quizId: string) => `medicine:quizdue:${quizId}`,
   quizInProgress: (quizId: string) => `medicine:quizinprogress:${quizId}`,
   examHistory: (subjectId: string) => `medicine:examhistory:${subjectId}`,
+  examMode: "medicine:exammode",
   lastRead: (subjectId: string) => `medicine:lastread:${subjectId}`,
   ebookPosition: (subjectId: string) => `medicine:ebook:${subjectId}`,
   ebookCompleted: (subjectId: string) => `medicine:ebookdone:${subjectId}`,

@@ -1042,5 +1042,226 @@
     ],
     "answer": 4,
     "explanation": "The prodromal phase of rabies typically presents with nonspecific flu-like symptoms before progressing to neurological signs."
+  },
+  {
+    "id": "q-block11-101",
+    "question": "Which gland secretion type releases part of the apical cytoplasm along with the secretory product, as seen in the lactating mammary gland?",
+    "options": [
+      "Merocrine",
+      "Apocrine",
+      "Holocrine",
+      "Eccrine",
+      "Endocrine"
+    ],
+    "answer": 1,
+    "explanation": "Apocrine secretion pinches off a portion of the apical cytoplasm along with the product — the lactating mammary gland is a classic example — unlike merocrine (eccrine) secretion, which uses exocytosis with the cell staying fully intact, or holocrine secretion, which releases the entire cell (e.g. sebaceous glands)."
+  },
+  {
+    "id": "q-block11-102",
+    "question": "Which type of cartilage forms the intervertebral discs and pubic symphysis, and is characterized by dense bundles of type I collagen fibers?",
+    "options": [
+      "Hyaline cartilage",
+      "Elastic cartilage",
+      "Fibrocartilage",
+      "Articular cartilage",
+      "Perichondrium"
+    ],
+    "answer": 2,
+    "explanation": "Fibrocartilage contains dense type I collagen bundles, giving it high tensile strength, and is found at the intervertebral discs, pubic symphysis, and menisci — unlike hyaline cartilage (type II collagen, e.g. tracheal rings) or elastic cartilage (elastic fibers, e.g. the pinna of the ear)."
+  },
+  {
+    "id": "q-block11-103",
+    "question": "Which muscle tissue type has spindle-shaped, uninucleated cells with no visible striations, and is under involuntary control?",
+    "options": [
+      "Skeletal muscle",
+      "Cardiac muscle",
+      "Smooth muscle",
+      "Striated muscle",
+      "Voluntary muscle"
+    ],
+    "answer": 2,
+    "explanation": "Smooth muscle cells are spindle-shaped, have a single central nucleus, and lack the sarcomere striations seen in skeletal and cardiac muscle; it is controlled involuntarily by the autonomic nervous system."
+  },
+  {
+    "id": "q-block11-104",
+    "question": "Which type of cell junction allows direct passage of ions and small molecules between the cytoplasm of adjacent cells, and is responsible for electrical coupling between cardiac muscle cells?",
+    "options": [
+      "Tight junction",
+      "Adherens junction",
+      "Desmosome",
+      "Gap junction",
+      "Hemidesmosome"
+    ],
+    "answer": 3,
+    "explanation": "Gap junctions are made of connexon channels that directly connect the cytoplasm of neighboring cells, allowing ions and small molecules to pass — this electrical coupling lets cardiac muscle cells contract in a coordinated wave."
+  },
+  {
+    "id": "q-block11-105",
+    "question": "In compact bone, what is the name for the central channel of an osteon that carries blood vessels and nerves?",
+    "options": [
+      "Volkmann's canal",
+      "Haversian (central) canal",
+      "Lacuna",
+      "Canaliculus",
+      "Periosteum"
+    ],
+    "answer": 1,
+    "explanation": "The Haversian (central) canal runs down the middle of each osteon and carries the blood vessels and nerves supplying that unit — Volkmann's canals run perpendicular to connect adjacent Haversian canals, while lacunae house osteocytes and canaliculi connect them."
+  },
+  {
+    "id": "q-block11-106",
+    "question": "Transitional epithelium is specifically adapted to withstand stretching. In which organ is it found?",
+    "options": [
+      "Trachea",
+      "Esophagus",
+      "Urinary bladder",
+      "Small intestine",
+      "Stomach"
+    ],
+    "answer": 2,
+    "explanation": "Transitional epithelium (urothelium) lines the urinary bladder, ureters, and part of the urethra, allowing the organ wall to stretch considerably as it fills without the epithelium tearing."
+  },
+  {
+    "id": "q-block11-107",
+    "question": "Which level of protein structure describes the linear sequence of amino acids linked by peptide bonds?",
+    "options": [
+      "Primary",
+      "Secondary",
+      "Tertiary",
+      "Quaternary",
+      "Supersecondary"
+    ],
+    "answer": 0,
+    "explanation": "Primary structure is simply the amino acid sequence; secondary structure describes local folding (alpha helices, beta sheets), tertiary the overall 3D fold of a single chain, and quaternary the arrangement of multiple subunits."
+  },
+  {
+    "id": "q-block11-108",
+    "question": "An enzyme's reaction rate is measured at increasing substrate concentrations until it plateaus. What does this plateau represent?",
+    "options": [
+      "The enzyme has been denatured",
+      "The enzyme is saturated with substrate (Vmax)",
+      "The substrate has been fully converted to product",
+      "The reaction has reached equilibrium",
+      "The enzyme's Km has increased"
+    ],
+    "answer": 1,
+    "explanation": "At high substrate concentrations, essentially all enzyme active sites are occupied, so the reaction rate plateaus at Vmax — adding more substrate can't increase the rate further because the enzyme itself is now the limiting factor."
+  },
+  {
+    "id": "q-block11-109",
+    "question": "Which type of enzyme inhibitor binds at a site other than the active site, changing the enzyme's shape so that even a high substrate concentration cannot fully restore its activity?",
+    "options": [
+      "Competitive inhibitor",
+      "Non-competitive (allosteric) inhibitor",
+      "Substrate analog",
+      "Transition-state analog",
+      "Irreversible covalent inhibitor only"
+    ],
+    "answer": 1,
+    "explanation": "A non-competitive (allosteric) inhibitor binds away from the active site and alters enzyme conformation, lowering Vmax in a way that excess substrate cannot overcome — unlike a competitive inhibitor, which competes directly for the active site and can be outcompeted by enough substrate."
+  },
+  {
+    "id": "q-block11-110",
+    "question": "Which type of RNA carries the codon sequence read by the ribosome during translation?",
+    "options": [
+      "mRNA",
+      "tRNA",
+      "rRNA",
+      "snRNA",
+      "miRNA"
+    ],
+    "answer": 0,
+    "explanation": "Messenger RNA (mRNA) carries the codon sequence transcribed from DNA to the ribosome; tRNA delivers amino acids by matching its anticodon to each codon, and rRNA forms the ribosome's catalytic core."
+  },
+  {
+    "id": "q-block11-111",
+    "question": "DNA polymerase synthesizes a new strand in which direction relative to the growing strand?",
+    "options": [
+      "5' to 3'",
+      "3' to 5'",
+      "Bidirectionally from every nucleotide",
+      "Randomly, then ligated together",
+      "Only in the antisense direction"
+    ],
+    "answer": 0,
+    "explanation": "DNA polymerase always adds new nucleotides to the growing strand's 3' end, synthesizing 5' to 3' — this is why one strand (the lagging strand) must be made discontinuously, in Okazaki fragments, since its template runs in the opposite direction."
+  },
+  {
+    "id": "q-block11-112",
+    "question": "Which plasma globulin fraction is responsible for antibody (immunoglobulin) activity?",
+    "options": [
+      "Alpha-1 globulin",
+      "Alpha-2 globulin",
+      "Beta globulin",
+      "Gamma globulin",
+      "Albumin"
+    ],
+    "answer": 3,
+    "explanation": "Gamma globulins are the immunoglobulin fraction of plasma proteins, produced by plasma cells; alpha and beta globulins instead include transport and carrier proteins such as transferrin and ceruloplasmin, and albumin (not a globulin) is chiefly responsible for maintaining plasma oncotic pressure."
+  },
+  {
+    "id": "q-block11-113",
+    "question": "A red blood cell is placed into a solution with the same solute concentration as its cytoplasm. What happens to the cell?",
+    "options": [
+      "It swells and may lyse",
+      "It shrinks (crenates)",
+      "Its volume stays the same",
+      "It undergoes apoptosis",
+      "It becomes turgid"
+    ],
+    "answer": 2,
+    "explanation": "In an isotonic solution there is no net water movement across the membrane, since the solute concentration inside and outside the cell is equal — so the cell's volume remains unchanged."
+  },
+  {
+    "id": "q-block11-114",
+    "question": "Which phase of hemostasis involves vascular constriction and formation of a temporary platelet plug, before the coagulation cascade reinforces it with fibrin?",
+    "options": [
+      "Primary hemostasis",
+      "Secondary hemostasis",
+      "Tertiary hemostasis (fibrinolysis)",
+      "Thrombopoiesis",
+      "Vasculogenesis"
+    ],
+    "answer": 0,
+    "explanation": "Primary hemostasis covers vascular spasm and platelet plug formation immediately after injury; secondary hemostasis (coagulation) then reinforces that plug with a fibrin mesh, and tertiary hemostasis (fibrinolysis) later dissolves the clot once healing is underway."
+  },
+  {
+    "id": "q-block11-115",
+    "question": "At which cell-cycle checkpoint does the cell verify that DNA has been replicated correctly before proceeding into mitosis?",
+    "options": [
+      "G1/S checkpoint",
+      "G2/M checkpoint",
+      "Metaphase (spindle-assembly) checkpoint",
+      "G0 checkpoint",
+      "Anaphase checkpoint"
+    ],
+    "answer": 1,
+    "explanation": "The G2/M checkpoint checks for complete, accurate DNA replication (and DNA damage) before the cell is allowed to enter mitosis; the G1/S checkpoint instead governs the decision to begin DNA replication, and the metaphase checkpoint confirms proper spindle attachment to chromosomes."
+  },
+  {
+    "id": "q-block11-116",
+    "question": "Which hematopoietic growth factor primarily stimulates megakaryocyte development and platelet production?",
+    "options": [
+      "Erythropoietin",
+      "Thrombopoietin",
+      "Granulocyte colony-stimulating factor (G-CSF)",
+      "Interleukin-3",
+      "Stem cell factor"
+    ],
+    "answer": 1,
+    "explanation": "Thrombopoietin, produced mainly by the liver, stimulates megakaryocyte maturation and platelet release — analogous to how erythropoietin stimulates red cell production and G-CSF stimulates neutrophil production."
+  },
+  {
+    "id": "q-block11-117",
+    "question": "A hormone binds a G-protein-coupled receptor on the cell membrane and triggers a rise in intracellular cyclic AMP (cAMP). What role does cAMP play in this pathway?",
+    "options": [
+      "It is the original extracellular signal",
+      "It is a second messenger relaying the signal inside the cell",
+      "It is the receptor itself",
+      "It directly enters the nucleus to bind DNA",
+      "It is a degraded byproduct with no signaling role"
+    ],
+    "answer": 1,
+    "explanation": "cAMP is a classic second messenger: it's generated inside the cell in response to receptor activation (here, via adenylyl cyclase) and relays and amplifies the signal further downstream, e.g. by activating protein kinase A — the hormone itself is the first messenger, acting from outside the cell."
   }
 ]
