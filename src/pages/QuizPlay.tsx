@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
@@ -8,11 +8,13 @@ import { SubjectBadge } from "../components/SubjectBadge";
 import { FlameIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
+import { buildSessionBank } from "../lib/quizShuffle";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
 
 interface InProgressSave {
+  bank: QuizQuestion[];
   answers: Record<string, number>;
   currentIndex: number;
   total: number;
@@ -34,21 +36,29 @@ export function QuizPlay() {
   const subjectLabel = quizSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
   const { history, dueIds, recordAttempt } = useQuizProgress(subjectId);
   const [started, setStarted] = useState(false);
-  const [activeBank, setActiveBank] = useState<QuizQuestion[] | null>(null);
+  const [sessionBank, setSessionBank] = useState<QuizQuestion[] | null>(null);
+  const [reviewMode, setReviewMode] = useState<"due" | "missed" | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
   const [result, setResult] = useState<QuizAttempt | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
 
-  const bank = activeBank ?? fullBank;
+  const bank = sessionBank ?? [];
   const dueQuestions = fullBank.filter((q) => dueIds.includes(q.id));
   const savedProgress = readJSON<InProgressSave | null>(STORAGE_KEYS.quizInProgress(subjectId), null);
-  const canResume = !!savedProgress && savedProgress.total === fullBank.length && savedProgress.currentIndex < savedProgress.total;
+  const fullBankIds = new Set(fullBank.map((q) => q.id));
+  const canResume =
+    !!savedProgress &&
+    savedProgress.total === fullBank.length &&
+    savedProgress.currentIndex < savedProgress.total &&
+    savedProgress.bank.length === fullBank.length &&
+    savedProgress.bank.every((q) => fullBankIds.has(q.id));
 
   const persistProgress = (nextAnswers: Record<string, number>, nextIndex: number) => {
-    if (activeBank) return;
+    if (reviewMode || !sessionBank) return;
     writeJSON(STORAGE_KEYS.quizInProgress(subjectId), {
+      bank: sessionBank,
       answers: nextAnswers,
       currentIndex: nextIndex,
       total: fullBank.length,
@@ -58,15 +68,17 @@ export function QuizPlay() {
   const clearInProgress = () => writeJSON(STORAGE_KEYS.quizInProgress(subjectId), null);
 
   const beginQuiz = (resume: boolean) => {
-    if (resume && savedProgress) {
+    if (resume && savedProgress && canResume) {
+      setSessionBank(savedProgress.bank);
       setAnswers(savedProgress.answers);
       setCurrentIndex(savedProgress.currentIndex);
     } else {
       clearInProgress();
+      setSessionBank(buildSessionBank(fullBank));
       setAnswers({});
       setCurrentIndex(0);
     }
-    setActiveBank(null);
+    setReviewMode(null);
     setFinished(false);
     setResult(null);
     setStarted(true);
@@ -76,7 +88,7 @@ export function QuizPlay() {
   const selected = currentQuestion ? answers[currentQuestion.id] : undefined;
   const revealed = selected !== undefined;
   const isLast = currentIndex === bank.length - 1;
-  const answeredCount = currentIndex + (revealed ? 1 : 0);
+  const answeredCount = bank.filter((q) => answers[q.id] !== undefined).length;
 
   let streak = 0;
   for (let i = currentIndex - (revealed ? 0 : 1); i >= 0; i--) {
@@ -92,21 +104,32 @@ export function QuizPlay() {
     persistProgress(nextAnswers, currentIndex);
   };
 
-  const goNext = () => {
-    if (!isLast) {
-      const nextIndex = currentIndex + 1;
-      setCurrentIndex(nextIndex);
-      persistProgress(answers, nextIndex);
-      return;
-    }
+  const goToQuestion = (index: number) => {
+    if (index < 0 || index >= bank.length) return;
+    setCurrentIndex(index);
+    persistProgress(answers, index);
+  };
+
+  const goPrev = () => goToQuestion(currentIndex - 1);
+
+  const finishQuiz = () => {
     const attempt = recordAttempt(bank, answers);
     setResult(attempt);
     setFinished(true);
-    if (!activeBank) clearInProgress();
+    if (!reviewMode) clearInProgress();
   };
 
-  const startBank = (nextBank: QuizQuestion[] | null) => {
-    setActiveBank(nextBank);
+  const goNext = () => {
+    if (!isLast) {
+      goToQuestion(currentIndex + 1);
+      return;
+    }
+    finishQuiz();
+  };
+
+  const startBank = (nextBank: QuizQuestion[] | null, mode: "due" | "missed" | null) => {
+    setSessionBank(buildSessionBank(nextBank ?? fullBank));
+    setReviewMode(mode);
     setCurrentIndex(0);
     setAnswers({});
     setFinished(false);
@@ -120,6 +143,17 @@ export function QuizPlay() {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goPrev();
+        return;
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (revealed || isLast) goNext();
+        else goToQuestion(currentIndex + 1);
+        return;
+      }
       if (!revealed) {
         const letterIdx = OPTION_LETTERS.indexOf(e.key.toUpperCase());
         const digitIdx = "123456789".indexOf(e.key);
@@ -137,9 +171,17 @@ export function QuizPlay() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started, finished, currentQuestion, revealed, answers, currentIndex]);
+  }, [started, finished, currentQuestion, revealed, answers, currentIndex, isLast]);
 
   const missedQuestions = result ? bank.filter((q) => result.missedIds.includes(q.id)) : [];
+
+  const navScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!started || finished) return;
+    const el = navScrollRef.current?.querySelector<HTMLElement>(".quiz-nav-pill.current");
+    el?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+  }, [currentIndex, started, finished]);
 
   if (fullBank.length === 0 && games.length === 0) {
     return (
@@ -214,11 +256,7 @@ export function QuizPlay() {
               <button
                 className="btn btn-secondary"
                 onClick={() => {
-                  setActiveBank(dueQuestions);
-                  setAnswers({});
-                  setCurrentIndex(0);
-                  setFinished(false);
-                  setResult(null);
+                  startBank(dueQuestions, "due");
                   setStarted(true);
                 }}
               >
@@ -250,9 +288,9 @@ export function QuizPlay() {
       <div className="quiz-header">
         <div>
           <h1>{subjectLabel}</h1>
-          {activeBank && <p className="subtitle">Reviewing {activeBank === dueQuestions ? "due" : "missed"} questions only</p>}
+          {reviewMode && <p className="subtitle">Reviewing {reviewMode} questions only</p>}
         </div>
-        {history.length >= 2 && !activeBank && (
+        {history.length >= 2 && !reviewMode && (
           <div className="quiz-trend" title="Score trend across recent attempts">
             <ScoreSparkline history={history} />
           </div>
@@ -269,13 +307,13 @@ export function QuizPlay() {
         </div>
       )}
 
-      {!activeBank && !finished && dueQuestions.length > 0 && (
+      {!reviewMode && !finished && dueQuestions.length > 0 && (
         <div className="quiz-due-banner">
           <p>
             <strong>{dueQuestions.length}</strong> question{dueQuestions.length === 1 ? "" : "s"} due
             for review from past attempts.
           </p>
-          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions)}>
+          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions, "due")}>
             Review due questions
           </button>
         </div>
@@ -299,6 +337,28 @@ export function QuizPlay() {
                 {streak}
               </span>
             )}
+          </div>
+
+          <div className="quiz-nav-strip" ref={navScrollRef}>
+            {bank.map((q, qi) => {
+              const ans = answers[q.id];
+              let cls = "quiz-nav-pill";
+              if (qi === currentIndex) cls += " current";
+              if (ans !== undefined) cls += ans === q.answer ? " correct" : " incorrect";
+              return (
+                <button
+                  key={q.id}
+                  type="button"
+                  className={cls}
+                  onClick={() => goToQuestion(qi)}
+                  aria-current={qi === currentIndex ? "true" : undefined}
+                  aria-label={`Go to question ${qi + 1}`}
+                  title={`Question ${qi + 1}`}
+                >
+                  {qi + 1}
+                </button>
+              );
+            })}
           </div>
 
           <p className="quiz-question-text">{currentQuestion.question}</p>
@@ -333,9 +393,10 @@ export function QuizPlay() {
             })}
           </div>
 
-          {!revealed && (
-            <p className="quiz-keyboard-hint">Tip: press a letter to answer</p>
-          )}
+          <p className="quiz-keyboard-hint">
+            {!revealed ? "Tip: press a letter to answer" : "Tip: press Enter to continue"} · ← → to move between
+            questions
+          </p>
 
           {revealed && (
             <div className={`quiz-feedback ${selected === currentQuestion.answer ? "correct" : "incorrect"}`} role="status">
@@ -346,11 +407,33 @@ export function QuizPlay() {
             </div>
           )}
 
-          {revealed && (
-            <button className="btn quiz-next-btn" onClick={goNext}>
-              {isLast ? "See results" : "Next question"}
+          <div className="quiz-nav-buttons">
+            <button
+              type="button"
+              className="btn btn-secondary quiz-prev-btn"
+              onClick={goPrev}
+              disabled={currentIndex === 0}
+            >
+              ← Previous
             </button>
-          )}
+            {revealed ? (
+              <button className="btn quiz-next-btn" onClick={goNext}>
+                {isLast ? "See results" : "Next question"}
+              </button>
+            ) : isLast ? (
+              <button type="button" className="btn btn-secondary quiz-skip-btn" onClick={finishQuiz}>
+                Finish quiz
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-secondary quiz-skip-btn"
+                onClick={() => goToQuestion(currentIndex + 1)}
+              >
+                Skip →
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         result && (
@@ -365,11 +448,11 @@ export function QuizPlay() {
             </div>
 
             <div className="quiz-retry-row">
-              <button className="btn btn-secondary" onClick={() => startBank(null)}>
+              <button className="btn btn-secondary" onClick={() => startBank(null, null)}>
                 Retry full quiz
               </button>
               {missedQuestions.length > 0 && (
-                <button className="btn" onClick={() => startBank(missedQuestions)}>
+                <button className="btn" onClick={() => startBank(missedQuestions, "missed")}>
                   Review missed only ({missedQuestions.length})
                 </button>
               )}
