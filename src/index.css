@@ -2417,6 +2417,69 @@ kbd, .mono {
   color: var(--text);
 }
 
+.update-nudge {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--radius-pill);
+  padding: 0.65rem 0.75rem 0.65rem 1.1rem;
+  color: var(--text);
+  font-size: 0.88rem;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 20px 45px -18px rgba(0, 0, 0, 0.5);
+  animation: update-nudge-in 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.update-nudge svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+@keyframes update-nudge-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .update-nudge {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .update-nudge {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    transform: none;
+  }
+
+  @keyframes update-nudge-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
 /* Nav card headers with subject badges */
 
 .nav-card-header {
