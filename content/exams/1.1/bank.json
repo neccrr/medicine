@@ -44,7 +44,8 @@
       "Reticular connective tissue"
     ],
     "answer": 2,
-    "explanation": "The tissue shown is areolar connective tissue, i.e. loose connective tissue (areolar = longgar)."
+    "explanation": "The tissue shown is areolar connective tissue, i.e. loose connective tissue (areolar = longgar).",
+    "image": "<img src=\"/histology/guess-the-slide/ct_loose.jpg\" alt=\"Micrograph of loose (areolar) connective tissue, showing collagen and elastic fibers, fibroblasts, and scattered fat cells in a loose meshwork\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-005",
@@ -135,7 +136,8 @@
       "Hb H"
     ],
     "answer": 1,
-    "explanation": "In hydrops fetalis (from alpha-thalassemia major), Hb Barts is the dominant hemoglobin, typically making up 70-80% of total hemoglobin."
+    "explanation": "In hydrops fetalis (from alpha-thalassemia major), Hb Barts is the dominant hemoglobin, typically making up 70-80% of total hemoglobin.",
+    "image": "<img src=\"/exams/1.1/hydrops-fetalis.jpg\" alt=\"Clinical photo of a stillborn neonate with hydrops fetalis, showing severe generalized edema, alongside the placenta\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-012",
@@ -209,7 +211,8 @@
       "Simple squamous"
     ],
     "answer": 0,
-    "explanation": "The intestinal lining is simple columnar epithelium, suited for absorption and secretion."
+    "explanation": "The intestinal lining is simple columnar epithelium, suited for absorption and secretion.",
+    "image": "<img src=\"/histology/guess-the-slide/sc_columnar_intestine.jpg\" alt=\"Micrograph of intestinal villi lined by simple columnar epithelium, with scattered goblet cells\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-019",
@@ -222,7 +225,8 @@
       "Five types"
     ],
     "answer": 2,
-    "explanation": "The kidney contains three epithelial types: simple squamous (Bowman's capsule/thin loop of Henle), simple cuboidal (renal tubules), and transitional (renal pelvis)."
+    "explanation": "The kidney contains three epithelial types: simple squamous (Bowman's capsule/thin loop of Henle), simple cuboidal (renal tubules), and transitional (renal pelvis).",
+    "image": "<img src=\"/histology/guess-the-slide/ss_bowmans.jpg\" alt=\"Micrograph of the kidney showing simple squamous epithelium lining Bowman's capsule\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-020",
@@ -260,7 +264,8 @@
       "Monocytes"
     ],
     "answer": 0,
-    "explanation": "Memory cells (memory B and T cells) are a specialized subset of lymphocytes."
+    "explanation": "Memory cells (memory B and T cells) are a specialized subset of lymphocytes.",
+    "image": "<img src=\"/histology/guess-the-slide/lymphocyte.jpg\" alt=\"Micrograph of a lymphocyte on a peripheral blood smear\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-023",
@@ -273,7 +278,8 @@
       "Encapsulated, with a distinct cortex and medulla (thymus)"
     ],
     "answer": 2,
-    "explanation": "MALT (e.g. in the appendix, gut, respiratory tract, and genitourinary tract) is lymphoid tissue with no surrounding capsule — unlike the thymus (capsule, Hassall's corpuscles, cortex/medulla), the spleen (capsule, white/red pulp), or lymph nodes (capsule with trabeculae)."
+    "explanation": "MALT (e.g. in the appendix, gut, respiratory tract, and genitourinary tract) is lymphoid tissue with no surrounding capsule — unlike the thymus (capsule, Hassall's corpuscles, cortex/medulla), the spleen (capsule, white/red pulp), or lymph nodes (capsule with trabeculae).",
+    "image": "<img src=\"/histology/guess-the-slide/malt_appendix.jpg\" alt=\"Micrograph of mucosa-associated lymphoid tissue (MALT) in the appendix, showing lymphoid follicles with no surrounding capsule\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-024",
@@ -440,7 +446,8 @@
       "Prolonged coagulation time"
     ],
     "answer": 0,
-    "explanation": "Platelet hyperactivity promotes excessive clot formation, raising the risk of vessel occlusion (e.g. deep vein thrombosis, myocardial infarction)."
+    "explanation": "Platelet hyperactivity promotes excessive clot formation, raising the risk of vessel occlusion (e.g. deep vein thrombosis, myocardial infarction).",
+    "image": "<img src=\"/histology/guess-the-slide/platelet.jpg\" alt=\"Micrograph of platelets on a peripheral blood smear\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-036",
@@ -490,7 +497,8 @@
       "Desmocollin"
     ],
     "answer": 0,
-    "explanation": "Platelet aggregation is mediated primarily by integrin (GPIIb/IIIa), which binds fibrinogen to bridge adjacent platelets."
+    "explanation": "Platelet aggregation is mediated primarily by integrin (GPIIb/IIIa), which binds fibrinogen to bridge adjacent platelets.",
+    "image": "<img src=\"/histology/guess-the-slide/platelet.jpg\" alt=\"Micrograph of platelets on a peripheral blood smear\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-041",
@@ -902,7 +910,8 @@
       "Mucous tissue"
     ],
     "answer": 2,
-    "explanation": "Given the described lump is most consistent with a lipoma, the tissue involved is adipose (fat) tissue."
+    "explanation": "Given the described lump is most consistent with a lipoma, the tissue involved is adipose (fat) tissue.",
+    "image": "<img src=\"/histology/guess-the-slide/ct_fat.jpg\" alt=\"Micrograph of adipose (fat) tissue, showing signet-ring-shaped adipocytes\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-084",
@@ -928,7 +937,8 @@
       "One type"
     ],
     "answer": 1,
-    "explanation": "The kidney contains three epithelial types: simple squamous, transitional, and simple cuboidal epithelium."
+    "explanation": "The kidney contains three epithelial types: simple squamous, transitional, and simple cuboidal epithelium.",
+    "image": "<img src=\"/histology/guess-the-slide/ss_bowmans.jpg\" alt=\"Micrograph of the kidney showing simple squamous epithelium lining Bowman's capsule\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-086",
@@ -953,7 +963,8 @@
       "It is a primary lymphoid organ"
     ],
     "answer": 1,
-    "explanation": "These features describe the spleen: a dense connective tissue capsule, a reticular tissue stroma, and secondary (not primary) lymphoid organ status — matching the option that reticular tissue is present."
+    "explanation": "These features describe the spleen: a dense connective tissue capsule, a reticular tissue stroma, and secondary (not primary) lymphoid organ status — matching the option that reticular tissue is present.",
+    "image": "<img src=\"/histology/guess-the-slide/spleen_pulp.jpg\" alt=\"Micrograph of splenic pulp, showing white pulp lymphoid nodules within red pulp\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-088",
@@ -1106,7 +1117,8 @@
       "Periosteum"
     ],
     "answer": 1,
-    "explanation": "The Haversian (central) canal runs down the middle of each osteon and carries the blood vessels and nerves supplying that unit — Volkmann's canals run perpendicular to connect adjacent Haversian canals, while lacunae house osteocytes and canaliculi connect them."
+    "explanation": "The Haversian (central) canal runs down the middle of each osteon and carries the blood vessels and nerves supplying that unit — Volkmann's canals run perpendicular to connect adjacent Haversian canals, while lacunae house osteocytes and canaliculi connect them.",
+    "image": "<svg viewBox=\"0 0 300 300\" role=\"img\" aria-label=\"Cross-section of an osteon in compact bone\"><circle cx=\"150\" cy=\"150\" r=\"110\" fill=\"none\" stroke=\"var(--border)\" stroke-width=\"1.5\" /><circle cx=\"150\" cy=\"150\" r=\"85\" fill=\"none\" stroke=\"var(--border)\" stroke-width=\"1.5\" /><circle cx=\"150\" cy=\"150\" r=\"60\" fill=\"none\" stroke=\"var(--border)\" stroke-width=\"1.5\" /><circle cx=\"150\" cy=\"150\" r=\"35\" fill=\"none\" stroke=\"var(--border)\" stroke-width=\"1.5\" /><circle cx=\"128\" cy=\"138\" r=\"3\" fill=\"var(--text-muted)\" /><circle cx=\"176\" cy=\"135\" r=\"3\" fill=\"var(--text-muted)\" /><circle cx=\"150\" cy=\"196\" r=\"3\" fill=\"var(--text-muted)\" /><circle cx=\"103\" cy=\"163\" r=\"3\" fill=\"var(--text-muted)\" /><circle cx=\"198\" cy=\"165\" r=\"3\" fill=\"var(--text-muted)\" /><circle cx=\"150\" cy=\"104\" r=\"3\" fill=\"var(--text-muted)\" /><circle cx=\"150\" cy=\"150\" r=\"16\" fill=\"var(--accent)\" /><line x1=\"150\" y1=\"150\" x2=\"150\" y2=\"40\" stroke=\"var(--accent)\" stroke-width=\"1.5\" stroke-dasharray=\"3 3\" /><text x=\"150\" y=\"30\" fill=\"var(--accent-ink, var(--text))\" font-size=\"13\" font-weight=\"700\" text-anchor=\"middle\">Central (Haversian) canal</text><text x=\"150\" y=\"270\" fill=\"var(--text-muted)\" font-size=\"12\" text-anchor=\"middle\">Concentric bone lamellae, with osteocytes in lacunae between rings</text></svg>"
   },
   {
     "id": "q-block11-106",
@@ -1119,7 +1131,8 @@
       "Stomach"
     ],
     "answer": 2,
-    "explanation": "Transitional epithelium (urothelium) lines the urinary bladder, ureters, and part of the urethra, allowing the organ wall to stretch considerably as it fills without the epithelium tearing."
+    "explanation": "Transitional epithelium (urothelium) lines the urinary bladder, ureters, and part of the urethra, allowing the organ wall to stretch considerably as it fills without the epithelium tearing.",
+    "image": "<img src=\"/histology/guess-the-slide/transitional_bladder.jpg\" alt=\"Micrograph of the urinary bladder wall showing transitional epithelium (urothelium)\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-107",
