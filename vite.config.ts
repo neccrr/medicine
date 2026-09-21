@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: false,
       includeAssets: ['pwa-icon.svg'],
       manifest: {
         name: 'Medicine — Study Tool',
@@ -27,10 +28,23 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,woff2,pdf}'],
+        cleanupOutdatedCaches: true,
       },
     }),
   ],
   build: {
     assetsInlineLimit: (filePath) => (filePath.endsWith('.pdf') ? false : undefined),
+    rollupOptions: {
+      output: {
+        // React/react-dom/react-router change far less often than app code —
+        // splitting them out keeps that chunk cacheable across deploys instead
+        // of re-downloading it every time any page's code changes.
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) {
+            return 'vendor';
+          }
+        },
+      },
+    },
   },
 })

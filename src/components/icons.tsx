@@ -302,3 +302,25 @@ export function SpeakerIcon() {
     </svg>
   );
 }
+
+export function RefreshIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <path
+        d="M19 5.5v5h-5M5 18.5v-5h5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.3 9.5a6.5 6.5 0 0 1 11.2-2.3l1.5 1.8M17.7 14.5a6.5 6.5 0 0 1-11.2 2.3l-1.5-1.8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}

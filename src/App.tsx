@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { CommandPalette } from "./components/CommandPalette";
 import { PulseLine } from "./components/PulseLine";
+import { UpdateNudge } from "./components/UpdateNudge";
 import { useCardSpotlight } from "./hooks/useCardSpotlight";
 
 // Each page ships as its own chunk, fetched only when its route is visited, so the initial
@@ -55,6 +56,7 @@ export default function App() {
         <Sidebar />
         <div className="app-content">
           <CommandPalette />
+          <UpdateNudge />
           <main className="main" id="main-content">
             <Suspense fallback={<RouteFallback />}>
               <Routes>
