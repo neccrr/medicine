@@ -1,9 +1,10 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { CommandPalette } from "./components/CommandPalette";
 import { PulseLine } from "./components/PulseLine";
 import { UpdateNudge } from "./components/UpdateNudge";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { useCardSpotlight } from "./hooks/useCardSpotlight";
 
 // Each page ships as its own chunk, fetched only when its route is visited, so the initial
@@ -48,43 +49,57 @@ function RouteFallback() {
   );
 }
 
+// Keyed by pathname so a crash on one page resets the moment the user navigates away,
+// instead of requiring a full reload to escape it.
+function AppRoutes() {
+  const { pathname } = useLocation();
+
+  return (
+    <ErrorBoundary key={pathname}>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/flashcards" element={<FlashcardSubjects />} />
+          <Route path="/flashcards/:subjectId" element={<FlashcardStudy />} />
+          <Route path="/quizzes" element={<QuizSubjects />} />
+          <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
+          <Route path="/exam" element={<ExamBlocks />} />
+          <Route path="/exam/:blockId" element={<ExamPlay />} />
+          <Route path="/modules" element={<Modules />} />
+          <Route path="/modules/:blockId/:subjectId" element={<ModuleViewer />} />
+          <Route path="/summaries" element={<Summaries />} />
+          <Route path="/summaries/:subjectId" element={<SummaryDetail />} />
+          <Route path="/ebooks" element={<EbookSubjects />} />
+          <Route path="/ebooks/:subjectId" element={<EbookReader />} />
+          <Route path="/ebooks/:subjectId/:chapterId" element={<EbookReader />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/progress" element={<Progress />} />
+        </Routes>
+      </Suspense>
+    </ErrorBoundary>
+  );
+}
+
 export default function App() {
   useCardSpotlight();
 
   return (
-    <BrowserRouter>
-      <a href="#main-content" className="skip-link">
-        Skip to content
-      </a>
-      <div className="app-shell">
-        <Sidebar />
-        <div className="app-content">
-          <CommandPalette />
-          <UpdateNudge />
-          <main className="main" id="main-content">
-            <Suspense fallback={<RouteFallback />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/flashcards" element={<FlashcardSubjects />} />
-                <Route path="/flashcards/:subjectId" element={<FlashcardStudy />} />
-                <Route path="/quizzes" element={<QuizSubjects />} />
-                <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
-                <Route path="/exam" element={<ExamBlocks />} />
-                <Route path="/exam/:blockId" element={<ExamPlay />} />
-                <Route path="/modules" element={<Modules />} />
-                <Route path="/modules/:blockId/:subjectId" element={<ModuleViewer />} />
-                <Route path="/summaries" element={<Summaries />} />
-                <Route path="/summaries/:subjectId" element={<SummaryDetail />} />
-                <Route path="/ebooks" element={<EbookSubjects />} />
-                <Route path="/ebooks/:subjectId" element={<EbookReader />} />
-                <Route path="/ebooks/:subjectId/:chapterId" element={<EbookReader />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/progress" element={<Progress />} />
-              </Routes>
-            </Suspense>
-          </main>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
+        <div className="app-shell">
+          <Sidebar />
+          <div className="app-content">
+            <CommandPalette />
+            <UpdateNudge />
+            <main className="main" id="main-content">
+              <AppRoutes />
+            </main>
+          </div>
         </div>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

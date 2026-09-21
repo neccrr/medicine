@@ -2490,6 +2490,51 @@ kbd, .mono {
   }
 }
 
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+}
+
+.error-boundary-card {
+  max-width: 30rem;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, var(--glass-shadow);
+}
+
+.error-boundary-card h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.3rem;
+}
+
+.error-boundary-card p {
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 1.25rem;
+}
+
+.error-boundary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.error-boundary-hint {
+  font-size: 0.82rem;
+  margin-bottom: 0;
+}
+
 /* Nav card headers with subject badges */
 
 .nav-card-header {

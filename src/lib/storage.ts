@@ -2,7 +2,14 @@ export function readJSON<T>(key: string, fallback: T): T {
   try {
     const raw = window.localStorage.getItem(key);
     if (!raw) return fallback;
-    return JSON.parse(raw) as T;
+    const parsed = JSON.parse(raw) as T;
+    // A stored literal "null" parses successfully but isn't the shape callers expect
+    // (a CardStateMap, an array, ...) — treat it the same as a missing key, unless the
+    // caller's own fallback is null/undefined too (e.g. QuizPlay's in-progress-save slot).
+    if (parsed === null || parsed === undefined) {
+      return fallback === null || fallback === undefined ? (parsed as T) : fallback;
+    }
+    return parsed;
   } catch {
     return fallback;
   }
