@@ -3149,6 +3149,14 @@ kbd {
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.85rem;
+  /* This class is also used on <button> elements (e.g. ModuleViewer's lecture list) —
+     reset UA button chrome so it matches the plain-link look everywhere else. */
+  background: none;
+  border: none;
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
 }
 
 .ebook-toc-link:hover {

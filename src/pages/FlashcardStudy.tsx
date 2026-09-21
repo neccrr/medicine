@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { flashcardDecks } from "../lib/content";
+import { flashcardDecks, flashcardSubjects } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
@@ -31,6 +31,7 @@ const EMPTY_DECK: Flashcard[] = [];
 
 export function FlashcardStudy() {
   const { subjectId = "" } = useParams();
+  const subjectLabel = flashcardSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
   const deck = flashcardDecks[subjectId] ?? EMPTY_DECK;
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -131,7 +132,7 @@ export function FlashcardStudy() {
       <Link to="/flashcards" className="back-link">
         ← All subjects
       </Link>
-      <h1>{subjectId}</h1>
+      <h1>{subjectLabel}</h1>
       <p className="subtitle">
         {stats.due} due · {stats.mastered}/{stats.total} mastered
         {selectedTags.length > 0 && ` · filtered to ${filteredDeck.length} card${filteredDeck.length === 1 ? "" : "s"}`}
