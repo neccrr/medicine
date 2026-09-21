@@ -19,6 +19,11 @@ describe("groupByBlock", () => {
     expect(block12).toBeDefined();
     expect(block12!.subjects).toEqual([]);
     expect(block12!.upcoming.map((u) => u.id)).toEqual(["anatomy"]);
+
+    const block13 = groups.find((g) => g.block.id === "1.3");
+    expect(block13).toBeDefined();
+    expect(block13!.subjects).toEqual([]);
+    expect(block13!.upcoming.map((u) => u.id)).toEqual(["gi-metabolism"]);
   });
 
   it("drops a block that has neither real nor upcoming subjects", () => {
