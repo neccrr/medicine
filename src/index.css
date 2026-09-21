@@ -257,6 +257,14 @@ kbd, .mono {
   flex-direction: column;
 }
 
+.route-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  color: var(--accent);
+}
+
 .sidebar {
   width: 240px;
   flex-shrink: 0;
@@ -2434,6 +2442,57 @@ kbd {
 .quiz-start-btn {
   font-size: 1rem;
   padding: 0.75rem 1.6rem;
+}
+
+.quiz-sections {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.quiz-sections-label {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.quiz-sections-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.quiz-section-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text);
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.quiz-section-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.quiz-section-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.quiz-section-range {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
 }
 
 .quiz-question-image {

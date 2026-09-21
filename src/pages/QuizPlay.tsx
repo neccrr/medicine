@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
@@ -9,15 +9,30 @@ import { FlameIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { buildSessionBank } from "../lib/quizShuffle";
+import { buildSections, type QuizSection } from "../lib/quizSections";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
+const EMPTY_BANK: QuizQuestion[] = [];
 
 interface InProgressSave {
   bank: QuizQuestion[];
   answers: Record<string, number>;
   currentIndex: number;
   total: number;
+}
+
+type SessionKind =
+  | { type: "full" }
+  | { type: "due" }
+  | { type: "missed" }
+  | { type: "section"; section: QuizSection };
+
+function sessionSubtitle(kind: SessionKind): string | null {
+  if (kind.type === "due") return "Reviewing due questions only";
+  if (kind.type === "missed") return "Reviewing missed questions only";
+  if (kind.type === "section") return `Studying ${kind.section.label}`;
+  return null;
 }
 
 function scoreMessage(score: number, total: number): string {
@@ -31,13 +46,13 @@ function scoreMessage(score: number, total: number): string {
 
 export function QuizPlay() {
   const { subjectId = "" } = useParams();
-  const fullBank = quizBanks[subjectId] ?? [];
+  const fullBank = quizBanks[subjectId] ?? EMPTY_BANK;
   const games = quizGames[subjectId] ?? [];
   const subjectLabel = quizSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
   const { history, dueIds, recordAttempt } = useQuizProgress(subjectId);
   const [started, setStarted] = useState(false);
   const [sessionBank, setSessionBank] = useState<QuizQuestion[] | null>(null);
-  const [reviewMode, setReviewMode] = useState<"due" | "missed" | null>(null);
+  const [sessionKind, setSessionKind] = useState<SessionKind>({ type: "full" });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
@@ -45,18 +60,33 @@ export function QuizPlay() {
   const [reviewOpen, setReviewOpen] = useState(false);
 
   const bank = sessionBank ?? [];
-  const dueQuestions = fullBank.filter((q) => dueIds.includes(q.id));
-  const savedProgress = readJSON<InProgressSave | null>(STORAGE_KEYS.quizInProgress(subjectId), null);
-  const fullBankIds = new Set(fullBank.map((q) => q.id));
-  const canResume =
-    !!savedProgress &&
-    savedProgress.total === fullBank.length &&
-    savedProgress.currentIndex < savedProgress.total &&
-    savedProgress.bank.length === fullBank.length &&
-    savedProgress.bank.every((q) => fullBankIds.has(q.id));
+  const sections = useMemo(() => buildSections(fullBank), [fullBank]);
+
+  // dueIds only changes when an attempt is recorded, so this only recomputes on finish, not on
+  // every keystroke while a quiz is in progress.
+  const dueQuestions = useMemo(
+    () => fullBank.filter((q) => dueIds.includes(q.id)),
+    [fullBank, dueIds],
+  );
+
+  // savedProgress/canResume are only read on the pre-start screen, but the underlying
+  // localStorage value can hold a full shuffled bank snapshot (100KB+ of JSON for a large
+  // subject). Memoizing on subjectId/fullBank keeps it off the hot path of answering questions
+  // and navigating, where it was previously re-read and re-parsed on every single render.
+  const { savedProgress, canResume } = useMemo(() => {
+    const saved = readJSON<InProgressSave | null>(STORAGE_KEYS.quizInProgress(subjectId), null);
+    const idSet = new Set(fullBank.map((q) => q.id));
+    const ok =
+      !!saved &&
+      saved.total === fullBank.length &&
+      saved.currentIndex < saved.total &&
+      saved.bank.length === fullBank.length &&
+      saved.bank.every((q) => idSet.has(q.id));
+    return { savedProgress: saved, canResume: ok };
+  }, [subjectId, fullBank]);
 
   const persistProgress = (nextAnswers: Record<string, number>, nextIndex: number) => {
-    if (reviewMode || !sessionBank) return;
+    if (sessionKind.type !== "full" || !sessionBank) return;
     writeJSON(STORAGE_KEYS.quizInProgress(subjectId), {
       bank: sessionBank,
       answers: nextAnswers,
@@ -67,20 +97,30 @@ export function QuizPlay() {
 
   const clearInProgress = () => writeJSON(STORAGE_KEYS.quizInProgress(subjectId), null);
 
+  const startBank = (nextSource: QuizQuestion[], kind: SessionKind) => {
+    setSessionBank(buildSessionBank(nextSource));
+    setSessionKind(kind);
+    setCurrentIndex(0);
+    setAnswers({});
+    setFinished(false);
+    setResult(null);
+    setReviewOpen(false);
+    if (kind.type === "full") clearInProgress();
+  };
+
   const beginQuiz = (resume: boolean) => {
     if (resume && savedProgress && canResume) {
       setSessionBank(savedProgress.bank);
+      setSessionKind({ type: "full" });
       setAnswers(savedProgress.answers);
       setCurrentIndex(savedProgress.currentIndex);
-    } else {
-      clearInProgress();
-      setSessionBank(buildSessionBank(fullBank));
-      setAnswers({});
-      setCurrentIndex(0);
+      setFinished(false);
+      setResult(null);
+      setStarted(true);
+      return;
     }
-    setReviewMode(null);
-    setFinished(false);
-    setResult(null);
+    clearInProgress();
+    startBank(fullBank, { type: "full" });
     setStarted(true);
   };
 
@@ -116,7 +156,7 @@ export function QuizPlay() {
     const attempt = recordAttempt(bank, answers);
     setResult(attempt);
     setFinished(true);
-    if (!reviewMode) clearInProgress();
+    if (sessionKind.type === "full") clearInProgress();
   };
 
   const goNext = () => {
@@ -125,17 +165,6 @@ export function QuizPlay() {
       return;
     }
     finishQuiz();
-  };
-
-  const startBank = (nextBank: QuizQuestion[] | null, mode: "due" | "missed" | null) => {
-    setSessionBank(buildSessionBank(nextBank ?? fullBank));
-    setReviewMode(mode);
-    setCurrentIndex(0);
-    setAnswers({});
-    setFinished(false);
-    setResult(null);
-    setReviewOpen(false);
-    if (!nextBank) clearInProgress();
   };
 
   useEffect(() => {
@@ -256,7 +285,7 @@ export function QuizPlay() {
               <button
                 className="btn btn-secondary"
                 onClick={() => {
-                  startBank(dueQuestions, "due");
+                  startBank(dueQuestions, { type: "due" });
                   setStarted(true);
                 }}
               >
@@ -275,6 +304,30 @@ export function QuizPlay() {
               {canResume ? "Start over" : "Start quiz"}
             </button>
           </div>
+
+          {sections.length > 0 && (
+            <div className="quiz-sections">
+              <p className="quiz-sections-label">
+                {fullBank.length} questions is a lot in one sitting — study a smaller section instead:
+              </p>
+              <div className="quiz-sections-row">
+                {sections.map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    className="quiz-section-btn"
+                    onClick={() => {
+                      startBank(s.questions, { type: "section", section: s });
+                      setStarted(true);
+                    }}
+                  >
+                    <span className="quiz-section-name">{s.shortLabel}</span>
+                    <span className="quiz-section-range">{s.range}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     );
@@ -288,9 +341,9 @@ export function QuizPlay() {
       <div className="quiz-header">
         <div>
           <h1>{subjectLabel}</h1>
-          {reviewMode && <p className="subtitle">Reviewing {reviewMode} questions only</p>}
+          {sessionSubtitle(sessionKind) && <p className="subtitle">{sessionSubtitle(sessionKind)}</p>}
         </div>
-        {history.length >= 2 && !reviewMode && (
+        {history.length >= 2 && sessionKind.type === "full" && (
           <div className="quiz-trend" title="Score trend across recent attempts">
             <ScoreSparkline history={history} />
           </div>
@@ -307,13 +360,13 @@ export function QuizPlay() {
         </div>
       )}
 
-      {!reviewMode && !finished && dueQuestions.length > 0 && (
+      {sessionKind.type === "full" && !finished && dueQuestions.length > 0 && (
         <div className="quiz-due-banner">
           <p>
             <strong>{dueQuestions.length}</strong> question{dueQuestions.length === 1 ? "" : "s"} due
             for review from past attempts.
           </p>
-          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions, "due")}>
+          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions, { type: "due" })}>
             Review due questions
           </button>
         </div>
@@ -448,11 +501,19 @@ export function QuizPlay() {
             </div>
 
             <div className="quiz-retry-row">
-              <button className="btn btn-secondary" onClick={() => startBank(null, null)}>
+              {sessionKind.type === "section" && (
+                <button
+                  className="btn"
+                  onClick={() => startBank(sessionKind.section.questions, sessionKind)}
+                >
+                  Retry {sessionKind.section.shortLabel}
+                </button>
+              )}
+              <button className="btn btn-secondary" onClick={() => startBank(fullBank, { type: "full" })}>
                 Retry full quiz
               </button>
               {missedQuestions.length > 0 && (
-                <button className="btn" onClick={() => startBank(missedQuestions, "missed")}>
+                <button className="btn" onClick={() => startBank(missedQuestions, { type: "missed" })}>
                   Review missed only ({missedQuestions.length})
                 </button>
               )}
