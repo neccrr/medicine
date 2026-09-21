@@ -9,7 +9,8 @@
       "Stratified squamous epithelium"
     ],
     "answer": 0,
-    "explanation": "The thyroid follicle wall is lined by simple cuboidal epithelium (follicular cells), which synthesize and secrete thyroid hormone into the colloid-filled lumen."
+    "explanation": "The thyroid follicle wall is lined by simple cuboidal epithelium (follicular cells), which synthesize and secrete thyroid hormone into the colloid-filled lumen.",
+    "image": "<img src=\"/histology/epithelium/thyroid-follicle-simple-cuboidal.jpg\" alt=\"Micrograph of thyroid follicles lined by simple cuboidal follicular epithelium\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-002",
@@ -34,7 +35,8 @@
       "Stratified squamous"
     ],
     "answer": 2,
-    "explanation": "Intestinal villi are lined by simple columnar epithelium, specialized for absorption."
+    "explanation": "Intestinal villi are lined by simple columnar epithelium, specialized for absorption.",
+    "image": "<img src=\"/histology/guess-the-slide/sc_columnar_intestine.jpg\" alt=\"Micrograph of intestinal villi lined by simple columnar epithelium\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-004",
@@ -98,7 +100,8 @@
       "Adherens junction"
     ],
     "answer": 0,
-    "explanation": "Tight junctions form a continuous seal around the apical margin of epithelial cells, blocking paracellular movement of molecules across the epithelium."
+    "explanation": "Tight junctions form a continuous seal around the apical margin of epithelial cells, blocking paracellular movement of molecules across the epithelium.",
+    "image": "<svg viewBox=\"0 0 320 180\" role=\"img\" aria-label=\"Tight junction sealing the apical membranes of two adjacent epithelial cells, blocking the paracellular space\"><rect x=\"20\" y=\"20\" width=\"130\" height=\"140\" rx=\"6\" fill=\"var(--surface)\" stroke=\"var(--border)\" stroke-width=\"1.5\"/><rect x=\"170\" y=\"20\" width=\"130\" height=\"140\" rx=\"6\" fill=\"var(--surface)\" stroke=\"var(--border)\" stroke-width=\"1.5\"/><rect x=\"148\" y=\"20\" width=\"24\" height=\"30\" fill=\"var(--accent)\" stroke=\"var(--accent)\" stroke-width=\"1.5\"/><text x=\"160\" y=\"12\" fill=\"var(--text-muted)\" font-size=\"11\" text-anchor=\"middle\">Apical (lumen side)</text><line x1=\"160\" y1=\"55\" x2=\"160\" y2=\"160\" stroke=\"var(--border-strong)\" stroke-width=\"1.5\" stroke-dasharray=\"3 5\"/><text x=\"160\" y=\"172\" fill=\"var(--text-muted)\" font-size=\"11\" text-anchor=\"middle\">Lateral intercellular space</text><text x=\"80\" y=\"95\" fill=\"var(--text-muted)\" font-size=\"12\" text-anchor=\"middle\">Cell A</text><text x=\"235\" y=\"95\" fill=\"var(--text-muted)\" font-size=\"12\" text-anchor=\"middle\">Cell B</text><text x=\"160\" y=\"38\" fill=\"var(--accent-ink)\" font-size=\"9\" text-anchor=\"middle\" font-weight=\"700\">seal</text></svg>"
   },
   {
     "id": "q-block11-costraver-009",
@@ -137,7 +140,8 @@
       "Carbohydrate chain"
     ],
     "answer": 0,
-    "explanation": "Integral membrane proteins are embedded in and span the lipid bilayer, unlike peripheral proteins, which attach loosely to one membrane face."
+    "explanation": "Integral membrane proteins are embedded in and span the lipid bilayer, unlike peripheral proteins, which attach loosely to one membrane face.",
+    "image": "<svg viewBox=\"0 0 340 180\" role=\"img\" aria-label=\"Cell membrane cross-section with an integral protein spanning the lipid bilayer\"><text x=\"170\" y=\"18\" fill=\"var(--text-muted)\" font-size=\"12\" text-anchor=\"middle\">Extracellular fluid</text><rect x=\"20\" y=\"50\" width=\"300\" height=\"14\" rx=\"7\" fill=\"var(--accent-soft)\" stroke=\"var(--border)\" stroke-width=\"1\"/><rect x=\"20\" y=\"100\" width=\"300\" height=\"14\" rx=\"7\" fill=\"var(--accent-soft)\" stroke=\"var(--border)\" stroke-width=\"1\"/><line x1=\"45\" y1=\"64\" x2=\"45\" y2=\"100\" stroke=\"var(--border-strong)\" stroke-width=\"1.5\"/><line x1=\"80\" y1=\"64\" x2=\"80\" y2=\"100\" stroke=\"var(--border-strong)\" stroke-width=\"1.5\"/><line x1=\"240\" y1=\"64\" x2=\"240\" y2=\"100\" stroke=\"var(--border-strong)\" stroke-width=\"1.5\"/><line x1=\"275\" y1=\"64\" x2=\"275\" y2=\"100\" stroke=\"var(--border-strong)\" stroke-width=\"1.5\"/><rect x=\"150\" y=\"35\" width=\"40\" height=\"94\" rx=\"16\" fill=\"var(--accent)\" stroke=\"var(--accent)\" stroke-width=\"1.5\"/><text x=\"170\" y=\"150\" fill=\"var(--text)\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"600\">Integral protein</text><text x=\"170\" y=\"168\" fill=\"var(--text-muted)\" font-size=\"12\" text-anchor=\"middle\">Cytoplasm</text></svg>"
   },
   {
     "id": "q-block11-costraver-012",
@@ -239,7 +243,8 @@
       "Simple squamous epithelium"
     ],
     "answer": 0,
-    "explanation": "The renal tubules are lined by simple cuboidal epithelium, suited to the reabsorptive and secretory work of the nephron."
+    "explanation": "The renal tubules are lined by simple cuboidal epithelium, suited to the reabsorptive and secretory work of the nephron.",
+    "image": "<img src=\"/histology/epithelium/renal-tubule-simple-cuboidal.jpg\" alt=\"Micrograph of a renal tubule lined by simple cuboidal epithelium\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-020",
@@ -265,7 +270,8 @@
       "Liver"
     ],
     "answer": 1,
-    "explanation": "The thymic cortex is packed with small immature T lymphocytes (thymocytes) shielded from the bloodstream by a barrier of reticular epithelial cells — a feature unique to the thymus among lymphoid organs."
+    "explanation": "The thymic cortex is packed with small immature T lymphocytes (thymocytes) shielded from the bloodstream by a barrier of reticular epithelial cells — a feature unique to the thymus among lymphoid organs.",
+    "image": "<img src=\"/histology/guess-the-slide/thymus_lobule.jpg\" alt=\"Micrograph of a thymic lobule showing the cortex and medulla\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-022",
@@ -343,7 +349,8 @@
       "It contains branching trabeculae"
     ],
     "answer": 4,
-    "explanation": "The spleen is wrapped in a dense connective-tissue capsule that sends trabeculae branching into the parenchyma, dividing it into red pulp (filtering blood) and white pulp (lymphoid follicles around a central arteriole) — rather than a cortex/medulla arrangement."
+    "explanation": "The spleen is wrapped in a dense connective-tissue capsule that sends trabeculae branching into the parenchyma, dividing it into red pulp (filtering blood) and white pulp (lymphoid follicles around a central arteriole) — rather than a cortex/medulla arrangement.",
+    "image": "<img src=\"/histology/guess-the-slide/spleen_pulp.jpg\" alt=\"Micrograph of splenic tissue showing red pulp and white pulp\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-028",
@@ -485,7 +492,8 @@
       "Plasma cell"
     ],
     "answer": 3,
-    "explanation": "Macrophages are the connective tissue's resident phagocytes, clearing cellular debris and foreign material — as opposed to neutrophils, whose phagocytosis is mostly directed at bacteria during acute inflammation."
+    "explanation": "Macrophages are the connective tissue's resident phagocytes, clearing cellular debris and foreign material — as opposed to neutrophils, whose phagocytosis is mostly directed at bacteria during acute inflammation.",
+    "image": "<img src=\"/histology/guess-the-slide/macrophage.jpg\" alt=\"Micrograph of a macrophage\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-039",
@@ -524,7 +532,8 @@
       "Enterocyte"
     ],
     "answer": 0,
-    "explanation": "Mature red blood cells have no mitochondria (they're extruded during erythropoiesis), so they rely entirely on anaerobic glycolysis for ATP — unlike essentially every other nucleated cell type, which uses oxidative phosphorylation."
+    "explanation": "Mature red blood cells have no mitochondria (they're extruded during erythropoiesis), so they rely entirely on anaerobic glycolysis for ATP — unlike essentially every other nucleated cell type, which uses oxidative phosphorylation.",
+    "image": "<img src=\"/histology/guess-the-slide/erythrocyte.jpg\" alt=\"Micrograph of mature erythrocytes (red blood cells)\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-042",
@@ -550,7 +559,8 @@
       "Reticular connective tissue"
     ],
     "answer": 2,
-    "explanation": "Elastic (large) arteries have a tunica media rich in concentric elastic laminae, letting the vessel wall stretch during systole and recoil during diastole to keep blood flowing during the cardiac cycle."
+    "explanation": "Elastic (large) arteries have a tunica media rich in concentric elastic laminae, letting the vessel wall stretch during systole and recoil during diastole to keep blood flowing during the cardiac cycle.",
+    "image": "<svg viewBox=\"0 0 300 300\" role=\"img\" aria-label=\"Cross-section of an elastic artery wall, showing a thick tunica media built from concentric elastic laminae\"><circle cx=\"150\" cy=\"150\" r=\"110\" fill=\"var(--surface)\" stroke=\"var(--border)\" stroke-width=\"1.5\"/><circle cx=\"150\" cy=\"150\" r=\"95\" fill=\"var(--accent-soft)\" stroke=\"var(--accent)\" stroke-width=\"2\"/><circle cx=\"150\" cy=\"150\" r=\"80\" fill=\"var(--surface)\" stroke=\"var(--accent-dim)\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><circle cx=\"150\" cy=\"150\" r=\"65\" fill=\"var(--accent-soft)\" stroke=\"var(--accent-dim)\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><circle cx=\"150\" cy=\"150\" r=\"50\" fill=\"var(--surface)\" stroke=\"var(--accent-dim)\" stroke-width=\"1\" stroke-dasharray=\"3 4\"/><circle cx=\"150\" cy=\"150\" r=\"42\" fill=\"var(--surface-2)\" stroke=\"var(--border-strong)\" stroke-width=\"1.5\"/><circle cx=\"150\" cy=\"150\" r=\"28\" fill=\"var(--surface-solid)\" stroke=\"var(--border-strong)\" stroke-width=\"1.5\"/><text x=\"150\" y=\"154\" fill=\"var(--text-muted)\" font-size=\"11\" text-anchor=\"middle\">Lumen</text><text x=\"150\" y=\"25\" fill=\"var(--text)\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"600\">Tunica adventitia</text><text x=\"150\" y=\"277\" fill=\"var(--accent)\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\">Tunica media</text><text x=\"150\" y=\"293\" fill=\"var(--text-muted)\" font-size=\"10\" text-anchor=\"middle\">(concentric elastic laminae)</text></svg>"
   },
   {
     "id": "q-block11-costraver-044",
@@ -615,7 +625,8 @@
       "All side chain types equally"
     ],
     "answer": 0,
-    "explanation": "Protein folding buries nonpolar (hydrophobic) side chains inward, away from the surrounding water, while polar and charged side chains stay on the surface, able to form hydrogen bonds with the aqueous environment."
+    "explanation": "Protein folding buries nonpolar (hydrophobic) side chains inward, away from the surrounding water, while polar and charged side chains stay on the surface, able to form hydrogen bonds with the aqueous environment.",
+    "image": "<svg viewBox=\"0 0 300 270\" role=\"img\" aria-label=\"Folded globular protein with nonpolar amino acids clustered in the hydrophobic core and polar amino acids on the water-facing surface\"><circle cx=\"150\" cy=\"120\" r=\"95\" fill=\"var(--surface)\" stroke=\"var(--border)\" stroke-width=\"1.5\"/><circle cx=\"130\" cy=\"100\" r=\"9\" fill=\"var(--accent)\"/><circle cx=\"165\" cy=\"92\" r=\"9\" fill=\"var(--accent)\"/><circle cx=\"160\" cy=\"130\" r=\"9\" fill=\"var(--accent)\"/><circle cx=\"122\" cy=\"140\" r=\"9\" fill=\"var(--accent)\"/><circle cx=\"148\" cy=\"155\" r=\"9\" fill=\"var(--accent)\"/><circle cx=\"150\" cy=\"30\" r=\"8\" fill=\"var(--surface)\" stroke=\"var(--text-muted)\" stroke-width=\"1.5\"/><circle cx=\"225\" cy=\"70\" r=\"8\" fill=\"var(--surface)\" stroke=\"var(--text-muted)\" stroke-width=\"1.5\"/><circle cx=\"238\" cy=\"150\" r=\"8\" fill=\"var(--surface)\" stroke=\"var(--text-muted)\" stroke-width=\"1.5\"/><circle cx=\"185\" cy=\"205\" r=\"8\" fill=\"var(--surface)\" stroke=\"var(--text-muted)\" stroke-width=\"1.5\"/><circle cx=\"108\" cy=\"208\" r=\"8\" fill=\"var(--surface)\" stroke=\"var(--text-muted)\" stroke-width=\"1.5\"/><circle cx=\"58\" cy=\"155\" r=\"8\" fill=\"var(--surface)\" stroke=\"var(--text-muted)\" stroke-width=\"1.5\"/><circle cx=\"65\" cy=\"75\" r=\"8\" fill=\"var(--surface)\" stroke=\"var(--text-muted)\" stroke-width=\"1.5\"/><text x=\"150\" y=\"250\" fill=\"var(--text-muted)\" font-size=\"12\" text-anchor=\"middle\">Nonpolar core &#183; polar surface</text></svg>"
   },
   {
     "id": "q-block11-costraver-049",
@@ -641,7 +652,8 @@
       "Stratified squamous epithelium"
     ],
     "answer": 2,
-    "explanation": "Transitional epithelium (urothelium) has dome-shaped \"umbrella cells\" at its surface that flatten out as the bladder distends, allowing the epithelium to stretch without losing its protective barrier."
+    "explanation": "Transitional epithelium (urothelium) has dome-shaped \"umbrella cells\" at its surface that flatten out as the bladder distends, allowing the epithelium to stretch without losing its protective barrier.",
+    "image": "<img src=\"/histology/epithelium/bladder-transitional-relaxed.jpg\" alt=\"Micrograph of transitional epithelium lining the relaxed urinary bladder\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-051",
@@ -654,7 +666,8 @@
       "Storing energy as fat"
     ],
     "answer": 0,
-    "explanation": "Dense regular connective tissue is packed with parallel collagen bundles running along a single axis, giving tendons the tensile strength to transmit muscle force to bone for movement."
+    "explanation": "Dense regular connective tissue is packed with parallel collagen bundles running along a single axis, giving tendons the tensile strength to transmit muscle force to bone for movement.",
+    "image": "<img src=\"/histology/guess-the-slide/ct_dense_regular.jpg\" alt=\"Micrograph of dense regular connective tissue (tendon)\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-052",
@@ -782,7 +795,8 @@
       "Reticular connective tissue"
     ],
     "answer": 2,
-    "explanation": "The dermis is dense irregular connective tissue: thick bundles of collagen running in multiple directions, giving skin strength to resist tearing from any direction — unlike tendons, whose dense regular tissue is aligned along a single axis."
+    "explanation": "The dermis is dense irregular connective tissue: thick bundles of collagen running in multiple directions, giving skin strength to resist tearing from any direction — unlike tendons, whose dense regular tissue is aligned along a single axis.",
+    "image": "<img src=\"/histology/guess-the-slide/ct_dense_irregular.jpg\" alt=\"Micrograph of dense irregular connective tissue (dermis)\" loading=\"lazy\" />"
   },
   {
     "id": "q-block11-costraver-062",
