@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   ebookMeta,
   ebookSubjects,
+  examBanks,
   flashcardDecks,
   flashcardSubjects,
   quizBanks,
@@ -17,6 +18,7 @@ import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/acti
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { subjectAccent, subjectHueStyle } from "../lib/subjectStyle";
+import { groupByBlock } from "../lib/blocks";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { RadialGauge } from "../components/RadialGauge";
@@ -35,8 +37,9 @@ import {
   QuizIcon,
   SearchIcon,
   SummaryIcon,
+  TimerIcon,
 } from "../components/icons";
-import type { CardStateMap, QuizAttempt, ReadingPosition } from "../types/content";
+import type { CardStateMap, ExamAttempt, QuizAttempt, ReadingPosition } from "../types/content";
 
 interface ContinueItem {
   to: string;
@@ -338,13 +341,28 @@ export function Home() {
             )}
           </div>
 
-          <div className="dashboard-section">
-            <h2 className="section-heading">
-              <AtomIcon />
-              Subjects
-            </h2>
+          {groupByBlock(subjects).map(({ block, subjects: blockSubjects, upcoming }) => {
+            const examPool =
+              examBanks[block.id]?.length ??
+              block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+            const examHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
+            const lastExam = examHistory[examHistory.length - 1];
+            return (
+          <div key={block.id} className="dashboard-section block-section">
+            <div className="block-section-head">
+              <h2 className="section-heading">
+                <AtomIcon />
+                {block.label}
+              </h2>
+              {examPool > 0 && (
+                <Link to={`/exam/${block.id}`} className="block-exam-link">
+                  <TimerIcon />
+                  {lastExam ? `Exam · last ${lastExam.score}/${lastExam.total}` : "Take the exam"}
+                </Link>
+              )}
+            </div>
             <div className="subject-grid">
-              {subjects.map((subject) => (
+              {blockSubjects.map((subject) => (
                 <div
                   key={subject.id}
                   className={
@@ -387,8 +405,23 @@ export function Home() {
                   </div>
                 </div>
               ))}
+              {upcoming.map((u) => (
+                <div
+                  key={u.id}
+                  className="subject-card subject-card-upcoming subject-tinted"
+                  style={subjectHueStyle(u.id) as CSSProperties}
+                >
+                  <div className="subject-card-head">
+                    <SubjectBadge id={u.id} label={u.label} />
+                    <h3>{u.label}</h3>
+                  </div>
+                  <p className="subject-card-upcoming-note">Content coming soon.</p>
+                </div>
+              ))}
             </div>
           </div>
+            );
+          })}
         </div>
 
         <aside className="dashboard-aside">

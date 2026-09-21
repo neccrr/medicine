@@ -9,6 +9,12 @@ const quizModules = import.meta.glob<QuizQuestion[]>(
   "../../content/quizzes/*/bank.json",
   { eager: true, import: "default" },
 );
+// A dedicated, curated question bank for a study block's exam (e.g. sourced from a real past
+// exam), keyed by block id. Falls back to pooling that block's regular quiz banks when absent.
+const examBankModules = import.meta.glob<QuizQuestion[]>(
+  "../../content/exams/*/bank.json",
+  { eager: true, import: "default" },
+);
 const summaryModules = import.meta.glob<string>(
   "../../content/summaries/*.md",
   { eager: true, import: "default", query: "?raw" },
@@ -88,6 +94,14 @@ export const flashcardDecks: Record<string, Flashcard[]> = Object.fromEntries(
 
 export const quizBanks: Record<string, QuizQuestion[]> = Object.fromEntries(
   Object.entries(quizModules).map(([path, questions]) => [
+    subjectFromPath(path),
+    questions,
+  ]),
+);
+
+/** Dedicated exam question banks, keyed by block id. */
+export const examBanks: Record<string, QuizQuestion[]> = Object.fromEntries(
+  Object.entries(examBankModules).map(([path, questions]) => [
     subjectFromPath(path),
     questions,
   ]),

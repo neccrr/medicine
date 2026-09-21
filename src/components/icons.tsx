@@ -257,6 +257,31 @@ export function PrinterIcon() {
   );
 }
 
+export function TimerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="1.6" fill="none" />
+      <path d="M12 13V8.5M9 2.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M12 13 15 15.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function FlagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <path
+        d="M6 3.5v17M6 4.5h10.5l-2.8 3.5 2.8 3.5H6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function SpeakerIcon() {
   return (
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">

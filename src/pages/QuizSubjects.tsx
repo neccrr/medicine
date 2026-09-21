@@ -1,56 +1,65 @@
 import { Link } from "react-router-dom";
 import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
+import { groupByBlock } from "../lib/blocks";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { UpcomingSubjectCard } from "../components/UpcomingSubjectCard";
 import type { QuizAttempt } from "../types/content";
 
 export function QuizSubjects() {
+  const groups = groupByBlock(quizSubjects);
+
   return (
     <section className="page">
       <h1>Quizzes</h1>
       <p className="subtitle">Multiple-choice question banks with instant scoring.</p>
-      <div className="card-grid">
-        {quizSubjects.map((subject) => {
-          const bank = quizBanks[subject.id];
-          const games = quizGames[subject.id];
-          const history = readJSON<QuizAttempt[]>(
-            STORAGE_KEYS.quizProgress(subject.id),
-            [],
-          );
-          const dueCount = readJSON<string[]>(STORAGE_KEYS.quizDue(subject.id), []).length;
-          const last = history[history.length - 1];
+      {groups.map(({ block, subjects, upcoming }) => (
+        <div key={block.id} className="block-section">
+          <h2 className="block-section-heading">{block.label}</h2>
+          <div className="card-grid">
+            {subjects.map((subject) => {
+              const bank = quizBanks[subject.id];
+              const games = quizGames[subject.id];
+              const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(subject.id), []);
+              const dueCount = readJSON<string[]>(STORAGE_KEYS.quizDue(subject.id), []).length;
+              const last = history[history.length - 1];
 
-          return (
-            <Link key={subject.id} to={`/quizzes/${subject.id}`} className="nav-card">
-              <div className="nav-card-header">
-                <SubjectBadge id={subject.id} label={subject.label} />
-                <h2>{subject.label}</h2>
-              </div>
-              <p>
-                {bank && (
-                  <>
-                    {bank.length} questions
-                    {dueCount > 0 && (
+              return (
+                <Link key={subject.id} to={`/quizzes/${subject.id}`} className="nav-card">
+                  <div className="nav-card-header">
+                    <SubjectBadge id={subject.id} label={subject.label} />
+                    <h2>{subject.label}</h2>
+                  </div>
+                  <p>
+                    {bank && (
                       <>
-                        {" "}
-                        · <strong>{dueCount} due</strong>
+                        {bank.length} questions
+                        {dueCount > 0 && (
+                          <>
+                            {" "}
+                            · <strong>{dueCount} due</strong>
+                          </>
+                        )}
+                        {last && (
+                          <>
+                            {" "}
+                            · last score <strong>{last.score}/{last.total}</strong>
+                          </>
+                        )}
                       </>
                     )}
-                    {last && (
-                      <>
-                        {" "}
-                        · last score <strong>{last.score}/{last.total}</strong>
-                      </>
-                    )}
-                  </>
-                )}
-                {bank && games && " · "}
-                {games && "Interactive quiz"}
-              </p>
-            </Link>
-          );
-        })}
-      </div>
+                    {bank && games && " · "}
+                    {games && "Interactive quiz"}
+                  </p>
+                </Link>
+              );
+            })}
+            {upcoming.map((u) => (
+              <UpcomingSubjectCard key={u.id} id={u.id} label={u.label} />
+            ))}
+          </div>
+        </div>
+      ))}
     </section>
   );
 }

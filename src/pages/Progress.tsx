@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { exportAllProgress, importAllProgress, readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
 import { flashcardDecks, flashcardSubjects } from "../lib/content";
+import { groupByBlock } from "../lib/blocks";
 import { rankGlobalHardestCards } from "../lib/hardestCards";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { generateStudyPlan } from "../lib/studyPlan";
@@ -139,27 +140,38 @@ export function Progress() {
         <div className="mastery-by-subject">
           <h2>Mastery by subject</h2>
           <p className="subtitle">Cards with a 21+ day review interval count as mastered.</p>
-          <ul className="mastery-list">
-            {flashcardSubjects.map((s) => {
-              const stats = buildDeckStats(s.id);
-              const percent = stats.total > 0 ? (stats.mastered / stats.total) * 100 : 0;
-              return (
-                <li key={s.id}>
-                  <Link to={`/flashcards/${s.id}`} className="mastery-row">
-                    <RadialGauge percent={percent} size={40} label={`${Math.round(percent)}% of ${s.label} mastered`} />
-                    <SubjectBadge id={s.id} label={s.label} />
-                    <span className="mastery-row-body">
-                      <span className="mastery-row-label">{s.label}</span>
-                      <span className="mastery-row-detail">
-                        {stats.mastered}/{stats.total} mastered
-                        {stats.due > 0 ? ` · ${stats.due} due` : ""}
-                      </span>
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          {groupByBlock(flashcardSubjects).map(({ block, subjects }) =>
+            subjects.length > 0 ? (
+              <div key={block.id} className="block-section">
+                <h3 className="block-section-heading">{block.label}</h3>
+                <ul className="mastery-list">
+                  {subjects.map((s) => {
+                    const stats = buildDeckStats(s.id);
+                    const percent = stats.total > 0 ? (stats.mastered / stats.total) * 100 : 0;
+                    return (
+                      <li key={s.id}>
+                        <Link to={`/flashcards/${s.id}`} className="mastery-row">
+                          <RadialGauge
+                            percent={percent}
+                            size={40}
+                            label={`${Math.round(percent)}% of ${s.label} mastered`}
+                          />
+                          <SubjectBadge id={s.id} label={s.label} />
+                          <span className="mastery-row-body">
+                            <span className="mastery-row-label">{s.label}</span>
+                            <span className="mastery-row-detail">
+                              {stats.mastered}/{stats.total} mastered
+                              {stats.due > 0 ? ` · ${stats.due} due` : ""}
+                            </span>
+                          </span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ) : null,
+          )}
         </div>
       )}
 
@@ -174,11 +186,17 @@ export function Progress() {
               onChange={(e) => handlePlanSubjectChange(e.target.value)}
               aria-label="Subject"
             >
-              {flashcardSubjects.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.label}
-                </option>
-              ))}
+              {groupByBlock(flashcardSubjects).map(({ block, subjects }) =>
+                subjects.length > 0 ? (
+                  <optgroup key={block.id} label={block.label}>
+                    {subjects.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                ) : null,
+              )}
             </select>
             <input
               type="date"
