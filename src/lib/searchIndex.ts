@@ -9,6 +9,7 @@ import {
   summaries,
   summarySubjects,
 } from "./content";
+import { studyBlocks } from "./blocks";
 import { markdownToPlainText, splitMarkdownSections, truncate } from "./textExtract";
 
 const EXCERPT_LENGTH = 200;
@@ -51,14 +52,14 @@ function subjectDocs(): SearchDoc[] {
       detail: "Question bank",
       to: `/quizzes/${s.id}`,
     })),
-    ...quizSubjects
-      .filter((s) => (quizBanks[s.id]?.length ?? 0) > 0)
-      .map((s) => ({
+    ...studyBlocks
+      .filter((b) => b.subjectIds.some((id) => (quizBanks[id]?.length ?? 0) > 0))
+      .map((b) => ({
         type: "exam" as const,
-        id: `xs-${s.id}`,
-        title: `${s.label} exam`,
+        id: `xb-${b.id}`,
+        title: `${b.label} exam`,
         detail: "Timed block exam",
-        to: `/exam/${s.id}`,
+        to: `/exam/${b.id}`,
       })),
     ...ebookSubjects.map((s) => ({
       type: "ebook" as const,

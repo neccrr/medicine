@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { quizBanks, quizSubjects } from "../lib/content";
+import { quizBanks } from "../lib/content";
+import { blockById } from "../lib/blocks";
 import { useExamHistory } from "../hooks/useExamHistory";
 import { buildSessionBank } from "../lib/quizShuffle";
-import { buildBlockOptions, SECONDS_PER_QUESTION, type ExamBlockOption } from "../lib/examBlocks";
+import { buildExamFormat } from "../lib/examFormat";
 import { ConfettiBurst } from "../components/ConfettiBurst";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { FlagIcon, TimerIcon } from "../components/icons";
@@ -34,12 +35,14 @@ function scoreMessage(score: number, total: number): string {
 }
 
 export function ExamPlay() {
-  const { subjectId = "" } = useParams();
-  const fullBank = quizBanks[subjectId] ?? EMPTY_BANK;
-  const subjectLabel = quizSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
-  const { lastAttempt, recordAttempt } = useExamHistory(subjectId);
-
-  const blockOptions = useMemo(() => buildBlockOptions(fullBank.length), [fullBank]);
+  const { blockId = "" } = useParams();
+  const block = blockById(blockId);
+  const pool = useMemo(
+    () => block?.subjectIds.flatMap((id) => quizBanks[id] ?? EMPTY_BANK) ?? EMPTY_BANK,
+    [block],
+  );
+  const format = useMemo(() => buildExamFormat(pool.length), [pool]);
+  const { lastAttempt, recordAttempt } = useExamHistory(blockId);
 
   const [started, setStarted] = useState(false);
   const [examBank, setExamBank] = useState<QuizQuestion[]>(EMPTY_BANK);
@@ -56,11 +59,10 @@ export function ExamPlay() {
   const answeredCount = examBank.filter((q) => answers[q.id] !== undefined).length;
   const isLast = currentIndex === examBank.length - 1;
 
-  const startCustomBank = (bank: QuizQuestion[]) => {
-    const limit = bank.length * SECONDS_PER_QUESTION;
+  const startCustomBank = (bank: QuizQuestion[], limitSec: number) => {
     setExamBank(bank);
-    setTimeLimitSec(limit);
-    setSecondsLeft(limit);
+    setTimeLimitSec(limitSec);
+    setSecondsLeft(limitSec);
     setCurrentIndex(0);
     setAnswers({});
     setFlagged(new Set());
@@ -70,8 +72,9 @@ export function ExamPlay() {
     setStarted(true);
   };
 
-  const startExam = (block: ExamBlockOption) => {
-    startCustomBank(buildSessionBank(fullBank).slice(0, block.count));
+  const startExam = () => {
+    const bank = buildSessionBank(pool).slice(0, format.questionCount);
+    startCustomBank(bank, format.timeLimitSec);
   };
 
   const finishExam = () => {
@@ -176,27 +179,48 @@ export function ExamPlay() {
 
   const missedQuestions = result ? examBank.filter((q) => result.missedIds.includes(q.id)) : [];
 
-  if (fullBank.length === 0) {
+  if (!block) {
     return (
       <section className="page">
-        <p>Unknown subject.</p>
+        <p>Unknown block.</p>
         <Link to="/exam">Back to exam</Link>
+      </section>
+    );
+  }
+
+  if (format.questionCount === 0) {
+    return (
+      <section className="page subject-tinted" style={subjectHueStyle(blockId) as CSSProperties}>
+        <Link to="/exam" className="back-link">
+          ← All exams
+        </Link>
+        <div className="quiz-start">
+          <div className="quiz-start-badge">
+            <SubjectBadge id={block.id} label={block.label} />
+          </div>
+          <h1>{block.label}</h1>
+          <p className="subtitle">No questions available for this block yet — check back once its subjects have content.</p>
+        </div>
       </section>
     );
   }
 
   if (!started) {
     return (
-      <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
+      <section className="page subject-tinted" style={subjectHueStyle(blockId) as CSSProperties}>
         <Link to="/exam" className="back-link">
           ← All exams
         </Link>
         <div className="quiz-start">
           <div className="quiz-start-badge">
-            <SubjectBadge id={subjectId} label={subjectLabel} />
+            <SubjectBadge id={block.id} label={block.label} />
           </div>
-          <h1>{subjectLabel}</h1>
+          <h1>{block.label}</h1>
           <p className="subtitle">Timed block exam — answers aren't revealed until you submit.</p>
+          <p className="exam-format-note">
+            {format.questionCount} questions · {Math.round(format.timeLimitSec / 60)} minutes · pooled from every
+            subject in this block
+          </p>
 
           {lastAttempt && (
             <p className="exam-last-score">
@@ -205,16 +229,10 @@ export function ExamPlay() {
             </p>
           )}
 
-          <div className="exam-block-picker">
-            <p className="quiz-sections-label">Choose a block size:</p>
-            <div className="quiz-sections-row">
-              {blockOptions.map((b) => (
-                <button key={b.count} type="button" className="quiz-section-btn" onClick={() => startExam(b)}>
-                  <span className="quiz-section-name">{b.questionLabel}</span>
-                  <span className="quiz-section-range">{b.durationLabel}</span>
-                </button>
-              ))}
-            </div>
+          <div className="quiz-start-actions">
+            <button className="btn quiz-start-btn" onClick={startExam}>
+              Start exam
+            </button>
           </div>
         </div>
       </section>
@@ -222,14 +240,14 @@ export function ExamPlay() {
   }
 
   return (
-    <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
+    <section className="page subject-tinted" style={subjectHueStyle(blockId) as CSSProperties}>
       <Link to="/exam" className="back-link">
         ← All exams
       </Link>
       <div className="quiz-header">
         <div>
-          <h1>{subjectLabel}</h1>
-          {!finished && <p className="subtitle">{examBank.length}-question block</p>}
+          <h1>{block.label}</h1>
+          {!finished && <p className="subtitle">{examBank.length}-question block exam</p>}
         </div>
         {!finished && (
           <div className={secondsLeft <= LOW_TIME_THRESHOLD_SEC ? "exam-timer exam-timer-low" : "exam-timer"} role="timer">
@@ -344,7 +362,10 @@ export function ExamPlay() {
 
             <div className="quiz-retry-row">
               {missedQuestions.length > 0 && (
-                <button className="btn" onClick={() => startCustomBank(buildSessionBank(missedQuestions))}>
+                <button
+                  className="btn"
+                  onClick={() => startCustomBank(buildSessionBank(missedQuestions), missedQuestions.length * 60)}
+                >
                   Retake missed only ({missedQuestions.length})
                 </button>
               )}

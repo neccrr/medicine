@@ -18,8 +18,8 @@ const QuizSubjects = lazy(() =>
   import("./pages/QuizSubjects").then((m) => ({ default: m.QuizSubjects })),
 );
 const QuizPlay = lazy(() => import("./pages/QuizPlay").then((m) => ({ default: m.QuizPlay })));
-const ExamSubjects = lazy(() =>
-  import("./pages/ExamSubjects").then((m) => ({ default: m.ExamSubjects })),
+const ExamBlocks = lazy(() =>
+  import("./pages/ExamBlocks").then((m) => ({ default: m.ExamBlocks })),
 );
 const ExamPlay = lazy(() => import("./pages/ExamPlay").then((m) => ({ default: m.ExamPlay })));
 const Summaries = lazy(() => import("./pages/Summaries").then((m) => ({ default: m.Summaries })));
@@ -63,8 +63,8 @@ export default function App() {
                 <Route path="/flashcards/:subjectId" element={<FlashcardStudy />} />
                 <Route path="/quizzes" element={<QuizSubjects />} />
                 <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
-                <Route path="/exam" element={<ExamSubjects />} />
-                <Route path="/exam/:subjectId" element={<ExamPlay />} />
+                <Route path="/exam" element={<ExamBlocks />} />
+                <Route path="/exam/:blockId" element={<ExamPlay />} />
                 <Route path="/summaries" element={<Summaries />} />
                 <Route path="/summaries/:subjectId" element={<SummaryDetail />} />
                 <Route path="/ebooks" element={<EbookSubjects />} />
