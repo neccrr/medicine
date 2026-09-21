@@ -14,7 +14,7 @@ import { markdownToPlainText, splitMarkdownSections, truncate } from "./textExtr
 const EXCERPT_LENGTH = 200;
 
 export interface SearchDoc {
-  type: "page" | "flashcard" | "quiz" | "ebook" | "summary";
+  type: "page" | "flashcard" | "quiz" | "exam" | "ebook" | "summary";
   id: string;
   title: string;
   detail: string;
@@ -28,6 +28,7 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "home", title: "Home", detail: "Tip of the day, quick links", to: "/" },
   { type: "page", id: "flashcards", title: "Flashcards", detail: "Spaced-repetition review", to: "/flashcards" },
   { type: "page", id: "quizzes", title: "Quizzes", detail: "Multiple-choice question banks", to: "/quizzes" },
+  { type: "page", id: "exam", title: "Exam", detail: "Timed block exams, scored at the end", to: "/exam" },
   { type: "page", id: "ebooks", title: "Ebooks", detail: "Chapter readers", to: "/ebooks" },
   { type: "page", id: "summaries", title: "Summaries", detail: "Written subject summaries", to: "/summaries" },
   { type: "page", id: "search", title: "Search", detail: "Search everything", to: "/search" },
@@ -50,6 +51,15 @@ function subjectDocs(): SearchDoc[] {
       detail: "Question bank",
       to: `/quizzes/${s.id}`,
     })),
+    ...quizSubjects
+      .filter((s) => (quizBanks[s.id]?.length ?? 0) > 0)
+      .map((s) => ({
+        type: "exam" as const,
+        id: `xs-${s.id}`,
+        title: `${s.label} exam`,
+        detail: "Timed block exam",
+        to: `/exam/${s.id}`,
+      })),
     ...ebookSubjects.map((s) => ({
       type: "ebook" as const,
       id: `es-${s.id}`,

@@ -35,8 +35,9 @@ import {
   QuizIcon,
   SearchIcon,
   SummaryIcon,
+  TimerIcon,
 } from "../components/icons";
-import type { CardStateMap, QuizAttempt, ReadingPosition } from "../types/content";
+import type { CardStateMap, ExamAttempt, QuizAttempt, ReadingPosition } from "../types/content";
 
 interface ContinueItem {
   to: string;
@@ -193,6 +194,17 @@ function buildSubjectOverviews() {
             : "Interactive",
           to: `/quizzes/${id}`,
           icon: <QuizIcon />,
+        });
+      }
+
+      if (bank) {
+        const examHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(id), []);
+        const lastExam = examHistory[examHistory.length - 1];
+        facets.push({
+          label: "Exam",
+          detail: lastExam ? `last ${lastExam.score}/${lastExam.total}` : "Timed block exam",
+          to: `/exam/${id}`,
+          icon: <TimerIcon />,
         });
       }
 

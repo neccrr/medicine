@@ -32,6 +32,11 @@ export interface QuizAttempt {
   missedIds: string[];
 }
 
+export interface ExamAttempt extends QuizAttempt {
+  timeTakenSec: number;
+  timeLimitSec: number;
+}
+
 export interface Subject {
   id: string;
   label: string;
