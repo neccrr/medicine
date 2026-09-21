@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   ebookMeta,
   ebookSubjects,
-  examBanks,
+  examPackagesByBlock,
   flashcardDecks,
   flashcardSubjects,
   modulesByBlockSubject,
@@ -355,10 +355,16 @@ export function Home() {
           </div>
 
           {groupByBlock(subjects).map(({ block, subjects: blockSubjects, upcoming }) => {
+            const packages = examPackagesByBlock[block.id] ?? [];
             const examPool =
-              examBanks[block.id]?.length ??
-              block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
-            const examHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
+              packages.length > 0
+                ? Math.max(...packages.map((p) => p.questions.length))
+                : block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+            // With more than one package, "last score" isn't a single number — the exam link
+            // just sends the user to the picker instead of surfacing one package's history.
+            // (Matches ExamPlay's own key convention: a lone package keeps the plain block key.)
+            const examHistory =
+              packages.length > 1 ? [] : readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
             const lastExam = examHistory[examHistory.length - 1];
             return (
           <div key={block.id} className="dashboard-section block-section">

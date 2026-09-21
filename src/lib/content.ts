@@ -11,10 +11,15 @@ const quizModules = import.meta.glob<QuizQuestion[]>(
   "../../content/quizzes/block/*/*/bank.json",
   { eager: true, import: "default" },
 );
-// A dedicated, curated question bank for a study block's exam (e.g. sourced from a real past
-// exam), keyed by block id. Falls back to pooling that block's regular quiz banks when absent.
+// Dedicated, curated question banks for a study block's exam (e.g. each sourced from a
+// different real past exam) — a block can have more than one package to choose between.
+// Falls back to pooling that block's regular quiz banks when none exist.
 const examBankModules = import.meta.glob<QuizQuestion[]>(
-  "../../content/exams/block/*/bank.json",
+  "../../content/exams/block/*/*/bank.json",
+  { eager: true, import: "default" },
+);
+const examPackageMetaModules = import.meta.glob<{ name: string }>(
+  "../../content/exams/block/*/*/meta.json",
   { eager: true, import: "default" },
 );
 const summaryModules = import.meta.glob<string>(
@@ -86,6 +91,11 @@ function moduleKey(path: string): string {
   return match ? `${match[1]}/${match[2]}` : path;
 }
 
+function examPackagePath(path: string): { blockId: string; packageId: string } {
+  const match = path.match(/exams\/block\/([^/]+)\/([^/]+)\/(bank|meta)\.json$/);
+  return match ? { blockId: match[1], packageId: match[2] } : { blockId: path, packageId: path };
+}
+
 // Slide decks get exported to PDF with ordinal prefixes and a stray ".pptx" left in the
 // filename (e.g. "7_Histologi jaringan epithel-Agustus 2025.pptx.pdf") — clean that up for display.
 function moduleName(path: string): string {
@@ -127,13 +137,26 @@ export const quizBanks: Record<string, QuizQuestion[]> = Object.fromEntries(
   ]),
 );
 
-/** Dedicated exam question banks, keyed by block id. */
-export const examBanks: Record<string, QuizQuestion[]> = Object.fromEntries(
-  Object.entries(examBankModules).map(([path, questions]) => [
-    subjectFromPath(path),
+export interface ExamPackage {
+  id: string;
+  name: string;
+  questions: QuizQuestion[];
+}
+
+/** Dedicated exam question packages, keyed by block id — a block may offer more than one. */
+export const examPackagesByBlock: Record<string, ExamPackage[]> = {};
+for (const [path, questions] of Object.entries(examBankModules)) {
+  const { blockId, packageId } = examPackagePath(path);
+  const meta = examPackageMetaModules[path.replace(/bank\.json$/, "meta.json")];
+  (examPackagesByBlock[blockId] ??= []).push({
+    id: packageId,
+    name: meta?.name ?? labelize(packageId),
     questions,
-  ]),
-);
+  });
+}
+for (const list of Object.values(examPackagesByBlock)) {
+  list.sort((a, b) => a.name.localeCompare(b.name));
+}
 
 export const summaries: Record<string, string> = Object.fromEntries(
   Object.entries(summaryModules).map(([path, markdown]) => [

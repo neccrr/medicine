@@ -2,7 +2,7 @@ import {
   ebookChapters,
   ebookMeta,
   ebookSubjects,
-  examBanks,
+  examPackagesByBlock,
   flashcardDecks,
   flashcardSubjects,
   modulesByBlockSubject,
@@ -58,7 +58,7 @@ function subjectDocs(): SearchDoc[] {
     ...studyBlocks
       .filter(
         (b) =>
-          (examBanks[b.id]?.length ?? 0) > 0 ||
+          (examPackagesByBlock[b.id]?.length ?? 0) > 0 ||
           b.subjectIds.some((id) => (quizBanks[id]?.length ?? 0) > 0),
       )
       .map((b) => ({

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { examBanks, quizBanks } from "../lib/content";
+import { examPackagesByBlock, quizBanks } from "../lib/content";
 import { studyBlocks, upcomingSubjects } from "../lib/blocks";
 import { buildExamFormat } from "../lib/examFormat";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
@@ -16,12 +16,10 @@ export function ExamBlocks() {
       </p>
       <div className="card-grid">
         {studyBlocks.map((block) => {
-          const poolSize =
-            examBanks[block.id]?.length ??
-            block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+          const packages = examPackagesByBlock[block.id] ?? [];
+          const pooledSize = block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+          const poolSize = packages.length > 0 ? Math.max(...packages.map((p) => p.questions.length)) : pooledSize;
           const format = buildExamFormat(poolSize);
-          const history = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
-          const last = history[history.length - 1];
           const stillUpcoming = upcomingSubjects.some((u) => u.blockId === block.id) && poolSize === 0;
 
           if (format.questionCount === 0) {
@@ -35,6 +33,21 @@ export function ExamBlocks() {
               </div>
             );
           }
+
+          if (packages.length > 1) {
+            return (
+              <Link key={block.id} to={`/exam/${block.id}`} className="nav-card">
+                <div className="nav-card-header">
+                  <SubjectBadge id={block.id} label={block.label} />
+                  <h2>{block.label}</h2>
+                </div>
+                <p>{packages.length} exam packages to choose from</p>
+              </Link>
+            );
+          }
+
+          const history = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
+          const last = history[history.length - 1];
 
           return (
             <Link key={block.id} to={`/exam/${block.id}`} className="nav-card">

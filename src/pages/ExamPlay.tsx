@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { examBanks, quizBanks } from "../lib/content";
+import { examPackagesByBlock, quizBanks } from "../lib/content";
 import { blockById } from "../lib/blocks";
 import { useExamHistory } from "../hooks/useExamHistory";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -10,7 +10,7 @@ import { ConfettiBurst } from "../components/ConfettiBurst";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { FlagIcon, TimerIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
-import { STORAGE_KEYS } from "../lib/storage";
+import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import type { ExamAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
@@ -39,14 +39,26 @@ function scoreMessage(score: number, total: number): string {
 }
 
 export function ExamPlay() {
-  const { blockId = "" } = useParams();
+  const { blockId = "", packageId } = useParams();
   const block = blockById(blockId);
+  const packages = examPackagesByBlock[blockId] ?? [];
+  // A block with one package plays it directly (transparent to the user); with several, the
+  // caller must pick one via /exam/:blockId/:packageId — this component itself is used both
+  // as the picker (no packageId) and the player (packageId set).
+  const chosenPackage =
+    packages.length === 0
+      ? undefined
+      : packages.length === 1
+        ? packages[0]
+        : packages.find((p) => p.id === packageId);
+  const showPackagePicker = packages.length > 1 && !chosenPackage;
   const pool = useMemo(
-    () => examBanks[blockId] ?? block?.subjectIds.flatMap((id) => quizBanks[id] ?? EMPTY_BANK) ?? EMPTY_BANK,
-    [block, blockId],
+    () => chosenPackage?.questions ?? block?.subjectIds.flatMap((id) => quizBanks[id] ?? EMPTY_BANK) ?? EMPTY_BANK,
+    [block, chosenPackage],
   );
   const format = useMemo(() => buildExamFormat(pool.length), [pool]);
-  const { lastAttempt, recordAttempt } = useExamHistory(blockId);
+  const historyKey = chosenPackage && packages.length > 1 ? `${blockId}/${chosenPackage.id}` : blockId;
+  const { lastAttempt, recordAttempt } = useExamHistory(historyKey);
   const [mode, setMode] = useLocalStorage<ExamMode>(STORAGE_KEYS.examMode, "real");
 
   const [started, setStarted] = useState(false);
@@ -194,6 +206,46 @@ export function ExamPlay() {
     );
   }
 
+  if (showPackagePicker) {
+    return (
+      <section className="page subject-tinted" style={subjectHueStyle(blockId) as CSSProperties}>
+        <Link to="/exam" className="back-link">
+          ← All exams
+        </Link>
+        <div className="quiz-start">
+          <div className="quiz-start-badge">
+            <SubjectBadge id={block.id} label={block.label} />
+          </div>
+          <h1>{block.label}</h1>
+          <p className="subtitle">This block has more than one exam package — pick which one to take.</p>
+        </div>
+        <div className="card-grid">
+          {packages.map((pkg) => {
+            const pkgFormat = buildExamFormat(pkg.questions.length);
+            const pkgHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(`${blockId}/${pkg.id}`), []);
+            const pkgLast = pkgHistory[pkgHistory.length - 1];
+            return (
+              <Link key={pkg.id} to={`/exam/${blockId}/${pkg.id}`} className="nav-card">
+                <div className="nav-card-header">
+                  <h2>{pkg.name}</h2>
+                </div>
+                <p>
+                  {pkgFormat.questionCount} questions · {Math.round(pkgFormat.timeLimitSec / 60)} min
+                  {pkgLast && (
+                    <>
+                      {" "}
+                      · last score <strong>{pkgLast.score}/{pkgLast.total}</strong>
+                    </>
+                  )}
+                </p>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
+
   if (format.questionCount === 0) {
     return (
       <section className="page subject-tinted" style={subjectHueStyle(blockId) as CSSProperties}>
@@ -229,8 +281,8 @@ export function ExamPlay() {
           </p>
           <p className="exam-format-note">
             {format.questionCount} questions · {Math.round(format.timeLimitSec / 60)} minutes ·{" "}
-            {examBanks[blockId]
-              ? "from a dedicated past-exam question bank"
+            {chosenPackage
+              ? `from the "${chosenPackage.name}" question bank`
               : "pooled from every subject in this block"}
           </p>
 

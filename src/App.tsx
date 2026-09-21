@@ -65,6 +65,7 @@ function AppRoutes() {
           <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
           <Route path="/exam" element={<ExamBlocks />} />
           <Route path="/exam/:blockId" element={<ExamPlay />} />
+          <Route path="/exam/:blockId/:packageId" element={<ExamPlay />} />
           <Route path="/modules" element={<Modules />} />
           <Route path="/modules/:blockId/:subjectId" element={<ModuleViewer />} />
           <Route path="/summaries" element={<Summaries />} />
