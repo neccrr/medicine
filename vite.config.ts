@@ -27,8 +27,32 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,woff2,pdf}'],
+        // PDFs (module lecture slides, ebook references) are excluded from the upfront
+        // precache — content/modules alone already runs ~50MB, and forcing that onto every
+        // first visit before anyone's opened a single module would be a bad trade for an
+        // "offline-first" app that's supposed to load fast. Cached lazily instead, below.
+        globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,woff2}'],
         cleanupOutdatedCaches: true,
+        // Without this, the SPA navigate-fallback (needed so client-side routes like
+        // /quizzes/histology work offline) also swallows iframe/direct navigation to a real
+        // static file under /assets/ — e.g. opening a module PDF was silently served
+        // index.html instead. Scoped to /assets/ specifically (not a general ".ext$" pattern)
+        // since a route param can itself contain a dot, e.g. /exam/1.1.
+        navigateFallbackDenylist: [/\/assets\//],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.endsWith('.pdf'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'pdf-cache',
+              expiration: {
+                maxEntries: 60,
+                maxAgeSeconds: 60 * 60 * 24 * 180,
+              },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
     }),
   ],

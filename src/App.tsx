@@ -23,6 +23,10 @@ const ExamBlocks = lazy(() =>
   import("./pages/ExamBlocks").then((m) => ({ default: m.ExamBlocks })),
 );
 const ExamPlay = lazy(() => import("./pages/ExamPlay").then((m) => ({ default: m.ExamPlay })));
+const Modules = lazy(() => import("./pages/Modules").then((m) => ({ default: m.Modules })));
+const ModuleViewer = lazy(() =>
+  import("./pages/ModuleViewer").then((m) => ({ default: m.ModuleViewer })),
+);
 const Summaries = lazy(() => import("./pages/Summaries").then((m) => ({ default: m.Summaries })));
 const SummaryDetail = lazy(() =>
   import("./pages/SummaryDetail").then((m) => ({ default: m.SummaryDetail })),
@@ -67,6 +71,8 @@ export default function App() {
                 <Route path="/quizzes/:subjectId" element={<QuizPlay />} />
                 <Route path="/exam" element={<ExamBlocks />} />
                 <Route path="/exam/:blockId" element={<ExamPlay />} />
+                <Route path="/modules" element={<Modules />} />
+                <Route path="/modules/:blockId/:subjectId" element={<ModuleViewer />} />
                 <Route path="/summaries" element={<Summaries />} />
                 <Route path="/summaries/:subjectId" element={<SummaryDetail />} />
                 <Route path="/ebooks" element={<EbookSubjects />} />

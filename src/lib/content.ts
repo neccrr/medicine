@@ -45,6 +45,13 @@ const quizGameModules = import.meta.glob<string>("../../content/quizzes/*/*.html
   import: "default",
   query: "?url",
 });
+// Raw lecture-slide PDFs, organized by block then subject — drop a file at
+// content/modules/block/{blockId}/{subjectId}/anything.pdf and it shows up with no code changes.
+const moduleModules = import.meta.glob<string>("../../content/modules/block/*/*/*.pdf", {
+  eager: true,
+  import: "default",
+  query: "?url",
+});
 
 function subjectFromPath(path: string): string {
   const match = path.match(/\/([^/]+)\/(deck|bank|meta)\.json$/);
@@ -69,6 +76,24 @@ function ebookPdfSubject(path: string): string {
 function pdfName(path: string): string {
   const match = path.match(/([^/]+)\.pdf$/);
   return match ? match[1].replace(/[-_]/g, " ") : "PDF";
+}
+
+function moduleKey(path: string): string {
+  const match = path.match(/modules\/block\/([^/]+)\/([^/]+)\/[^/]+\.pdf$/);
+  return match ? `${match[1]}/${match[2]}` : path;
+}
+
+// Slide decks get exported to PDF with ordinal prefixes and a stray ".pptx" left in the
+// filename (e.g. "7_Histologi jaringan epithel-Agustus 2025.pptx.pdf") — clean that up for display.
+function moduleName(path: string): string {
+  const match = path.match(/([^/]+)\.pdf$/);
+  if (!match) return "Module";
+  return match[1]
+    .replace(/\.pptx$/i, "")
+    .replace(/^\d+[._]\s*/, "")
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function quizGameSubject(path: string): string {
@@ -188,3 +213,23 @@ for (const subjectId of Object.keys(ebookPdfs)) {
 export const ebookSubjects: Subject[] = Object.keys(ebookMeta)
   .sort()
   .map((id) => ({ id, label: ebookMeta[id].title }));
+
+export interface ModulePdf {
+  name: string;
+  url: string;
+}
+
+/** Lecture-slide PDFs, keyed by "{blockId}/{subjectId}". */
+export const modulesByBlockSubject: Record<string, ModulePdf[]> = {};
+for (const [path, url] of Object.entries(moduleModules)) {
+  const key = moduleKey(path);
+  (modulesByBlockSubject[key] ??= []).push({ name: moduleName(path), url });
+}
+for (const list of Object.values(modulesByBlockSubject)) {
+  list.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Subject ids that have at least one module PDF somewhere, across all blocks. */
+export const moduleSubjectIds: Set<string> = new Set(
+  Object.keys(modulesByBlockSubject).map((key) => key.split("/")[1]),
+);

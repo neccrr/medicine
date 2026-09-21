@@ -6,6 +6,7 @@ import {
   examBanks,
   flashcardDecks,
   flashcardSubjects,
+  modulesByBlockSubject,
   quizBanks,
   quizGames,
   quizSubjects,
@@ -18,7 +19,7 @@ import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/acti
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { subjectAccent, subjectHueStyle } from "../lib/subjectStyle";
-import { groupByBlock } from "../lib/blocks";
+import { groupByBlock, studyBlocks } from "../lib/blocks";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { RadialGauge } from "../components/RadialGauge";
@@ -36,6 +37,7 @@ import {
   PlayCircleIcon,
   QuizIcon,
   SearchIcon,
+  SlidesIcon,
   SummaryIcon,
   TimerIcon,
 } from "../components/icons";
@@ -221,6 +223,17 @@ function buildSubjectOverviews() {
           detail: "Written summary",
           to: `/summaries/${id}`,
           icon: <SummaryIcon />,
+        });
+      }
+
+      const blockId = studyBlocks.find((b) => b.subjectIds.includes(id))?.id;
+      const modulePdfs = blockId ? modulesByBlockSubject[`${blockId}/${id}`] : undefined;
+      if (blockId && modulePdfs) {
+        facets.push({
+          label: "Modules",
+          detail: `${modulePdfs.length} lecture${modulePdfs.length === 1 ? "" : "s"}`,
+          to: `/modules/${blockId}/${id}`,
+          icon: <SlidesIcon />,
         });
       }
 

@@ -5,13 +5,24 @@ import { StreakBadge } from "./StreakBadge";
 import { QuizDueBadge } from "./QuizDueBadge";
 import { PulseLine } from "./PulseLine";
 import { OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
-import { BookIcon, CardsIcon, HomeIcon, ProgressIcon, QuizIcon, SearchIcon, SummaryIcon, TimerIcon } from "./icons";
+import {
+  BookIcon,
+  CardsIcon,
+  HomeIcon,
+  ProgressIcon,
+  QuizIcon,
+  SearchIcon,
+  SlidesIcon,
+  SummaryIcon,
+  TimerIcon,
+} from "./icons";
 
 const links: { to: string; label: string; end?: boolean; icon: ReactNode }[] = [
   { to: "/", label: "Home", end: true, icon: <HomeIcon /> },
   { to: "/flashcards", label: "Flashcards", icon: <CardsIcon /> },
   { to: "/quizzes", label: "Quizzes", icon: <QuizIcon /> },
   { to: "/exam", label: "Exam", icon: <TimerIcon /> },
+  { to: "/modules", label: "Modules", icon: <SlidesIcon /> },
   { to: "/ebooks", label: "Ebooks", icon: <BookIcon /> },
   { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
   { to: "/search", label: "Search", icon: <SearchIcon /> },

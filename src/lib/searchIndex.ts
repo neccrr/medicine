@@ -5,6 +5,7 @@ import {
   examBanks,
   flashcardDecks,
   flashcardSubjects,
+  modulesByBlockSubject,
   quizBanks,
   quizSubjects,
   summaries,
@@ -16,7 +17,7 @@ import { markdownToPlainText, splitMarkdownSections, truncate } from "./textExtr
 const EXCERPT_LENGTH = 200;
 
 export interface SearchDoc {
-  type: "page" | "flashcard" | "quiz" | "exam" | "ebook" | "summary";
+  type: "page" | "flashcard" | "quiz" | "exam" | "ebook" | "summary" | "module";
   id: string;
   title: string;
   detail: string;
@@ -31,6 +32,7 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "flashcards", title: "Flashcards", detail: "Spaced-repetition review", to: "/flashcards" },
   { type: "page", id: "quizzes", title: "Quizzes", detail: "Multiple-choice question banks", to: "/quizzes" },
   { type: "page", id: "exam", title: "Exam", detail: "Timed block exams, scored at the end", to: "/exam" },
+  { type: "page", id: "modules", title: "Modules", detail: "Original lecture slide PDFs", to: "/modules" },
   { type: "page", id: "ebooks", title: "Ebooks", detail: "Chapter readers", to: "/ebooks" },
   { type: "page", id: "summaries", title: "Summaries", detail: "Written subject summaries", to: "/summaries" },
   { type: "page", id: "search", title: "Search", detail: "Search everything", to: "/search" },
@@ -66,6 +68,18 @@ function subjectDocs(): SearchDoc[] {
         detail: "Timed block exam",
         to: `/exam/${b.id}`,
       })),
+    ...Object.keys(modulesByBlockSubject).map((key) => {
+      const [blockId, subjectId] = key.split("/");
+      const label = flashcardSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
+      const count = modulesByBlockSubject[key].length;
+      return {
+        type: "module" as const,
+        id: `md-${key}`,
+        title: `${label} modules`,
+        detail: `${count} lecture${count === 1 ? "" : "s"}`,
+        to: `/modules/${blockId}/${subjectId}`,
+      };
+    }),
     ...ebookSubjects.map((s) => ({
       type: "ebook" as const,
       id: `es-${s.id}`,

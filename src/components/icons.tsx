@@ -188,6 +188,25 @@ export function BookIcon() {
   );
 }
 
+export function SlidesIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <rect
+        x="3"
+        y="4.5"
+        width="18"
+        height="12"
+        rx="1.4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        fill="none"
+      />
+      <path d="M8 20.5h8M12 16.5v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M6.5 13.5l3-3.5 2.5 2.5 3.5-4.5 2 2.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function SummaryIcon() {
   return (
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">

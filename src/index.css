@@ -22,6 +22,7 @@
   --type-flashcard: #38bdf8;
   --type-quiz: #a78bfa;
   --type-exam: #fb923c;
+  --type-module: #818cf8;
   --type-ebook: #f2b134;
   --type-summary: #f472b6;
   --radius: 14px;
@@ -68,6 +69,7 @@
   --type-flashcard: #0d84b8;
   --type-quiz: #6d4cc4;
   --type-exam: #b3570c;
+  --type-module: #4338ca;
   --type-ebook: #96650f;
   --type-summary: #b8397a;
   --glass-border: rgba(255, 255, 255, 0.65);
@@ -987,6 +989,10 @@ kbd, .mono {
   border-left-color: var(--type-exam);
 }
 
+.subject-pill-modules {
+  border-left-color: var(--type-module);
+}
+
 .subject-pill-ebook {
   border-left-color: var(--type-ebook);
 }
@@ -1017,6 +1023,10 @@ kbd, .mono {
 
 .subject-pill-exam .subject-pill-icon {
   color: var(--type-exam);
+}
+
+.subject-pill-modules .subject-pill-icon {
+  color: var(--type-module);
 }
 
 .subject-pill-ebook .subject-pill-icon {
