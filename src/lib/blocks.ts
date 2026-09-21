@@ -16,8 +16,12 @@ export interface UpcomingSubject {
  * when a subject moves between blocks or a new block starts.
  */
 export const studyBlocks: StudyBlock[] = [
-  { id: "1.1", label: "Biology Block: Cell and Hematology", subjectIds: ["histology", "biochem", "physiology"] },
-  { id: "1.2", label: "Integument and Musculoskeletal System", subjectIds: [] },
+  {
+    id: "1.1",
+    label: "Block 1.1: Biology Block: Cell and Hematology",
+    subjectIds: ["histology", "biochem", "physiology"],
+  },
+  { id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System", subjectIds: [] },
 ];
 
 /** Subjects announced for a block before any content has been uploaded for them. */

@@ -60,6 +60,19 @@
     "explanation": "Wolbachia causes cytoplasmic incompatibility: when an infected male mates with an uninfected female, the eggs fail to hatch, because the bacteria interferes with normal embryonic development."
   },
   {
+    "id": "q-block11-006",
+    "question": "In the peptide sequence Arg-Val-Glu-His-Asp-Thr, which pair of residues would pair up to form an ionic bond (salt bridge)?",
+    "options": [
+      "Arg and Glu",
+      "Val and Thr",
+      "His and Asp",
+      "Val and His",
+      "Asp and Thr"
+    ],
+    "answer": 0,
+    "explanation": "Arginine's side chain is positively charged and glutamate's is negatively charged; oppositely charged side chains coming within about 3 Angstroms of each other form a salt bridge (ion pair) — the other listed pairs lack this charge complementarity."
+  },
+  {
     "id": "q-block11-007",
     "question": "The HbS mutation causing sickle cell disease occurs on which globin chain?",
     "options": [
@@ -250,6 +263,19 @@
     "explanation": "Memory cells (memory B and T cells) are a specialized subset of lymphocytes."
   },
   {
+    "id": "q-block11-023",
+    "question": "A 35-year-old woman has had painful swelling in the left inguinal region for 2 days. Examination shows inflammation of a lymphoid organ. Which histological feature would identify this organ as mucosa-associated lymphoid tissue (MALT), rather than the thymus, spleen, or a lymph node?",
+    "options": [
+      "Has Hassall's corpuscles with a cortex/medulla arrangement (thymus)",
+      "Parenchyma made of white pulp and red pulp (spleen)",
+      "Has no surrounding capsule",
+      "Dense connective tissue capsule with trabeculae (lymph node)",
+      "Encapsulated, with a distinct cortex and medulla (thymus)"
+    ],
+    "answer": 2,
+    "explanation": "MALT (e.g. in the appendix, gut, respiratory tract, and genitourinary tract) is lymphoid tissue with no surrounding capsule — unlike the thymus (capsule, Hassall's corpuscles, cortex/medulla), the spleen (capsule, white/red pulp), or lymph nodes (capsule with trabeculae)."
+  },
+  {
     "id": "q-block11-024",
     "question": "A patient with suspected dengue has an IgM/IgG blood test done on day 5 of illness. What is this type of test called?",
     "options": [
@@ -274,6 +300,72 @@
     ],
     "answer": 0,
     "explanation": "This is prophase: chromatin condenses into visible chromosomes and the nuclear envelope/nucleolus break down."
+  },
+  {
+    "id": "q-block11-027",
+    "question": "Some extracellular signaling responses occur quickly, within seconds to minutes. Where does this fast reaction take place?",
+    "options": [
+      "Cytoplasm",
+      "Mitochondria",
+      "Cell membrane",
+      "Nucleus",
+      "Golgi apparatus"
+    ],
+    "answer": 2,
+    "explanation": "Receptors on the cell membrane bind lipophobic ligands (which can't cross the membrane) and trigger a fast response, since they act directly without needing to change gene expression — unlike cytosolic/nuclear receptors, whose gene-expression-mediated response is comparatively slow."
+  },
+  {
+    "id": "q-block11-029",
+    "question": "Which extracellular matrix component's disrupted synthesis explains the gum findings shown in this photo, from a patient with vitamin C deficiency?",
+    "options": [
+      "Ground substance",
+      "Elastic fibers",
+      "Collagen fibers",
+      "Fibrillin",
+      "Hyaluronic acid"
+    ],
+    "answer": 2,
+    "explanation": "Vitamin C is a required cofactor for the prolyl/lysyl hydroxylase enzymes in collagen synthesis; without it, collagen fibers are poorly cross-linked and disorganized, so gums bleed easily and ulcerate — the classic gingival presentation of scurvy.",
+    "image": "<img src=\"/exams/1.1/gingiva-scurvy.png\" alt=\"Photo of a patient's inflamed, bleeding gums (gingiva) consistent with scurvy\" loading=\"lazy\" />"
+  },
+  {
+    "id": "q-block11-030",
+    "question": "Cell signaling plays several important roles in the body. Which of the following is one of them?",
+    "options": [
+      "It exclusively causes excessive cell growth",
+      "It has no relationship to immune system development",
+      "It can trigger the elimination of unneeded cells by inducing their death",
+      "It exclusively produces new cells and never removes them",
+      "It only regulates metabolism, with no role in development"
+    ],
+    "answer": 2,
+    "explanation": "Cell signaling's roles include controlling metabolism, differentiation and division; supporting immune system development; preventing excessive growth; and eliminating unneeded cells by inducing their death (a controlled process, more precisely termed apoptosis) — so it can trigger programmed elimination of cells, not just their growth or production."
+  },
+  {
+    "id": "q-block11-049",
+    "question": "Which extracellular matrix protein is abundant in lung tissue, allowing the lungs to expand and recoil with each breath?",
+    "options": [
+      "Collagen",
+      "Elastin",
+      "Fibronectin",
+      "Laminin",
+      "Proteoglycan"
+    ],
+    "answer": 1,
+    "explanation": "Elastin is an elastic protein fiber abundant in lung tissue, allowing the lungs to expand and deflate with each breath — unlike collagen, which provides tensile strength rather than elasticity."
+  },
+  {
+    "id": "q-block11-071",
+    "question": "A 62-year-old woman on hemodialysis was diagnosed with chronic kidney disease 1 year ago. Labs: Hb 7.1 g/dL, Hct 36.3%, leukocytes 3,500/mm3, platelets 340,000/mm3, erythrocytes 2.5 million/mm3. What is the underlying cause of these hematologic findings?",
+    "options": [
+      "Inability to produce erythropoietin",
+      "Vitamin B12 deficiency",
+      "Acute blood loss from the dialysis access",
+      "Bone marrow fibrosis",
+      "Iron malabsorption"
+    ],
+    "answer": 0,
+    "explanation": "In chronic kidney disease, damaged renal peritubular interstitial cells can no longer produce adequate erythropoietin, the hormone that stimulates red blood cell production in the bone marrow — leading to the normocytic anemia seen here."
   },
   {
     "id": "q-block11-028",
