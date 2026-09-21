@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { quizBanks } from "../lib/content";
+import { examBanks, quizBanks } from "../lib/content";
 import { studyBlocks, upcomingSubjects } from "../lib/blocks";
 import { buildExamFormat } from "../lib/examFormat";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
@@ -16,7 +16,9 @@ export function ExamBlocks() {
       </p>
       <div className="card-grid">
         {studyBlocks.map((block) => {
-          const poolSize = block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+          const poolSize =
+            examBanks[block.id]?.length ??
+            block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
           const format = buildExamFormat(poolSize);
           const history = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
           const last = history[history.length - 1];

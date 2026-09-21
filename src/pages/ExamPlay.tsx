@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { quizBanks } from "../lib/content";
+import { examBanks, quizBanks } from "../lib/content";
 import { blockById } from "../lib/blocks";
 import { useExamHistory } from "../hooks/useExamHistory";
 import { buildSessionBank } from "../lib/quizShuffle";
@@ -38,8 +38,8 @@ export function ExamPlay() {
   const { blockId = "" } = useParams();
   const block = blockById(blockId);
   const pool = useMemo(
-    () => block?.subjectIds.flatMap((id) => quizBanks[id] ?? EMPTY_BANK) ?? EMPTY_BANK,
-    [block],
+    () => examBanks[blockId] ?? block?.subjectIds.flatMap((id) => quizBanks[id] ?? EMPTY_BANK) ?? EMPTY_BANK,
+    [block, blockId],
   );
   const format = useMemo(() => buildExamFormat(pool.length), [pool]);
   const { lastAttempt, recordAttempt } = useExamHistory(blockId);
@@ -218,8 +218,10 @@ export function ExamPlay() {
           <h1>{block.label}</h1>
           <p className="subtitle">Timed block exam — answers aren't revealed until you submit.</p>
           <p className="exam-format-note">
-            {format.questionCount} questions · {Math.round(format.timeLimitSec / 60)} minutes · pooled from every
-            subject in this block
+            {format.questionCount} questions · {Math.round(format.timeLimitSec / 60)} minutes ·{" "}
+            {examBanks[blockId]
+              ? "from a dedicated past-exam question bank"
+              : "pooled from every subject in this block"}
           </p>
 
           {lastAttempt && (

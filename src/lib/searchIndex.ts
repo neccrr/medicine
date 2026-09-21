@@ -2,6 +2,7 @@ import {
   ebookChapters,
   ebookMeta,
   ebookSubjects,
+  examBanks,
   flashcardDecks,
   flashcardSubjects,
   quizBanks,
@@ -53,7 +54,11 @@ function subjectDocs(): SearchDoc[] {
       to: `/quizzes/${s.id}`,
     })),
     ...studyBlocks
-      .filter((b) => b.subjectIds.some((id) => (quizBanks[id]?.length ?? 0) > 0))
+      .filter(
+        (b) =>
+          (examBanks[b.id]?.length ?? 0) > 0 ||
+          b.subjectIds.some((id) => (quizBanks[id]?.length ?? 0) > 0),
+      )
       .map((b) => ({
         type: "exam" as const,
         id: `xb-${b.id}`,

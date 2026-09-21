@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   ebookMeta,
   ebookSubjects,
+  examBanks,
   flashcardDecks,
   flashcardSubjects,
   quizBanks,
@@ -341,7 +342,9 @@ export function Home() {
           </div>
 
           {groupByBlock(subjects).map(({ block, subjects: blockSubjects, upcoming }) => {
-            const examPool = block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+            const examPool =
+              examBanks[block.id]?.length ??
+              block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
             const examHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
             const lastExam = examHistory[examHistory.length - 1];
             return (
