@@ -284,5 +284,265 @@
     ],
     "answer": 2,
     "explanation": "Each tRNA carries an anticodon that base-pairs with a complementary codon on the mRNA, and arrives already charged with the specific amino acid that codon specifies — the adaptor step linking nucleotide sequence to amino acid sequence."
+  },
+  {
+    "id": "q-bio-023",
+    "question": "Is leucine glucogenic, ketogenic, or both?",
+    "options": [
+      "Essential",
+      "Nonpolar",
+      "Both",
+      "Ketogenic",
+      "Glucogenic"
+    ],
+    "answer": 3,
+    "explanation": "Leucine is purely ketogenic — it's degraded to acetyl-CoA and acetoacetyl-CoA and cannot be used to make new glucose."
+  },
+  {
+    "id": "q-bio-024",
+    "question": "Is isoleucine glucogenic, ketogenic, or both?",
+    "options": [
+      "Nonpolar",
+      "Ketogenic",
+      "Essential",
+      "Both",
+      "Glucogenic"
+    ],
+    "answer": 3,
+    "explanation": "Isoleucine is both glucogenic and ketogenic — part of its carbon skeleton becomes succinyl-CoA (glucogenic), and part becomes acetyl-CoA (ketogenic)."
+  },
+  {
+    "id": "q-bio-025",
+    "question": "Is valine glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Glucogenic",
+      "Nonpolar",
+      "Essential",
+      "Ketogenic"
+    ],
+    "answer": 1,
+    "explanation": "Valine is purely glucogenic, degraded to succinyl-CoA, a TCA-cycle intermediate that can be used for gluconeogenesis."
+  },
+  {
+    "id": "q-bio-026",
+    "question": "Is phenylalanine glucogenic, ketogenic, or both?",
+    "options": [
+      "Ketogenic",
+      "Essential",
+      "Nonpolar",
+      "Glucogenic",
+      "Both"
+    ],
+    "answer": 4,
+    "explanation": "Phenylalanine is both glucogenic and ketogenic — after conversion to tyrosine, its carbon skeleton splits into fumarate (glucogenic) and acetoacetate (ketogenic)."
+  },
+  {
+    "id": "q-bio-027",
+    "question": "Is tyrosine glucogenic, ketogenic, or both?",
+    "options": [
+      "Glucogenic",
+      "Both",
+      "Nonpolar",
+      "Ketogenic",
+      "Essential"
+    ],
+    "answer": 1,
+    "explanation": "Tyrosine is both glucogenic and ketogenic, degraded to fumarate and acetoacetate, just like the phenylalanine it's derived from."
+  },
+  {
+    "id": "q-bio-028",
+    "question": "Is tryptophan glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Nonpolar",
+      "Ketogenic",
+      "Essential",
+      "Glucogenic"
+    ],
+    "answer": 0,
+    "explanation": "Tryptophan is both glucogenic and ketogenic — its ring is degraded to alanine/pyruvate (glucogenic) and acetoacetyl-CoA (ketogenic)."
+  },
+  {
+    "id": "q-bio-029",
+    "question": "Is aspartate glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Glucogenic",
+      "Essential",
+      "Nonpolar",
+      "Ketogenic"
+    ],
+    "answer": 1,
+    "explanation": "Aspartate is purely glucogenic, converted directly to oxaloacetate by transamination."
+  },
+  {
+    "id": "q-bio-030",
+    "question": "Is asparagine glucogenic, ketogenic, or both?",
+    "options": [
+      "Glucogenic",
+      "Essential",
+      "Both",
+      "Nonpolar",
+      "Ketogenic"
+    ],
+    "answer": 0,
+    "explanation": "Asparagine is purely glucogenic — asparaginase converts it to aspartate, which feeds into oxaloacetate."
+  },
+  {
+    "id": "q-bio-031",
+    "question": "Is glutamate glucogenic, ketogenic, or both?",
+    "options": [
+      "Nonpolar",
+      "Essential",
+      "Both",
+      "Ketogenic",
+      "Glucogenic"
+    ],
+    "answer": 4,
+    "explanation": "Glutamate is purely glucogenic, converted by transamination to α-ketoglutarate, a TCA-cycle intermediate."
+  },
+  {
+    "id": "q-bio-032",
+    "question": "Is glutamine glucogenic, ketogenic, or both?",
+    "options": [
+      "Essential",
+      "Glucogenic",
+      "Both",
+      "Ketogenic",
+      "Nonpolar"
+    ],
+    "answer": 1,
+    "explanation": "Glutamine is purely glucogenic — glutaminase converts it to glutamate, which feeds into α-ketoglutarate."
+  },
+  {
+    "id": "q-bio-033",
+    "question": "Is arginine glucogenic, ketogenic, or both?",
+    "options": [
+      "Ketogenic",
+      "Glucogenic",
+      "Essential",
+      "Nonpolar",
+      "Both"
+    ],
+    "answer": 1,
+    "explanation": "Arginine is purely glucogenic, ultimately converted to glutamate and then α-ketoglutarate."
+  },
+  {
+    "id": "q-bio-034",
+    "question": "Is histidine glucogenic, ketogenic, or both?",
+    "options": [
+      "Essential",
+      "Ketogenic",
+      "Nonpolar",
+      "Glucogenic",
+      "Both"
+    ],
+    "answer": 3,
+    "explanation": "Histidine is purely glucogenic, degraded through glutamate to α-ketoglutarate."
+  },
+  {
+    "id": "q-bio-035",
+    "question": "Is lysine glucogenic, ketogenic, or both?",
+    "options": [
+      "Nonpolar",
+      "Glucogenic",
+      "Essential",
+      "Both",
+      "Ketogenic"
+    ],
+    "answer": 4,
+    "explanation": "Lysine is purely ketogenic — like leucine, it's degraded entirely to acetyl-CoA/acetoacetyl-CoA with no glucogenic route."
+  },
+  {
+    "id": "q-bio-036",
+    "question": "Is methionine glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Nonpolar",
+      "Essential",
+      "Ketogenic",
+      "Glucogenic"
+    ],
+    "answer": 4,
+    "explanation": "Methionine is purely glucogenic, degraded (via propionyl-CoA) to succinyl-CoA."
+  },
+  {
+    "id": "q-bio-037",
+    "question": "Is cysteine glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Nonpolar",
+      "Glucogenic",
+      "Essential",
+      "Ketogenic"
+    ],
+    "answer": 2,
+    "explanation": "Cysteine is purely glucogenic, converted to pyruvate after its sulfur is removed."
+  },
+  {
+    "id": "q-bio-038",
+    "question": "Is serine glucogenic, ketogenic, or both?",
+    "options": [
+      "Essential",
+      "Both",
+      "Glucogenic",
+      "Ketogenic",
+      "Nonpolar"
+    ],
+    "answer": 2,
+    "explanation": "Serine is purely glucogenic, converted directly to pyruvate."
+  },
+  {
+    "id": "q-bio-039",
+    "question": "Is threonine glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Ketogenic",
+      "Nonpolar",
+      "Glucogenic",
+      "Essential"
+    ],
+    "answer": 0,
+    "explanation": "Threonine is both glucogenic and ketogenic — it can be converted to pyruvate/succinyl-CoA (glucogenic) or contribute acetyl-CoA (ketogenic) depending on the pathway used."
+  },
+  {
+    "id": "q-bio-040",
+    "question": "Is glycine glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Glucogenic",
+      "Essential",
+      "Nonpolar",
+      "Ketogenic"
+    ],
+    "answer": 1,
+    "explanation": "Glycine is purely glucogenic, interconverted with serine and ultimately feeding into pyruvate."
+  },
+  {
+    "id": "q-bio-041",
+    "question": "Is alanine glucogenic, ketogenic, or both?",
+    "options": [
+      "Both",
+      "Essential",
+      "Ketogenic",
+      "Nonpolar",
+      "Glucogenic"
+    ],
+    "answer": 4,
+    "explanation": "Alanine is purely glucogenic — transamination converts it directly to pyruvate, the classic link between muscle protein breakdown and hepatic gluconeogenesis (the glucose-alanine cycle)."
+  },
+  {
+    "id": "q-bio-042",
+    "question": "Is proline glucogenic, ketogenic, or both?",
+    "options": [
+      "Ketogenic",
+      "Essential",
+      "Nonpolar",
+      "Both",
+      "Glucogenic"
+    ],
+    "answer": 4,
+    "explanation": "Proline is purely glucogenic, oxidized through glutamate to α-ketoglutarate."
   }
 ]
