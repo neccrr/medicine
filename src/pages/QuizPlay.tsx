@@ -8,11 +8,13 @@ import { SubjectBadge } from "../components/SubjectBadge";
 import { FlameIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
+import { buildSessionBank } from "../lib/quizShuffle";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
 
 interface InProgressSave {
+  bank: QuizQuestion[];
   answers: Record<string, number>;
   currentIndex: number;
   total: number;
@@ -34,21 +36,29 @@ export function QuizPlay() {
   const subjectLabel = quizSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
   const { history, dueIds, recordAttempt } = useQuizProgress(subjectId);
   const [started, setStarted] = useState(false);
-  const [activeBank, setActiveBank] = useState<QuizQuestion[] | null>(null);
+  const [sessionBank, setSessionBank] = useState<QuizQuestion[] | null>(null);
+  const [reviewMode, setReviewMode] = useState<"due" | "missed" | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
   const [result, setResult] = useState<QuizAttempt | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
 
-  const bank = activeBank ?? fullBank;
+  const bank = sessionBank ?? [];
   const dueQuestions = fullBank.filter((q) => dueIds.includes(q.id));
   const savedProgress = readJSON<InProgressSave | null>(STORAGE_KEYS.quizInProgress(subjectId), null);
-  const canResume = !!savedProgress && savedProgress.total === fullBank.length && savedProgress.currentIndex < savedProgress.total;
+  const fullBankIds = new Set(fullBank.map((q) => q.id));
+  const canResume =
+    !!savedProgress &&
+    savedProgress.total === fullBank.length &&
+    savedProgress.currentIndex < savedProgress.total &&
+    savedProgress.bank.length === fullBank.length &&
+    savedProgress.bank.every((q) => fullBankIds.has(q.id));
 
   const persistProgress = (nextAnswers: Record<string, number>, nextIndex: number) => {
-    if (activeBank) return;
+    if (reviewMode || !sessionBank) return;
     writeJSON(STORAGE_KEYS.quizInProgress(subjectId), {
+      bank: sessionBank,
       answers: nextAnswers,
       currentIndex: nextIndex,
       total: fullBank.length,
@@ -58,15 +68,17 @@ export function QuizPlay() {
   const clearInProgress = () => writeJSON(STORAGE_KEYS.quizInProgress(subjectId), null);
 
   const beginQuiz = (resume: boolean) => {
-    if (resume && savedProgress) {
+    if (resume && savedProgress && canResume) {
+      setSessionBank(savedProgress.bank);
       setAnswers(savedProgress.answers);
       setCurrentIndex(savedProgress.currentIndex);
     } else {
       clearInProgress();
+      setSessionBank(buildSessionBank(fullBank));
       setAnswers({});
       setCurrentIndex(0);
     }
-    setActiveBank(null);
+    setReviewMode(null);
     setFinished(false);
     setResult(null);
     setStarted(true);
@@ -104,7 +116,7 @@ export function QuizPlay() {
     const attempt = recordAttempt(bank, answers);
     setResult(attempt);
     setFinished(true);
-    if (!activeBank) clearInProgress();
+    if (!reviewMode) clearInProgress();
   };
 
   const goNext = () => {
@@ -115,8 +127,9 @@ export function QuizPlay() {
     finishQuiz();
   };
 
-  const startBank = (nextBank: QuizQuestion[] | null) => {
-    setActiveBank(nextBank);
+  const startBank = (nextBank: QuizQuestion[] | null, mode: "due" | "missed" | null) => {
+    setSessionBank(buildSessionBank(nextBank ?? fullBank));
+    setReviewMode(mode);
     setCurrentIndex(0);
     setAnswers({});
     setFinished(false);
@@ -243,11 +256,7 @@ export function QuizPlay() {
               <button
                 className="btn btn-secondary"
                 onClick={() => {
-                  setActiveBank(dueQuestions);
-                  setAnswers({});
-                  setCurrentIndex(0);
-                  setFinished(false);
-                  setResult(null);
+                  startBank(dueQuestions, "due");
                   setStarted(true);
                 }}
               >
@@ -279,9 +288,9 @@ export function QuizPlay() {
       <div className="quiz-header">
         <div>
           <h1>{subjectLabel}</h1>
-          {activeBank && <p className="subtitle">Reviewing {activeBank === dueQuestions ? "due" : "missed"} questions only</p>}
+          {reviewMode && <p className="subtitle">Reviewing {reviewMode} questions only</p>}
         </div>
-        {history.length >= 2 && !activeBank && (
+        {history.length >= 2 && !reviewMode && (
           <div className="quiz-trend" title="Score trend across recent attempts">
             <ScoreSparkline history={history} />
           </div>
@@ -298,13 +307,13 @@ export function QuizPlay() {
         </div>
       )}
 
-      {!activeBank && !finished && dueQuestions.length > 0 && (
+      {!reviewMode && !finished && dueQuestions.length > 0 && (
         <div className="quiz-due-banner">
           <p>
             <strong>{dueQuestions.length}</strong> question{dueQuestions.length === 1 ? "" : "s"} due
             for review from past attempts.
           </p>
-          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions)}>
+          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions, "due")}>
             Review due questions
           </button>
         </div>
@@ -439,11 +448,11 @@ export function QuizPlay() {
             </div>
 
             <div className="quiz-retry-row">
-              <button className="btn btn-secondary" onClick={() => startBank(null)}>
+              <button className="btn btn-secondary" onClick={() => startBank(null, null)}>
                 Retry full quiz
               </button>
               {missedQuestions.length > 0 && (
-                <button className="btn" onClick={() => startBank(missedQuestions)}>
+                <button className="btn" onClick={() => startBank(missedQuestions, "missed")}>
                   Review missed only ({missedQuestions.length})
                 </button>
               )}
