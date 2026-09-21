@@ -1519,6 +1519,74 @@ kbd, .mono {
   white-space: nowrap;
 }
 
+.quiz-nav-strip {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding: 0.15rem 0.1rem 0.85rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: thin;
+}
+
+.quiz-nav-pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.quiz-nav-pill:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.quiz-nav-pill.correct {
+  background: var(--accent-soft);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.quiz-nav-pill.incorrect {
+  background: var(--red-soft);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.quiz-nav-pill.current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+  color: var(--text);
+}
+
+.quiz-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.quiz-nav-buttons .quiz-prev-btn {
+  flex: 0 0 auto;
+}
+
+.quiz-nav-buttons .quiz-next-btn,
+.quiz-nav-buttons .quiz-skip-btn {
+  flex: 1;
+  margin-top: 0;
+}
+
 .quiz-question-text {
   font-family: var(--font-display);
   font-weight: 500;
