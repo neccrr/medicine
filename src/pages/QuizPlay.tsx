@@ -1,13 +1,22 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { quizBanks, quizGames, quizSubjects } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
 import { ScoreSparkline } from "../components/ScoreSparkline";
 import { ConfettiBurst } from "../components/ConfettiBurst";
+import { SubjectBadge } from "../components/SubjectBadge";
+import { FlameIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
+import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
+
+interface InProgressSave {
+  answers: Record<string, number>;
+  currentIndex: number;
+  total: number;
+}
 
 function scoreMessage(score: number, total: number): string {
   const pct = total === 0 ? 0 : score / total;
@@ -24,6 +33,7 @@ export function QuizPlay() {
   const games = quizGames[subjectId] ?? [];
   const subjectLabel = quizSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
   const { history, dueIds, recordAttempt } = useQuizProgress(subjectId);
+  const [started, setStarted] = useState(false);
   const [activeBank, setActiveBank] = useState<QuizQuestion[] | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -33,6 +43,103 @@ export function QuizPlay() {
 
   const bank = activeBank ?? fullBank;
   const dueQuestions = fullBank.filter((q) => dueIds.includes(q.id));
+  const savedProgress = readJSON<InProgressSave | null>(STORAGE_KEYS.quizInProgress(subjectId), null);
+  const canResume = !!savedProgress && savedProgress.total === fullBank.length && savedProgress.currentIndex < savedProgress.total;
+
+  const persistProgress = (nextAnswers: Record<string, number>, nextIndex: number) => {
+    if (activeBank) return;
+    writeJSON(STORAGE_KEYS.quizInProgress(subjectId), {
+      answers: nextAnswers,
+      currentIndex: nextIndex,
+      total: fullBank.length,
+    });
+  };
+
+  const clearInProgress = () => writeJSON(STORAGE_KEYS.quizInProgress(subjectId), null);
+
+  const beginQuiz = (resume: boolean) => {
+    if (resume && savedProgress) {
+      setAnswers(savedProgress.answers);
+      setCurrentIndex(savedProgress.currentIndex);
+    } else {
+      clearInProgress();
+      setAnswers({});
+      setCurrentIndex(0);
+    }
+    setActiveBank(null);
+    setFinished(false);
+    setResult(null);
+    setStarted(true);
+  };
+
+  const currentQuestion = bank[currentIndex];
+  const selected = currentQuestion ? answers[currentQuestion.id] : undefined;
+  const revealed = selected !== undefined;
+  const isLast = currentIndex === bank.length - 1;
+  const answeredCount = currentIndex + (revealed ? 1 : 0);
+
+  let streak = 0;
+  for (let i = currentIndex - (revealed ? 0 : 1); i >= 0; i--) {
+    const q = bank[i];
+    if (!q || answers[q.id] !== q.answer) break;
+    streak++;
+  }
+
+  const selectAnswer = (optionIndex: number) => {
+    if (revealed || !currentQuestion) return;
+    const nextAnswers = { ...answers, [currentQuestion.id]: optionIndex };
+    setAnswers(nextAnswers);
+    persistProgress(nextAnswers, currentIndex);
+  };
+
+  const goNext = () => {
+    if (!isLast) {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      persistProgress(answers, nextIndex);
+      return;
+    }
+    const attempt = recordAttempt(bank, answers);
+    setResult(attempt);
+    setFinished(true);
+    if (!activeBank) clearInProgress();
+  };
+
+  const startBank = (nextBank: QuizQuestion[] | null) => {
+    setActiveBank(nextBank);
+    setCurrentIndex(0);
+    setAnswers({});
+    setFinished(false);
+    setResult(null);
+    setReviewOpen(false);
+    if (!nextBank) clearInProgress();
+  };
+
+  useEffect(() => {
+    if (!started || finished || !currentQuestion) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (!revealed) {
+        const letterIdx = OPTION_LETTERS.indexOf(e.key.toUpperCase());
+        const digitIdx = "123456789".indexOf(e.key);
+        const idx = letterIdx >= 0 ? letterIdx : digitIdx;
+        if (idx >= 0 && idx < currentQuestion.options.length) {
+          e.preventDefault();
+          selectAnswer(idx);
+        }
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        goNext();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [started, finished, currentQuestion, revealed, answers, currentIndex]);
+
+  const missedQuestions = result ? bank.filter((q) => result.missedIds.includes(q.id)) : [];
 
   if (fullBank.length === 0 && games.length === 0) {
     return (
@@ -67,37 +174,73 @@ export function QuizPlay() {
     );
   }
 
-  const currentQuestion = bank[currentIndex];
-  const selected = answers[currentQuestion.id];
-  const revealed = selected !== undefined;
-  const isLast = currentIndex === bank.length - 1;
-  const answeredCount = currentIndex + (revealed ? 1 : 0);
+  if (!started) {
+    return (
+      <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
+        <Link to="/quizzes" className="back-link">
+          ← All quizzes
+        </Link>
+        <div className="quiz-start">
+          <div className="quiz-start-badge">
+            <SubjectBadge id={subjectId} label={subjectLabel} />
+          </div>
+          <h1>{subjectLabel}</h1>
+          <p className="subtitle">
+            {fullBank.length} question{fullBank.length === 1 ? "" : "s"} · one at a time, with instant feedback
+          </p>
 
-  const selectAnswer = (optionIndex: number) => {
-    if (revealed) return;
-    setAnswers((prev) => ({ ...prev, [currentQuestion.id]: optionIndex }));
-  };
+          {history.length >= 2 && (
+            <div className="quiz-trend quiz-start-trend" title="Score trend across recent attempts">
+              <ScoreSparkline history={history} />
+            </div>
+          )}
 
-  const goNext = () => {
-    if (!isLast) {
-      setCurrentIndex((i) => i + 1);
-      return;
-    }
-    const attempt = recordAttempt(bank, answers);
-    setResult(attempt);
-    setFinished(true);
-  };
+          {games.length > 0 && (
+            <div className="quiz-game-links">
+              {games.map((game) => (
+                <a key={game.url} href={game.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                  Also try: {game.name} ↗
+                </a>
+              ))}
+            </div>
+          )}
 
-  const startBank = (nextBank: QuizQuestion[] | null) => {
-    setActiveBank(nextBank);
-    setCurrentIndex(0);
-    setAnswers({});
-    setFinished(false);
-    setResult(null);
-    setReviewOpen(false);
-  };
+          {dueQuestions.length > 0 && (
+            <div className="quiz-due-banner">
+              <p>
+                <strong>{dueQuestions.length}</strong> question{dueQuestions.length === 1 ? "" : "s"} due
+                for review from past attempts.
+              </p>
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  setActiveBank(dueQuestions);
+                  setAnswers({});
+                  setCurrentIndex(0);
+                  setFinished(false);
+                  setResult(null);
+                  setStarted(true);
+                }}
+              >
+                Review due questions
+              </button>
+            </div>
+          )}
 
-  const missedQuestions = result ? bank.filter((q) => result.missedIds.includes(q.id)) : [];
+          <div className="quiz-start-actions">
+            {canResume && savedProgress && (
+              <button className="btn btn-secondary" onClick={() => beginQuiz(true)}>
+                Resume ({savedProgress.currentIndex + 1}/{savedProgress.total})
+              </button>
+            )}
+            <button className="btn quiz-start-btn" onClick={() => beginQuiz(false)}>
+              {canResume ? "Start over" : "Start quiz"}
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
@@ -150,9 +293,19 @@ export function QuizPlay() {
             <span className="quiz-progress-label">
               Question {currentIndex + 1} of {bank.length}
             </span>
+            {streak >= 3 && (
+              <span className="quiz-streak-badge" title={`${streak} correct in a row`}>
+                <FlameIcon />
+                {streak}
+              </span>
+            )}
           </div>
 
           <p className="quiz-question-text">{currentQuestion.question}</p>
+
+          {currentQuestion.image && (
+            <div className="quiz-question-image" dangerouslySetInnerHTML={{ __html: currentQuestion.image }} />
+          )}
 
           <div className="quiz-options" role="radiogroup" aria-label={currentQuestion.question}>
             {currentQuestion.options.map((opt, oi) => {
@@ -179,6 +332,10 @@ export function QuizPlay() {
               );
             })}
           </div>
+
+          {!revealed && (
+            <p className="quiz-keyboard-hint">Tip: press a letter to answer</p>
+          )}
 
           {revealed && (
             <div className={`quiz-feedback ${selected === currentQuestion.answer ? "correct" : "incorrect"}`} role="status">
@@ -236,6 +393,9 @@ export function QuizPlay() {
                       <p className="quiz-question-text">
                         {qi + 1}. {q.question}
                       </p>
+                      {q.image && (
+                        <div className="quiz-question-image quiz-question-image-small" dangerouslySetInnerHTML={{ __html: q.image }} />
+                      )}
                       <div className="quiz-options quiz-options-static">
                         {q.options.map((opt, oi) => {
                           let cls = "quiz-option";

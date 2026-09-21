@@ -21,6 +21,7 @@ export const STORAGE_KEYS = {
   tagFilter: (deckId: string) => `medicine:tagfilter:${deckId}`,
   quizProgress: (quizId: string) => `medicine:quiz:${quizId}`,
   quizDue: (quizId: string) => `medicine:quizdue:${quizId}`,
+  quizInProgress: (quizId: string) => `medicine:quizinprogress:${quizId}`,
   lastRead: (subjectId: string) => `medicine:lastread:${subjectId}`,
   ebookPosition: (subjectId: string) => `medicine:ebook:${subjectId}`,
   ebookCompleted: (subjectId: string) => `medicine:ebookdone:${subjectId}`,

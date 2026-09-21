@@ -12,6 +12,7 @@ export interface QuizQuestion {
   options: string[];
   answer: number;
   explanation: string;
+  image?: string;
 }
 
 export interface CardState {
