@@ -22,10 +22,14 @@ export const studyBlocks: StudyBlock[] = [
     subjectIds: ["histology", "biochem", "physiology"],
   },
   { id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System", subjectIds: [] },
+  { id: "1.3", label: "Block 1.3: Digestive System and Metabolism", subjectIds: [] },
 ];
 
 /** Subjects announced for a block before any content has been uploaded for them. */
-export const upcomingSubjects: UpcomingSubject[] = [{ id: "anatomy", label: "Anatomy", blockId: "1.2" }];
+export const upcomingSubjects: UpcomingSubject[] = [
+  { id: "anatomy", label: "Anatomy", blockId: "1.2" },
+  { id: "gi-metabolism", label: "Digestive System & Metabolism", blockId: "1.3" },
+];
 
 export function blockById(blockId: string): StudyBlock | undefined {
   return studyBlocks.find((b) => b.id === blockId);
