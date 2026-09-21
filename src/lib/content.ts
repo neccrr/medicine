@@ -1,22 +1,24 @@
 import type { EbookMeta, Flashcard, QuizQuestion, Subject } from "../types/content";
 
+// Every content type lives under content/{type}/block/{blockId}/... — one folder tree, laid
+// out to match the curriculum's own block structure, sectioned the same way content/modules is.
 // Vite bundles all matching JSON/MD files at build time — fully static, no server round-trip.
 const flashcardModules = import.meta.glob<Flashcard[]>(
-  "../../content/flashcards/*/deck.json",
+  "../../content/flashcards/block/*/*/deck.json",
   { eager: true, import: "default" },
 );
 const quizModules = import.meta.glob<QuizQuestion[]>(
-  "../../content/quizzes/*/bank.json",
+  "../../content/quizzes/block/*/*/bank.json",
   { eager: true, import: "default" },
 );
 // A dedicated, curated question bank for a study block's exam (e.g. sourced from a real past
 // exam), keyed by block id. Falls back to pooling that block's regular quiz banks when absent.
 const examBankModules = import.meta.glob<QuizQuestion[]>(
-  "../../content/exams/*/bank.json",
+  "../../content/exams/block/*/bank.json",
   { eager: true, import: "default" },
 );
 const summaryModules = import.meta.glob<string>(
-  "../../content/summaries/*.md",
+  "../../content/summaries/block/*/*.md",
   { eager: true, import: "default", query: "?raw" },
 );
 const tipsModule = import.meta.glob<string[]>("../../content/tips/tips.json", {
@@ -24,23 +26,24 @@ const tipsModule = import.meta.glob<string[]>("../../content/tips/tips.json", {
   import: "default",
 });
 const ebookMetaModules = import.meta.glob<EbookMeta>(
-  "../../content/ebooks/*/meta.json",
+  "../../content/ebooks/block/*/*/meta.json",
   { eager: true, import: "default" },
 );
 const ebookChapterModules = import.meta.glob<string>(
-  "../../content/ebooks/*/chapter-*.md",
+  "../../content/ebooks/block/*/*/chapter-*.md",
   { eager: true, import: "default", query: "?raw" },
 );
 // PDFs dropped into a subject's folder are copied to the build output and exposed as a URL —
-// drop a file at content/ebooks/{subject}/anything.pdf and it shows up with no code changes.
-const ebookPdfModules = import.meta.glob<string>("../../content/ebooks/*/*.pdf", {
+// drop a file at content/ebooks/block/{blockId}/{subject}/anything.pdf and it shows up with no
+// code changes.
+const ebookPdfModules = import.meta.glob<string>("../../content/ebooks/block/*/*/*.pdf", {
   eager: true,
   import: "default",
   query: "?url",
 });
 // Self-contained interactive HTML quizzes (their own UI/scoring, e.g. an image-ID game) dropped
 // into a subject's folder are exposed as a URL and embedded via iframe — no bank.json needed.
-const quizGameModules = import.meta.glob<string>("../../content/quizzes/*/*.html", {
+const quizGameModules = import.meta.glob<string>("../../content/quizzes/block/*/*/*.html", {
   eager: true,
   import: "default",
   query: "?url",
@@ -64,12 +67,12 @@ function subjectFromMdPath(path: string): string {
 }
 
 function ebookChapterKey(path: string): string {
-  const match = path.match(/ebooks\/([^/]+)\/([^/]+)\.md$/);
+  const match = path.match(/ebooks\/block\/[^/]+\/([^/]+)\/([^/]+)\.md$/);
   return match ? `${match[1]}/${match[2]}` : path;
 }
 
 function ebookPdfSubject(path: string): string {
-  const match = path.match(/ebooks\/([^/]+)\/[^/]+\.pdf$/);
+  const match = path.match(/ebooks\/block\/[^/]+\/([^/]+)\/[^/]+\.pdf$/);
   return match ? match[1] : path;
 }
 
@@ -97,7 +100,7 @@ function moduleName(path: string): string {
 }
 
 function quizGameSubject(path: string): string {
-  const match = path.match(/quizzes\/([^/]+)\/[^/]+\.html$/);
+  const match = path.match(/quizzes\/block\/[^/]+\/([^/]+)\/[^/]+\.html$/);
   return match ? match[1] : path;
 }
 

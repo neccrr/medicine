@@ -127,20 +127,26 @@ no runtime fetch.
 
 ```
 content/
-  flashcards/{subject}/deck.json   → Flashcard[]  { id, front, back, tags }
-  quizzes/{subject}/bank.json      → QuizQuestion[] { id, question, options, answer, explanation }
-  quizzes/{subject}/*.html         → any self-contained interactive quiz dropped here — no code changes needed
-  ebooks/{subject}/meta.json       → { title, description, chapters: [{id,title}], resources?: [{title,url}] }
-  ebooks/{subject}/chapter-N.md    → Markdown, one file per chapter
-  ebooks/{subject}/*.pdf           → any PDF dropped here — no code changes needed
-  summaries/{subject}.md           → Markdown, rendered client-side
-  tips/tips.json                   → string[]
+  flashcards/block/{blockId}/{subject}/deck.json   → Flashcard[]  { id, front, back, tags }
+  quizzes/block/{blockId}/{subject}/bank.json      → QuizQuestion[] { id, question, options, answer, explanation }
+  quizzes/block/{blockId}/{subject}/*.html         → any self-contained interactive quiz dropped here — no code changes needed
+  ebooks/block/{blockId}/{subject}/meta.json       → { title, description, chapters: [{id,title}], resources?: [{title,url}] }
+  ebooks/block/{blockId}/{subject}/chapter-N.md    → Markdown, one file per chapter
+  ebooks/block/{blockId}/{subject}/*.pdf           → any PDF dropped here — no code changes needed
+  summaries/block/{blockId}/{subject}.md           → Markdown, rendered client-side
+  exams/block/{blockId}/bank.json                  → QuizQuestion[], a curated bank for that block's timed exam
+  modules/block/{blockId}/{subject}/*.pdf          → original lecture-slide PDFs, listed and viewable in-app
+  tips/tips.json                                   → string[]
 ```
 
-Adding a new subject is just adding a new folder + file — no code changes
-required; subject lists everywhere (Flashcards/Quizzes/Ebooks/Summaries,
-plus the search index and command palette) are derived automatically from
-what's present in `/content`.
+Every content type is sectioned by study block (`blockId` — e.g. `1.1`),
+then by subject — one folder tree, matching the curriculum's own
+structure. Adding a new subject or block is just adding a new folder +
+file — no code changes required; subject lists everywhere (Flashcards/
+Quizzes/Ebooks/Summaries/Modules, plus the search index and command
+palette) are derived automatically from what's present in `/content`. A
+block's display name and which subjects belong to it are configured
+separately in `src/lib/blocks.ts`.
 
 ### Ebooks: chapters, PDFs, and external links
 
@@ -148,8 +154,8 @@ An ebook subject can mix any combination of:
 
 - **Markdown chapters** (`chapter-N.md`) — rendered with a table-of-contents
   sidebar, prev/next nav, and resume-where-you-left-off position tracking.
-- **PDFs** — drop any `.pdf` file into `content/ebooks/{subject}/` (e.g. after
-  pushing it to the repo on GitHub) and it's picked up automatically at
+- **PDFs** — drop any `.pdf` file into `content/ebooks/block/{blockId}/{subject}/`
+  (e.g. after pushing it to the repo on GitHub) and it's picked up automatically at
   build time: bundled as a real static asset (never inlined, so large files
   stay out of the JS bundle — see `assetsInlineLimit` in `vite.config.ts`),
   listed in the sidebar, and rendered inline via an embedded viewer with an
@@ -160,28 +166,22 @@ An ebook subject can mix any combination of:
   `meta.json` for a "Further reading" list in the sidebar (citations,
   guideline pages, journal links, anything external), opened in a new tab.
 
-`content/ebooks/histology` and `content/ebooks/biochem` demonstrate
-chapters + resources; drop a PDF into a subject folder (with or without a
-`meta.json`) to get a PDF-only or PDF-plus-chapters book, no code changes
-needed.
+`content/ebooks/block/1.1/histology` and `content/ebooks/block/1.1/biochem`
+demonstrate chapters + resources; drop a PDF into a subject folder (with or
+without a `meta.json`) to get a PDF-only or PDF-plus-chapters book, no code
+changes needed.
 
 ### Quizzes: question banks and interactive HTML games
 
 A quiz subject can be a `bank.json` (multiple-choice, scored and tracked by
 the app's own quiz engine), a self-contained interactive `.html` file (its
 own UI/scoring — e.g. an image-identification game), or both. Drop any
-`.html` file into `content/quizzes/{subject}/` and it's picked up
-automatically: bundled as a real static asset, listed on the Quizzes page,
-and rendered inline via an embedded iframe with an "open in new tab"
-fallback — same treatment as ebook PDFs. A subject folder that *only* has an
-HTML game (no `bank.json`) still gets a quiz entry, titled from the folder
-name.
-
-`content/quizzes/histology/Guess-the-Slide.html` is an HTML-only quiz game
-(image-ID with hints); `content/quizzes/histology/Structure-Labeler.html`
-and `content/quizzes/biochem/Amino-Acid-Fates.html` each pair a `bank.json`
-with a game, so those subjects show both the MCQ quiz and an "Also try:
-<game name> ↗" link. Game display names come straight from the filename
+`.html` file into `content/quizzes/block/{blockId}/{subject}/` and it's
+picked up automatically: bundled as a real static asset, listed on the
+Quizzes page, and rendered inline via an embedded iframe with an "open in
+new tab" fallback — same treatment as ebook PDFs. A subject folder that
+*only* has an HTML game (no `bank.json`) still gets a quiz entry, titled
+from the folder name. Game display names come straight from the filename
 (dashes become spaces), so name the file the way you want it to read in
 the UI.
 
