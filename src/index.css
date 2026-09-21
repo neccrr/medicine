@@ -1,7 +1,9 @@
 :root {
   --bg: #0a0f0d;
-  --surface: #101613;
-  --surface-2: #161f1b;
+  --surface: rgba(19, 27, 23, 0.6);
+  --surface-2: rgba(25, 35, 30, 0.72);
+  --surface-solid: #101613;
+  --surface-2-solid: #161f1b;
   --border: #223029;
   --border-strong: #2d4038;
   --text: #eef4f1;
@@ -22,8 +24,18 @@
   --type-exam: #fb923c;
   --type-ebook: #f2b134;
   --type-summary: #f472b6;
-  --radius: 12px;
-  --radius-lg: 20px;
+  --radius: 14px;
+  --radius-lg: 24px;
+  --radius-xl: 30px;
+  --radius-pill: 999px;
+  /* Liquid-glass material: translucent surfaces + a light-catching rim, layered
+     over the drifting blob background so color bleeds through every panel. */
+  --glass-blur: blur(28px) saturate(180%);
+  --glass-blur-soft: blur(16px) saturate(150%);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-strong: rgba(255, 255, 255, 0.18);
+  --glass-highlight: rgba(255, 255, 255, 0.07);
+  --glass-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.6);
   --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
   --font-body: "Archivo", -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, monospace;
@@ -34,8 +46,10 @@
 
 :root[data-theme="light"] {
   --bg: #f5f2e8;
-  --surface: #fffdf8;
-  --surface-2: #efe9d7;
+  --surface: rgba(255, 253, 248, 0.62);
+  --surface-2: rgba(239, 233, 215, 0.75);
+  --surface-solid: #fffdf8;
+  --surface-2-solid: #efe9d7;
   --border: #ddd4bc;
   --border-strong: #c9bd9e;
   --text: #16211b;
@@ -56,6 +70,10 @@
   --type-exam: #b3570c;
   --type-ebook: #96650f;
   --type-summary: #b8397a;
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --glass-border-strong: rgba(255, 255, 255, 0.9);
+  --glass-highlight: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 24px 48px -30px rgba(50, 43, 20, 0.28);
   color-scheme: light;
 }
 
@@ -271,15 +289,19 @@ kbd, .mono {
   width: 240px;
   flex-shrink: 0;
   position: sticky;
-  top: 0;
+  top: 0.75rem;
   align-self: flex-start;
-  height: 100vh;
+  height: calc(100vh - 1.5rem);
+  margin: 0.75rem 0 0.75rem 0.75rem;
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1rem;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  border-right: 1px solid var(--border);
-  backdrop-filter: blur(10px);
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, var(--glass-shadow);
   overflow-y: auto;
   z-index: 60;
 }
@@ -310,12 +332,12 @@ kbd, .mono {
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0.75rem;
-  border-radius: 10px;
+  border-radius: var(--radius-pill);
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 500;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
 .sidebar-link:hover {
@@ -326,17 +348,11 @@ kbd, .mono {
 .sidebar-link.active {
   background: var(--accent-soft);
   color: var(--accent);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.12) inset;
 }
 
-.sidebar-link.active::before {
-  content: "";
-  position: absolute;
-  left: -1rem;
-  top: 0.35rem;
-  bottom: 0.35rem;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--accent);
+.sidebar-link.active:hover {
+  transform: none;
 }
 
 .sidebar-link-icon {
@@ -377,9 +393,11 @@ kbd, .mono {
   top: 0;
   z-index: 50;
   padding: 0.9rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset;
 }
 
 .topbar-row {
@@ -553,11 +571,14 @@ kbd, .mono {
   align-items: flex-start;
   gap: 0.9rem;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   padding: 1.1rem 1.3rem;
   margin: 1.75rem 0 2.25rem;
+  backdrop-filter: var(--glass-blur-soft);
+  -webkit-backdrop-filter: var(--glass-blur-soft);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset;
 }
 
 .tip-dot {
@@ -659,12 +680,15 @@ kbd, .mono {
   position: relative;
   display: block;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   padding: 1.35rem;
   text-decoration: none;
   color: var(--text);
   overflow: hidden;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset;
   transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -697,9 +721,9 @@ kbd, .mono {
 }
 
 .nav-card:hover {
-  border-color: var(--border-strong);
+  border-color: var(--glass-border-strong);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 12px 28px -14px rgba(0, 0, 0, 0.4);
 }
 
 .nav-card:hover::before {
@@ -1404,9 +1428,9 @@ kbd, .mono {
   gap: 0.4rem;
   background: linear-gradient(135deg, var(--accent), var(--accent-dim));
   color: var(--accent-ink);
-  border: none;
-  border-radius: 8px;
-  padding: 0.65rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  padding: 0.65rem 1.3rem;
   font-family: var(--font-body);
   font-weight: 600;
   cursor: pointer;
@@ -1414,6 +1438,7 @@ kbd, .mono {
   letter-spacing: 0.01em;
   overflow: hidden;
   text-decoration: none;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.35) inset, 0 8px 20px -12px var(--accent-soft);
   transition: transform 0.1s ease, box-shadow 0.15s ease;
 }
 
@@ -1427,7 +1452,7 @@ kbd, .mono {
 }
 
 .btn:hover {
-  box-shadow: 0 10px 24px -8px var(--accent-soft);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.35) inset, 0 10px 24px -8px var(--accent-soft);
 }
 
 .btn:hover::before {
@@ -1453,13 +1478,16 @@ kbd, .mono {
 .btn-secondary {
   background: var(--surface-2);
   color: var(--text);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur-soft);
+  -webkit-backdrop-filter: var(--glass-blur-soft);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset;
 }
 
 .btn-secondary:hover {
   background: var(--surface-2);
-  border-color: var(--border-strong);
-  box-shadow: none;
+  border-color: var(--glass-border-strong);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset;
 }
 
 .btn-small {
@@ -1474,10 +1502,12 @@ kbd, .mono {
 
 .quiz-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
-  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 20px 50px -30px rgba(0, 0, 0, 0.5);
 }
 
 .quiz-progress {
@@ -1831,19 +1861,21 @@ kbd, .mono {
   gap: 0.75rem;
   text-align: left;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
   padding: 0.7rem 0.95rem;
   color: var(--text);
   cursor: pointer;
   font-size: 0.92rem;
   font-family: inherit;
   width: 100%;
+  backdrop-filter: var(--glass-blur-soft);
+  -webkit-backdrop-filter: var(--glass-blur-soft);
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .quiz-option:not(:disabled):hover {
-  border-color: var(--border-strong);
+  border-color: var(--glass-border-strong);
   background: var(--surface-2);
 }
 
@@ -3366,13 +3398,47 @@ kbd {
   background: var(--accent);
 }
 
+/*
+ * Liquid-glass finish for the remaining panel-style surfaces: a light-catching
+ * rim plus a frosted blur of whatever's behind them (the drifting blobs, page
+ * content). Kept off small/high-count elements (badges, pills, kbd, heatmap
+ * cells) where backdrop-filter would cost more than it's worth.
+ */
+.continue-item,
+.subject-card,
+.dashboard-widget,
+.exam-timer,
+.exam-mode-btn,
+.exam-flag-btn,
+.quiz-feedback,
+.quiz-score-hero,
+.quiz-review-item,
+.reading-control-btn,
+.search-input,
+.search-result a,
+.backup-nudge,
+.session-summary,
+.quiz-start,
+.quiz-section-btn,
+.quiz-question-image,
+.quiz-due-banner,
+.ebook-toc,
+.stat-tile,
+.form-input,
+.global-hardest-card-link,
+.mastery-row {
+  border-color: var(--glass-border);
+  backdrop-filter: var(--glass-blur-soft);
+  -webkit-backdrop-filter: var(--glass-blur-soft);
+}
+
 /* Command palette */
 
 .command-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 8, 7, 0.6);
-  backdrop-filter: blur(2px);
+  background: rgba(4, 8, 7, 0.45);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -3391,9 +3457,11 @@ kbd {
   max-width: 560px;
   margin: 0 1rem;
   background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 24px 70px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--radius-xl);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 24px 70px -12px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   animation: palette-in 0.16s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
