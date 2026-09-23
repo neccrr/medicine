@@ -135,7 +135,9 @@ content/
   ebooks/block/{blockId}/{subject}/*.pdf           → any PDF dropped here — no code changes needed
   summaries/block/{blockId}/{subject}.md           → Markdown, rendered client-side
   exams/block/{blockId}/bank.json                  → QuizQuestion[], a curated bank for that block's timed exam
-  modules/block/{blockId}/{subject}/*.pdf          → original lecture-slide PDFs, listed and viewable in-app
+  modules/block/{blockId}/{subject}/lecture/*.pdf              → lecturer slides, viewable in-app
+  modules/block/{blockId}/{subject}/practicum/reports/*.pdf    → practicum reports
+  modules/block/{blockId}/{subject}/practicum/assistance/*.pdf → practicum assistance (asistensi) decks
   tips/tips.json                                   → string[]
 ```
 
