@@ -7,16 +7,16 @@
 ![PWA](https://img.shields.io/badge/PWA-installable-2dd4a7)
 ![No backend](https://img.shields.io/badge/backend-none-lightgrey)
 
-A fully static, zero-backend study app: flashcards (SM-2 spaced repetition),
-multiple-choice quizzes and interactive quiz games, chaptered ebooks,
-written summaries, and client-side search — installable as an
-offline-capable PWA. All content ships as JSON/Markdown in the repo; all
-progress lives in the browser's `localStorage`. No accounts, no database,
-no server round-trip — free to host forever on Vercel's hobby tier (static
-hosting only, no serverless invocations).
+A fully static, zero-backend study app for medical school, organized the way
+the curriculum is: by **study block**, then by **subject**. Each subject can
+have spaced-repetition flashcards, quizzes, chaptered ebooks, summaries and the
+original lecture and practicum PDFs. Each block can have timed practice exams
+built from past papers.
 
-It's open source under the MIT license — clone it, point `/content` at
-your own material, and it's your own study app.
+All content ships as JSON, Markdown and PDF files in the repo, and all progress
+lives in the browser's `localStorage`. There are no accounts, no database and no
+server round-trips. It installs as an offline-capable PWA and runs on any static
+host, including Vercel's free tier.
 
 ## Screenshots
 
@@ -25,13 +25,13 @@ your own material, and it's your own study app.
 <td width="50%">
 
 ![Home dashboard, dark theme](docs/screenshots/home-dark.png)
-Home dashboard, dark theme — streaks, due counts, continue-where-you-left-off
+**Home**: streak, due cards, what to continue, per-block subject cards
 
 </td>
 <td width="50%">
 
 ![Home dashboard, light theme](docs/screenshots/home-light.png)
-Same page, light theme — OS-aware default, toggle anytime
+**Light theme**: follows the OS by default, toggle anytime
 
 </td>
 </tr>
@@ -39,13 +39,27 @@ Same page, light theme — OS-aware default, toggle anytime
 <td width="50%">
 
 ![Flashcard review](docs/screenshots/flashcard-dark.png)
-Flashcard review — flip animation, tag filters, keyboard grading
+**Flashcards**: SM-2 review, tag filters, keyboard grading
 
 </td>
 <td width="50%">
 
 ![Quiz](docs/screenshots/quiz-light.png)
-Quiz — instant scoring, plus a link to the subject's interactive game
+**Quiz**: one question at a time, instant feedback with explanations
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+![Timed block exam](docs/screenshots/exam-dark.png)
+**Exam**: timed block exam, question navigator, flag for review
+
+</td>
+<td width="50%">
+
+![Modules viewer](docs/screenshots/modules-light.png)
+**Modules**: lecture and practicum PDFs, grouped by section
 
 </td>
 </tr>
@@ -55,38 +69,73 @@ Quiz — instant scoring, plus a link to the subject's interactive game
 <summary>Ebook chapter &amp; Progress page</summary>
 
 ![Ebook chapter](docs/screenshots/ebook-dark.png)
-Ebook chapter — original diagrams, reading controls, resume position
+**Ebook**: chapters with original diagrams, reading controls, further reading
 
 ![Progress page](docs/screenshots/progress-light.png)
-Progress — streak stats, activity heatmap, study-plan generator
+**Progress**: streaks, activity heatmap, mastery by subject, study plan, backup
 
 </details>
 
+## What's inside
+
+| Block | Subject | Content |
+|---|---|---|
+| **1.1**: Cell Biology and Hematology | Histology | 31 flashcards · 170 quiz questions · 5-chapter ebook · summary · 3 lecture PDFs |
+| | Biochemistry | 45 flashcards · 42 quiz questions · 7-chapter ebook · summary · 3 lecture PDFs |
+| | Physiology | 23 flashcards · 26 quiz questions · 4 lecture PDFs |
+| | *Block exam* | 3 exam packages: Original Set (100 Q), Costraver (64 Q), UB 2025 (80 Q) |
+| **1.2**: Integument and Musculoskeletal System | Anatomy | 9 practicum assistance PDFs *(flashcards, quizzes and lectures coming)* |
+| **1.3**: Digestive System and Metabolism | — | Coming soon |
+
 ## Features
 
-- **SM-2 spaced repetition** for flashcards — due-card queue, tag
-  filtering, session summaries, and a per-deck (plus global, cross-subject)
-  "hardest cards" list ranked by lapse count
-- **Quizzes** — instant scoring, a "review missed only" retry flow, a
-  cross-attempt due-questions queue, a score-trend sparkline, and support
-  for self-contained interactive HTML quiz games alongside the MCQ bank
-- **Ebooks** — chaptered Markdown readers with a table of contents,
-  prev/next nav, resume-where-you-left-off position tracking, adjustable
-  font size, an accessible-font toggle, print/export styling, and
-  optional PDFs
-- **Full-text search** — fuzzy search (Fuse.js) across every flashcard,
-  quiz question, summary, and ebook chapter, plus a **⌘K / Ctrl+K**
-  command palette
-- **Progress tracking** — study-streak counter, a GitHub-style activity
-  heatmap, a study-plan generator (set an exam date, get a daily review
-  pace), and one-click export/import of all progress as JSON
-- **Installable PWA** — offline-capable after first load (service worker
-  precaches the app, PDFs, and quiz games); a backup-reminder nudge
-  prompts an export if it's been a while
-- **Light/dark theme**, OS-aware by default, with a distinct per-subject
-  accent color and initial badge
-- **Zero backend** — no accounts, no database, no server round-trip;
-  every byte of progress stays in the browser's `localStorage`
+**Flashcards**
+- SM-2 spaced repetition with a due-card queue and a session summary
+- Tag filtering (remembered per deck), with color-coded tag pills
+- "Hardest cards" ranked by lapses, per deck and globally on the Progress page
+- Optional card images and read-aloud (Web Speech API)
+
+**Quizzes**
+- One question at a time with instant feedback and an explanation for every answer
+- A numbered navigator, previous/next, and full keyboard control
+- Question and option order reshuffled on every attempt, so answers can't be memorized by position
+- Banks over 50 questions split into about 25-question sections you can take one at a time
+- An unfinished attempt resumes where you left off
+- "Review missed only" retry, and a due queue where missed questions come back until you answer them correctly
+- Score-trend sparkline, question images (micrographs and diagrams), and confetti on a perfect score
+
+**Exam**
+- Timed block exams: up to 100 questions at 1 minute each, scaled down for smaller banks
+- A block can have several **exam packages** (e.g. past papers from different sources) to choose between. Without packages, the exam pools the block's quiz banks.
+- **Real exam** mode (scored only at the end) or **instant feedback** mode
+- Flag for review, a navigator showing answered and flagged questions, and a low-time warning
+- Submitting with questions unanswered or flagged asks for confirmation first
+- Review with explanations after submitting, a "retry missed" round, and score history per package
+
+**Modules**
+- The original lecture slides and practicum PDFs, viewable in-app with an "open in new tab" fallback
+- Grouped as **Lecture**, then **Practicum** (Reports, Assistance), with empty sections marked "To be added"
+
+**Ebooks and summaries**
+- Chaptered Markdown with original inline SVG diagrams, a table of contents, and previous/next navigation
+- Resume position and chapter-completion tracking
+- Adjustable font size, an accessible-font toggle (Atkinson Hyperlegible), and print-friendly styling
+- Optional PDFs and a "Further reading" list of external links
+
+**Search and navigation**
+- Fuzzy search (Fuse.js) across every flashcard, quiz question, summary section and ebook chapter, with type and subject filters
+- A **⌘K / Ctrl+K** command palette to jump to any page or subject
+
+**Progress**
+- Study streaks, a GitHub-style activity heatmap, and mastery by subject (a card counts as mastered at a 21+ day interval)
+- A study-plan generator: pick an exam date and get the daily review pace to clear the deck in time
+- One-click export and import of all progress as a JSON file, plus a reminder if you haven't backed up in 14 days
+
+**App**
+- Installable PWA that works offline after the first visit (details in [Offline and updates](#offline-and-updates))
+- Light and dark themes, with a color per content type and per subject
+- Blocks with no content yet appear as "coming soon" placeholders
+- A recovery screen instead of a blank page if saved progress from an older version breaks something
 
 ## Quick start
 
@@ -97,260 +146,215 @@ npm install
 npm run dev       # http://localhost:5173
 ```
 
-No environment variables, no API keys, no database to set up — it just
-runs.
+There are no environment variables, API keys or database to set up.
 
-## Add your own content
+## Adding content
 
-Content lives in `/content` and is auto-discovered at build time — **drop
-a folder in, no code changes required.** See
-[Content structure](#content-structure) below for the exact file layout.
-
-## Stack
-
-- **Vite + React + TypeScript** — static SPA, `npm run build` outputs plain
-  HTML/CSS/JS to `dist/`
-- **react-router-dom** — client-side routing (`BrowserRouter`; `vercel.json`
-  rewrites all paths to `index.html` for deep-link support)
-- **Fuse.js** — fuzzy search, used by both the Search page and the command
-  palette, over content bundled at build time
-- **marked** — renders the Markdown summary and ebook chapter files
-- **vite-plugin-pwa** — installable manifest + offline service worker
-  (precaches the built app; works with zero connectivity after first load)
-- No backend, no auth, no database
-
-## Content structure
-
-Content lives in `/content` at the repo root and is bundled into the app at
-**build time** via `import.meta.glob` (see `src/lib/content.ts`) — there is
-no runtime fetch.
+Everything under `/content` is discovered at build time with `import.meta.glob`
+(see `src/lib/content.ts`). Adding a file is enough; you don't need to change
+any code. Nothing is fetched at runtime.
 
 ```
 content/
-  flashcards/block/{blockId}/{subject}/deck.json   → Flashcard[]  { id, front, back, tags }
-  quizzes/block/{blockId}/{subject}/bank.json      → QuizQuestion[] { id, question, options, answer, explanation }
-  quizzes/block/{blockId}/{subject}/*.html         → any self-contained interactive quiz dropped here — no code changes needed
-  ebooks/block/{blockId}/{subject}/meta.json       → { title, description, chapters: [{id,title}], resources?: [{title,url}] }
-  ebooks/block/{blockId}/{subject}/chapter-N.md    → Markdown, one file per chapter
-  ebooks/block/{blockId}/{subject}/*.pdf           → any PDF dropped here — no code changes needed
-  summaries/block/{blockId}/{subject}.md           → Markdown, rendered client-side
-  exams/block/{blockId}/bank.json                  → QuizQuestion[], a curated bank for that block's timed exam
-  modules/block/{blockId}/{subject}/lecture/*.pdf              → lecturer slides, viewable in-app
+  flashcards/block/{blockId}/{subject}/deck.json       → Flashcard[]     { id, front, back, tags, image? }
+  quizzes/block/{blockId}/{subject}/bank.json          → QuizQuestion[]  { id, question, options, answer, explanation, image? }
+  quizzes/block/{blockId}/{subject}/*.html             → self-contained interactive quiz, embedded in an iframe
+  exams/block/{blockId}/{packageId}/bank.json          → QuizQuestion[], one exam package
+  exams/block/{blockId}/{packageId}/meta.json          → { name }, the package's display name
+  ebooks/block/{blockId}/{subject}/meta.json           → { title, description, chapters: [{ id, title }], resources?: [{ title, url }] }
+  ebooks/block/{blockId}/{subject}/chapter-NN.md       → Markdown chapter (inline <svg> diagrams allowed)
+  ebooks/block/{blockId}/{subject}/*.pdf               → PDF shown alongside the chapters
+  summaries/block/{blockId}/{subject}.md               → Markdown summary
+  modules/block/{blockId}/{subject}/lecture/*.pdf              → lecturer slides
   modules/block/{blockId}/{subject}/practicum/reports/*.pdf    → practicum reports
   modules/block/{blockId}/{subject}/practicum/assistance/*.pdf → practicum assistance (asistensi) decks
-  tips/tips.json                                   → string[]
+  tips/tips.json                                       → string[], the tip of the day
 ```
 
-Every content type is sectioned by study block (`blockId` — e.g. `1.1`),
-then by subject — one folder tree, matching the curriculum's own
-structure. Adding a new subject or block is just adding a new folder +
-file — no code changes required; subject lists everywhere (Flashcards/
-Quizzes/Ebooks/Summaries/Modules, plus the search index and command
-palette) are derived automatically from what's present in `/content`. A
-block's display name and which subjects belong to it are configured
-separately in `src/lib/blocks.ts`.
+### Blocks and subjects
 
-### Ebooks: chapters, PDFs, and external links
+Subjects are derived from folder names. Which subjects belong to which block,
+and each block's display name, are set in `src/lib/blocks.ts`:
 
-An ebook subject can mix any combination of:
+```ts
+{ id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System", subjectIds: ["anatomy"] }
+```
 
-- **Markdown chapters** (`chapter-N.md`) — rendered with a table-of-contents
-  sidebar, prev/next nav, and resume-where-you-left-off position tracking.
-- **PDFs** — drop any `.pdf` file into `content/ebooks/block/{blockId}/{subject}/`
-  (e.g. after pushing it to the repo on GitHub) and it's picked up automatically at
-  build time: bundled as a real static asset (never inlined, so large files
-  stay out of the JS bundle — see `assetsInlineLimit` in `vite.config.ts`),
-  listed in the sidebar, and rendered inline via an embedded viewer with an
-  "open in new tab" fallback. A subject folder that *only* has a PDF (no
-  `meta.json`) still gets a book entry — the title is derived from the
-  folder name.
-- **External links** — add a `resources: [{ title, url }]` array to
-  `meta.json` for a "Further reading" list in the sidebar (citations,
-  guideline pages, journal links, anything external), opened in a new tab.
+`upcomingSubjects` in the same file adds "coming soon" cards for a subject
+that's announced but has no content yet. A new block is a new entry in
+`studyBlocks` plus its content folders.
 
-`content/ebooks/block/1.1/histology` and `content/ebooks/block/1.1/biochem`
-demonstrate chapters + resources; drop a PDF into a subject folder (with or
-without a `meta.json`) to get a PDF-only or PDF-plus-chapters book, no code
-changes needed.
+### Quizzes and exams
 
-### Quizzes: question banks and interactive HTML games
+- `image` is an optional HTML string rendered above the question. Use an `<img>`
+  pointing into `public/`, or an inline `<svg>` that uses the theme's CSS
+  variables (e.g. `var(--accent)`) so it follows light and dark mode.
+- A bank with more than 50 questions is split into sections automatically.
+- A block with folders under `content/exams/block/{blockId}/` offers those
+  packages on its Exam page. A block with no packages gets a pooled exam built
+  from its subjects' quiz banks.
 
-A quiz subject can be a `bank.json` (multiple-choice, scored and tracked by
-the app's own quiz engine), a self-contained interactive `.html` file (its
-own UI/scoring — e.g. an image-identification game), or both. Drop any
-`.html` file into `content/quizzes/block/{blockId}/{subject}/` and it's
-picked up automatically: bundled as a real static asset, listed on the
-Quizzes page, and rendered inline via an embedded iframe with an "open in
-new tab" fallback — same treatment as ebook PDFs. A subject folder that
-*only* has an HTML game (no `bank.json`) still gets a quiz entry, titled
-from the folder name. Game display names come straight from the filename
-(dashes become spaces), so name the file the way you want it to read in
-the UI.
+### Modules
 
-## Client-side logic
+A PDF placed directly in a subject's module folder (with no subfolder) is shown
+in a plain list. Once a subject uses any section subfolder, the viewer shows
+the full **Lecture / Practicum → Reports, Assistance** layout. Other subfolder
+names also work and are listed after the standard sections.
 
-- **`src/lib/sm2.ts`** — SM-2 spaced-repetition algorithm. Grading a card
-  (0–5 quality) returns a new `{ interval, easeFactor, dueDate, reps, lapses }`.
-- **`src/hooks/useSpacedRepetition.ts`** — wraps SM-2 with per-deck
-  `localStorage` state, exposes due cards, a `grade(cardId, quality)`
-  function, and the deck's "hardest cards" (most lapses, via `lib/hardestCards.ts`).
-- **`src/lib/hardestCards.ts`** — ranks cards by lapse count (ties broken by
-  ease factor); used both per-deck and, on the Progress page, merged across
-  every subject into a single global "hardest cards" list.
-- **`src/lib/quizScoring.ts`** — pure quiz-scoring functions: `scoreQuiz`
-  grades a submission against the answer key, and `updateDueIds` maintains a
-  cross-attempt "due for review" queue — a missed question joins the queue
-  and stays there until it's answered correctly in a later attempt.
-- **`src/hooks/useQuizProgress.ts`** — wraps `quizScoring.ts` with
-  `localStorage` state: appends each attempt (`{ score, total, date,
-  missedIds }`) to history and updates the due-questions queue, powering the
-  "review missed only" flow, the due-review banner, and the score history
-  sparkline.
-- **`src/lib/studyPlan.ts`** — pure function that turns an exam date plus a
-  deck's stats into a daily review pace ("N cards/day clears the deck in
-  M days"), powering the Progress page's study-plan generator.
-- **`src/lib/tipOfDay.ts`** — deterministic pick from `tips.json` based on
-  the calendar date, so everyone sees the same tip on a given day without a
-  server.
-- **`src/lib/activity.ts`** — logs a "study day" on any flashcard grade,
-  quiz submission, or ebook chapter view; computes current/longest streaks
-  for the sidebar badge and the Progress page's calendar heatmap.
-- **`src/lib/textExtract.ts`** — strips markdown/HTML (including embedded
-  `<svg>` diagrams, which are pure coordinate noise) down to plain text;
-  used to index summaries and ebook chapters for search without polluting
-  results with diagram markup.
-- **`src/hooks/useTheme.ts`** — light/dark theme, defaults to the OS
-  preference, persisted and toggleable from the sidebar.
-- **`src/hooks/useReadingPrefs.ts`** — persisted font-scale and
-  accessible-font (Atkinson Hyperlegible) preferences, shared by the ebook
-  reader and summary pages.
-- **`src/lib/storage.ts`** — thin `localStorage` JSON helpers, plus
-  `exportAllProgress` / `importAllProgress` for the Progress page's backup
-  flow (all `medicine:*` keys, whole state as one downloadable JSON file).
+Module and ebook PDFs are served as separate static files, never inlined into
+the JavaScript bundle. They aren't downloaded upfront for offline use; each is
+cached the first time it's opened.
+
+> **Before adding PDFs from a course,** check them for personal data. Lab and
+> class decks often include assistants' profiles, phone numbers, birth dates,
+> or group invite links and QR codes. Remove those pages first: this repo is
+> public, and the files are served as-is.
 
 ## Pages
 
-| Route                       | Purpose                                          |
-|-------------------------------|----------------------------------------------------|
-| `/`                          | Home, tip of the day, quick links                |
-| `/flashcards`                | Subject list with due-card counts                |
-| `/flashcards/:subjectId`     | SM-2 study session — flip animation, keyboard shortcuts (space to flip, 1–5 to grade), tag filtering, session summary, hardest-cards list, read-aloud |
-| `/quizzes`                   | Subject list with last score and due-question counts |
-| `/quizzes/:subjectId`        | Quiz with instant scoring, missed-only retry, a cross-attempt due-questions banner, score trend sparkline — plus a link to the subject's interactive HTML game, if it has one |
-| `/ebooks`                    | Ebook list with resume position                  |
-| `/ebooks/:subjectId/:chapterId` | Chapter reader with table of contents, prev/next nav, font-size/accessible-font controls, print button |
-| `/summaries`                 | Subject list                                     |
-| `/summaries/:subjectId`      | Rendered Markdown summary                        |
-| `/search`                    | Fuzzy search across every flashcard, quiz question, summary section, and ebook chapter, with type/subject filters |
-| `/progress`                  | Streak stats, activity heatmap, study-plan generator, global hardest-cards list, export/import as JSON |
+| Route | What's there |
+|---|---|
+| `/` | Home: streak, stat tiles, "continue" list, tip of the day, per-block subject cards |
+| `/flashcards` → `/flashcards/:blockId/:subjectId` | Subject list with due counts → SM-2 review session |
+| `/quizzes` → `/quizzes/:blockId/:subjectId` | Subject list with last score and due counts → quiz (with section picker for large banks) |
+| `/exam` → `/exam/:blockId[/:packageId]` | Block list → package picker → timed exam |
+| `/modules` → `/modules/:blockId/:subjectId` | Subjects with PDFs → sectioned PDF viewer |
+| `/ebooks` → `/ebooks/:blockId/:subjectId/:chapterId` | Book list with resume position → chapter reader |
+| `/summaries` → `/summaries/:blockId/:subjectId` | Summary list → rendered summary |
+| `/search` | Fuzzy search with type and subject filters |
+| `/progress` | Streaks, heatmap, mastery, study plan, hardest cards, export/import |
 
-Press **⌘K / Ctrl+K** anywhere to open the command palette and jump to any
-page or subject.
+Every page is code-split and loaded on demand.
+
+## Keyboard shortcuts
+
+| Where | Keys |
+|---|---|
+| Anywhere | **⌘K / Ctrl+K**: command palette |
+| Flashcards | **Space / Enter**: flip · **1–5**: grade (Blackout → Easy) |
+| Quiz | **A–E** or **1–5**: answer · **Enter / Space**: continue · **← →**: previous/next question |
+| Exam | **A–E** or **1–5**: answer · **← →**: previous/next question |
+
+## Offline and updates
+
+- The service worker (vite-plugin-pwa / Workbox) precaches the app shell,
+  styles, fonts and images, so the app loads with no connection after the
+  first visit.
+- PDFs are cached the first time you open them, which keeps the first visit
+  fast even though the modules add up to about 300 MB.
+- When a new version is deployed, the app checks for it on focus and every
+  30 minutes, then shows a **"A new version is ready"** prompt. It never
+  reloads on its own, so a quiz or exam in progress isn't lost.
+
+## Project layout
+
+```
+src/
+  pages/        one component per route (lazy-loaded)
+  components/   sidebar, command palette, heatmap, badges, nudges, error boundary…
+  hooks/        useSpacedRepetition, useQuizProgress, useExamHistory, useTheme,
+                useReadingPrefs, useServiceWorkerUpdate, useLocalStorage…
+  lib/          pure logic (each piece has a *.test.ts beside it)
+  styles/       theme.css (design tokens) plus one stylesheet per area, imported by index.css
+  types/        content.ts: Flashcard, QuizQuestion, ExamAttempt, EbookMeta…
+```
+
+Key modules in `src/lib`:
+
+| File | Responsibility |
+|---|---|
+| `content.ts` | Discovers every content file at build time and exposes decks, banks, exam packages, ebooks, summaries and modules |
+| `blocks.ts` | Block → subject mapping, "coming soon" subjects, grouping lists by block |
+| `sm2.ts` | SM-2 scheduling: a 0–5 grade becomes the next interval, ease factor and due date |
+| `quizScoring.ts` | Scores an attempt and keeps the "due for review" queue of missed questions |
+| `quizShuffle.ts` | Per-attempt shuffle of question order and option order (answer index remapped) |
+| `quizSections.ts` | Splits large banks into even sections |
+| `examFormat.ts` | Exam length and time limit (100 questions max, 60 s each) |
+| `moduleSections.ts` | Groups module PDFs into Lecture / Practicum sections |
+| `searchIndex.ts` | Builds the Fuse.js index over all content |
+| `textExtract.ts` | Strips Markdown, HTML and inline SVG down to searchable plain text |
+| `activity.ts` | Study-day log, current and longest streaks |
+| `studyPlan.ts` | Exam date plus deck stats becomes a daily review pace |
+| `hardestCards.ts` | Ranks cards by lapses, then ease factor |
+| `backupReminder.ts` | When to show the export reminder |
+| `tipOfDay.ts` | Deterministic daily tip (same for everyone, no server) |
+| `subjectStyle.ts` | Stable per-subject hue from the subject id, avoiding the red and green used for wrong/right |
+| `storage.ts` | `localStorage` helpers and export/import of all `medicine:*` keys |
 
 ## Design
 
-**"Clinical Vitals"** — the app's visual identity is an EKG-pulse motif
-carried through consistently: a hand-drawn pulse trace as the logo (draws
-itself in on load) and hero decoration, a fine graph-paper grid texture on
-every surface, an editorial serif (**Fraunces**) for headings against a
-confident grotesk (**Archivo**) for UI text, and a monospace
-(**IBM Plex Mono**) reserved for anything that reads as data — streak
-counts, SM-2 stats, badges, kbd hints — so numbers look like an actual
-monitor read-out. Accent color is a phosphor teal (vital-monitor green)
-rather than another blue-gradient SaaS look. Fonts load from Google Fonts
-(see `index.html`); CSS custom properties in `src/index.css` define both
-the dark (default) and light (warm paper) themes — swap the values there to
-retheme.
+The look is **frosted glass over a clinical monitor**: translucent,
+blurred panels float over slowly drifting color blobs, on a faint graph-paper
+grid. An EKG pulse trace is the logo and hero decoration.
 
-## Polish
+- **Type:** Fraunces (headings), Archivo (UI), IBM Plex Mono for anything that
+  reads as data (counts, stats, badges, shortcut hints), and Atkinson
+  Hyperlegible as the accessible reading font
+- **Color:** a phosphor-teal accent; a fixed color per content type
+  (flashcards, quizzes, exams, modules, ebooks, summaries); a hue per subject
+  derived from its id
+- **Theming:** all tokens live in `src/styles/theme.css`, with a dark default
+  and a warm-paper light theme. Change the variables to retheme the app.
+- **Accessibility:** skip-to-content link, visible focus outlines, ARIA roles
+  on quiz options, toggles and timers, and `prefers-reduced-motion` respected
+  by every animation
 
-- Light/dark theme (OS-aware default, persisted toggle)
-- Per-subject accent color + initial badge, derived deterministically from
-  the subject id
-- 3D flip animation on flashcards, keyboard-driven review (space/1–5),
-  optional read-aloud via the Web Speech API
-- Tag-based flashcard filtering — click any tag (on a card or in the filter
-  row) to drill a deck down to just that topic
-- Cross-attempt quiz due-questions queue: a missed question resurfaces on
-  your next visit until you get it right, the same way SM-2 resurfaces due
-  flashcards
-- A global "hardest cards" list on the Progress page, merged and ranked
-  across every subject's deck
-- Study streak tracking with a GitHub-style activity heatmap
-- A study-plan generator: set an exam date, get a daily review pace
-- A backup-reminder nudge if it's been a while since your last progress export
-- Adjustable ebook/summary font size and an accessible-font (Atkinson
-  Hyperlegible) toggle, plus print-friendly styling
-- A branded splash screen on first load (inlined critical CSS, fades out
-  once the app is ready — see `index.html`)
-- Command palette (⌘K) for fast navigation
-- Installable PWA with offline support (manifest + service worker,
-  PDFs and quiz games included in the precache)
-- Accessibility: skip-to-content link, focus-visible outlines, ARIA
-  roles on the quiz radiogroup and tag-filter toggles, `prefers-reduced-motion`
-  respected everywhere animation is used (pulse-line draw-in, card stagger,
-  page transitions, quiz feedback, splash screen)
+## Data and privacy
 
-## Trade-offs
-
-- Progress is per-browser/per-device — clearing site data or switching
-  devices loses it. Use **Progress → Export** to back up, and **Import** to
-  restore on another device/browser.
-- No multi-user stats or leaderboards — there's no server-side user data to
-  aggregate.
-- No auth, no accounts — anyone with the URL sees the same content; only
-  their own local progress is personal.
-
-## Testing
-
-Pure logic (SM-2, quiz scoring, streak math, search indexing, text
-extraction, study-plan pacing, backup-reminder timing) is covered by
-Vitest unit tests in `src/lib/*.test.ts` — no DOM/component tests, just the
-algorithms that are easy to get subtly wrong.
-
-```bash
-npm run test        # run once
-npm run test:watch  # watch mode
-```
+- Progress stays in this browser on this device. Use **Progress → Export** to
+  back up, and **Import** to restore on another device.
+- Content is the same for everyone. There are no accounts, per-user content,
+  shared stats or leaderboards.
+- Clearing site data erases progress. If saved progress from an older version
+  ever breaks a page, the recovery screen offers **Reload** or **Clear local
+  data and reload**.
 
 ## Development
 
 ```bash
-npm install
-npm run dev       # http://localhost:5173
-npm run build     # type-checks, builds to dist/, generates the service worker
-npm run preview   # serve the production build locally
-npm run lint       # oxlint
-npm run test       # vitest
+npm run dev          # dev server on http://localhost:5173
+npm run build        # type-check (tsc -b), build to dist/, generate the service worker
+npm run preview      # serve the production build locally
+npm run lint         # oxlint
+npm run test         # vitest, single run
+npm run test:watch   # vitest, watch mode
 ```
 
-## Deploying to Vercel
+Tests cover the pure logic in `src/lib` (SM-2, scoring, shuffling, sections,
+exam format, module grouping, blocks, streaks, search indexing, text
+extraction, study plans, backup timing, tip of the day). There are no DOM or
+component tests.
 
-This repo includes `vercel.json` (build command, `dist` output dir, and an
-SPA rewrite so client-side routes work on refresh/deep-link). Import the
-repo in Vercel — no environment variables or serverless functions are
-needed; it's served as pure static assets on the hobby tier.
+## Deploying
+
+`vercel.json` sets the build command, the `dist` output directory, and an SPA
+rewrite so deep links work on refresh. It also marks `sw.js`, the manifest and
+`index.html` as `no-cache`, so a new deploy reaches installed copies promptly.
+Import the repo in Vercel; it needs no environment variables or serverless
+functions. Any static host with an SPA fallback to `index.html` works too, if it
+sends the same no-cache headers for those three files.
 
 ## Contributing
 
-Contributions are welcome — this is a small, readable codebase on purpose.
-
-- **Adding content** (flashcards, quizzes, ebook chapters, summaries) needs
-  no code changes at all — see [Content structure](#content-structure) and
-  drop files into `/content`.
-- **Bug fixes / features**: fork the repo, make your change, and run the
-  full check before opening a PR:
+- **Content** (flashcards, questions, chapters, summaries, PDFs) never needs a
+  code change. Follow [Adding content](#adding-content), and read the
+  personal-data note there before adding course PDFs.
+- **Code:** keep pure logic in `src/lib` with a matching `*.test.ts`, and run
+  the full check before opening a PR:
 
   ```bash
   npm run lint && npm run test && npm run build
   ```
-- Keep pure logic in `src/lib/*.ts` covered by a Vitest test in the
-  matching `*.test.ts` file — see [Testing](#testing).
-- Open an issue first for anything that changes the data model
-  (`src/types/content.ts`) or the content file layout, so the approach can
-  be discussed before the work is done.
+- Open an issue first for changes to the data model (`src/types/content.ts`)
+  or the content folder layout.
 
 ## License
 
-[MIT](./LICENSE) — use it, fork it, retheme it, point it at your own
-content. Attribution is appreciated but not required.
+The code and the original study material written for this app (flashcards,
+quiz questions, ebook chapters, summaries, diagrams) are [MIT](./LICENSE)
+licensed.
+
+The PDFs under `content/modules/` are lecture and practicum materials from
+their respective lecturers and lab assistants. They remain their authors'
+work, are included only as study references, and are not covered by the MIT
+license. To have a file removed, open an issue.
