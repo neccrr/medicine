@@ -54,8 +54,9 @@ const quizGameModules = import.meta.glob<string>("../../content/quizzes/block/*/
   query: "?url",
 });
 // Raw lecture-slide PDFs, organized by block then subject — drop a file at
-// content/modules/block/{blockId}/{subjectId}/anything.pdf and it shows up with no code changes.
-const moduleModules = import.meta.glob<string>("../../content/modules/block/*/*/*.pdf", {
+// content/modules/block/{blockId}/{subjectId}/anything.pdf, or in a section subfolder such as
+// .../{subjectId}/practicum/assistance/anything.pdf, and it shows up with no code changes.
+const moduleModules = import.meta.glob<string>("../../content/modules/block/*/*/**/*.pdf", {
   eager: true,
   import: "default",
   query: "?url",
@@ -87,8 +88,14 @@ function pdfName(path: string): string {
 }
 
 function moduleKey(path: string): string {
-  const match = path.match(/modules\/block\/([^/]+)\/([^/]+)\/[^/]+\.pdf$/);
+  const match = path.match(/modules\/block\/([^/]+)\/([^/]+)\//);
   return match ? `${match[1]}/${match[2]}` : path;
+}
+
+/** Subfolder path between the subject folder and the file, e.g. "practicum/assistance" ("" if none). */
+function moduleSection(path: string): string {
+  const match = path.match(/modules\/block\/[^/]+\/[^/]+\/(.+)\/[^/]+\.pdf$/);
+  return match ? match[1].toLowerCase() : "";
 }
 
 function examPackagePath(path: string): { blockId: string; packageId: string } {
@@ -243,13 +250,14 @@ export const ebookSubjects: Subject[] = Object.keys(ebookMeta)
 export interface ModulePdf {
   name: string;
   url: string;
+  section: string;
 }
 
 /** Lecture-slide PDFs, keyed by "{blockId}/{subjectId}". */
 export const modulesByBlockSubject: Record<string, ModulePdf[]> = {};
 for (const [path, url] of Object.entries(moduleModules)) {
   const key = moduleKey(path);
-  (modulesByBlockSubject[key] ??= []).push({ name: moduleName(path), url });
+  (modulesByBlockSubject[key] ??= []).push({ name: moduleName(path), url, section: moduleSection(path) });
 }
 for (const list of Object.values(modulesByBlockSubject)) {
   list.sort((a, b) => a.name.localeCompare(b.name));

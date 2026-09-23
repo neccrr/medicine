@@ -1,7 +1,8 @@
 import { useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { modulesByBlockSubject, moduleSubjects } from "../lib/content";
+import { modulesByBlockSubject, moduleSubjects, type ModulePdf } from "../lib/content";
 import { blockById } from "../lib/blocks";
+import { groupModules } from "../lib/moduleSections";
 import { subjectHueStyle } from "../lib/subjectStyle";
 
 function ExternalIcon() {
@@ -24,7 +25,9 @@ export function ModuleViewer() {
   const block = blockById(blockId);
   const subject = moduleSubjects.find((s) => s.id === subjectId);
   const pdfs = modulesByBlockSubject[`${blockId}/${subjectId}`] ?? [];
-  const [selected, setSelected] = useState(0);
+  const groups = groupModules(pdfs);
+  const ordered = groups ? groups.flatMap((g) => g.sections.flatMap((s) => s.pdfs)) : pdfs;
+  const [selectedUrl, setSelectedUrl] = useState<string>();
 
   if (!block || !subject) {
     return (
@@ -35,7 +38,23 @@ export function ModuleViewer() {
     );
   }
 
-  const current = pdfs[selected];
+  const current = ordered.find((p) => p.url === selectedUrl) ?? ordered[0];
+
+  const pdfList = (list: ModulePdf[]) => (
+    <ol>
+      {list.map((pdf) => (
+        <li key={pdf.url}>
+          <button
+            type="button"
+            className={pdf.url === current.url ? "ebook-toc-link active" : "ebook-toc-link"}
+            onClick={() => setSelectedUrl(pdf.url)}
+          >
+            {pdf.name}
+          </button>
+        </li>
+      ))}
+    </ol>
+  );
 
   return (
     <section className="page ebook-page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
@@ -44,25 +63,29 @@ export function ModuleViewer() {
       </Link>
 
       {pdfs.length === 0 ? (
-        <p>No lecture slides yet for this subject — drop a PDF into its module folder.</p>
+        <p>No PDFs yet for this subject — drop one into its module folder.</p>
       ) : (
         <div className="ebook-layout">
-          <nav className="ebook-toc" aria-label="Lecture list">
+          <nav className="ebook-toc" aria-label="Module list">
             <h2 className="ebook-toc-title">{subject.label}</h2>
             <p className="ebook-toc-subhead">{block.label}</p>
-            <ol>
-              {pdfs.map((pdf, i) => (
-                <li key={pdf.url}>
-                  <button
-                    type="button"
-                    className={i === selected ? "ebook-toc-link active" : "ebook-toc-link"}
-                    onClick={() => setSelected(i)}
-                  >
-                    {pdf.name}
-                  </button>
-                </li>
-              ))}
-            </ol>
+            {groups
+              ? groups.map((group) => (
+                  <div key={group.id} className="ebook-toc-section">
+                    <p className="ebook-toc-group">{group.label}</p>
+                    {group.sections.map((section) => (
+                      <div key={section.id} className="ebook-toc-part">
+                        {section.label && <p className="ebook-toc-sublabel">{section.label}</p>}
+                        {section.pdfs.length > 0 ? (
+                          pdfList(section.pdfs)
+                        ) : (
+                          <p className="ebook-toc-empty">To be added</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))
+              : pdfList(pdfs)}
           </nav>
 
           <div className="ebook-content">

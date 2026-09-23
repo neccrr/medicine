@@ -33,7 +33,7 @@ export function Modules() {
                     <h2>{subject.label}</h2>
                   </div>
                   <p>
-                    {pdfs.length} lecture{pdfs.length === 1 ? "" : "s"}
+                    {pdfs.length} PDF{pdfs.length === 1 ? "" : "s"}
                   </p>
                 </Link>
               );
