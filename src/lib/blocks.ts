@@ -21,7 +21,7 @@ export const studyBlocks: StudyBlock[] = [
     label: "Block 1.1: Biology Block: Cell and Hematology",
     subjectIds: ["histology", "biochem", "physiology"],
   },
-  { id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System", subjectIds: [] },
+  { id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System", subjectIds: ["anatomy"] },
   { id: "1.3", label: "Block 1.3: Digestive System and Metabolism", subjectIds: [] },
 ];
 

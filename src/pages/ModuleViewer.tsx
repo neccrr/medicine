@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { modulesByBlockSubject, flashcardSubjects } from "../lib/content";
+import { modulesByBlockSubject, moduleSubjects } from "../lib/content";
 import { blockById } from "../lib/blocks";
 import { subjectHueStyle } from "../lib/subjectStyle";
 
@@ -22,7 +22,7 @@ function ExternalIcon() {
 export function ModuleViewer() {
   const { blockId = "", subjectId = "" } = useParams();
   const block = blockById(blockId);
-  const subject = flashcardSubjects.find((s) => s.id === subjectId);
+  const subject = moduleSubjects.find((s) => s.id === subjectId);
   const pdfs = modulesByBlockSubject[`${blockId}/${subjectId}`] ?? [];
   const [selected, setSelected] = useState(0);
 

@@ -259,3 +259,7 @@ for (const list of Object.values(modulesByBlockSubject)) {
 export const moduleSubjectIds: Set<string> = new Set(
   Object.keys(modulesByBlockSubject).map((key) => key.split("/")[1]),
 );
+
+export const moduleSubjects: Subject[] = Array.from(moduleSubjectIds)
+  .sort()
+  .map((id) => ({ id, label: labelize(id) }));

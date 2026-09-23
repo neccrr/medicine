@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { flashcardSubjects, moduleSubjectIds, modulesByBlockSubject } from "../lib/content";
+import { moduleSubjects, modulesByBlockSubject } from "../lib/content";
 import { groupByBlock } from "../lib/blocks";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { UpcomingSubjectCard } from "../components/UpcomingSubjectCard";
-
-const moduleSubjects = flashcardSubjects.filter((s) => moduleSubjectIds.has(s.id));
 
 export function Modules() {
   const groups = groupByBlock(moduleSubjects);
