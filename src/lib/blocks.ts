@@ -49,10 +49,15 @@ export interface BlockGroup<T> {
 /** Buckets a flat subject list into its study blocks, in block order, dropping empty blocks. */
 export function groupByBlock<T extends { id: string }>(subjects: T[]): BlockGroup<T>[] {
   return studyBlocks
-    .map((block) => ({
-      block,
-      subjects: subjects.filter((s) => block.subjectIds.includes(s.id)),
-      upcoming: upcomingSubjects.filter((u) => u.blockId === block.id),
-    }))
+    .map((block) => {
+      const present = subjects.filter((s) => block.subjectIds.includes(s.id));
+      return {
+        block,
+        subjects: present,
+        upcoming: upcomingSubjects.filter(
+          (u) => u.blockId === block.id && !present.some((s) => s.id === u.id),
+        ),
+      };
+    })
     .filter((g) => g.subjects.length > 0 || g.upcoming.length > 0);
 }

@@ -26,6 +26,12 @@ describe("groupByBlock", () => {
     expect(block13!.upcoming.map((u) => u.id)).toEqual(["gi-metabolism"]);
   });
 
+  it("hides an upcoming placeholder once that subject has real content in the list", () => {
+    const block12 = groupByBlock([{ id: "anatomy" }]).find((g) => g.block.id === "1.2")!;
+    expect(block12.subjects.map((s) => s.id)).toEqual(["anatomy"]);
+    expect(block12.upcoming).toEqual([]);
+  });
+
   it("drops a block that has neither real nor upcoming subjects", () => {
     // Every currently configured block has something (real or upcoming), so nothing is dropped
     // for the real config — this just documents the filtering behavior with an empty input.

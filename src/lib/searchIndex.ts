@@ -144,6 +144,7 @@ function contentDocs(): SearchDoc[] {
         id: `sum-${subjectId}-${i}`,
         title: `${label}: ${section.heading}`,
         detail: truncate(markdownToPlainText(section.body), EXCERPT_LENGTH),
+        keywords: markdownToPlainText(section.body),
         to,
         subjectId,
       }))
@@ -175,6 +176,7 @@ function contentDocs(): SearchDoc[] {
         id: `eb-${key}-${i}`,
         title: `${chapterTitle}: ${section.heading}`,
         detail: truncate(markdownToPlainText(section.body), EXCERPT_LENGTH),
+        keywords: markdownToPlainText(section.body),
         to,
         subjectId,
       }))
