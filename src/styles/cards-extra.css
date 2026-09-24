@@ -119,24 +119,59 @@
 /* Icon buttons: theme toggle, streak, command palette trigger */
 
 .icon-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 0.4rem 0.55rem;
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.1s ease;
+  overflow: hidden;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    scale 0.35s var(--ease-spring);
+}
+
+/* Liquid-glass hover: the button swells slightly and a specular highlight follows the pointer
+   (position set by useCardSpotlight). */
+.icon-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(48px circle at var(--spot-x, 50%) var(--spot-y, 50%), var(--glass-specular), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
 .icon-btn:hover {
   background: var(--surface-2);
+  border-color: var(--glass-border-strong);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 6px 16px -10px rgba(0, 0, 0, 0.45);
+  scale: 1.06;
+}
+
+.icon-btn:hover::after {
+  opacity: 0.55;
 }
 
 .icon-btn:active {
-  transform: scale(0.94);
+  scale: 0.94;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-btn {
+    transition: none;
+  }
+
+  .icon-btn:hover {
+    scale: none;
+  }
 }
 
 kbd {

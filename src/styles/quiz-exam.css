@@ -20,7 +20,26 @@
   overflow: hidden;
   text-decoration: none;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.35) inset, 0 8px 20px -12px var(--accent-soft);
-  transition: transform 0.1s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s ease, scale 0.35s var(--ease-spring), box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Pointer-following specular highlight (position set by useCardSpotlight). */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(90px circle at var(--spot-x, 50%) var(--spot-y, 50%), var(--glass-specular), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.btn:hover:not(:disabled) {
+  scale: 1.02;
+}
+
+.btn:hover:not(:disabled)::after {
+  opacity: 0.35;
 }
 
 .btn::before {
@@ -40,13 +59,21 @@
   transform: translateX(120%);
 }
 
-.btn:active {
-  transform: translateY(1px);
+.btn:active:not(:disabled) {
+  scale: 0.97;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .btn::before {
     display: none;
+  }
+
+  .btn {
+    transition: none;
+  }
+
+  .btn:hover:not(:disabled) {
+    scale: none;
   }
 }
 

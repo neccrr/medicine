@@ -40,7 +40,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 60;
-  transition: width 0.2s ease, padding 0.2s ease;
+  transition: width var(--dur-morph) var(--ease-glass), padding var(--dur-morph) var(--ease-glass);
 }
 
 .sidebar-brand {
@@ -55,6 +55,7 @@
   padding: 0 0.25rem 0 0.5rem;
   margin-bottom: 2rem;
   justify-content: space-between;
+  transition: padding var(--dur-morph) var(--ease-glass);
 }
 
 .sidebar-brand-name {
@@ -62,6 +63,9 @@
   align-items: center;
   gap: 0.55rem;
   white-space: nowrap;
+  overflow: hidden;
+  max-width: 11rem;
+  transition: opacity 0.3s ease 0.08s, max-width var(--dur-morph) var(--ease-glass);
 }
 
 .sidebar-collapse-btn {
@@ -70,17 +74,77 @@
 
 .sidebar-link-label {
   white-space: nowrap;
+  overflow: hidden;
+  max-width: 11rem;
+  transition: opacity 0.3s ease 0.08s, max-width var(--dur-morph) var(--ease-glass);
 }
 
 .sidebar-nav {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
   flex: 1;
 }
 
+/* Glass lenses behind the links (positioned by Sidebar.tsx): one marks the current page, the
+   other follows the pointer, springing from link to link and catching a specular highlight. */
+.sidebar-lens {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sidebar-lens-active {
+  width: var(--active-w, 0);
+  height: var(--active-h, 0);
+  transform: translate(var(--active-x, 0), var(--active-y, 0));
+  opacity: var(--active-o, 0);
+  background: var(--accent-soft);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.14) inset,
+    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent) inset,
+    0 8px 20px -12px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.sidebar-lens-hover {
+  width: var(--hover-w, 0);
+  height: var(--hover-h, 0);
+  transform: translate(var(--hover-x, 0), var(--hover-y, 0));
+  opacity: var(--hover-o, 0);
+  scale: calc(0.9 + 0.1 * var(--hover-o, 0));
+  background:
+    radial-gradient(70px circle at var(--lens-px, 50%) var(--lens-py, 50%), var(--glass-specular), transparent 70%),
+    var(--glass-lens);
+  border: 1px solid var(--glass-border-strong);
+  backdrop-filter: blur(6px) saturate(180%);
+  -webkit-backdrop-filter: blur(6px) saturate(180%);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 10px 22px -14px rgba(0, 0, 0, 0.45);
+}
+
+.sidebar-nav[data-ready] .sidebar-lens {
+  transition:
+    transform 0.55s var(--ease-spring),
+    width 0.55s var(--ease-spring),
+    height 0.55s var(--ease-spring),
+    opacity 0.25s ease,
+    scale 0.4s var(--ease-spring);
+}
+
+.sidebar-nav[data-lens-jump] .sidebar-lens-hover {
+  transition: opacity 0.25s ease, scale 0.4s var(--ease-spring);
+}
+
+.sidebar-nav[data-morphing] .sidebar-lens {
+  transition: opacity 0.25s ease, scale 0.4s var(--ease-spring);
+}
+
 .sidebar-link {
   position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -90,22 +154,23 @@
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 500;
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  transition:
+    color 0.2s ease,
+    padding var(--dur-morph) var(--ease-glass),
+    gap var(--dur-morph) var(--ease-glass),
+    scale 0.35s var(--ease-spring);
 }
 
 .sidebar-link:hover {
-  background: var(--surface-2);
   color: var(--text);
 }
 
-.sidebar-link.active {
-  background: var(--accent-soft);
-  color: var(--accent);
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.12) inset;
+.sidebar-link:active {
+  scale: 0.96;
 }
 
-.sidebar-link.active:hover {
-  transform: none;
+.sidebar-link.active {
+  color: var(--accent);
 }
 
 .sidebar-link-icon {
@@ -177,8 +242,9 @@
   gap: 0.4rem;
 }
 
-/* Collapsed sidebar (desktop only): an icon rail. Labels stay in the DOM, visually hidden, so
-   links keep their accessible names; the title attribute shows them on hover. */
+/* Collapsed sidebar (desktop only): an icon rail. Every change here is animatable (widths,
+   paddings, gaps, opacity), so the rail morphs rather than jumps. Labels only fade, so links
+   keep their accessible names; the title attribute shows them on hover. */
 @media (min-width: 961px) {
   .sidebar.collapsed {
     width: 72px;
@@ -186,26 +252,30 @@
   }
 
   .sidebar.collapsed .sidebar-brand {
-    justify-content: center;
-    padding: 0;
+    padding: 0 5px 0 0;
   }
 
-  .sidebar.collapsed .sidebar-brand-name {
-    display: none;
-  }
-
-  .sidebar.collapsed .sidebar-link {
-    justify-content: center;
-    padding: 0.6rem;
-  }
-
+  .sidebar.collapsed .sidebar-brand-name,
   .sidebar.collapsed .sidebar-link-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
+    opacity: 0;
+    max-width: 0;
+    transition: opacity 0.15s ease, max-width var(--dur-morph) var(--ease-glass);
+  }
+
+  /* Centres the 18px icon in the 48px rail without switching justify-content. */
+  .sidebar.collapsed .sidebar-link {
+    padding: 0.6rem 15px;
+    gap: 0;
+  }
+
+  /* The footer re-flows into a column, so it cross-fades instead of jumping; the two
+     identical keyframes restart the animation on every toggle. */
+  .sidebar.collapsed .sidebar-footer {
+    animation: sidebar-footer-in-a 0.45s var(--ease-glass);
+  }
+
+  .sidebar:not(.collapsed) .sidebar-footer {
+    animation: sidebar-footer-in-b 0.45s var(--ease-glass);
   }
 
   .sidebar.collapsed .sidebar-footer,
@@ -284,7 +354,7 @@
   max-width: 1160px;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
-  transition: max-width 0.2s ease;
+  transition: max-width var(--dur-morph) var(--ease-glass);
 }
 
 /* With the sidebar collapsed to its icon rail, let pages (ebooks, PDFs, card grids) use the
@@ -330,9 +400,32 @@
   margin: 0 0 1.5rem;
 }
 
+@keyframes sidebar-footer-in-a {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes sidebar-footer-in-b {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sidebar,
+  .sidebar-brand,
+  .sidebar-brand-name,
+  .sidebar-link,
+  .sidebar-link-label,
+  .sidebar-nav[data-ready] .sidebar-lens,
   .main {
     transition: none;
+  }
+
+  .sidebar .sidebar-footer {
+    animation: none;
   }
 }

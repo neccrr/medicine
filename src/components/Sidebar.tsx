@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { StreakBadge } from "./StreakBadge";
 import { QuizDueBadge } from "./QuizDueBadge";
@@ -43,6 +43,84 @@ export function Sidebar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   // Desktop only: shrinks the sidebar to an icon rail. The mobile drawer ignores it.
   const [collapsed, setCollapsed] = useLocalStorage<boolean>(STORAGE_KEYS.sidebarCollapsed, false);
+  const navRef = useRef<HTMLElement>(null);
+  const hoveredLink = useRef<HTMLElement | null>(null);
+  const { pathname } = useLocation();
+
+  // Two glass "lenses" sit behind the links: one marks the current page, the other follows the
+  // pointer. Both are positioned from the link boxes through CSS custom properties on the nav,
+  // and CSS springs them between links.
+  const placeLens = useCallback((name: "active" | "hover", link: Element | null) => {
+    const nav = navRef.current;
+    if (!nav) return;
+    if (!(link instanceof HTMLElement)) {
+      nav.style.setProperty(`--${name}-o`, "0");
+      return;
+    }
+    nav.style.setProperty(`--${name}-x`, `${link.offsetLeft}px`);
+    nav.style.setProperty(`--${name}-y`, `${link.offsetTop}px`);
+    nav.style.setProperty(`--${name}-w`, `${link.offsetWidth}px`);
+    nav.style.setProperty(`--${name}-h`, `${link.offsetHeight}px`);
+    nav.style.setProperty(`--${name}-o`, "1");
+  }, []);
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const sync = () => {
+      placeLens("active", nav.querySelector(".sidebar-link.active"));
+      if (hoveredLink.current) placeLens("hover", hoveredLink.current);
+    };
+    sync();
+    // Only animate once the lenses have a real starting position.
+    const frame = requestAnimationFrame(() => nav.setAttribute("data-ready", ""));
+    // Keeps the lenses glued to the links while the sidebar collapses or expands.
+    const observer = new ResizeObserver(sync);
+    observer.observe(nav);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [pathname, placeLens]);
+
+  // While the sidebar itself is resizing, the lenses follow the links frame by frame (via the
+  // ResizeObserver) instead of springing, so they never lag behind the narrowing rail.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const nav = navRef.current;
+    if (!nav) return;
+    nav.setAttribute("data-morphing", "");
+    const timer = window.setTimeout(() => nav.removeAttribute("data-morphing"), 700);
+    return () => window.clearTimeout(timer);
+  }, [collapsed]);
+
+  const onNavPointerMove = (e: PointerEvent<HTMLElement>) => {
+    const nav = navRef.current;
+    const link = (e.target as HTMLElement).closest(".sidebar-link") as HTMLElement | null;
+    if (!nav || !link) return;
+    if (link !== hoveredLink.current) {
+      // Coming from outside the nav, the lens appears in place instead of sliding in from
+      // wherever it was last.
+      if (!hoveredLink.current) {
+        nav.setAttribute("data-lens-jump", "");
+        requestAnimationFrame(() => requestAnimationFrame(() => nav.removeAttribute("data-lens-jump")));
+      }
+      hoveredLink.current = link;
+      placeLens("hover", link);
+    }
+    const rect = link.getBoundingClientRect();
+    nav.style.setProperty("--lens-px", `${e.clientX - rect.left}px`);
+    nav.style.setProperty("--lens-py", `${e.clientY - rect.top}px`);
+  };
+
+  const onNavPointerLeave = () => {
+    hoveredLink.current = null;
+    placeLens("hover", null);
+  };
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -144,7 +222,15 @@ export function Sidebar() {
           </button>
         </div>
 
-        <nav className="sidebar-nav" aria-label="Primary">
+        <nav
+          className="sidebar-nav"
+          aria-label="Primary"
+          ref={navRef}
+          onPointerMove={onNavPointerMove}
+          onPointerLeave={onNavPointerLeave}
+        >
+          <span className="sidebar-lens sidebar-lens-active" aria-hidden="true" />
+          <span className="sidebar-lens sidebar-lens-hover" aria-hidden="true" />
           {links.map((link) => (
             <NavLink
               key={link.to}
