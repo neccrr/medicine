@@ -85,6 +85,7 @@ host, including Vercel's free tier.
 | | Physiology | 23 flashcards · 26 quiz questions · 4 lecture PDFs |
 | | *Block exam* | 3 exam packages: Original Set (100 Q), Costraver (64 Q), UB 2025 (80 Q) |
 | **1.2**: Integument and Musculoskeletal System | Anatomy | 7-chapter ebook (22 original diagrams, 153 slide figures) · 9 practicum assistance PDFs *(flashcards, quizzes and lectures coming)* |
+| | Physiology | 5-chapter ebook on muscle contraction and reflexes (12 original diagrams, 41 slide figures) · 3 practicum assistance PDFs *(lectures and reports coming)* |
 | **1.3**: Digestive System and Metabolism | — | Coming soon |
 
 ## Features
@@ -173,16 +174,24 @@ content/
 
 ### Blocks and subjects
 
-Subjects are derived from folder names. Which subjects belong to which block,
-and each block's display name, are set in `src/lib/blocks.ts`:
+Subjects and their blocks are both derived from folder paths: a file under
+`content/{type}/block/1.2/physiology/` belongs to physiology in Block 1.2. The
+same subject can therefore appear in more than one block (physiology is in
+both 1.1 and 1.2), each with its own card. `src/lib/blocks.ts` holds only
+each block's display name:
 
 ```ts
-{ id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System", subjectIds: ["anatomy"] }
+{ id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System" }
 ```
 
 `upcomingSubjects` in the same file adds "coming soon" cards for a subject
 that's announced but has no content yet. A new block is a new entry in
 `studyBlocks` plus its content folders.
+
+One limitation: flashcard, quiz, ebook and summary progress is still keyed by
+subject id, so a subject may have a given content type in only one block
+(Block 1.2 physiology has an ebook and modules, but its flashcards and quizzes
+live in 1.1). `src/lib/contentIntegrity.test.ts` fails if two blocks clash.
 
 ### Quizzes and exams
 
@@ -264,7 +273,7 @@ Key modules in `src/lib`:
 | File | Responsibility |
 |---|---|
 | `content.ts` | Discovers every content file at build time and exposes decks, banks, exam packages, ebooks, summaries and modules |
-| `blocks.ts` | Block → subject mapping, "coming soon" subjects, grouping lists by block |
+| `blocks.ts` | Block display names, "coming soon" subjects, grouping lists by block |
 | `sm2.ts` | SM-2 scheduling: a 0–5 grade becomes the next interval, ease factor and due date |
 | `quizScoring.ts` | Scores an attempt and keeps the "due for review" queue of missed questions |
 | `quizShuffle.ts` | Per-attempt shuffle of question order and option order (answer index remapped) |
@@ -359,5 +368,5 @@ their respective lecturers and lab assistants. They remain their authors'
 work, are included only as study references, and are not covered by the MIT
 license. The same applies to the slide figures under `public/ebook-figures/`,
 which are cropped from those decks (many reproduce figures from published
-anatomy atlases); each is captioned with its source deck and slide. To have a
+atlases and textbooks); each is captioned with its source deck and slide. To have a
 file removed, open an issue.

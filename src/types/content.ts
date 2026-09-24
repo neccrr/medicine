@@ -40,6 +40,8 @@ export interface ExamAttempt extends QuizAttempt {
 export interface Subject {
   id: string;
   label: string;
+  /** Study block whose content folder this subject's material lives in, e.g. "1.1". */
+  blockId: string;
 }
 
 export interface EbookChapterMeta {

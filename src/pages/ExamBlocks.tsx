@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { examPackagesByBlock, quizBanks } from "../lib/content";
+import { examPackagesByBlock, quizQuestionsInBlock } from "../lib/content";
 import { studyBlocks, upcomingSubjects } from "../lib/blocks";
 import { buildExamFormat } from "../lib/examFormat";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
@@ -17,7 +17,7 @@ export function ExamBlocks() {
       <div className="card-grid">
         {studyBlocks.map((block) => {
           const packages = examPackagesByBlock[block.id] ?? [];
-          const pooledSize = block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+          const pooledSize = quizQuestionsInBlock(block.id).length;
           const poolSize = packages.length > 0 ? Math.max(...packages.map((p) => p.questions.length)) : pooledSize;
           const format = buildExamFormat(poolSize);
           const stillUpcoming = upcomingSubjects.some((u) => u.blockId === block.id) && poolSize === 0;

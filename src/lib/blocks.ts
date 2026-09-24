@@ -1,7 +1,6 @@
 export interface StudyBlock {
   id: string;
   label: string;
-  subjectIds: string[];
 }
 
 export interface UpcomingSubject {
@@ -11,18 +10,13 @@ export interface UpcomingSubject {
 }
 
 /**
- * Curriculum grouping above "subject" — which subjects belong to which study block.
- * Not derived from content folders (unlike subjects themselves): update this list by hand
- * when a subject moves between blocks or a new block starts.
+ * The study blocks, in curriculum order, with their display names. Which subjects a block has
+ * comes from the content folders themselves (content/{type}/block/{blockId}/{subject}/...).
  */
 export const studyBlocks: StudyBlock[] = [
-  {
-    id: "1.1",
-    label: "Block 1.1: Biology Block: Cell and Hematology",
-    subjectIds: ["histology", "biochem", "physiology"],
-  },
-  { id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System", subjectIds: ["anatomy"] },
-  { id: "1.3", label: "Block 1.3: Digestive System and Metabolism", subjectIds: [] },
+  { id: "1.1", label: "Block 1.1: Biology Block: Cell and Hematology" },
+  { id: "1.2", label: "Block 1.2: Integument and Musculoskeletal System" },
+  { id: "1.3", label: "Block 1.3: Digestive System and Metabolism" },
 ];
 
 /** Subjects announced for a block before any content has been uploaded for them. */
@@ -35,11 +29,6 @@ export function blockById(blockId: string): StudyBlock | undefined {
   return studyBlocks.find((b) => b.id === blockId);
 }
 
-/** Which study block a subject belongs to — used to build block-sectioned routes (/flashcards/:blockId/:subjectId, etc). */
-export function blockIdForSubject(subjectId: string): string | undefined {
-  return studyBlocks.find((b) => b.subjectIds.includes(subjectId))?.id;
-}
-
 export interface BlockGroup<T> {
   block: StudyBlock;
   subjects: T[];
@@ -47,10 +36,10 @@ export interface BlockGroup<T> {
 }
 
 /** Buckets a flat subject list into its study blocks, in block order, dropping empty blocks. */
-export function groupByBlock<T extends { id: string }>(subjects: T[]): BlockGroup<T>[] {
+export function groupByBlock<T extends { id: string; blockId: string }>(subjects: T[]): BlockGroup<T>[] {
   return studyBlocks
     .map((block) => {
-      const present = subjects.filter((s) => block.subjectIds.includes(s.id));
+      const present = subjects.filter((s) => s.blockId === block.id);
       return {
         block,
         subjects: present,

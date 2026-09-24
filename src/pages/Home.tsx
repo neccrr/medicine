@@ -6,9 +6,11 @@ import {
   examPackagesByBlock,
   flashcardDecks,
   flashcardSubjects,
+  moduleSubjects,
   modulesByBlockSubject,
   quizBanks,
   quizGames,
+  quizQuestionsInBlock,
   quizSubjects,
   summaries,
   summarySubjects,
@@ -19,7 +21,7 @@ import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/acti
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { subjectAccent, subjectHueStyle } from "../lib/subjectStyle";
-import { blockIdForSubject, groupByBlock } from "../lib/blocks";
+import { groupByBlock } from "../lib/blocks";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { RadialGauge } from "../components/RadialGauge";
@@ -41,7 +43,7 @@ import {
   SummaryIcon,
   TimerIcon,
 } from "../components/icons";
-import type { CardStateMap, ExamAttempt, QuizAttempt, ReadingPosition } from "../types/content";
+import type { CardStateMap, ExamAttempt, QuizAttempt, ReadingPosition, Subject } from "../types/content";
 
 interface ContinueItem {
   to: string;
@@ -74,7 +76,7 @@ function buildContinueItems(): ContinueItem[] {
     const { s, meta, position } = resumes[0];
     const chapter = meta.chapters.find((c) => c.id === position.chapterId);
     items.push({
-      to: `/ebooks/${blockIdForSubject(s.id)}/${s.id}/${position.chapterId}`,
+      to: `/ebooks/${s.blockId}/${s.id}/${position.chapterId}`,
       title: `Continue "${meta.title}"`,
       detail: chapter ? chapter.title : "Resume reading",
       subjectId: s.id,
@@ -94,7 +96,7 @@ function buildContinueItems(): ContinueItem[] {
     .slice(0, 2)
     .forEach(({ s, due }) => {
       items.push({
-        to: `/flashcards/${blockIdForSubject(s.id)}/${s.id}`,
+        to: `/flashcards/${s.blockId}/${s.id}`,
         title: `${due} card${due === 1 ? "" : "s"} due in ${s.label}`,
         detail: "Spaced-repetition review",
         subjectId: s.id,
@@ -114,7 +116,7 @@ function buildContinueItems(): ContinueItem[] {
     .forEach(({ s, due }) => {
       dueQuizSubjectIds.add(s.id);
       items.push({
-        to: `/quizzes/${blockIdForSubject(s.id)}/${s.id}`,
+        to: `/quizzes/${s.blockId}/${s.id}`,
         title: `${due} quiz question${due === 1 ? "" : "s"} due in ${s.label}`,
         detail: "Missed in a past attempt",
         subjectId: s.id,
@@ -133,7 +135,7 @@ function buildContinueItems(): ContinueItem[] {
     .slice(0, 2)
     .forEach(({ s, last }) => {
       items.push({
-        to: `/quizzes/${blockIdForSubject(s.id)}/${s.id}`,
+        to: `/quizzes/${s.blockId}/${s.id}`,
         title: `Retake ${s.label} quiz`,
         detail: `Last score ${last.score}/${last.total}`,
         subjectId: s.id,
@@ -145,29 +147,32 @@ function buildContinueItems(): ContinueItem[] {
 }
 
 function buildSubjectOverviews() {
-  const ids = new Set<string>();
-  flashcardSubjects.forEach((s) => ids.add(s.id));
-  quizSubjects.forEach((s) => ids.add(s.id));
-  ebookSubjects.forEach((s) => ids.add(s.id));
-  summarySubjects.forEach((s) => ids.add(s.id));
+  // A subject can have material in more than one block (e.g. physiology in 1.1 and 1.2), so
+  // each block gets its own card, showing only the content whose folder is in that block.
+  const all = [
+    ...flashcardSubjects,
+    ...quizSubjects,
+    ...ebookSubjects,
+    ...summarySubjects,
+    ...moduleSubjects,
+  ];
+  const pairs = new Map<string, { id: string; blockId: string }>();
+  all.forEach((s) => pairs.set(`${s.blockId}/${s.id}`, { id: s.id, blockId: s.blockId }));
+  const inBlock = (list: Subject[], id: string, blockId: string) =>
+    list.some((s) => s.id === id && s.blockId === blockId);
 
-  return Array.from(ids)
-    .sort()
-    .map((id) => {
+  return Array.from(pairs.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, { id, blockId }]) => {
       const label =
-        flashcardSubjects.find((s) => s.id === id)?.label ??
-        quizSubjects.find((s) => s.id === id)?.label ??
-        ebookSubjects.find((s) => s.id === id)?.label ??
-        summarySubjects.find((s) => s.id === id)?.label ??
-        id;
+        all.find((s) => s.id === id && s.blockId === blockId && !moduleSubjects.includes(s))?.label ??
+        id.charAt(0).toUpperCase() + id.slice(1);
 
       const facets: SubjectFacet[] = [];
       let activityScore = 0;
       let mastery: number | null = null;
 
-      const blockId = blockIdForSubject(id);
-
-      const deck = flashcardDecks[id];
+      const deck = inBlock(flashcardSubjects, id, blockId) ? flashcardDecks[id] : undefined;
       if (deck) {
         const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(id), {});
         const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
@@ -182,8 +187,9 @@ function buildSubjectOverviews() {
         });
       }
 
-      const bank = quizBanks[id];
-      const games = quizGames[id];
+      const quizHere = inBlock(quizSubjects, id, blockId);
+      const bank = quizHere ? quizBanks[id] : undefined;
+      const games = quizHere ? quizGames[id] : undefined;
       if (bank || games) {
         const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(id), []);
         const last = history[history.length - 1];
@@ -203,7 +209,7 @@ function buildSubjectOverviews() {
         });
       }
 
-      const meta = ebookMeta[id];
+      const meta = inBlock(ebookSubjects, id, blockId) ? ebookMeta[id] : undefined;
       if (meta) {
         const completedCount = readJSON<string[]>(STORAGE_KEYS.ebookCompleted(id), []).length;
         facets.push({
@@ -219,7 +225,7 @@ function buildSubjectOverviews() {
         });
       }
 
-      if (summaries[id]) {
+      if (inBlock(summarySubjects, id, blockId) && summaries[id]) {
         facets.push({
           label: "Summary",
           detail: "Written summary",
@@ -228,17 +234,17 @@ function buildSubjectOverviews() {
         });
       }
 
-      const modulePdfs = blockId ? modulesByBlockSubject[`${blockId}/${id}`] : undefined;
-      if (blockId && modulePdfs) {
+      const modulePdfs = modulesByBlockSubject[`${blockId}/${id}`];
+      if (modulePdfs) {
         facets.push({
           label: "Modules",
-          detail: `${modulePdfs.length} lecture${modulePdfs.length === 1 ? "" : "s"}`,
+          detail: `${modulePdfs.length} PDF${modulePdfs.length === 1 ? "" : "s"}`,
           to: `/modules/${blockId}/${id}`,
           icon: <SlidesIcon />,
         });
       }
 
-      return { id, label, facets, activityScore, mastery };
+      return { key, id, blockId, label, facets, activityScore, mastery };
     });
 }
 
@@ -264,7 +270,7 @@ export function Home() {
   const subjects = buildSubjectOverviews();
   const featuredId =
     subjects.length > 1
-      ? subjects.reduce((top, s) => (s.activityScore > top.activityScore ? s : top), subjects[0]).id
+      ? subjects.reduce((top, s) => (s.activityScore > top.activityScore ? s : top), subjects[0]).key
       : null;
 
   const heroTitle = streak > 0
@@ -360,7 +366,7 @@ export function Home() {
             const examPool =
               packages.length > 0
                 ? Math.max(...packages.map((p) => p.questions.length))
-                : block.subjectIds.reduce((sum, id) => sum + (quizBanks[id]?.length ?? 0), 0);
+                : quizQuestionsInBlock(block.id).length;
             // With more than one package, "last score" isn't a single number — the exam link
             // just sends the user to the picker instead of surfacing one package's history.
             // (Matches ExamPlay's own key convention: a lone package keeps the plain block key.)
@@ -384,9 +390,9 @@ export function Home() {
             <div className="subject-grid">
               {blockSubjects.map((subject) => (
                 <div
-                  key={subject.id}
+                  key={subject.key}
                   className={
-                    subject.id === featuredId
+                    subject.key === featuredId
                       ? "subject-card subject-card-featured subject-tinted"
                       : "subject-card subject-tinted"
                   }

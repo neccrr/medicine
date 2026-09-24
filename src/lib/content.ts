@@ -126,6 +126,28 @@ function htmlName(path: string): string {
   return match ? match[1].replace(/[-_]/g, " ") : "Quiz";
 }
 
+function blockFromPath(path: string): string {
+  const match = path.match(/\/block\/([^/]+)\//);
+  return match ? match[1] : "";
+}
+
+/**
+ * Content keys stay subject ids within one content type; this records each subject's block for
+ * that type (from its folder) and notes any subject that appears in two blocks of the same type,
+ * which the id-keyed maps can't hold apart. contentIntegrity.test.ts asserts there are none.
+ */
+export const subjectBlockCollisions: string[] = [];
+function blockBySubject(paths: string[], subjectOf: (path: string) => string, kind: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const path of paths) {
+    const id = subjectOf(path);
+    const blockId = blockFromPath(path);
+    if (out[id] && out[id] !== blockId) subjectBlockCollisions.push(`${kind}:${id} in ${out[id]} and ${blockId}`);
+    out[id] = blockId;
+  }
+  return out;
+}
+
 function labelize(id: string): string {
   return id.charAt(0).toUpperCase() + id.slice(1);
 }
@@ -174,9 +196,10 @@ export const summaries: Record<string, string> = Object.fromEntries(
 
 export const tips: string[] = Object.values(tipsModule)[0] ?? [];
 
+const flashcardBlocks = blockBySubject(Object.keys(flashcardModules), subjectFromPath, "flashcards");
 export const flashcardSubjects: Subject[] = Object.keys(flashcardDecks)
   .sort()
-  .map((id) => ({ id, label: labelize(id) }));
+  .map((id) => ({ id, label: labelize(id), blockId: flashcardBlocks[id] }));
 
 export interface QuizGame {
   name: string;
@@ -192,15 +215,25 @@ for (const list of Object.values(quizGames)) {
   list.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+const quizBlocks = {
+  ...blockBySubject(Object.keys(quizGameModules), quizGameSubject, "quiz games"),
+  ...blockBySubject(Object.keys(quizModules), subjectFromPath, "quizzes"),
+};
 export const quizSubjects: Subject[] = Array.from(
   new Set([...Object.keys(quizBanks), ...Object.keys(quizGames)]),
 )
   .sort()
-  .map((id) => ({ id, label: labelize(id) }));
+  .map((id) => ({ id, label: labelize(id), blockId: quizBlocks[id] }));
 
+/** Every quiz-bank question from the subjects whose quiz folder is in this block (pooled exam fallback). */
+export function quizQuestionsInBlock(blockId: string): QuizQuestion[] {
+  return quizSubjects.filter((s) => s.blockId === blockId).flatMap((s) => quizBanks[s.id] ?? []);
+}
+
+const summaryBlocks = blockBySubject(Object.keys(summaryModules), subjectFromMdPath, "summaries");
 export const summarySubjects: Subject[] = Object.keys(summaries)
   .sort()
-  .map((id) => ({ id, label: labelize(id) }));
+  .map((id) => ({ id, label: labelize(id), blockId: summaryBlocks[id] }));
 
 const ebookMetaFromFiles: Record<string, EbookMeta> = Object.fromEntries(
   Object.entries(ebookMetaModules).map(([path, meta]) => [
@@ -243,9 +276,14 @@ for (const subjectId of Object.keys(ebookPdfs)) {
   }
 }
 
+const ebookBlocks = {
+  ...blockBySubject(Object.keys(ebookPdfModules), ebookPdfSubject, "ebook PDFs"),
+  ...blockBySubject(Object.keys(ebookChapterModules), (p) => ebookChapterKey(p).split("/")[0], "ebook chapters"),
+  ...blockBySubject(Object.keys(ebookMetaModules), subjectFromPath, "ebooks"),
+};
 export const ebookSubjects: Subject[] = Object.keys(ebookMeta)
   .sort()
-  .map((id) => ({ id, label: ebookMeta[id].title }));
+  .map((id) => ({ id, label: ebookMeta[id].title, blockId: ebookBlocks[id] }));
 
 export interface ModulePdf {
   name: string;
@@ -263,11 +301,10 @@ for (const list of Object.values(modulesByBlockSubject)) {
   list.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/** Subject ids that have at least one module PDF somewhere, across all blocks. */
-export const moduleSubjectIds: Set<string> = new Set(
-  Object.keys(modulesByBlockSubject).map((key) => key.split("/")[1]),
-);
-
-export const moduleSubjects: Subject[] = Array.from(moduleSubjectIds)
+/** One entry per block a subject has module PDFs in; modules are already keyed by block. */
+export const moduleSubjects: Subject[] = Object.keys(modulesByBlockSubject)
   .sort()
-  .map((id) => ({ id, label: labelize(id) }));
+  .map((key) => {
+    const [blockId, id] = key.split("/");
+    return { id, label: labelize(id), blockId };
+  });

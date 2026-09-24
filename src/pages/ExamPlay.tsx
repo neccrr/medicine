@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { examPackagesByBlock, quizBanks } from "../lib/content";
+import { examPackagesByBlock, quizQuestionsInBlock } from "../lib/content";
 import { blockById } from "../lib/blocks";
 import { useExamHistory } from "../hooks/useExamHistory";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -53,7 +53,7 @@ export function ExamPlay() {
         : packages.find((p) => p.id === packageId);
   const showPackagePicker = packages.length > 1 && !chosenPackage;
   const pool = useMemo(
-    () => chosenPackage?.questions ?? block?.subjectIds.flatMap((id) => quizBanks[id] ?? EMPTY_BANK) ?? EMPTY_BANK,
+    () => chosenPackage?.questions ?? (block ? quizQuestionsInBlock(block.id) : EMPTY_BANK),
     [block, chosenPackage],
   );
   const format = useMemo(() => buildExamFormat(pool.length), [pool]);
