@@ -52,6 +52,20 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
+          {
+            // Ebook slide figures (~7.5MB total) are cached as each chapter is read rather
+            // than precached, for the same first-visit reason as the PDFs above.
+            urlPattern: ({ url }) => url.pathname.startsWith('/ebook-figures/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'ebook-figure-cache',
+              expiration: {
+                maxEntries: 400,
+                maxAgeSeconds: 60 * 60 * 24 * 180,
+              },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
         ],
       },
     }),

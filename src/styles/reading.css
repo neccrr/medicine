@@ -68,6 +68,21 @@
   border-radius: calc(var(--radius) - 4px);
 }
 
+.summary-content figure.slide-figure img {
+  max-height: 560px;
+  width: auto;
+  background: #fff;
+}
+
+.summary-content figure.diagram .figure-source {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+}
+
 .summary-content figure.micrograph-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

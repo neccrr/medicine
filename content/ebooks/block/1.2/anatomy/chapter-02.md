@@ -13,6 +13,11 @@ Fertilization is the meeting of a sperm and an oocyte. It usually takes
 place in the **ampulla of the uterine (fallopian) tube**, and it has four
 steps:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p06_0.webp" alt="Fertilization" loading="lazy" width="1100" height="760" />
+  <figcaption>Fertilization: the sperm crosses the corona radiata and zona pellucida, the oocyte completes meiosis II, and the male and female pronuclei meet. <span class="figure-source">Slide 6, Basic Embryology (Jidan)</span></figcaption>
+</figure>
+
 1. **Capacitation.** Sperm freshly deposited in the female tract cannot
    fertilize. Over several hours in the uterus and tube, cholesterol and
    glycoproteins are stripped from the sperm head membrane, making it
@@ -53,6 +58,11 @@ the sperm) and starts cleavage.
 - **Implantation.** The blastocyst sheds the zona pellucida and attaches
   to the endometrium around day 6, usually on the posterior wall of the
   uterine body. It is fully embedded by the end of week 2.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p10_1.webp" alt="Early and later blastocyst" loading="lazy" width="1100" height="393" />
+  <figcaption>Early and later blastocyst: embryoblast (inner cell mass), trophoblast and blastocyst cavity. <span class="figure-source">Slide 10, Basic Embryology (Jidan)</span></figcaption>
+</figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 640 200" role="img" aria-labelledby="w1-title w1-desc">
@@ -112,6 +122,11 @@ the sperm) and starts cleavage.
 Week 2 is often called the "week of twos", because almost everything
 splits in two:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p12_0.webp" alt="The implanting embryo around day 8" loading="lazy" width="1100" height="825" />
+  <figcaption>The implanting embryo around day 8: cytotrophoblast, syncytiotrophoblast, epiblast, hypoblast and amniotic cavity. <span class="figure-source">Slide 12, Basic Embryology (Jidan)</span></figcaption>
+</figure>
+
 - The **trophoblast** divides into an inner, cellular
   **cytotrophoblast** and an outer **syncytiotrophoblast**, a mass of fused
   cells that erodes into the endometrium and its blood vessels. The
@@ -129,6 +144,11 @@ splits in two:
 
 **Gastrulation** turns the two-layered disc into three layers. It is the
 defining event of week 3.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p17_0.webp" alt="Gastrulation" loading="lazy" width="1100" height="410" />
+  <figcaption>Gastrulation: epiblast cells invaginate through the primitive streak (Indonesian: sel-sel mesoderm mengalami invaginasi = mesoderm cells invaginating). <span class="figure-source">Slide 17, Basic Embryology (Jidan)</span></figcaption>
+</figure>
 
 1. A thickened groove, the **primitive streak**, appears in the midline of
    the epiblast at the caudal end of the disc. At its cranial end is a
@@ -148,6 +168,11 @@ So all three germ layers come from the epiblast.
 Cells passing through the primitive node migrate cranially in the midline
 and form a rod, the **notochord**. It has two jobs to remember:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p18_0.webp" alt="The notochord in the midline" loading="lazy" width="1100" height="402" />
+  <figcaption>The notochord in the midline. It induces neurulation through Sonic hedgehog and later becomes the nucleus pulposus. <span class="figure-source">Slide 18, Basic Embryology (Jidan)</span></figcaption>
+</figure>
+
 - **Induction.** The notochord secretes **Sonic hedgehog (SHH)**, which
   signals the overlying ectoderm to become neural plate. This starts
   neurulation.
@@ -159,6 +184,16 @@ and form a rod, the **notochord**. It has two jobs to remember:
 
 **Neurulation** is how the ectoderm over the notochord becomes the central
 nervous system:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p21_0.webp" alt="Neural folds (lipatan saraf) rising on each side of the neural groove (alur saraf), with somites beside them" loading="lazy" width="644" height="889" />
+  <figcaption>Neural folds (lipatan saraf) rising on each side of the neural groove (alur saraf), with somites beside them. <span class="figure-source">Slide 21, Basic Embryology (Jidan)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p21_2.webp" alt="Day 23" loading="lazy" width="751" height="867" />
+  <figcaption>Day 23: the neural tube has closed except at the anterior and posterior neuropores. <span class="figure-source">Slide 21, Basic Embryology (Jidan)</span></figcaption>
+</figure>
 
 1. The notochord induces the overlying ectoderm to thicken into the
    **neural plate**.
@@ -199,6 +234,11 @@ the first trimester.
 
 The mesoderm on each side of the notochord organises into three
 longitudinal strips, from medial to lateral.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p24_0.webp" alt="Mesoderm dividing into paraxial, intermediate and lateral plate parts; the lateral plate splits into parietal and visceral layers" loading="lazy" width="1100" height="731" />
+  <figcaption>Mesoderm dividing into paraxial, intermediate and lateral plate parts; the lateral plate splits into parietal and visceral layers. <span class="figure-source">Slide 24, Basic Embryology (Jidan)</span></figcaption>
+</figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 640 260" role="img" aria-labelledby="meso-title meso-desc">
@@ -255,6 +295,11 @@ The paraxial mesoderm beside the neural tube segments into paired blocks,
 the **somites** (about 42–44 pairs appear, though some later regress).
 Each somite divides into three parts:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p26_0.webp" alt="A somite differentiating into sclerotome, dermatome and myotome" loading="lazy" width="1100" height="596" />
+  <figcaption>A somite differentiating into sclerotome, dermatome and myotome. <span class="figure-source">Slide 26, Basic Embryology (Jidan)</span></figcaption>
+</figure>
+
 - **Sclerotome** → the vertebrae and ribs (cartilage and bone of the axial
   skeleton). Each vertebral body forms from the lower half of one
   sclerotome fused with the upper half of the next, which is why spinal
@@ -292,6 +337,11 @@ gut**. It is closed at the cranial end by the **oropharyngeal membrane**
 anus). The gut is divided into three parts, each with its own artery,
 which remains true in the adult:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p30_0.webp" alt="Endoderm folded into the primitive gut, with its foregut, midgut and hindgut derivatives" loading="lazy" width="1100" height="549" />
+  <figcaption>Endoderm folded into the primitive gut, with its foregut, midgut and hindgut derivatives. <span class="figure-source">Slide 30, Basic Embryology (Jidan)</span></figcaption>
+</figure>
+
 | Part | Adult derivatives (epithelium) | Artery |
 | --- | --- | --- |
 | **Foregut** | Pharynx, oesophagus, stomach, first half of the duodenum, liver, gallbladder, pancreas; also the respiratory tract | Coeliac trunk |
@@ -317,6 +367,11 @@ mesoderm.
 The body looks symmetrical from outside but not inside: the heart points
 left, the liver sits right, and the stomach lies in the left upper
 abdomen. This left–right asymmetry is set during gastrulation.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p33_0.webp" alt="Left-sided signalling at the primitive node" loading="lazy" width="1100" height="571" />
+  <figcaption>Left-sided signalling at the primitive node: FGF8, Nodal, Lefty2 and PITX2, with Lefty1 and the notochord (SHH) as a midline barrier. <span class="figure-source">Slide 33, Basic Embryology (Jidan)</span></figcaption>
+</figure>
 
 - Cilia on the **primitive node** beat in a way that sweeps fluid to the
   left.

@@ -20,6 +20,16 @@ The os coxae forms from three bones that fuse at the **acetabulum**, the
 socket for the femoral head: the **ilium** above, the **ischium** behind
 and below, and the **pubis** in front.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p06_0.webp" alt="Os coxae, lateral view, with its landmarks" loading="lazy" width="1100" height="872" />
+  <figcaption>Os coxae, lateral view, with its landmarks. <span class="figure-source">Slide 6, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p07_0.webp" alt="Os coxae from the lateral and medial sides" loading="lazy" width="1100" height="499" />
+  <figcaption>Os coxae from the lateral and medial sides. <span class="figure-source">Slide 7, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
 - **Ilium**:
   - the **crista iliaca** (iliac crest), ending in front at the **spina
     iliaca anterior superior (SIAS/ASIS)** and behind at the **spina
@@ -47,6 +57,11 @@ can all be felt through the skin.
 ### Femur
 
 The longest and strongest bone of the body.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p11_0.webp" alt="The femur, anterior and posterior views" loading="lazy" width="1078" height="1232" />
+  <figcaption>The femur, anterior and posterior views. <span class="figure-source">Slide 11, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 **Proximal end:**
 
@@ -83,6 +98,11 @@ quadriceps and increases its leverage.
 
 The **tibia** is the medial, weight-bearing bone of the leg.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p15_0.webp" alt="Tibia and fibula, anterior and posterior views" loading="lazy" width="1100" height="500" />
+  <figcaption>Tibia and fibula, anterior and posterior views. <span class="figure-source">Slide 15, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
 - **Condylus medialis** and **condylus lateralis**, whose flat upper
   surfaces form the **facies articularis superior** (tibial plateau).
 - The **eminentia intercondylaris**, with medial and lateral tubercles.
@@ -115,6 +135,16 @@ anchors muscles and stabilises the ankle.
 - **5 metatarsals** (I–V).
 - **14 phalanges**: the great toe (*hallux*) has two, the other toes three
   each.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p20_0.webp" alt="Bones of the foot from above and below (Indonesian" loading="lazy" width="1100" height="1015" />
+  <figcaption>Bones of the foot from above and below (Indonesian: tulang = bone). <span class="figure-source">Slide 20, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p22_0.webp" alt="The Chopart (red) and Lisfranc (blue) joint lines" loading="lazy" width="1100" height="944" />
+  <figcaption>The Chopart (red) and Lisfranc (blue) joint lines. <span class="figure-source">Slide 22, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 Two joint lines are used in amputation and fracture description:
 
@@ -194,6 +224,11 @@ Two joint lines are used in amputation and fracture description:
 | **Art. tibiofibularis distalis** | Distal fibula ↔ fibular notch of tibia | **Syndesmosis** | Ligg. tibiofibularia anterius and posterius, interosseous ligament |
 | **Art. talocruralis** (ankle) | Tibia and fibula (the "mortise") ↔ trochlea of the talus | **Hinge** (trochlear shape) | Medial: **lig. deltoideum** (tibionavicular, tibiocalcaneal, anterior and posterior tibiotalar parts). Lateral: **lig. talofibulare anterius**, **lig. calcaneofibulare**, **lig. talofibulare posterius**. |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p14_0.webp" alt="The knee joint" loading="lazy" width="1100" height="546" />
+  <figcaption>The knee joint: cruciate and collateral ligaments and the menisci. <span class="figure-source">Slide 14, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
 - **Cruciate ligaments.** The **ACL** prevents the tibia sliding forward
   on the femur; the **PCL** prevents it sliding backward. They cross like
   an X inside the knee.
@@ -220,6 +255,11 @@ Two joint lines are used in amputation and fracture description:
   - m. quadratus femoris;
   - m. obturatorius externus.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p29_1.webp" alt="Iliopsoas" loading="lazy" width="1071" height="1112" />
+  <figcaption>Iliopsoas: psoas major and iliacus. <span class="figure-source">Slide 29, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
   Piriformis is the landmark muscle of the gluteal region (see the
   topography section).
 
@@ -228,6 +268,16 @@ Two joint lines are used in amputation and fracture description:
 The shape of the buttock comes mainly from **m. gluteus maximus** and the
 overlying fat. The region extends from the **iliac crest** above to the
 **gluteal fold** below.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p27_2.webp" alt="Deep gluteal muscles, with piriformis at the greater sciatic foramen" loading="lazy" width="676" height="790" />
+  <figcaption>Deep gluteal muscles, with piriformis at the greater sciatic foramen. <span class="figure-source">Slide 27, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p28_0.webp" alt="Gluteus maximus, tensor fasciae latae and the iliotibial tract, lateral view" loading="lazy" width="845" height="1051" />
+  <figcaption>Gluteus maximus, tensor fasciae latae and the iliotibial tract, lateral view. <span class="figure-source">Slide 28, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 | Muscle | Origin → insertion | Action | Nerve |
 | --- | --- | --- | --- |
@@ -247,6 +297,21 @@ buttock, well away from the sciatic nerve.
 
 **Anterior compartment (extensors of the knee), supplied by the femoral
 nerve:**
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p31_0.webp" alt="Anterior and medial thigh muscles" loading="lazy" width="1081" height="1158" />
+  <figcaption>Anterior and medial thigh muscles. <span class="figure-source">Slide 31, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p32_0.webp" alt="The adductor muscles" loading="lazy" width="731" height="1314" />
+  <figcaption>The adductor muscles. <span class="figure-source">Slide 32, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p33_0.webp" alt="The hamstrings" loading="lazy" width="892" height="1222" />
+  <figcaption>The hamstrings. <span class="figure-source">Slide 33, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 - **M. quadriceps femoris**: **rectus femoris** (from the AIIS, so it also
   flexes the hip), **vastus lateralis**, **vastus medialis** and **vastus
@@ -284,6 +349,11 @@ also rotates the flexed knee laterally.
 ### Leg (crus)
 
 The leg has three compartments, each with its own nerve.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p50_0.webp" alt="Cross-section of the leg, with its compartments and their nerves and vessels" loading="lazy" width="1100" height="1071" />
+  <figcaption>Cross-section of the leg, with its compartments and their nerves and vessels. <span class="figure-source">Slide 50, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 640 330" role="img" aria-labelledby="leg-title leg-desc">
@@ -355,6 +425,11 @@ they share the same nerve (deep fibular).
     flexor digiti minimi brevis (and a small m. opponens digiti minimi, not
     always present).
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p38_0.webp" alt="Muscles of the dorsum of the foot" loading="lazy" width="1100" height="1003" />
+  <figcaption>Muscles of the dorsum of the foot. <span class="figure-source">Slide 38, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
   The sole's muscles are supplied by the medial and lateral **plantar
   nerves**, the terminal branches of the tibial nerve.
 
@@ -364,6 +439,11 @@ they share the same nerve (deep fibular).
 
 The sacrospinous and sacrotuberous ligaments convert the greater and
 lesser sciatic notches into two foramina.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p41_0.webp" alt="The greater and lesser sciatic foramina, with piriformis dividing the greater foramen" loading="lazy" width="972" height="1067" />
+  <figcaption>The greater and lesser sciatic foramina, with piriformis dividing the greater foramen. <span class="figure-source">Slide 41, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 - **Foramen ischiadicum majus** (greater sciatic foramen): **m.
   piriformis** passes through it and divides it into two.
@@ -386,10 +466,20 @@ A gap at the top of the obturator membrane, under the obturator groove of
 the pubis. It carries the **obturator nerve, artery and vein** from the
 pelvis into the medial thigh.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p10_0.webp" alt="The obturator foramen, membrane and canal" loading="lazy" width="1100" height="742" />
+  <figcaption>The obturator foramen, membrane and canal. <span class="figure-source">Slide 10, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
 ### Lacuna musculorum and lacuna vasorum
 
 The space under the **inguinal ligament** is divided by the **arcus
 iliopectineus** into two:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p44_0.webp" alt="The space under the inguinal ligament, divided into the muscular and vascular lacunae" loading="lazy" width="978" height="1004" />
+  <figcaption>The space under the inguinal ligament, divided into the muscular and vascular lacunae. <span class="figure-source">Slide 44, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 - **Lacuna musculorum** (lateral):
   - m. iliopsoas;
@@ -420,6 +510,11 @@ iliopectineus** into two:
   below and lateral to the pubic tubercle. The **great saphenous vein**
   passes through it to join the femoral vein, along with the superficial
   external pudendal vessels and lymph vessels.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p45_0.webp" alt="The femoral sheath, femoral ring and canal" loading="lazy" width="1077" height="1057" />
+  <figcaption>The femoral sheath, femoral ring and canal. <span class="figure-source">Slide 45, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 ### Trigonum femorale (femoral triangle)
 
@@ -501,6 +596,11 @@ femoral triangle to the **adductor hiatus** in adductor magnus.
 
 The diamond-shaped hollow behind the knee.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p48_0.webp" alt="The popliteal fossa and its contents" loading="lazy" width="1100" height="915" />
+  <figcaption>The popliteal fossa and its contents. <span class="figure-source">Slide 48, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
 - **Boundaries**:
   - superomedial: **semitendinosus and semimembranosus**;
   - superolateral: **biceps femoris**;
@@ -520,6 +620,11 @@ The diamond-shaped hollow behind the knee.
 
 The tunnel formed between the talus and calcaneus, filled mainly by the
 strong interosseous talocalcaneal ligament.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p49_0.webp" alt="Structures behind the medial malleolus" loading="lazy" width="1100" height="855" />
+  <figcaption>Structures behind the medial malleolus: Tom, Dick, And Very Nervous Harry. <span class="figure-source">Slide 49, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 It is different from the **tarsal tunnel**, behind the medial malleolus
 under the flexor retinaculum. That tunnel carries, from front to back:
@@ -553,6 +658,16 @@ Mnemonic: "**T**om, **D**ick **A**nd **V**ery **N**ervous **H**arry".
 - The **aa. glutea superior and inferior** (from the internal iliac
   artery) supply the buttock. The **a. obturatoria** supplies the medial
   thigh.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p52_0.webp" alt="Arterial sequence of the lower limb" loading="lazy" width="1072" height="576" />
+  <figcaption>Arterial sequence of the lower limb. <span class="figure-source">Slide 52, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p52_1.webp" alt="Arteries of the thigh, anterior and posterior views" loading="lazy" width="1100" height="638" />
+  <figcaption>Arteries of the thigh, anterior and posterior views. <span class="figure-source">Slide 52, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
 **Femoral head blood supply.** The head is supplied mainly by branches of
 the **medial circumflex femoral artery**, which run up along the neck.
@@ -601,6 +716,11 @@ necrosis below).
       the **deep fibular nerve** (anterior compartment, dorsal foot
       muscles, first web space).
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p55_0.webp" alt="Cutaneous nerve territories of the lower limb" loading="lazy" width="862" height="1184" />
+  <figcaption>Cutaneous nerve territories of the lower limb. <span class="figure-source">Slide 55, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
+
 ## Clinical correlations
 
 1. **Congenital talipes equinovarus (CTEV, club foot).** A congenital
@@ -638,6 +758,11 @@ necrosis below).
      together, which loads the medial compartment.
    - **Genu valgum** (knock knees): the knees are together and the ankles
      apart, which loads the lateral compartment.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-07-inf_p56_0.webp" alt="Normal alignment compared with genu varum and genu valgum" loading="lazy" width="666" height="607" />
+  <figcaption>Normal alignment compared with genu varum and genu valgum. <span class="figure-source">Slide 56, Extremitas Inferior (Firman)</span></figcaption>
+</figure>
 
    Mild varum in infants and valgum in toddlers are normal stages of
    development.

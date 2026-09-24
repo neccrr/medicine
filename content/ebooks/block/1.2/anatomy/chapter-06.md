@@ -18,6 +18,11 @@ and manipulate. It has two parts:
 An S-shaped bone lying horizontally at the root of the neck. It is the
 only bony connection between the upper limb and the trunk.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p04_0.webp" alt="Right scapula and clavicle, anterior view" loading="lazy" width="1100" height="948" />
+  <figcaption>Right scapula and clavicle, anterior view. <span class="figure-source">Slide 4, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 - **Extremitas sternalis**: articulates with the manubrium
   (sternoclavicular joint).
 - **Extremitas acromialis**: articulates with the acromion
@@ -38,6 +43,11 @@ outstretched hand.
 
 A flat, triangular bone on the posterior thoracic wall (over ribs II–VII).
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p06_0.webp" alt="The scapula from the front, side and back" loading="lazy" width="901" height="1112" />
+  <figcaption>The scapula from the front, side and back. <span class="figure-source">Slide 6, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 - **Two surfaces**:
   - **facies costalis (anterior)**: the **fossa subscapularis**;
   - **facies posterior**: divided by the **spina scapulae** into the
@@ -55,6 +65,11 @@ A flat, triangular bone on the posterior thoracic wall (over ribs II–VII).
 
 ## Bones of the free limb
 
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p10_0.webp" alt="Skeleton of the upper limb" loading="lazy" width="596" height="1192" />
+  <figcaption>Skeleton of the upper limb. <span class="figure-source">Slide 10, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
 ### Humerus
 
 **Proximal end:**
@@ -193,6 +208,16 @@ interossea**, a syndesmosis.
 | **Art. radiocarpalis** (wrist) | Distal radius and disc ↔ scaphoid, lunate, triquetrum | Ellipsoid (condyloid) | Radial and ulnar collateral, palmar and dorsal radiocarpal ligaments |
 | **Artt. intercarpales**, **carpometacarpales** | Between carpals; carpals ↔ metacarpals | Mostly plane; the **CMC joint of the thumb is a saddle** joint, which allows opposition | |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p20_0.webp" alt="The elbow joint and its ligaments" loading="lazy" width="1100" height="751" />
+  <figcaption>The elbow joint and its ligaments. <span class="figure-source">Slide 20, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p21_0.webp" alt="Joints of the wrist and hand" loading="lazy" width="1100" height="705" />
+  <figcaption>Joints of the wrist and hand. <span class="figure-source">Slide 21, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 The deck calls the shoulder joint "saddle in shape, ball in function",
 the same wording as for the sternoclavicular joint. By standard
 references the glenohumeral joint is a true **ball-and-socket** joint; only
@@ -226,6 +251,11 @@ The deck names the nerve to latissimus dorsi "n. thoracica". It is the
 | **M. subclavius** | Rib I and its cartilage | Underside of clavicle | Anchors and depresses the clavicle | N. subclavius (from the upper trunk) |
 | **M. serratus anterior** | Outer surfaces of ribs I–VIII | Anterior surface of the medial border of scapula | Protracts the scapula and holds it against the chest wall; rotates it upward | **N. thoracicus longus** |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p28_0.webp" alt="Serratus anterior on the side of the chest wall" loading="lazy" width="1100" height="643" />
+  <figcaption>Serratus anterior on the side of the chest wall. <span class="figure-source">Slide 28, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 ### Shoulder (deltoid and scapular) region
 
 | Muscle | Origin | Insertion | Action | Nerve |
@@ -237,6 +267,16 @@ The deck names the nerve to latissimus dorsi "n. thoracica". It is the
 | **M. subscapularis** | Subscapular fossa | **Lesser tubercle** | Medially rotates the arm | Nn. subscapulares superior and inferior |
 | **M. teres major** | Inferior angle of scapula | Crest of the lesser tubercle | Adducts, extends and medially rotates the arm | N. subscapularis inferior |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p30_0.webp" alt="Deltoid" loading="lazy" width="715" height="1022" />
+  <figcaption>Deltoid. <span class="figure-source">Slide 30, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p32_0.webp" alt="The rotator cuff" loading="lazy" width="1100" height="480" />
+  <figcaption>The rotator cuff: supraspinatus, infraspinatus, teres minor and subscapularis. <span class="figure-source">Slide 32, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 **The rotator cuff** is four muscles whose tendons blend with the
 shoulder capsule and hold the humeral head in the glenoid:
 **S**upraspinatus, **I**nfraspinatus, **T**eres minor, **S**ubscapularis
@@ -247,6 +287,11 @@ squeezed under the acromion, is the one most often torn or inflamed.
 
 The arm has two compartments separated by the humerus and
 intermuscular septa.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p34_1.webp" alt="Triceps brachii" loading="lazy" width="964" height="1072" />
+  <figcaption>Triceps brachii: long, lateral and medial heads. <span class="figure-source">Slide 34, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
 
 **Anterior compartment (flexors), all supplied by the n.
 musculocutaneus:**
@@ -267,6 +312,21 @@ musculocutaneus:**
 
 **Anterior compartment (flexors and pronators)**, arising mostly from the
 **medial epicondyle** (common flexor origin), in layers:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p37_0.webp" alt="Flexor muscles of the forearm, by layer" loading="lazy" width="1100" height="742" />
+  <figcaption>Flexor muscles of the forearm, by layer. <span class="figure-source">Slide 37, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p39_0.webp" alt="Superficial extensor muscles of the forearm" loading="lazy" width="1001" height="996" />
+  <figcaption>Superficial extensor muscles of the forearm. <span class="figure-source">Slide 39, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p40_0.webp" alt="Deep extensor muscles of the forearm" loading="lazy" width="1100" height="860" />
+  <figcaption>Deep extensor muscles of the forearm. <span class="figure-source">Slide 40, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
 
 - **Superficial layer**: m. pronator teres, m. flexor carpi radialis, m.
   palmaris longus, m. flexor carpi ulnaris. (The deck also lists flexor
@@ -324,6 +384,11 @@ the "**LOAF**" muscles, which get the median nerve: the first two
 
 A pyramid-shaped space between the arm and the chest wall.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p45_0.webp" alt="Walls of the axilla" loading="lazy" width="942" height="1092" />
+  <figcaption>Walls of the axilla. <span class="figure-source">Slide 45, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 | Wall | Formed by |
 | --- | --- |
 | Anterior | Pectoralis major and minor |
@@ -352,9 +417,19 @@ A pyramid-shaped space between the arm and the chest wall.
 | **Spatium triangulare** (triangular space) | Teres minor above, teres major below, long head of triceps laterally | Circumflex scapular artery |
 | **Interval triangulare** (triangular interval) | Teres major above, long head of triceps medially, lateral head of triceps/humerus laterally | **Radial nerve** and deep brachial artery (a. profunda brachii) |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p48_0.webp" alt="The quadrangular space, triangular space and triangular interval, with their contents" loading="lazy" width="1100" height="882" />
+  <figcaption>The quadrangular space, triangular space and triangular interval, with their contents. <span class="figure-source">Slide 48, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 ### Fossa cubiti (cubital fossa)
 
 A triangular hollow in front of the elbow.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p46_0.webp" alt="Boundaries of the cubital fossa (Indonesian" loading="lazy" width="1058" height="1025" />
+  <figcaption>Boundaries of the cubital fossa (Indonesian: garis antara epicondyli = line between the epicondyles). <span class="figure-source">Slide 46, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
 
 - **Boundaries**:
   - superior: an imaginary line between the two epicondyles;
@@ -382,6 +457,11 @@ A triangular hollow in front of the elbow.
 A tunnel at the wrist formed by the arch of carpal bones, roofed by the
 **retinaculum musculorum flexorum** (transverse carpal ligament).
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p47_1.webp" alt="The carpal tunnel in cross-section" loading="lazy" width="1100" height="655" />
+  <figcaption>The carpal tunnel in cross-section: flexor tendons and the median nerve under the flexor retinaculum. <span class="figure-source">Slide 47, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 - **Attachments of the roof**:
   - laterally, the scaphoid tubercle and trapezium;
   - medially, the pisiform and the hook of the hamate.
@@ -398,6 +478,11 @@ retinaculum (through Guyon's canal).
 
 The hollow on the back of the wrist at the base of the thumb, visible when
 the thumb is extended.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p49_0.webp" alt="The anatomical snuffbox, with the radial artery in its floor" loading="lazy" width="1100" height="579" />
+  <figcaption>The anatomical snuffbox, with the radial artery in its floor. <span class="figure-source">Slide 49, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
 
 - **Medial border**: tendon of extensor pollicis longus.
 - **Lateral border**: tendons of extensor pollicis brevis and abductor
@@ -460,6 +545,16 @@ even when the first radiograph looks normal.
   <figcaption>One artery, three names: subclavian → axillary (at rib I) → brachial (at teres major). The brachial artery splits in the cubital fossa, and the radial and ulnar arteries rejoin in the palm as two arches.</figcaption>
 </figure>
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p52_0.webp" alt="Arteries of the shoulder and arm, from the subclavian to the brachial artery" loading="lazy" width="1100" height="1004" />
+  <figcaption>Arteries of the shoulder and arm, from the subclavian to the brachial artery. <span class="figure-source">Slide 52, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p53_0.webp" alt="Arteries of the forearm and hand" loading="lazy" width="817" height="1054" />
+  <figcaption>Arteries of the forearm and hand. <span class="figure-source">Slide 53, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 - The **a. subclavia** becomes the **a. axillaris** at the outer border of
   rib I.
 - The axillary artery becomes the **a. brachialis** at the lower border of
@@ -490,10 +585,20 @@ even when the first radiograph looks normal.
   - in the cubital fossa they are linked by the **v. mediana cubiti**, the
     usual vein for taking blood.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p54_1.webp" alt="Deep (vena profunda) and superficial (vena superficialis) veins of the upper limb" loading="lazy" width="1100" height="836" />
+  <figcaption>Deep (vena profunda) and superficial (vena superficialis) veins of the upper limb. <span class="figure-source">Slide 54, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 ### The brachial plexus
 
 The whole upper limb is supplied by the **plexus brachialis**, formed by
 the ventral rami of **C5–T1**. It is organised in five stages:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p56_0.webp" alt="The brachial plexus" loading="lazy" width="1100" height="866" />
+  <figcaption>The brachial plexus: roots, trunks, divisions, cords and terminal branches. <span class="figure-source">Slide 56, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
 
 1. **Roots**: C5, C6, C7, C8, T1.
 2. **Trunks**:
@@ -588,6 +693,11 @@ The **n. suprascapularis** comes from the superior trunk.
 All lymph from the upper limb drains to the **axillary lymph nodes**, in
 five groups:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p57_0.webp" alt="Axillary lymph node groups and the drainage of the breast" loading="lazy" width="1100" height="774" />
+  <figcaption>Axillary lymph node groups and the drainage of the breast. <span class="figure-source">Slide 57, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 | Group | Position | Drains |
 | --- | --- | --- |
 | **Lateral** (humeral, brachial) | Along the axillary vein | Most of the upper limb |
@@ -614,10 +724,35 @@ axillary nodes are examined, and often removed, in breast cancer.
 | **Winged scapula** | **Long thoracic nerve** (e.g. in axillary surgery) | The medial border of the scapula lifts off the chest wall when the patient pushes against a wall. The patient cannot raise the arm fully above the head. |
 | **Surgical neck fracture** | **Axillary nerve** | Weak abduction (deltoid) and numbness over the lower deltoid ("regimental badge" area) |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p59_0.webp" alt="Course of the median, ulnar and radial nerves" loading="lazy" width="1100" height="718" />
+  <figcaption>Course of the median, ulnar and radial nerves. <span class="figure-source">Slide 59, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p61_0.webp" alt="Wrist drop after radial nerve injury" loading="lazy" width="950" height="588" />
+  <figcaption>Wrist drop after radial nerve injury. <span class="figure-source">Slide 61, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p61_1.webp" alt="Carpal tunnel syndrome" loading="lazy" width="1012" height="784" />
+  <figcaption>Carpal tunnel syndrome: numbness in the median nerve territory of the hand. <span class="figure-source">Slide 61, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p62_0.webp" alt="Winged scapula after long thoracic nerve injury" loading="lazy" width="846" height="1128" />
+  <figcaption>Winged scapula after long thoracic nerve injury. <span class="figure-source">Slide 62, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
+
 ### Fracture of the humerus
 
 The three nerves in contact with the humerus are each at risk at a
 typical fracture site:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p63_0.webp" alt="Radiograph of a humeral shaft fracture, where the radial nerve is at risk" loading="lazy" width="626" height="1084" />
+  <figcaption>Radiograph of a humeral shaft fracture, where the radial nerve is at risk. <span class="figure-source">Slide 63, Extremitas Superior (Dapa)</span></figcaption>
+</figure>
 
 - the **axillary nerve** at the surgical neck;
 - the **radial nerve** in the radial groove (mid-shaft fracture), which is

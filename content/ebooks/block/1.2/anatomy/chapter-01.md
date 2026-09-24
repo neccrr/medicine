@@ -72,6 +72,11 @@ The body surface is divided into named **regions** (*regiones*). They
 are used to describe where a structure sits or where a patient reports
 symptoms. Some you will use constantly:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p04_0.webp" alt="Named regions of the body, anterior and posterior views" loading="lazy" width="1100" height="788" />
+  <figcaption>Named regions of the body, anterior and posterior views. <span class="figure-source">Slide 4, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 | Area | Region names (Latin → English) |
 | --- | --- |
 | Head | regio frontalis, parietalis, occipitalis, temporalis, orbitalis, nasalis, oralis, mentalis |
@@ -87,6 +92,11 @@ symptoms. Some you will use constantly:
 An **anatomical plane** is an imaginary flat surface that divides the body.
 Planes let us describe where a structure lies, which way a movement goes,
 and which orientation a scan or a cut specimen shows.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p07_0.webp" alt="The median, sagittal, frontal (coronal) and transverse planes" loading="lazy" width="1100" height="673" />
+  <figcaption>The median, sagittal, frontal (coronal) and transverse planes. <span class="figure-source">Slide 7, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
 
 - **Median (midsagittal) plane**: the single vertical plane through the
   midline, dividing the body into right and left halves.
@@ -144,6 +154,11 @@ and which orientation a scan or a cut specimen shows.
 A **section** is a cut made along a plane. It is the language of specimens,
 CT and MRI:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p08_0.webp" alt="Sectional planes through the brain, and longitudinal, transverse and oblique sections of a limb" loading="lazy" width="1100" height="1194" />
+  <figcaption>Sectional planes through the brain, and longitudinal, transverse and oblique sections of a limb. <span class="figure-source">Slide 8, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 - **Sectio longitudinalis**: a cut along the long axis of the body or a
   part. It can lie in a median, sagittal or coronal plane.
 - **Sectio transversalis**: a cut at right angles to the long axis, giving
@@ -160,6 +175,11 @@ because a lesion that looks small in one plane may be large in another.
 
 Directional terms describe the position of one structure **relative to
 another**, always from the anatomical position.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p12_0.webp" alt="Directional terms on the body" loading="lazy" width="1097" height="942" />
+  <figcaption>Directional terms on the body: superior/inferior, anterior/posterior, medial/lateral and proximal/distal. <span class="figure-source">Slide 12, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
 
 | Term | Meaning | Opposite |
 | --- | --- | --- |
@@ -242,6 +262,11 @@ A few more words describe position *within* a structure:
 - **Ipsilateral**: on the *same* side as a reference point.
 - **Contralateral**: on the *opposite* side.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p18_0.webp" alt="Unilateral, bilateral, ipsilateral and contralateral, shown on the limbs" loading="lazy" width="1097" height="604" />
+  <figcaption>Unilateral, bilateral, ipsilateral and contralateral, shown on the limbs. <span class="figure-source">Slide 18, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 **Clinical relevance.** A bilateral, symmetrical rash on both legs points
 toward a systemic cause (for example a vasculitis). A stroke in the left
 cerebral hemisphere causes weakness of the **contralateral** (right) side
@@ -251,6 +276,11 @@ of the body, because the motor pathways cross.
 
 Vertical reference lines are used to locate structures on the chest and
 back, for example to place a stethoscope or a chest drain.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p15_0.webp" alt="Vertical reference lines on the anterior, lateral and posterior trunk" loading="lazy" width="1100" height="898" />
+  <figcaption>Vertical reference lines on the anterior, lateral and posterior trunk. <span class="figure-source">Slide 15, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
 
 | Surface | Lines (medial → lateral) |
 | --- | --- |
@@ -332,6 +362,26 @@ incomplete; "m. biceps brachii" is correct.
 Movements happen at joints, in a plane, around an axis at right angles to
 that plane.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_0.webp" alt="Abduction, adduction and circumduction at the shoulder; rotation of the head, neck and lower limb" loading="lazy" width="1100" height="939" />
+  <figcaption>Abduction, adduction and circumduction at the shoulder; rotation of the head, neck and lower limb. <span class="figure-source">Slide 24, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_1.webp" alt="Elevation and depression of the mandible; opposition of the thumb" loading="lazy" width="899" height="652" />
+  <figcaption>Elevation and depression of the mandible; opposition of the thumb. <span class="figure-source">Slide 24, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_2.webp" alt="Inversion and eversion of the foot; protraction and retraction of the mandible" loading="lazy" width="792" height="564" />
+  <figcaption>Inversion and eversion of the foot; protraction and retraction of the mandible. <span class="figure-source">Slide 24, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p25_0.webp" alt="Pronation and supination of the forearm; dorsiflexion and plantar flexion of the foot" loading="lazy" width="1100" height="813" />
+  <figcaption>Pronation and supination of the forearm; dorsiflexion and plantar flexion of the foot. <span class="figure-source">Slide 25, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 | Movement | Description | Example |
 | --- | --- | --- |
 | Flexion / extension | Bending (decreasing the angle) / straightening, in the sagittal plane | Bending the elbow; nodding the head forward; bending the trunk forward |
@@ -353,6 +403,11 @@ the palm.
 
 **Osteology** is the study of bones. Bones are classified by shape:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p29_0.webp" alt="Bones classified by shape" loading="lazy" width="890" height="990" />
+  <figcaption>Bones classified by shape: long, short, flat, irregular and sesamoid. <span class="figure-source">Slide 29, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 - **Long bones**, longer than they are wide, such as the humerus and femur.
 - **Short bones**, roughly cube-shaped, such as the carpal bones.
 - **Flat bones**, thin plates, such as the parietal bone and sternum.
@@ -372,6 +427,11 @@ the palm.
 - **Periosteum**: the fibrous membrane covering the outer surface. It
   carries nerves and blood vessels into the bone and is why a fracture is
   painful.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p30_0.webp" alt="Parts of a long bone" loading="lazy" width="717" height="993" />
+  <figcaption>Parts of a long bone. Indonesian labels: tulang rawan = cartilage, sumsum merah/kuning = red/yellow marrow, tulang spons/kompak = spongy/compact bone, saraf = nerve, pembuluh darah = blood vessel. <span class="figure-source">Slide 30, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 480 310" role="img" aria-labelledby="bone-title bone-desc">
@@ -424,6 +484,16 @@ the palm.
 **Arthrology** is the study of joints (*articulationes*), the places
 where two or more bones meet. Joints are classified by the tissue that
 joins the bones:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p37_0.webp" alt="Fibrous joints (suture, gomphosis, syndesmosis) and cartilaginous joints (synchondrosis, symphysis)" loading="lazy" width="1100" height="1076" />
+  <figcaption>Fibrous joints (suture, gomphosis, syndesmosis) and cartilaginous joints (synchondrosis, symphysis). <span class="figure-source">Slide 37, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p33_0.webp" alt="Synovial, fibrous and cartilaginous joints compared" loading="lazy" width="1100" height="958" />
+  <figcaption>Synovial, fibrous and cartilaginous joints compared. <span class="figure-source">Slide 33, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
 
 - **Fibrous joints** are joined by dense connective tissue and barely move.
   - *Sutura*: the skull sutures.
@@ -487,6 +557,11 @@ as its two branches. The meaning is the same either way.
 | **Spheroidea** (ball and socket) | Many | Movement in every direction, including rotation | Hip and shoulder joints |
 | **Plana** (plane) | Gliding | One flat surface slides on another | Acromioclavicular joint, intercarpal joints |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p32_0.webp" alt="Structure of a synovial joint" loading="lazy" width="971" height="1057" />
+  <figcaption>Structure of a synovial joint: articular capsule, synovial membrane, joint cavity and hyaline cartilage. <span class="figure-source">Slide 32, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 Books differ on the two-axis joints. The practicum deck treats "condyloid"
 as the umbrella term and splits it into **bicondylar** (a convex surface on
 a concave one, like the knee) and **saddle** (two perpendicular axes, like
@@ -495,6 +570,11 @@ the thumb). If a question uses one scheme, answer in that scheme.
 ## Myology: muscles
 
 There are three types of muscle tissue:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p39_0.webp" alt="Cardiac, smooth and skeletal muscle tissue" loading="lazy" width="1045" height="697" />
+  <figcaption>Cardiac, smooth and skeletal muscle tissue. <span class="figure-source">Slide 39, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
 
 | Type | Control | Location |
 | --- | --- | --- |
@@ -519,6 +599,21 @@ origin, insertion, innervation and action.
 
 Blood flows in two circuits in series:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p42_0.webp" alt="Pulmonary and systemic circulation (Indonesian labels" loading="lazy" width="1100" height="1100" />
+  <figcaption>Pulmonary and systemic circulation (Indonesian labels: atrium/ventrikel kanan and kiri = right and left atrium/ventricle). <span class="figure-source">Slide 42, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p45_1.webp" alt="The aorta and its major branches in the trunk" loading="lazy" width="1100" height="1076" />
+  <figcaption>The aorta and its major branches in the trunk. <span class="figure-source">Slide 45, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p48_0.webp" alt="The venae cavae and major veins of the trunk" loading="lazy" width="1100" height="1205" />
+  <figcaption>The venae cavae and major veins of the trunk. <span class="figure-source">Slide 48, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 - **Pulmonary circulation**: the right ventricle pumps deoxygenated blood
   through the pulmonary arteries to the lungs; oxygenated blood returns
   through the pulmonary veins to the left atrium.
@@ -542,12 +637,22 @@ empties at the junction of the left subclavian and left internal jugular
 veins. The right upper quadrant drains through the right lymphatic duct on
 the right side.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p51_0.webp" alt="Lymphatic vessels and nodes; the thoracic duct drains most of the body" loading="lazy" width="1100" height="1248" />
+  <figcaption>Lymphatic vessels and nodes; the thoracic duct drains most of the body. <span class="figure-source">Slide 51, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
+
 ### Nervous system
 
 - **Central nervous system (CNS)**: brain and spinal cord (*medulla
   spinalis*).
 - **Peripheral nervous system (PNS)**: the cranial and spinal nerves and
   their ganglia and plexuses.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p53_0.webp" alt="Central and peripheral nervous systems" loading="lazy" width="904" height="1264" />
+  <figcaption>Central and peripheral nervous systems. <span class="figure-source">Slide 53, Basic Anatomy (Naufal)</span></figcaption>
+</figure>
 
 A few words mean different things in the CNS and PNS:
 

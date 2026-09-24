@@ -84,7 +84,7 @@ host, including Vercel's free tier.
 | | Biochemistry | 45 flashcards · 42 quiz questions · 7-chapter ebook · summary · 3 lecture PDFs |
 | | Physiology | 23 flashcards · 26 quiz questions · 4 lecture PDFs |
 | | *Block exam* | 3 exam packages: Original Set (100 Q), Costraver (64 Q), UB 2025 (80 Q) |
-| **1.2**: Integument and Musculoskeletal System | Anatomy | 9 practicum assistance PDFs *(flashcards, quizzes and lectures coming)* |
+| **1.2**: Integument and Musculoskeletal System | Anatomy | 7-chapter ebook (22 original diagrams, 153 slide figures) · 9 practicum assistance PDFs *(flashcards, quizzes and lectures coming)* |
 | **1.3**: Digestive System and Metabolism | — | Coming soon |
 
 ## Features
@@ -357,4 +357,7 @@ licensed.
 The PDFs under `content/modules/` are lecture and practicum materials from
 their respective lecturers and lab assistants. They remain their authors'
 work, are included only as study references, and are not covered by the MIT
-license. To have a file removed, open an issue.
+license. The same applies to the slide figures under `public/ebook-figures/`,
+which are cropped from those decks (many reproduce figures from published
+anatomy atlases); each is captioned with its source deck and slide. To have a
+file removed, open an issue.

@@ -2,6 +2,21 @@
 
 The **skeleton trunci** (axial skeleton of the trunk) has three parts:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p05_0.webp" alt="The skeleton thoracis" loading="lazy" width="950" height="700" />
+  <figcaption>The skeleton thoracis: sternum, and true (I–VII), false (VIII–X) and floating (XI–XII) ribs. <span class="figure-source">Slide 5, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p06_0.webp" alt="The superior thoracic aperture and the structures passing through it" loading="lazy" width="871" height="720" />
+  <figcaption>The superior thoracic aperture and the structures passing through it. <span class="figure-source">Slide 6, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p06_1.webp" alt="The inferior thoracic aperture and the costal arch" loading="lazy" width="729" height="738" />
+  <figcaption>The inferior thoracic aperture and the costal arch. <span class="figure-source">Slide 6, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 - the **sternum**;
 - 12 pairs of **costae** (ribs);
 - the **columna vertebralis** (vertebral column).
@@ -32,6 +47,11 @@ The sternum is a flat bone in the anterior midline, in three parts.
 - **Incisura costalis II**: only *half* a facet on the manubrium. The
   other half is on the body, because the second costal cartilage meets the
   sternum exactly at the manubriosternal joint.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p08_0.webp" alt="Sternum from the front and side, with the manubrium and its notches highlighted" loading="lazy" width="870" height="797" />
+  <figcaption>Sternum from the front and side, with the manubrium and its notches highlighted. <span class="figure-source">Slide 8, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 ### Corpus sterni
 
@@ -79,6 +99,16 @@ Each rib is an **os costale** (the bony part) joined anteriorly to a
 - **Sulcus costae** (costal groove): along the inferior border of the
   inner surface. It carries the intercostal vein, artery and nerve.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p14_0.webp" alt="A typical rib" loading="lazy" width="713" height="865" />
+  <figcaption>A typical rib: caput, collum, tuberculum, angulus, corpus and sulcus costae. <span class="figure-source">Slide 14, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p13_0.webp" alt="Costovertebral joints" loading="lazy" width="988" height="864" />
+  <figcaption>Costovertebral joints: the rib head articulates with two vertebral bodies and the tubercle with the transverse process. <span class="figure-source">Slide 13, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 <figure class="diagram">
   <svg viewBox="0 0 600 320" role="img" aria-labelledby="rib-title rib-desc">
     <title id="rib-title">A typical rib and its joints with the vertebra and sternum</title>
@@ -125,6 +155,16 @@ Each rib is an **os costale** (the bony part) joined anteriorly to a
 **Ribs III–IX are typical**: head with two facets and a crista, neck,
 tubercle, angle and costal groove. **Ribs I, II, X, XI and XII are
 atypical**:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p15_0.webp" alt="Rib I" loading="lazy" width="979" height="428" />
+  <figcaption>Rib I: the scalene tubercle, with grooves for the subclavian vein in front and the subclavian artery behind. <span class="figure-source">Slide 15, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p16_0.webp" alt="Rib II, with the tuberosity for serratus anterior" loading="lazy" width="1065" height="703" />
+  <figcaption>Rib II, with the tuberosity for serratus anterior. <span class="figure-source">Slide 16, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 - **Rib I** is the shortest, broadest, flattest and most sharply curved.
   - Its head has a single facet and no crista.
@@ -176,10 +216,25 @@ intercostal space in the left midclavicular line**.
 | Artt. interchondrales | Costal cartilages VI–X ↔ each other | Synovial plane joints |
 | Artt. costovertebrales | Rib head ↔ vertebral bodies (**art. capitis costae**); tubercle ↔ transverse process (**art. costotransversaria**) | Synovial |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p20_0.webp" alt="Joints of the sternum and costal cartilages" loading="lazy" width="805" height="893" />
+  <figcaption>Joints of the sternum and costal cartilages. <span class="figure-source">Slide 20, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 ## Muscles of the thoracic wall
 
 The thoracic wall muscles fill the intercostal spaces and move the ribs
 in breathing. They lie in three layers:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p23_0.webp" alt="The external intercostal muscles" loading="lazy" width="865" height="711" />
+  <figcaption>The external intercostal muscles. <span class="figure-source">Slide 23, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p28_1.webp" alt="Layers of an intercostal space, with the intercostal vein, artery and nerve under the rib" loading="lazy" width="847" height="513" />
+  <figcaption>Layers of an intercostal space, with the intercostal vein, artery and nerve under the rib. <span class="figure-source">Slide 28, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 | Layer | Muscles | Fibre direction and action |
 | --- | --- | --- |
@@ -273,12 +328,22 @@ two small **anterior** intercostal arteries, which join in the space.
 - **Anterior intercostal veins** drain to the **v. thoracica interna**
   and the **v. musculophrenica**.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p27_0.webp" alt="Veins of the thoracic wall" loading="lazy" width="863" height="600" />
+  <figcaption>Veins of the thoracic wall: the azygos and hemiazygos systems and the internal thoracic veins. <span class="figure-source">Slide 27, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 ### Lymph
 
 - Anterior chest wall → **nodi parasternales** (along the internal
   thoracic vessels).
 - Posterior chest wall → **nodi intercostales** (near the rib heads).
 - Diaphragm → **nodi diaphragmatici**.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p28_0.webp" alt="Lymphatic drainage of the thoracic wall" loading="lazy" width="837" height="709" />
+  <figcaption>Lymphatic drainage of the thoracic wall: parasternal, intercostal and diaphragmatic nodes, and the thoracic duct. <span class="figure-source">Slide 28, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 From these nodes lymph reaches the **ductus thoracicus** (on the left)
 or the right lymphatic duct, which empty at the junction of the
@@ -291,6 +356,11 @@ found in a small percentage of people. It can narrow the space through
 which the **subclavian artery and vein** and the **lower trunk of the
 brachial plexus** leave the thorax. That compression is one cause of
 **thoracic outlet syndrome (TOS)**:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p29_2.webp" alt="Thoracic outlet syndrome" loading="lazy" width="792" height="792" />
+  <figcaption>Thoracic outlet syndrome: the nerve, artery and vein compressed between the clavicle and the first rib. <span class="figure-source">Slide 29, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 - pain, numbness and tingling along the medial forearm and hand (from
   C8–T1);
@@ -306,6 +376,11 @@ The vertebral column is typically **33 vertebrae** in five regions:
 ### Curvatures
 
 Seen from the side, the adult column has four curves:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p31_0.webp" alt="The vertebral column and its four curvatures" loading="lazy" width="1100" height="493" />
+  <figcaption>The vertebral column and its four curvatures. <span class="figure-source">Slide 31, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 - **Primary curves**, present in the fetus: **thoracic** and **sacral
   kyphosis** (concave forward).
@@ -361,6 +436,11 @@ Seen from the side, the adult column has four curves:
   cord.
 - **Foramen intervertebrale**: the gap between the pedicles of adjacent
   vertebrae, where each spinal nerve exits.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p32_0.webp" alt="A typical vertebra from above and from the side" loading="lazy" width="1100" height="472" />
+  <figcaption>A typical vertebra from above and from the side. <span class="figure-source">Slide 32, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 560 320" role="img" aria-labelledby="vert-title vert-desc">
@@ -453,6 +533,11 @@ The vertebral artery and vein pass through the foramina of C1–C6.
   - a **fovea costalis processus transversi** on each transverse process
     (T1–T10), for the rib tubercle.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p34_0.webp" alt="Thoracic vertebrae, with their costal facets" loading="lazy" width="869" height="899" />
+  <figcaption>Thoracic vertebrae, with their costal facets. <span class="figure-source">Slide 34, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 Because a typical rib head spans two vertebrae, most thoracic bodies carry
 **half-facets** (*semilunar*):
 
@@ -481,10 +566,25 @@ and lateral).
   to its transverse processes. L5 is sometimes partly fused to the sacrum
   (**sacralisation**).
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p36_0.webp" alt="A lumbar vertebra from above and from the side" loading="lazy" width="869" height="897" />
+  <figcaption>A lumbar vertebra from above and from the side. <span class="figure-source">Slide 36, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 ### Os sacrum
 
 The sacrum is five fused sacral vertebrae, forming a triangle wedged
 between the hip bones.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p37_0.webp" alt="Sacrum, pelvic (anterior) surface" loading="lazy" width="1100" height="770" />
+  <figcaption>Sacrum, pelvic (anterior) surface: promontory, transverse lines and anterior sacral foramina. <span class="figure-source">Slide 37, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p38_0.webp" alt="Sacrum, dorsal surface" loading="lazy" width="1100" height="691" />
+  <figcaption>Sacrum, dorsal surface: median, intermediate and lateral sacral crests, posterior foramina and the sacral hiatus. <span class="figure-source">Slide 38, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 - **Facies pelvina** (anterior, concave):
   - the **basis ossis sacri** (base) above, with the **promontorium**
@@ -519,6 +619,11 @@ first has **cornua coccygea**, which articulate with the sacral cornua.
 Between adjacent vertebral bodies (from C2–C3 down to L5–S1) lies a
 **discus intervertebralis**. Discs make up about a quarter of the length
 of the column and act as **shock absorbers**.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p40_0.webp" alt="The intervertebral disc" loading="lazy" width="1100" height="477" />
+  <figcaption>The intervertebral disc: anulus fibrosus around the nucleus pulposus. <span class="figure-source">Slide 40, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 - **Anulus fibrosus**: concentric lamellae of fibrocartilage forming the
   outer ring. The fibres in neighbouring lamellae cross obliquely.
@@ -556,6 +661,11 @@ radiating down the leg (sciatica).
   anterior arch of the atlas and the transverse ligament) and two lateral
   plane joints. Together they allow rotation (shaking the head "no").
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p43_0.webp" alt="Atlanto-occipital and atlanto-axial joints, with the cruciform and alar ligaments" loading="lazy" width="1100" height="423" />
+  <figcaption>Atlanto-occipital and atlanto-axial joints, with the cruciform and alar ligaments. <span class="figure-source">Slide 43, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 ### Kinesiology
 
 The vertebral column as a whole performs **flexion**, **extension**,
@@ -575,9 +685,24 @@ by the ribs.
 | **Lig. cruciforme atlantis** | A cross made of the strong **lig. transversum atlantis**, which holds the dens against the atlas, and vertical fascicles above and below. |
 | **Ligg. alaria** | From the sides of the dens to the occipital condyles. They limit rotation of the head. |
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p44_1.webp" alt="Anterior and posterior longitudinal ligaments" loading="lazy" width="550" height="764" />
+  <figcaption>Anterior and posterior longitudinal ligaments. <span class="figure-source">Slide 44, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p44_2.webp" alt="The supraspinous ligament and ligamentum nuchae" loading="lazy" width="551" height="831" />
+  <figcaption>The supraspinous ligament and ligamentum nuchae. <span class="figure-source">Slide 44, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
+
 ## Muscles of the back
 
 The back muscles fall into three groups:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p46_0.webp" alt="Superficial and deep muscles of the back" loading="lazy" width="1100" height="570" />
+  <figcaption>Superficial and deep muscles of the back. <span class="figure-source">Slide 46, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 | Group | Muscles | Role and nerve supply |
 | --- | --- | --- |
@@ -610,6 +735,11 @@ from lateral to medial.
     example from osteoporotic wedge fractures.
   - **Hyperlordosis**: an exaggerated lumbar curve, for example in late
     pregnancy or with abdominal obesity.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-03-trunci_p48_0.webp" alt="A normal column compared with excessive kyphosis, excessive lordosis and scoliosis" loading="lazy" width="984" height="381" />
+  <figcaption>A normal column compared with excessive kyphosis, excessive lordosis and scoliosis. <span class="figure-source">Slide 48, Skeleton Trunci (Kayla)</span></figcaption>
+</figure>
 
 ## Key teaching point
 

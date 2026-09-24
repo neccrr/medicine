@@ -24,6 +24,11 @@ The skull develops in two parts:
 The face forms around the primitive mouth (**stomodeum**) from five
 prominences that appear in week 4:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p05_0.webp" alt="Development of the face" loading="lazy" width="1100" height="853" />
+  <figcaption>Development of the face: the frontonasal, maxillary and mandibular prominences around the stomodeum. <span class="figure-source">Slide 5, Cranium (Liza)</span></figcaption>
+</figure>
+
 - one **frontonasal prominence**, which gives rise to the forehead, the
   bridge of the nose and the **medial** and **lateral nasal
   prominences** around each nasal placode;
@@ -42,6 +47,16 @@ At birth the vault bones are separated by fibrous sutures that widen at
 their corners into **fontanelles** (*fonticuli*). These let the bones
 overlap as the head passes through the birth canal and leave room for the
 brain to grow.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p06_0.webp" alt="The neonatal skull from the side and from above" loading="lazy" width="1100" height="810" />
+  <figcaption>The neonatal skull from the side and from above: fontanelles and sutures. <span class="figure-source">Slide 6, Cranium (Liza)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p07_0.webp" alt="The anterior, posterior, anterolateral and posterolateral fontanelles" loading="lazy" width="1100" height="825" />
+  <figcaption>The anterior, posterior, anterolateral and posterolateral fontanelles. <span class="figure-source">Slide 7, Cranium (Liza)</span></figcaption>
+</figure>
 
 | Fontanelle | Location and shape | Usual closure |
 | --- | --- | --- |
@@ -106,6 +121,16 @@ The anterior fontanelle is felt in every infant examination:
 
 The adult skull has **22 bones** (plus the hyoid and six ear ossicles):
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p14_0.webp" alt="Bones of the neurocranium, colour-coded" loading="lazy" width="1100" height="1103" />
+  <figcaption>Bones of the neurocranium, colour-coded. <span class="figure-source">Slide 14, Cranium (Liza)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p24_0.webp" alt="The 14 facial bones" loading="lazy" width="1088" height="955" />
+  <figcaption>The 14 facial bones. <span class="figure-source">Slide 24, Cranium (Liza)</span></figcaption>
+</figure>
+
 | | Single (unpaired) | Paired |
 | --- | --- | --- |
 | **Neurocranium** (ossa cranii), 8 bones | Os frontale, os ethmoidale, os sphenoidale, os occipitale | Os temporale, os parietale |
@@ -119,6 +144,11 @@ The frontal bone forms the forehead and the roofs of the orbits. It meets
 the frontal process of the maxilla and the nasal bones medially, and the
 zygomatic bone laterally. Key features:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p16_0.webp" alt="Os frontale" loading="lazy" width="1100" height="736" />
+  <figcaption>Os frontale: squama, superciliary arch, glabella and supraorbital margin. <span class="figure-source">Slide 16, Cranium (Liza)</span></figcaption>
+</figure>
+
 - **Arcus superciliaris**: the brow ridges.
 - **Glabella**: the smooth area between them.
 - **Margo supraorbitalis**: the upper rim of the orbital opening (*aditus
@@ -130,6 +160,11 @@ zygomatic bone laterally. Key features:
 ### Os ethmoidale
 
 A light, cube-shaped bone between the orbits:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p18_0.webp" alt="Os ethmoidale" loading="lazy" width="1100" height="552" />
+  <figcaption>Os ethmoidale: cribriform plate, crista galli and perpendicular plate. <span class="figure-source">Slide 18, Cranium (Liza)</span></figcaption>
+</figure>
 
 - **Lamina cribrosa** (cribriform plate): perforated by the **foramina
   cribrosa**, which carry the olfactory nerve fibres (CN I). It forms part
@@ -172,6 +207,11 @@ Forms the back and much of the base of the skull:
 
 The temporal bone has four parts:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p21_1.webp" alt="Os temporale" loading="lazy" width="1100" height="693" />
+  <figcaption>Os temporale: squamous, tympanic, petrous and mastoid parts. <span class="figure-source">Slide 21, Cranium (Liza)</span></figcaption>
+</figure>
+
 1. **Pars squamosa**: the thin, flat part on the side of the skull. It
    carries the **processus zygomaticus** and the **fossa mandibularis**
    (for the temporomandibular joint).
@@ -190,6 +230,11 @@ The **processus styloideus** projects down from its underside, with the
 
 The paired parietal bones form most of the roof and sides of the vault:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p22_0.webp" alt="The parietal bones from above, with the sagittal, coronal and lambdoid sutures" loading="lazy" width="1023" height="1039" />
+  <figcaption>The parietal bones from above, with the sagittal, coronal and lambdoid sutures. <span class="figure-source">Slide 22, Cranium (Liza)</span></figcaption>
+</figure>
+
 - **Tuber parietale**: the parietal eminence, the widest point of the
   head.
 - **Lineae temporales superior and inferior**: attachments of the
@@ -204,6 +249,16 @@ The paired parietal bones form most of the roof and sides of the vault:
 ### Mandibula
 
 The only movable skull bone, with a **corpus** (body) and two **rami**.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p25_0.webp" alt="Mandibula, anterior view" loading="lazy" width="1100" height="487" />
+  <figcaption>Mandibula, anterior view. <span class="figure-source">Slide 25, Cranium (Liza)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p26_0.webp" alt="Mandibula, posterior view" loading="lazy" width="1100" height="620" />
+  <figcaption>Mandibula, posterior view. <span class="figure-source">Slide 26, Cranium (Liza)</span></figcaption>
+</figure>
 
 - **Angulus mandibulae**: where the body meets the ramus.
 - **Processus condylaris**: head and neck, articulating at the
@@ -241,6 +296,11 @@ maxillaris**, the largest paranasal sinus.
 The **palatum durum** (hard palate) is formed by the **palatine
 processes of the maxillae** in front and the **horizontal plates of the
 palatine bones** behind. Seen from below, it has three openings:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p33_0.webp" alt="The hard palate from below, with the incisive, greater palatine and lesser palatine foramina" loading="lazy" width="1100" height="408" />
+  <figcaption>The hard palate from below, with the incisive, greater palatine and lesser palatine foramina. <span class="figure-source">Slide 33, Cranium (Liza)</span></figcaption>
+</figure>
 
 - the **foramen incisivum**, behind the central incisors, for the
   nasopalatine nerve;
@@ -288,6 +348,11 @@ Anatomists describe the external skull from five views (*normae*).
 - Sutures: frontozygomatica, frontonasalis, internasalis,
   nasomaxillaris, intermaxillaris.
 - The **foramen mentale** on the mandible.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p37_0.webp" alt="Norma frontalis" loading="lazy" width="1100" height="824" />
+  <figcaption>Norma frontalis. <span class="figure-source">Slide 37, Cranium (Liza)</span></figcaption>
+</figure>
 
 The supraorbital, infraorbital and mental foramina lie roughly on one
 vertical line. They are where the three divisions of the trigeminal
@@ -356,6 +421,11 @@ nerve (V1, V2, V3) reach the face.
   <figcaption>Pterion is the H-shaped junction of frontal, parietal, sphenoid (greater wing) and temporal bones at the temple, the thinnest part of the vault. Asterion is where parietal, occipital and temporal bones meet.</figcaption>
 </figure>
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p39_0.webp" alt="Norma lateralis, with pterion and asterion" loading="lazy" width="1100" height="841" />
+  <figcaption>Norma lateralis, with pterion and asterion. <span class="figure-source">Slide 39, Cranium (Liza)</span></figcaption>
+</figure>
+
 The landmarks to find on the side of the skull:
 
 - **Pterion**: the H-shaped junction of the frontal, parietal, sphenoid
@@ -382,6 +452,11 @@ emergency.
 
 Seen from above:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p40_0.webp" alt="Norma verticalis" loading="lazy" width="1100" height="1115" />
+  <figcaption>Norma verticalis: coronal, sagittal and lambdoid sutures, bregma and lambda. <span class="figure-source">Slide 40, Cranium (Liza)</span></figcaption>
+</figure>
+
 - **Sutura coronalis** (between frontal and parietals).
 - **Sutura sagittalis** (between the two parietals).
 - **Sutura lambdoidea** (between parietals and occipital).
@@ -399,6 +474,11 @@ Seen from above:
 
 From behind:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p41_0.webp" alt="Norma occipitalis" loading="lazy" width="1100" height="801" />
+  <figcaption>Norma occipitalis. <span class="figure-source">Slide 41, Cranium (Liza)</span></figcaption>
+</figure>
+
 - **Sutura lambdoidea**.
 - **Protuberantia occipitalis externa** and **inion**.
 - **Lineae nuchales superior and inferior**.
@@ -407,6 +487,11 @@ From behind:
 ### Norma basalis
 
 From below, from front to back:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium-43-0.08_0.12_0.94_0.9.webp" alt="Norma basalis around the foramen magnum" loading="lazy" width="1100" height="561" />
+  <figcaption>Norma basalis around the foramen magnum: condyles, jugular foramen, hypoglossal canal and stylomastoid foramen. <span class="figure-source">Slide 43, Cranium (Liza)</span></figcaption>
+</figure>
 
 - **Hard palate**: the incisive, greater palatine and lesser palatine
   foramina; the **spina nasalis posterior**.
@@ -430,6 +515,11 @@ From below, from front to back:
 
 The inner surface of the skull cap shows:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p45_0.webp" alt="Inner surface of the calvaria" loading="lazy" width="1100" height="1029" />
+  <figcaption>Inner surface of the calvaria: groove for the superior sagittal sinus, meningeal grooves and granular foveolae. <span class="figure-source">Slide 45, Cranium (Liza)</span></figcaption>
+</figure>
+
 - **Sulcus sinus sagittalis superioris**: a midline groove for the
   superior sagittal sinus, ending in front at the **crista frontalis**.
 - **Sulci arteriosi et venosi**: branching grooves for the middle
@@ -444,6 +534,21 @@ The inner surface of the skull cap shows:
 
 The floor of the cranial cavity steps down, from front to back, in three
 **cranial fossae**.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p46_0.webp" alt="The anterior, middle and posterior cranial fossae" loading="lazy" width="1093" height="765" />
+  <figcaption>The anterior, middle and posterior cranial fossae. <span class="figure-source">Slide 46, Cranium (Liza)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p46_1.webp" alt="Bones forming the floor of the cranial cavity" loading="lazy" width="986" height="773" />
+  <figcaption>Bones forming the floor of the cranial cavity. <span class="figure-source">Slide 46, Cranium (Liza)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p47_0.webp" alt="The internal cranial base and its foramina" loading="lazy" width="1100" height="1013" />
+  <figcaption>The internal cranial base and its foramina. <span class="figure-source">Slide 47, Cranium (Liza)</span></figcaption>
+</figure>
 
 | Fossa | Bones | Contents |
 | --- | --- | --- |
@@ -539,6 +644,11 @@ fossae.
 | **Canalis nervi hypoglossi** | Occipital, above the condyle | CN XII |
 | **Foramen magnum** | Occipital | Medulla oblongata/spinal cord and meninges, aa. vertebrales, spinal roots of CN XI |
 | **Foramen stylomastoideum** | Underside of temporal (outside) | CN VII leaving the skull to the face |
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-04-cranium_p48_0.webp" alt="Openings of the cranial base and what passes through each" loading="lazy" width="1100" height="1244" />
+  <figcaption>Openings of the cranial base and what passes through each. <span class="figure-source">Slide 48, Cranium (Liza)</span></figcaption>
+</figure>
 
 The deck's summary slide highlights the **canalis condylaris** next to
 "CN XII". The hypoglossal nerve actually exits through the **canalis

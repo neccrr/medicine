@@ -9,6 +9,11 @@ the neck viscera, and lymphatic drainage.
 
 The scalp has five layers. Their initials spell **SCALP**:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p04_0.webp" alt="Layers of the scalp" loading="lazy" width="1100" height="1256" />
+  <figcaption>Layers of the scalp: skin, dense connective tissue, galea aponeurotica, loose connective tissue and pericranium. <span class="figure-source">Slide 4, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 | Layer | Features |
 | --- | --- |
 | **S**kin (cutis) | Thick and hair-bearing, with many sebaceous glands |
@@ -38,6 +43,26 @@ The facial muscles lie in the subcutaneous tissue and insert into the
 skin. When they contract, they move the skin, creating expressions. They
 develop from the **second pharyngeal arch**, and all are supplied by the
 **facial nerve (CN VII)**. They are grouped by the opening they surround:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p10_0.webp" alt="Muscles of facial expression, lateral view" loading="lazy" width="1100" height="952" />
+  <figcaption>Muscles of facial expression, lateral view. <span class="figure-source">Slide 10, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p07_0.webp" alt="Orbital group" loading="lazy" width="1100" height="528" />
+  <figcaption>Orbital group: corrugator supercilii and the orbital and palpebral parts of orbicularis oculi. <span class="figure-source">Slide 7, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p08_0.webp" alt="Nasal group" loading="lazy" width="1100" height="1141" />
+  <figcaption>Nasal group: procerus, nasalis (transverse and alar parts) and depressor septi nasi. <span class="figure-source">Slide 8, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p09_0.webp" alt="Oral group around the mouth, with the modiolus" loading="lazy" width="1100" height="733" />
+  <figcaption>Oral group around the mouth, with the modiolus. <span class="figure-source">Slide 9, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
 
 | Group | Muscles | Main action |
 | --- | --- | --- |
@@ -86,6 +111,11 @@ area around the eye and forehead is supplied by the **internal carotid
 artery**, through the **ophthalmic artery** (supraorbital and
 supratrochlear branches).
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p13_0.webp" alt="Branches of the external carotid artery in the face and scalp" loading="lazy" width="1100" height="878" />
+  <figcaption>Branches of the external carotid artery in the face and scalp. <span class="figure-source">Slide 13, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 Branches of the external carotid artery, from below upward:
 
 1. **A. thyroidea superior**
@@ -115,6 +145,11 @@ angularis** and runs down and back behind the facial artery. It joins
 the **v. retromandibularis** and drains into the **v. jugularis
 interna**, which drains most of the face and head.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p14_0.webp" alt="Veins of the face and scalp draining to the internal jugular vein; note the pterygoid plexus" loading="lazy" width="1100" height="956" />
+  <figcaption>Veins of the face and scalp draining to the internal jugular vein; note the pterygoid plexus. <span class="figure-source">Slide 14, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 The facial vein has no effective valves. Through the ophthalmic veins it
 connects with the **cavernous sinus**, and through the **plexus
 pterygoideus** it connects with deep veins. Infection of the skin around
@@ -124,6 +159,16 @@ region is called the **danger triangle of the face**.
 ### Nerves
 
 The face has two separate nerve supplies:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p15_0.webp" alt="Sensory territories of the trigeminal divisions (V1, V2, V3) and of the cervical nerves" loading="lazy" width="1100" height="483" />
+  <figcaption>Sensory territories of the trigeminal divisions (V1, V2, V3) and of the cervical nerves. <span class="figure-source">Slide 15, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p16_0.webp" alt="Terminal branches of the facial nerve fanning out from the parotid gland" loading="lazy" width="1100" height="753" />
+  <figcaption>Terminal branches of the facial nerve fanning out from the parotid gland. <span class="figure-source">Slide 16, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
 
 - **Sensory: trigeminal nerve (CN V)**, in three divisions:
   - **V1, n. ophthalmicus**: the forehead, upper eyelid and bridge of the
@@ -204,6 +249,11 @@ of head and neck (from front to back: submental, submandibular, parotid
 and preauricular, retroauricular, occipital), and from there to the
 **deep cervical nodes**.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p17_0.webp" alt="Lymph node groups of the head and neck" loading="lazy" width="1100" height="796" />
+  <figcaption>Lymph node groups of the head and neck. <span class="figure-source">Slide 17, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 ## The neck (*regio colli*)
 
 ### Layers and fascia
@@ -225,6 +275,16 @@ Deep to the skin, the neck has two layers of fascia:
 ### Compartments of the neck
 
 The fascial layers create four compartments:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p20_0.webp" alt="Fascial layers and compartments of the neck" loading="lazy" width="1100" height="953" />
+  <figcaption>Fascial layers and compartments of the neck. <span class="figure-source">Slide 20, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p19_0.webp" alt="Cross-section of the neck with the pretracheal, superficial and prevertebral layers and the carotid sheath" loading="lazy" width="1100" height="529" />
+  <figcaption>Cross-section of the neck with the pretracheal, superficial and prevertebral layers and the carotid sheath. <span class="figure-source">Slide 19, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
 
 | Compartment | Bounded by | Contents |
 | --- | --- | --- |
@@ -293,6 +353,11 @@ The fascial layers create four compartments:
 
 The hyoid bone is a U-shaped bone in the anterior midline, between the
 mandible and the thyroid cartilage, at the level of **C3**.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p21_0.webp" alt="Os hyoideum" loading="lazy" width="1100" height="1471" />
+  <figcaption>Os hyoideum: body, greater and lesser horns, and its position above the larynx. <span class="figure-source">Slide 21, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
 
 - It has a **corpus** (body), two **cornua majora** (greater horns) and
   two **cornua minora** (lesser horns). The **lig. stylohyoideum** runs
@@ -372,6 +437,16 @@ The anterior triangle is bounded by the **midline of the neck**, the
 **anterior border of SCM** and the **lower border of the mandible**. It is
 subdivided into four smaller triangles:
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p23_0.webp" alt="Anterior triangle" loading="lazy" width="1100" height="1045" />
+  <figcaption>Anterior triangle: infrahyoid muscles, larynx, carotid artery and internal jugular vein. <span class="figure-source">Slide 23, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p23_1.webp" alt="Suprahyoid muscles" loading="lazy" width="1100" height="1654" />
+  <figcaption>Suprahyoid muscles: digastric, stylohyoid, mylohyoid and geniohyoid. <span class="figure-source">Slide 23, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 | Triangle | Boundaries | Key contents |
 | --- | --- | --- |
 | **Submandibular** (digastric) | Mandible; anterior and posterior bellies of digastric | Submandibular gland and lymph nodes, facial artery and vein, hypoglossal nerve |
@@ -406,6 +481,11 @@ The posterior triangle is bounded by the **posterior border of SCM**, the
 **anterior border of trapezius** and the **middle third of the
 clavicle**. Its floor is formed by splenius capitis, levator scapulae
 and the scalene muscles. The inferior belly of omohyoid divides it into:
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p24_0.webp" alt="Posterior triangle" loading="lazy" width="1100" height="440" />
+  <figcaption>Posterior triangle: occipital and omoclavicular (subclavian) parts, with the muscles forming its floor. <span class="figure-source">Slide 24, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
 
 - the **trigonum occipitale** (above), which contains the **accessory
   nerve (CN XI)** crossing to trapezius and the cutaneous branches of the
@@ -454,6 +534,11 @@ and the scalene muscles. The inferior belly of omohyoid divides it into:
   supplies the laryngeal muscles, not the gland itself, and it is the
   structure most at risk in thyroid surgery: injury causes hoarseness.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p26_0.webp" alt="The thyroid gland, its arteries and the recurrent laryngeal nerves" loading="lazy" width="1100" height="1109" />
+  <figcaption>The thyroid gland, its arteries and the recurrent laryngeal nerves. <span class="figure-source">Slide 26, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 ### Glandulae parathyroideae
 
 - **Location**: usually four small glands (two superior, two inferior) on
@@ -468,6 +553,11 @@ and the scalene muscles. The inferior belly of omohyoid divides it into:
   cervical ganglia. Secretion is controlled by blood calcium, not by
   nerves.
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p27_0.webp" alt="The parathyroid glands on the back of the thyroid lobes" loading="lazy" width="1100" height="1100" />
+  <figcaption>The parathyroid glands on the back of the thyroid lobes. <span class="figure-source">Slide 27, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 ### Thymus
 
 - **Location**: the superior and anterior **mediastinum**, sometimes
@@ -479,11 +569,21 @@ and the scalene muscles. The inferior belly of omohyoid divides it into:
 - **Blood supply**: small branches of nearby vessels (the internal
   thoracic and inferior thyroid arteries).
 
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p28_0.webp" alt="The thymus in the superior mediastinum" loading="lazy" width="1100" height="776" />
+  <figcaption>The thymus in the superior mediastinum. <span class="figure-source">Slide 28, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
+
 ## Lymphatic drainage of the head and neck
 
 All lymph from the head and neck ultimately reaches the **deep cervical
 lymph nodes** (*nodi lymphoidei cervicales profundi*). These form a chain
 along the **internal jugular vein**, mostly under cover of SCM.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p30_0.webp" alt="Deep cervical lymph nodes along the internal jugular vein, and the thoracic duct" loading="lazy" width="1100" height="583" />
+  <figcaption>Deep cervical lymph nodes along the internal jugular vein, and the thoracic duct. <span class="figure-source">Slide 30, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
 
 - **Superficial nodes** drain into the deep nodes. They are:
   - a ring at the junction of head and neck: occipital, retroauricular
@@ -509,6 +609,11 @@ because the thoracic duct drains past it.
   - the patient cannot wrinkle the forehead, close the eye or smile on
     that side;
   - the corner of the mouth droops.
+
+<figure class="diagram slide-figure">
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p32_0.webp" alt="Facial nerve palsy" loading="lazy" width="1100" height="1398" />
+  <figcaption>Facial nerve palsy: the brow, eyelid and corner of the mouth droop on the affected side. <span class="figure-source">Slide 32, Situs Faciales et Colli (Kezia)</span></figcaption>
+</figure>
 
   Because the whole side, forehead included, is affected, it is a lower
   motor neuron lesion. An upper motor neuron lesion (such as a stroke)
