@@ -284,6 +284,19 @@
   max-width: 1160px;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
+  transition: max-width 0.2s ease;
+}
+
+/* With the sidebar collapsed to its icon rail, let pages (ebooks, PDFs, card grids) use the
+   width it gave back instead of leaving it as empty margin. */
+@media (min-width: 961px) {
+  .app-shell:has(.sidebar.collapsed) .main {
+    max-width: 1480px;
+  }
+
+  .app-shell:has(.sidebar.collapsed) .ebook-layout {
+    grid-template-columns: 230px 1fr;
+  }
 }
 
 .page {
@@ -318,7 +331,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sidebar {
+  .sidebar,
+  .main {
     transition: none;
   }
 }
