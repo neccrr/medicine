@@ -23,18 +23,20 @@ export function writeJSON<T>(key: string, value: T): void {
   }
 }
 
+// Per-subject keys take a subject key, "{blockId}/{subjectId}" (see subjectKey in content.ts).
 export const STORAGE_KEYS = {
-  cardState: (deckId: string) => `medicine:flashcards:${deckId}`,
-  tagFilter: (deckId: string) => `medicine:tagfilter:${deckId}`,
-  quizProgress: (quizId: string) => `medicine:quiz:${quizId}`,
-  quizDue: (quizId: string) => `medicine:quizdue:${quizId}`,
-  quizInProgress: (quizId: string) => `medicine:quizinprogress:${quizId}`,
-  examHistory: (subjectId: string) => `medicine:examhistory:${subjectId}`,
+  cardState: (key: string) => `medicine:flashcards:${key}`,
+  tagFilter: (key: string) => `medicine:tagfilter:${key}`,
+  quizProgress: (key: string) => `medicine:quiz:${key}`,
+  quizDue: (key: string) => `medicine:quizdue:${key}`,
+  quizInProgress: (key: string) => `medicine:quizinprogress:${key}`,
+  /** Keyed by block id, or "{blockId}/{packageId}" for one exam package. */
+  examHistory: (id: string) => `medicine:examhistory:${id}`,
   examMode: "medicine:exammode",
-  lastRead: (subjectId: string) => `medicine:lastread:${subjectId}`,
-  ebookPosition: (subjectId: string) => `medicine:ebook:${subjectId}`,
-  ebookCompleted: (subjectId: string) => `medicine:ebookdone:${subjectId}`,
-  examDate: (subjectId: string) => `medicine:examdate:${subjectId}`,
+  lastRead: (key: string) => `medicine:lastread:${key}`,
+  ebookPosition: (key: string) => `medicine:ebook:${key}`,
+  ebookCompleted: (key: string) => `medicine:ebookdone:${key}`,
+  examDate: (key: string) => `medicine:examdate:${key}`,
   readingPrefs: "medicine:readingprefs",
   lastExport: "medicine:lastexport",
   theme: "medicine:theme",

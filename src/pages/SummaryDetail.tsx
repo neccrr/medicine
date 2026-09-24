@@ -1,22 +1,23 @@
 import { useEffect, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { marked } from "marked";
-import { summaries } from "../lib/content";
+import { subjectKey, summaries } from "../lib/content";
 import { writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { useReadingPrefs } from "../hooks/useReadingPrefs";
 import { ReadingControls } from "../components/ReadingControls";
 import { subjectHueStyle } from "../lib/subjectStyle";
 
 export function SummaryDetail() {
-  const { subjectId = "" } = useParams();
-  const markdown = summaries[subjectId];
+  const { blockId = "", subjectId = "" } = useParams();
+  const key = subjectKey(blockId, subjectId);
+  const markdown = summaries[key];
   const [readingPrefs, setReadingPrefs] = useReadingPrefs();
 
   useEffect(() => {
     if (subjectId) {
-      writeJSON(STORAGE_KEYS.lastRead(subjectId), new Date().toISOString());
+      writeJSON(STORAGE_KEYS.lastRead(key), new Date().toISOString());
     }
-  }, [subjectId]);
+  }, [key, subjectId]);
 
   if (!markdown) {
     return (

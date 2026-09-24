@@ -1,0 +1,769 @@
+[
+  {
+    "id": "q-mphys-001",
+    "question": "The connective tissue layer surrounding each individual muscle fiber is the:",
+    "options": [
+      "Epimysium",
+      "Perimysium",
+      "Deep fascia",
+      "Sarcolemma",
+      "Endomysium"
+    ],
+    "answer": 4,
+    "explanation": "Epimysium surrounds the muscle, perimysium each fascicle, endomysium each fiber."
+  },
+  {
+    "id": "q-mphys-002",
+    "question": "A triad consists of:",
+    "options": [
+      "One myofibril and two mitochondria",
+      "Two T-tubules and one terminal cisterna",
+      "A thick filament and two thin filaments",
+      "Actin, myosin and troponin",
+      "One T-tubule and two terminal cisternae"
+    ],
+    "answer": 4,
+    "explanation": "The triad links the T-tubule's action potential to Ca²⁺ release from the flanking cisternae."
+  },
+  {
+    "id": "q-mphys-003",
+    "question": "The smallest functional unit of skeletal muscle is the:",
+    "options": [
+      "Fascicle",
+      "Motor unit",
+      "Sarcomere",
+      "Myofilament",
+      "Myofibril"
+    ],
+    "answer": 2,
+    "explanation": "A sarcomere runs from one Z disc to the next."
+  },
+  {
+    "id": "q-mphys-004",
+    "question": "During contraction, which band stays the same length?",
+    "options": [
+      "A band",
+      "I band",
+      "H zone",
+      "Sarcomere length",
+      "Distance between Z discs"
+    ],
+    "answer": 0,
+    "explanation": "The A band is the length of the thick filament, which does not change; I band and H zone shrink."
+  },
+  {
+    "id": "q-mphys-005",
+    "question": "Which protein binds Ca²⁺ to start contraction in skeletal muscle?",
+    "options": [
+      "Troponin I",
+      "Titin",
+      "Calmodulin",
+      "Tropomyosin",
+      "Troponin C"
+    ],
+    "answer": 4,
+    "explanation": "Ca²⁺ binds TnC; smooth muscle uses calmodulin instead."
+  },
+  {
+    "id": "q-mphys-006",
+    "question": "At rest, the myosin-binding sites on actin are covered by:",
+    "options": [
+      "Troponin C",
+      "Tropomyosin",
+      "Nebulin",
+      "Titin",
+      "Myomesin"
+    ],
+    "answer": 1,
+    "explanation": "Tropomyosin lies along the groove of the actin helix and blocks the binding sites."
+  },
+  {
+    "id": "q-mphys-007",
+    "question": "Which protein is mainly responsible for passive tension when muscle is stretched?",
+    "options": [
+      "Actin",
+      "Dystrophin",
+      "Nebulin",
+      "Troponin",
+      "Titin"
+    ],
+    "answer": 4,
+    "explanation": "Titin acts as a molecular spring from the Z disc to the M line."
+  },
+  {
+    "id": "q-mphys-008",
+    "question": "Which feature is characteristic of smooth muscle but not skeletal muscle?",
+    "options": [
+      "Ca²⁺ acts through calmodulin rather than troponin",
+      "Requirement for ACh from a somatic motor neuron",
+      "Multinucleated fibers",
+      "Fastest contraction speed",
+      "Sarcomeres"
+    ],
+    "answer": 0,
+    "explanation": "Smooth muscle has no troponin and no sarcomeres."
+  },
+  {
+    "id": "q-mphys-009",
+    "question": "Which statement about skeletal muscle fibers is correct?",
+    "options": [
+      "They are controlled by autonomic neurons",
+      "Fibers are linked electrically by gap junctions",
+      "Each fiber contracts only when its own motor neuron fires",
+      "Their single-fiber twitch is graded",
+      "They are autorhythmic"
+    ],
+    "answer": 2,
+    "explanation": "Skeletal fibers are independent, so force is graded by recruiting more fibers."
+  },
+  {
+    "id": "q-mphys-010",
+    "question": "At the neuromuscular junction, acetylcholine binds:",
+    "options": [
+      "Troponin C",
+      "DHP receptors in the T-tubule",
+      "Nicotinic receptors on the motor end plate",
+      "Muscarinic receptors on the sarcolemma",
+      "Ryanodine receptors on the SR"
+    ],
+    "answer": 2,
+    "explanation": "Nicotinic receptors are ligand-gated cation channels that produce the end-plate potential."
+  },
+  {
+    "id": "q-mphys-011",
+    "question": "In skeletal muscle, the DHP receptor opens the ryanodine receptor by:",
+    "options": [
+      "The Na⁺/Ca²⁺ exchanger",
+      "Binding acetylcholine",
+      "Direct mechanical coupling",
+      "Calcium-induced calcium release from extracellular Ca²⁺",
+      "cAMP-dependent phosphorylation"
+    ],
+    "answer": 2,
+    "explanation": "Skeletal muscle uses mechanical DHPR–RyR1 coupling; calcium-induced calcium release is the cardiac mechanism."
+  },
+  {
+    "id": "q-mphys-012",
+    "question": "In the crossbridge cycle, binding of ATP to the myosin head causes:",
+    "options": [
+      "Release of Ca²⁺ from the SR",
+      "The power stroke",
+      "Cocking of the head to 90°",
+      "Binding of Ca²⁺ to troponin",
+      "Detachment of myosin from actin"
+    ],
+    "answer": 4,
+    "explanation": "ATP binding lowers myosin's affinity for actin; hydrolysis then recocks the head."
+  },
+  {
+    "id": "q-mphys-013",
+    "question": "The power stroke is triggered by release of:",
+    "options": [
+      "ATP",
+      "Ca²⁺",
+      "Acetylcholine",
+      "ADP",
+      "Inorganic phosphate (Pi)"
+    ],
+    "answer": 4,
+    "explanation": "Pi release makes the head swing back, pulling actin toward the M line; ADP is released at the end."
+  },
+  {
+    "id": "q-mphys-014",
+    "question": "Rigor mortis occurs because:",
+    "options": [
+      "Troponin is destroyed after death",
+      "Lactic acid denatures actin",
+      "No ATP is available to detach myosin from actin",
+      "Ca²⁺ cannot be released from the SR",
+      "Acetylcholine accumulates at the NMJ"
+    ],
+    "answer": 2,
+    "explanation": "Without ATP every crossbridge remains in the rigor state."
+  },
+  {
+    "id": "q-mphys-015",
+    "question": "Relaxation of skeletal muscle depends mainly on:",
+    "options": [
+      "SERCA pumping Ca²⁺ back into the sarcoplasmic reticulum",
+      "Opening of ryanodine receptors",
+      "Binding of ATP to troponin",
+      "The Na⁺/Ca²⁺ exchanger",
+      "Release of more acetylcholine"
+    ],
+    "answer": 0,
+    "explanation": "SERCA uses ATP to remove Ca²⁺ from the cytosol; NCX is more important in cardiac muscle."
+  },
+  {
+    "id": "q-mphys-016",
+    "question": "According to the sliding filament theory, during contraction:",
+    "options": [
+      "Thin filaments shorten",
+      "Thick filaments shorten",
+      "The A band shortens",
+      "Thin filaments slide toward the M line without shortening",
+      "Z discs move apart"
+    ],
+    "answer": 3,
+    "explanation": "Filament overlap increases; the filaments themselves keep their length."
+  },
+  {
+    "id": "q-mphys-017",
+    "question": "During a 100 m sprint, ATP in the first 10–15 seconds comes mainly from:",
+    "options": [
+      "Ketone bodies",
+      "Anaerobic glycolysis only",
+      "Creatine phosphate (direct phosphorylation)",
+      "Aerobic oxidation of fatty acids",
+      "Protein breakdown"
+    ],
+    "answer": 2,
+    "explanation": "Stored ATP lasts ~6 s, then creatine kinase regenerates ATP from creatine phosphate."
+  },
+  {
+    "id": "q-mphys-018",
+    "question": "Anaerobic glycolysis yields how much ATP per glucose?",
+    "options": [
+      "1 ATP",
+      "32 ATP",
+      "2 ATP",
+      "36 ATP",
+      "No net ATP"
+    ],
+    "answer": 2,
+    "explanation": "Glycolysis to lactic acid nets 2 ATP; aerobic respiration yields about 32."
+  },
+  {
+    "id": "q-mphys-019",
+    "question": "Which activity relies mainly on the aerobic pathway?",
+    "options": [
+      "Sprinting",
+      "Marathon running",
+      "A 100 m swim",
+      "Weightlifting",
+      "A tennis rally"
+    ],
+    "answer": 1,
+    "explanation": "Prolonged exercise relies on oxidation of glucose, fatty acids and amino acids."
+  },
+  {
+    "id": "q-mphys-020",
+    "question": "Muscle hypertrophy after resistance training is due mainly to:",
+    "options": [
+      "More connective tissue",
+      "Fluid retention",
+      "More mitochondria only",
+      "More actin and myosin in each fiber",
+      "More muscle fibers"
+    ],
+    "answer": 3,
+    "explanation": "Adult fibers thicken by adding myofibrils; fiber number barely changes."
+  },
+  {
+    "id": "q-mphys-021",
+    "question": "A muscle cramp is best relieved by:",
+    "options": [
+      "Contracting it harder",
+      "Immobilizing it in a shortened position",
+      "Applying a tourniquet",
+      "Stretching the affected muscle",
+      "Giving acetylcholine"
+    ],
+    "answer": 3,
+    "explanation": "Stretch activates inhibitory reflexes (Golgi tendon organ) that relax the muscle."
+  },
+  {
+    "id": "q-mphys-022",
+    "question": "Maximal active tension is produced at a sarcomere length of about:",
+    "options": [
+      "1.5 µm",
+      "1.0–1.2 µm",
+      "3.6 µm or more",
+      "2.0–2.2 µm",
+      "3.0 µm"
+    ],
+    "answer": 3,
+    "explanation": "At 2.0–2.2 µm every myosin head can reach actin; at ≥3.6 µm there is no overlap."
+  },
+  {
+    "id": "q-mphys-023",
+    "question": "As a muscle is stretched beyond its optimal length, passive tension:",
+    "options": [
+      "Increases",
+      "Decreases",
+      "Equals active tension at all lengths",
+      "Stays zero",
+      "Becomes negative"
+    ],
+    "answer": 0,
+    "explanation": "Stretched titin and connective tissue recoil more strongly; active tension falls."
+  },
+  {
+    "id": "q-mphys-024",
+    "question": "A motor unit is:",
+    "options": [
+      "One motor neuron and all the muscle fibers it innervates",
+      "One muscle fiber and its nerve endings",
+      "A group of sarcomeres",
+      "All the motor neurons to one muscle",
+      "One motor neuron and the myofibrils it innervates"
+    ],
+    "answer": 0,
+    "explanation": "The slide's 'myofibrils' should read muscle fibers: a neuron innervates whole cells."
+  },
+  {
+    "id": "q-mphys-025",
+    "question": "Muscles used for fine movements, such as the extraocular muscles, have:",
+    "options": [
+      "Gap junctions between fibers",
+      "Only slow fibers",
+      "Large motor units",
+      "No motor units",
+      "Small motor units"
+    ],
+    "answer": 4,
+    "explanation": "Few fibers per neuron allows finely graded force."
+  },
+  {
+    "id": "q-mphys-026",
+    "question": "According to the size principle, which motor units are recruited first?",
+    "options": [
+      "The units closest to the tendon",
+      "Small, fatigue-resistant units",
+      "Units in random order",
+      "Large, fast-fatiguing units",
+      "All units simultaneously"
+    ],
+    "answer": 1,
+    "explanation": "Henneman's size principle: small units first, large ones added as force rises."
+  },
+  {
+    "id": "q-mphys-027",
+    "question": "The latent period of a twitch corresponds to:",
+    "options": [
+      "Fatigue",
+      "The time taken by SERCA to pump Ca²⁺",
+      "The time for relaxation",
+      "Excitation–contraction coupling, including Ca²⁺ release",
+      "The refractory period of the neuron"
+    ],
+    "answer": 3,
+    "explanation": "Nothing is visible yet, but the AP spreads and Ca²⁺ is released from the SR."
+  },
+  {
+    "id": "q-mphys-028",
+    "question": "Why can a second stimulus summate with the first twitch?",
+    "options": [
+      "The muscle is fatigued",
+      "The twitch is shorter than the action potential",
+      "The first stimulus was below threshold",
+      "The action potential and refractory period last only a few ms, far shorter than the twitch",
+      "Ca²⁺ cannot be pumped back"
+    ],
+    "answer": 3,
+    "explanation": "A new AP can fire while the fiber is still contracting from the first."
+  },
+  {
+    "id": "q-mphys-029",
+    "question": "Treppe is produced by repeated stimuli of the same intensity given:",
+    "options": [
+      "Before relaxation is complete",
+      "With increasing voltage",
+      "So fast that no relaxation occurs",
+      "Only after complete relaxation",
+      "Only once"
+    ],
+    "answer": 3,
+    "explanation": "Each twitch returns to baseline but is slightly stronger than the last."
+  },
+  {
+    "id": "q-mphys-030",
+    "question": "Stimuli that arrive before the muscle has fully relaxed produce:",
+    "options": [
+      "Fatigue",
+      "Rigor",
+      "Summation",
+      "A single twitch",
+      "Treppe"
+    ],
+    "answer": 2,
+    "explanation": "Tension from the second contraction adds on top of the first."
+  },
+  {
+    "id": "q-mphys-031",
+    "question": "A wavy plateau with small valleys between stimuli is:",
+    "options": [
+      "Fused (complete) tetanus",
+      "A single twitch",
+      "Unfused (incomplete) tetanus",
+      "Fatigue",
+      "Treppe"
+    ],
+    "answer": 2,
+    "explanation": "Partial relaxation between stimuli leaves valleys; fused tetanus is a smooth line."
+  },
+  {
+    "id": "q-mphys-032",
+    "question": "Fused (complete) tetanus is characterized by:",
+    "options": [
+      "A wavy plateau with valleys",
+      "Separate twitches of increasing height",
+      "Tension falling despite stimulation",
+      "Tension lower than a single twitch",
+      "A smooth, straight plateau at maximal tension with no relaxation between stimuli"
+    ],
+    "answer": 4,
+    "explanation": "The practicum slide swaps fused and unfused; fused is the smooth one."
+  },
+  {
+    "id": "q-mphys-033",
+    "question": "Which is NOT a proposed mechanism of peripheral fatigue?",
+    "options": [
+      "Reduced ACh release",
+      "Accumulation of inorganic phosphate",
+      "Loss of motivation",
+      "Depletion of glycogen",
+      "Ca²⁺ leak from the SR"
+    ],
+    "answer": 2,
+    "explanation": "Loss of motivation is central fatigue."
+  },
+  {
+    "id": "q-mphys-034",
+    "question": "Muscle fatigue correlates most closely with depletion of:",
+    "options": [
+      "Titin",
+      "Actin",
+      "Acetylcholinesterase",
+      "Myoglobin",
+      "Muscle glycogen"
+    ],
+    "answer": 4,
+    "explanation": "Capacity for work declines almost in step with falling glycogen."
+  },
+  {
+    "id": "q-mphys-035",
+    "question": "Holding a heavy bag still at your side is an example of:",
+    "options": [
+      "Eccentric isotonic contraction",
+      "Concentric isotonic contraction",
+      "Tetanus of the disease type",
+      "Isometric contraction",
+      "Treppe"
+    ],
+    "answer": 3,
+    "explanation": "Tension develops without change in length."
+  },
+  {
+    "id": "q-mphys-036",
+    "question": "Lowering a cup slowly to the table uses the biceps in:",
+    "options": [
+      "Treppe",
+      "Isometric contraction",
+      "Eccentric contraction",
+      "Concentric contraction",
+      "Fused tetanus"
+    ],
+    "answer": 2,
+    "explanation": "The muscle lengthens while still generating force."
+  },
+  {
+    "id": "q-mphys-037",
+    "question": "In an isotonic contraction, a heavier load causes:",
+    "options": [
+      "No change in velocity",
+      "Greater shortening distance",
+      "A longer latent period and slower shortening",
+      "Faster shortening",
+      "A shorter latent period"
+    ],
+    "answer": 2,
+    "explanation": "Tension must first rise to match the load; velocity falls as load rises."
+  },
+  {
+    "id": "q-mphys-038",
+    "question": "A reflex is best defined as:",
+    "options": [
+      "A rapid, predictable, involuntary motor response to a stimulus",
+      "A slow postural adjustment",
+      "A conscious response to pain",
+      "A learned skill",
+      "Any voluntary movement"
+    ],
+    "answer": 0,
+    "explanation": "Reflexes occur without conscious control."
+  },
+  {
+    "id": "q-mphys-039",
+    "question": "A tendon reflex is NOT triggered by stroking the tendon because:",
+    "options": [
+      "Stroking is always anticipated",
+      "The reflex needs visual input",
+      "The stimulus does not suit the receptor (it must suddenly stretch the spindle)",
+      "The stimulus is too strong",
+      "Tendons have no nerves"
+    ],
+    "answer": 2,
+    "explanation": "An adequate stimulus must match the receptor, reach threshold, be sudden and unanticipated."
+  },
+  {
+    "id": "q-mphys-040",
+    "question": "In a reflex arc, the sensory neuron enters the spinal cord through the:",
+    "options": [
+      "Ventral horn",
+      "Ventral root",
+      "Dorsal root",
+      "Spinal meninges",
+      "Sympathetic trunk"
+    ],
+    "answer": 2,
+    "explanation": "Afferents enter dorsally; motor axons leave through the ventral root."
+  },
+  {
+    "id": "q-mphys-041",
+    "question": "The only truly monosynaptic reflexes in humans are the:",
+    "options": [
+      "Abdominal reflexes",
+      "Pupillary light reflexes",
+      "Stretch (tendon) reflexes",
+      "Crossed extensor reflexes",
+      "Withdrawal reflexes"
+    ],
+    "answer": 2,
+    "explanation": "The Ia afferent synapses directly on the alpha motor neuron."
+  },
+  {
+    "id": "q-mphys-042",
+    "question": "An autonomic reflex differs from a somatic reflex in that its efferent pathway:",
+    "options": [
+      "Is integrated in the cerebral cortex",
+      "Has no synapse",
+      "Has two neurons with a synapse in an autonomic ganglion",
+      "Ends on skeletal muscle",
+      "Uses the dorsal root"
+    ],
+    "answer": 2,
+    "explanation": "Preganglionic and postganglionic neurons supply smooth muscle, cardiac muscle or glands."
+  },
+  {
+    "id": "q-mphys-043",
+    "question": "Compared with an innate spinal reflex, a learned reflex usually has:",
+    "options": [
+      "A longer reaction time",
+      "A shorter reaction time",
+      "No effector",
+      "No sensory input",
+      "No synapses"
+    ],
+    "answer": 0,
+    "explanation": "Learned responses involve higher brain centers and more synapses."
+  },
+  {
+    "id": "q-mphys-044",
+    "question": "The biceps reflex tests spinal segments:",
+    "options": [
+      "C5–C6",
+      "T8–T12",
+      "L3–L4",
+      "S1–S2",
+      "C7–C8"
+    ],
+    "answer": 0,
+    "explanation": "'C5–6 pick up sticks'."
+  },
+  {
+    "id": "q-mphys-045",
+    "question": "The triceps reflex is tested by tapping the tendon just above the:",
+    "options": [
+      "Olecranon",
+      "Styloid process of the radius",
+      "Radial tuberosity",
+      "Medial epicondyle",
+      "Biceps tendon"
+    ],
+    "answer": 0,
+    "explanation": "Normal response: elbow extension (C7, radial nerve)."
+  },
+  {
+    "id": "q-mphys-046",
+    "question": "During the abdominal reflex, the umbilicus normally moves:",
+    "options": [
+      "Upward only",
+      "Away from the stimulated side",
+      "Not at all",
+      "Downward only",
+      "Toward the stimulated side"
+    ],
+    "answer": 4,
+    "explanation": "The abdominal muscles under the stroke contract (T8–T12)."
+  },
+  {
+    "id": "q-mphys-047",
+    "question": "The patellar reflex is elicited by tapping the patellar ligament and tests:",
+    "options": [
+      "L2–L4 via the femoral nerve",
+      "L5 via the common fibular nerve",
+      "C5–C6 via the musculocutaneous nerve",
+      "T10 via intercostal nerves",
+      "S1 via the tibial nerve"
+    ],
+    "answer": 0,
+    "explanation": "The quadriceps contracts and the knee extends."
+  },
+  {
+    "id": "q-mphys-048",
+    "question": "The Achilles reflex tests which segment?",
+    "options": [
+      "S1",
+      "L2",
+      "T12",
+      "C7",
+      "L4"
+    ],
+    "answer": 0,
+    "explanation": "'S1–2 buckle my shoe'; tibial nerve, plantar flexion."
+  },
+  {
+    "id": "q-mphys-049",
+    "question": "Light shone into the right eye constricts the left pupil. This is the:",
+    "options": [
+      "Direct light reflex",
+      "Consensual light reflex",
+      "Ciliospinal reflex",
+      "Corneal reflex",
+      "Accommodation reflex"
+    ],
+    "answer": 1,
+    "explanation": "Each pretectal nucleus projects to both Edinger–Westphal nuclei."
+  },
+  {
+    "id": "q-mphys-050",
+    "question": "If a tendon reflex seems absent, the examiner should first:",
+    "options": [
+      "Stop the examination",
+      "Ask the subject to tense the muscle",
+      "Record it as 0 immediately",
+      "Repeat it with reinforcement, e.g. the Jendrassik maneuver",
+      "Strike the muscle belly instead"
+    ],
+    "answer": 3,
+    "explanation": "Reinforcement increases reflex excitability; distraction also helps."
+  },
+  {
+    "id": "q-mphys-051",
+    "question": "Brisk reflexes with clonus and an extensor plantar response suggest a lesion of the:",
+    "options": [
+      "Peripheral sensory nerve only",
+      "Lower motor neuron",
+      "Upper motor neuron",
+      "Neuromuscular junction",
+      "Muscle itself"
+    ],
+    "answer": 2,
+    "explanation": "Loss of descending inhibition causes hyperreflexia."
+  },
+  {
+    "id": "q-mphys-052",
+    "question": "Frogs are used for the wet lab mainly because they are:",
+    "options": [
+      "Poikilothermic and have a large, easily prepared gastrocnemius",
+      "Free of skeletal muscle reflexes",
+      "Unaffected by electrical stimulation",
+      "Unable to fatigue",
+      "Homeothermic like humans"
+    ],
+    "answer": 0,
+    "explanation": "No temperature control is needed and the gastrocnemius is easy to dissect and stimulate."
+  },
+  {
+    "id": "q-mphys-053",
+    "question": "Pithing the frog destroys the brain and spinal cord in order to:",
+    "options": [
+      "Prevent treppe",
+      "Lower the stimulation threshold",
+      "Kill it humanely and abolish interfering CNS reflexes",
+      "Increase muscle glycogen",
+      "Keep the muscle warm"
+    ],
+    "answer": 2,
+    "explanation": "Limp hind legs confirm pithing is complete."
+  },
+  {
+    "id": "q-mphys-054",
+    "question": "The nerve prepared with the frog gastrocnemius is the:",
+    "options": [
+      "Vagus nerve",
+      "Sciatic nerve (n. ischiadicus)",
+      "Obturator nerve",
+      "Femoral nerve",
+      "Tibial nerve only"
+    ],
+    "answer": 1,
+    "explanation": "It is tied and cut proximally so a length stays attached to the muscle."
+  },
+  {
+    "id": "q-mphys-055",
+    "question": "The preparation is kept moist with:",
+    "options": [
+      "Alcohol",
+      "Ringer lactate",
+      "Formalin",
+      "Distilled water",
+      "Hypertonic saline"
+    ],
+    "answer": 1,
+    "explanation": "Ringer lactate keeps the tissue alive and excitable."
+  },
+  {
+    "id": "q-mphys-056",
+    "question": "In PhysioEx, the electrical stimulus replaces:",
+    "options": [
+      "The sarcoplasmic reticulum",
+      "ATP",
+      "Calcium",
+      "Acetylcholine released at the neuromuscular junction",
+      "Troponin"
+    ],
+    "answer": 3,
+    "explanation": "The current depolarizes the membrane to threshold directly."
+  },
+  {
+    "id": "q-mphys-057",
+    "question": "In PhysioEx Activity 1, as voltage increases above threshold, the latent period:",
+    "options": [
+      "Increases steadily",
+      "Doubles at each step",
+      "Decreases to zero",
+      "Stays roughly constant",
+      "Disappears above 4 V"
+    ],
+    "answer": 3,
+    "explanation": "It reflects the time for excitation–contraction coupling, not stimulus strength."
+  },
+  {
+    "id": "q-mphys-058",
+    "question": "Increasing voltage from 8.5 V to 10 V gives no increase in single-twitch force because:",
+    "options": [
+      "Treppe has ended",
+      "Voltage above 8.5 V blocks the NMJ",
+      "All motor units are already recruited",
+      "The muscle is fatigued",
+      "The latent period is too long"
+    ],
+    "answer": 2,
+    "explanation": "8.5 V is the maximal stimulus; more force then requires higher frequency."
+  },
+  {
+    "id": "q-mphys-059",
+    "question": "In PhysioEx Activity 6, shortening the muscle below its optimal length (75 mm):",
+    "options": [
+      "Lowers active force while passive force stays zero",
+      "Has no effect on force",
+      "Produces fused tetanus",
+      "Raises active force",
+      "Raises passive force"
+    ],
+    "answer": 0,
+    "explanation": "Too much overlap reduces active tension; passive force appears only with stretch."
+  }
+]

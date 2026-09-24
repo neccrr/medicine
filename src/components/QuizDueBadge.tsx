@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { quizSubjects } from "../lib/content";
+import { keyOf, quizSubjects } from "../lib/content";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { QuizIcon } from "./icons";
 
 function totalQuizDue(): number {
   return quizSubjects.reduce(
-    (sum, s) => sum + readJSON<string[]>(STORAGE_KEYS.quizDue(s.id), []).length,
+    (sum, s) => sum + readJSON<string[]>(STORAGE_KEYS.quizDue(keyOf(s)), []).length,
     0,
   );
 }

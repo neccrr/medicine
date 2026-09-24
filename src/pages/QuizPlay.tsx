@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { quizBanks, quizGames, quizSubjects } from "../lib/content";
+import { keyOf, quizBanks, quizGames, quizSubjects, subjectKey } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
 import { ScoreSparkline } from "../components/ScoreSparkline";
 import { ConfettiBurst } from "../components/ConfettiBurst";
@@ -45,11 +45,12 @@ function scoreMessage(score: number, total: number): string {
 }
 
 export function QuizPlay() {
-  const { subjectId = "" } = useParams();
-  const fullBank = quizBanks[subjectId] ?? EMPTY_BANK;
-  const games = quizGames[subjectId] ?? [];
-  const subjectLabel = quizSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
-  const { history, dueIds, recordAttempt } = useQuizProgress(subjectId);
+  const { blockId = "", subjectId = "" } = useParams();
+  const key = subjectKey(blockId, subjectId);
+  const fullBank = quizBanks[key] ?? EMPTY_BANK;
+  const games = quizGames[key] ?? [];
+  const subjectLabel = quizSubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
+  const { history, dueIds, recordAttempt } = useQuizProgress(key);
   const [started, setStarted] = useState(false);
   const [sessionBank, setSessionBank] = useState<QuizQuestion[] | null>(null);
   const [sessionKind, setSessionKind] = useState<SessionKind>({ type: "full" });
@@ -71,10 +72,10 @@ export function QuizPlay() {
 
   // savedProgress/canResume are only read on the pre-start screen, but the underlying
   // localStorage value can hold a full shuffled bank snapshot (100KB+ of JSON for a large
-  // subject). Memoizing on subjectId/fullBank keeps it off the hot path of answering questions
+  // subject). Memoizing on key/fullBank keeps it off the hot path of answering questions
   // and navigating, where it was previously re-read and re-parsed on every single render.
   const { savedProgress, canResume } = useMemo(() => {
-    const saved = readJSON<InProgressSave | null>(STORAGE_KEYS.quizInProgress(subjectId), null);
+    const saved = readJSON<InProgressSave | null>(STORAGE_KEYS.quizInProgress(key), null);
     const idSet = new Set(fullBank.map((q) => q.id));
     const ok =
       !!saved &&
@@ -84,11 +85,11 @@ export function QuizPlay() {
       saved.bank.length === fullBank.length &&
       saved.bank.every((q) => idSet.has(q.id));
     return { savedProgress: saved, canResume: ok };
-  }, [subjectId, fullBank]);
+  }, [key, fullBank]);
 
   const persistProgress = (nextAnswers: Record<string, number>, nextIndex: number) => {
     if (sessionKind.type !== "full" || !sessionBank) return;
-    writeJSON(STORAGE_KEYS.quizInProgress(subjectId), {
+    writeJSON(STORAGE_KEYS.quizInProgress(key), {
       bank: sessionBank,
       answers: nextAnswers,
       currentIndex: nextIndex,
@@ -96,7 +97,7 @@ export function QuizPlay() {
     });
   };
 
-  const clearInProgress = () => writeJSON(STORAGE_KEYS.quizInProgress(subjectId), null);
+  const clearInProgress = () => writeJSON(STORAGE_KEYS.quizInProgress(key), null);
 
   const startBank = (nextSource: QuizQuestion[], kind: SessionKind) => {
     setSessionBank(buildSessionBank(nextSource));

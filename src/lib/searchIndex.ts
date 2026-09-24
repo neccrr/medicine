@@ -5,6 +5,7 @@ import {
   examPackagesByBlock,
   flashcardDecks,
   flashcardSubjects,
+  keyOf,
   modulesByBlockSubject,
   quizBanks,
   quizQuestionsInBlock,
@@ -13,7 +14,6 @@ import {
   summarySubjects,
 } from "./content";
 import { studyBlocks } from "./blocks";
-import type { Subject } from "../types/content";
 import { markdownToPlainText, splitMarkdownSections, truncate } from "./textExtract";
 
 const EXCERPT_LENGTH = 200;
@@ -45,16 +45,16 @@ function subjectDocs(): SearchDoc[] {
   return [
     ...flashcardSubjects.map((s) => ({
       type: "flashcard" as const,
-      id: `fs-${s.id}`,
+      id: `fs-${keyOf(s)}`,
       title: `${s.label} flashcards`,
-      detail: "Subject deck",
+      detail: `Block ${s.blockId} deck`,
       to: `/flashcards/${s.blockId}/${s.id}`,
     })),
     ...quizSubjects.map((s) => ({
       type: "quiz" as const,
-      id: `qs-${s.id}`,
+      id: `qs-${keyOf(s)}`,
       title: `${s.label} quiz`,
-      detail: "Question bank",
+      detail: `Block ${s.blockId} question bank`,
       to: `/quizzes/${s.blockId}/${s.id}`,
     })),
     ...studyBlocks
@@ -78,64 +78,66 @@ function subjectDocs(): SearchDoc[] {
         type: "module" as const,
         id: `md-${key}`,
         title: `${label} modules`,
-        detail: `${count} PDF${count === 1 ? "" : "s"}`,
+        detail: `Block ${blockId} · ${count} PDF${count === 1 ? "" : "s"}`,
         to: `/modules/${blockId}/${subjectId}`,
       };
     }),
     ...ebookSubjects.map((s) => ({
       type: "ebook" as const,
-      id: `es-${s.id}`,
+      id: `es-${keyOf(s)}`,
       title: s.label,
-      detail: "Ebook",
+      detail: `Block ${s.blockId} ebook`,
       to: `/ebooks/${s.blockId}/${s.id}`,
     })),
     ...summarySubjects.map((s) => ({
       type: "summary" as const,
-      id: `ss-${s.id}`,
+      id: `ss-${keyOf(s)}`,
       title: `${s.label} summary`,
-      detail: "Written summary",
+      detail: `Block ${s.blockId} summary`,
       to: `/summaries/${s.blockId}/${s.id}`,
     })),
   ];
 }
 
-function blockOf(subjects: Subject[], subjectId: string): string {
-  return subjects.find((s) => s.id === subjectId)?.blockId ?? "";
+/** The bare subject id from a "{blockId}/{subjectId}" key, used for the subject filter chips. */
+function subjectOf(key: string): string {
+  return key.split("/")[1] ?? key;
 }
 
 function contentDocs(): SearchDoc[] {
-  const flashcardDocs = Object.entries(flashcardDecks).flatMap(([subjectId, cards]) =>
+  const flashcardDocs = Object.entries(flashcardDecks).flatMap(([key, cards]) =>
     cards.map((card) => ({
       type: "flashcard" as const,
       id: card.id,
       title: card.front,
       detail: card.back,
-      to: `/flashcards/${blockOf(flashcardSubjects, subjectId)}/${subjectId}`,
-      subjectId,
+      to: `/flashcards/${key}`,
+      subjectId: subjectOf(key),
       keywords: card.tags.join(" "),
     })),
   );
-  const quizDocs = Object.entries(quizBanks).flatMap(([subjectId, bank]) =>
+  const quizDocs = Object.entries(quizBanks).flatMap(([key, bank]) =>
     bank.map((q) => ({
       type: "quiz" as const,
       id: q.id,
       title: q.question,
       detail: q.explanation,
-      to: `/quizzes/${blockOf(quizSubjects, subjectId)}/${subjectId}`,
-      subjectId,
+      to: `/quizzes/${key}`,
+      subjectId: subjectOf(key),
       keywords: q.options.join(" "),
     })),
   );
-  const summaryDocs = Object.entries(summaries).flatMap(([subjectId, markdown]) => {
-    const label = summarySubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
-    const to = `/summaries/${blockOf(summarySubjects, subjectId)}/${subjectId}`;
+  const summaryDocs = Object.entries(summaries).flatMap(([key, markdown]) => {
+    const subjectId = subjectOf(key);
+    const label = summarySubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
+    const to = `/summaries/${key}`;
     const sections = splitMarkdownSections(markdown);
 
     if (sections.length === 0) {
       return [
         {
           type: "summary" as const,
-          id: `sum-${subjectId}`,
+          id: `sum-${key}`,
           title: `${label} summary`,
           detail: truncate(markdownToPlainText(markdown), EXCERPT_LENGTH),
           to,
@@ -147,7 +149,7 @@ function contentDocs(): SearchDoc[] {
     return sections
       .map((section, i) => ({
         type: "summary" as const,
-        id: `sum-${subjectId}-${i}`,
+        id: `sum-${key}-${i}`,
         title: `${label}: ${section.heading}`,
         detail: truncate(markdownToPlainText(section.body), EXCERPT_LENGTH),
         keywords: markdownToPlainText(section.body),
@@ -157,10 +159,10 @@ function contentDocs(): SearchDoc[] {
       .filter((doc) => doc.detail.length > 0);
   });
   const ebookDocs = Object.entries(ebookChapters).flatMap(([key, markdown]) => {
-    const [subjectId, chapterId] = key.split("/");
-    const meta = ebookMeta[subjectId];
+    const [blockId, subjectId, chapterId] = key.split("/");
+    const meta = ebookMeta[`${blockId}/${subjectId}`];
     const chapterTitle = meta?.chapters.find((c) => c.id === chapterId)?.title ?? chapterId;
-    const to = `/ebooks/${blockOf(ebookSubjects, subjectId)}/${subjectId}/${chapterId}`;
+    const to = `/ebooks/${blockId}/${subjectId}/${chapterId}`;
     const sections = splitMarkdownSections(markdown);
 
     if (sections.length === 0) {

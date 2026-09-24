@@ -10,6 +10,7 @@ import {
   modulesByBlockSubject,
   quizBanks,
   quizGames,
+  keyOf,
   quizQuestionsInBlock,
   quizSubjects,
   summaries,
@@ -43,7 +44,7 @@ import {
   SummaryIcon,
   TimerIcon,
 } from "../components/icons";
-import type { CardStateMap, ExamAttempt, QuizAttempt, ReadingPosition, Subject } from "../types/content";
+import type { CardStateMap, ExamAttempt, QuizAttempt, ReadingPosition } from "../types/content";
 
 interface ContinueItem {
   to: string;
@@ -65,8 +66,8 @@ function buildContinueItems(): ContinueItem[] {
 
   const resumes = ebookSubjects
     .map((s) => {
-      const meta = ebookMeta[s.id];
-      const position = readJSON<ReadingPosition | null>(STORAGE_KEYS.ebookPosition(s.id), null);
+      const meta = ebookMeta[keyOf(s)];
+      const position = readJSON<ReadingPosition | null>(STORAGE_KEYS.ebookPosition(keyOf(s)), null);
       return position ? { s, meta, position } : null;
     })
     .filter((x): x is NonNullable<typeof x> => x !== null)
@@ -86,8 +87,8 @@ function buildContinueItems(): ContinueItem[] {
 
   flashcardSubjects
     .map((s) => {
-      const deck = flashcardDecks[s.id];
-      const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(s.id), {});
+      const deck = flashcardDecks[keyOf(s)];
+      const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
       const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
       return { s, due };
     })
@@ -108,13 +109,13 @@ function buildContinueItems(): ContinueItem[] {
   quizSubjects
     .map((s) => ({
       s,
-      due: readJSON<string[]>(STORAGE_KEYS.quizDue(s.id), []).length,
+      due: readJSON<string[]>(STORAGE_KEYS.quizDue(keyOf(s)), []).length,
     }))
     .filter((x) => x.due > 0)
     .sort((a, b) => b.due - a.due)
     .slice(0, 2)
     .forEach(({ s, due }) => {
-      dueQuizSubjectIds.add(s.id);
+      dueQuizSubjectIds.add(keyOf(s));
       items.push({
         to: `/quizzes/${s.blockId}/${s.id}`,
         title: `${due} quiz question${due === 1 ? "" : "s"} due in ${s.label}`,
@@ -126,11 +127,11 @@ function buildContinueItems(): ContinueItem[] {
 
   quizSubjects
     .map((s) => {
-      const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(s.id), []);
+      const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(keyOf(s)), []);
       const last = history[history.length - 1];
       return last ? { s, last } : null;
     })
-    .filter((x): x is NonNullable<typeof x> => x !== null && !dueQuizSubjectIds.has(x.s.id))
+    .filter((x): x is NonNullable<typeof x> => x !== null && !dueQuizSubjectIds.has(keyOf(x.s)))
     .sort((a, b) => b.last.date.localeCompare(a.last.date))
     .slice(0, 2)
     .forEach(({ s, last }) => {
@@ -157,9 +158,7 @@ function buildSubjectOverviews() {
     ...moduleSubjects,
   ];
   const pairs = new Map<string, { id: string; blockId: string }>();
-  all.forEach((s) => pairs.set(`${s.blockId}/${s.id}`, { id: s.id, blockId: s.blockId }));
-  const inBlock = (list: Subject[], id: string, blockId: string) =>
-    list.some((s) => s.id === id && s.blockId === blockId);
+  all.forEach((s) => pairs.set(keyOf(s), { id: s.id, blockId: s.blockId }));
 
   return Array.from(pairs.entries())
     .sort(([a], [b]) => a.localeCompare(b))
@@ -172,9 +171,9 @@ function buildSubjectOverviews() {
       let activityScore = 0;
       let mastery: number | null = null;
 
-      const deck = inBlock(flashcardSubjects, id, blockId) ? flashcardDecks[id] : undefined;
+      const deck = flashcardDecks[key];
       if (deck) {
-        const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(id), {});
+        const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
         const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
         const masteredCount = deck.filter((c) => (stateMap[c.id]?.interval ?? 0) >= 21).length;
         mastery = deck.length > 0 ? (masteredCount / deck.length) * 100 : 0;
@@ -187,13 +186,12 @@ function buildSubjectOverviews() {
         });
       }
 
-      const quizHere = inBlock(quizSubjects, id, blockId);
-      const bank = quizHere ? quizBanks[id] : undefined;
-      const games = quizHere ? quizGames[id] : undefined;
+      const bank = quizBanks[key];
+      const games = quizGames[key];
       if (bank || games) {
-        const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(id), []);
+        const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
         const last = history[history.length - 1];
-        const due = readJSON<string[]>(STORAGE_KEYS.quizDue(id), []).length;
+        const due = readJSON<string[]>(STORAGE_KEYS.quizDue(key), []).length;
         activityScore += due;
         facets.push({
           label: "Quiz",
@@ -209,9 +207,9 @@ function buildSubjectOverviews() {
         });
       }
 
-      const meta = inBlock(ebookSubjects, id, blockId) ? ebookMeta[id] : undefined;
+      const meta = ebookMeta[key];
       if (meta) {
-        const completedCount = readJSON<string[]>(STORAGE_KEYS.ebookCompleted(id), []).length;
+        const completedCount = readJSON<string[]>(STORAGE_KEYS.ebookCompleted(key), []).length;
         facets.push({
           label: "Ebook",
           detail:
@@ -225,7 +223,7 @@ function buildSubjectOverviews() {
         });
       }
 
-      if (inBlock(summarySubjects, id, blockId) && summaries[id]) {
+      if (summaries[key]) {
         facets.push({
           label: "Summary",
           detail: "Written summary",
@@ -234,7 +232,7 @@ function buildSubjectOverviews() {
         });
       }
 
-      const modulePdfs = modulesByBlockSubject[`${blockId}/${id}`];
+      const modulePdfs = modulesByBlockSubject[key];
       if (modulePdfs) {
         facets.push({
           label: "Modules",
@@ -256,13 +254,13 @@ export function Home() {
   const hasActivity = activityDays.length > 0;
 
   const totalDue = flashcardSubjects.reduce((sum, s) => {
-    const deck = flashcardDecks[s.id];
-    const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(s.id), {});
+    const deck = flashcardDecks[keyOf(s)];
+    const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
     return sum + deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
   }, 0);
 
   const totalQuizAttempts = quizSubjects.reduce(
-    (sum, s) => sum + readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(s.id), []).length,
+    (sum, s) => sum + readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(keyOf(s)), []).length,
     0,
   );
 

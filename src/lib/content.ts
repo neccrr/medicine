@@ -62,34 +62,20 @@ const moduleModules = import.meta.glob<string>("../../content/modules/block/*/*/
   query: "?url",
 });
 
-function subjectFromPath(path: string): string {
-  const match = path.match(/\/([^/]+)\/(deck|bank|meta)\.json$/);
-  return match ? match[1] : path;
-}
-
-function subjectFromMdPath(path: string): string {
-  const match = path.match(/\/([^/]+)\.md$/);
-  return match ? match[1] : path;
-}
-
-function ebookChapterKey(path: string): string {
-  const match = path.match(/ebooks\/block\/[^/]+\/([^/]+)\/([^/]+)\.md$/);
+/** "{blockId}/{subjectId}" from any content path under content/{type}/block/{blockId}/{subject}... */
+function keyFromPath(path: string): string {
+  const match = path.match(/\/block\/([^/]+)\/([^/.]+)/);
   return match ? `${match[1]}/${match[2]}` : path;
 }
 
-function ebookPdfSubject(path: string): string {
-  const match = path.match(/ebooks\/block\/[^/]+\/([^/]+)\/[^/]+\.pdf$/);
-  return match ? match[1] : path;
+function ebookChapterKey(path: string): string {
+  const match = path.match(/ebooks\/block\/([^/]+)\/([^/]+)\/([^/]+)\.md$/);
+  return match ? `${match[1]}/${match[2]}/${match[3]}` : path;
 }
 
 function pdfName(path: string): string {
   const match = path.match(/([^/]+)\.pdf$/);
   return match ? match[1].replace(/[-_]/g, " ") : "PDF";
-}
-
-function moduleKey(path: string): string {
-  const match = path.match(/modules\/block\/([^/]+)\/([^/]+)\//);
-  return match ? `${match[1]}/${match[2]}` : path;
 }
 
 /** Subfolder path between the subject folder and the file, e.g. "practicum/assistance" ("" if none). */
@@ -116,55 +102,53 @@ function moduleName(path: string): string {
     .trim();
 }
 
-function quizGameSubject(path: string): string {
-  const match = path.match(/quizzes\/block\/[^/]+\/([^/]+)\/[^/]+\.html$/);
-  return match ? match[1] : path;
-}
-
 function htmlName(path: string): string {
   const match = path.match(/([^/]+)\.html$/);
   return match ? match[1].replace(/[-_]/g, " ") : "Quiz";
-}
-
-function blockFromPath(path: string): string {
-  const match = path.match(/\/block\/([^/]+)\//);
-  return match ? match[1] : "";
-}
-
-/**
- * Content keys stay subject ids within one content type; this records each subject's block for
- * that type (from its folder) and notes any subject that appears in two blocks of the same type,
- * which the id-keyed maps can't hold apart. contentIntegrity.test.ts asserts there are none.
- */
-export const subjectBlockCollisions: string[] = [];
-function blockBySubject(paths: string[], subjectOf: (path: string) => string, kind: string): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const path of paths) {
-    const id = subjectOf(path);
-    const blockId = blockFromPath(path);
-    if (out[id] && out[id] !== blockId) subjectBlockCollisions.push(`${kind}:${id} in ${out[id]} and ${blockId}`);
-    out[id] = blockId;
-  }
-  return out;
 }
 
 function labelize(id: string): string {
   return id.charAt(0).toUpperCase() + id.slice(1);
 }
 
-export const flashcardDecks: Record<string, Flashcard[]> = Object.fromEntries(
-  Object.entries(flashcardModules).map(([path, cards]) => [
-    subjectFromPath(path),
-    cards,
-  ]),
-);
+/**
+ * The key every content map and every progress entry in localStorage uses: "{blockId}/{subjectId}".
+ * A subject can have material in more than one block (physiology in 1.1 and 1.2), so the subject
+ * id alone isn't unique.
+ */
+export function subjectKey(blockId: string, subjectId: string): string {
+  return `${blockId}/${subjectId}`;
+}
 
-export const quizBanks: Record<string, QuizQuestion[]> = Object.fromEntries(
-  Object.entries(quizModules).map(([path, questions]) => [
-    subjectFromPath(path),
-    questions,
-  ]),
-);
+export function keyOf(subject: Pick<Subject, "id" | "blockId">): string {
+  return subjectKey(subject.blockId, subject.id);
+}
+
+function subjectsFromKeys(keys: Iterable<string>, label: (key: string, id: string) => string = (_k, id) => labelize(id)): Subject[] {
+  return Array.from(new Set(keys))
+    .sort()
+    .map((key) => {
+      const [blockId, id] = key.split("/");
+      return { id, blockId, label: label(key, id) };
+    });
+}
+
+function keyedBy<T>(modules: Record<string, T>): Record<string, T> {
+  return Object.fromEntries(Object.entries(modules).map(([path, value]) => [keyFromPath(path), value]));
+}
+
+function groupedBy<T>(modules: Record<string, string>, make: (path: string, url: string) => T, sortKey: (item: T) => string): Record<string, T[]> {
+  const out: Record<string, T[]> = {};
+  for (const [path, url] of Object.entries(modules)) (out[keyFromPath(path)] ??= []).push(make(path, url));
+  for (const list of Object.values(out)) list.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+  return out;
+}
+
+/** Flashcard decks, keyed by "{blockId}/{subjectId}". */
+export const flashcardDecks: Record<string, Flashcard[]> = keyedBy(flashcardModules);
+
+/** Quiz banks, keyed by "{blockId}/{subjectId}". */
+export const quizBanks: Record<string, QuizQuestion[]> = keyedBy(quizModules);
 
 export interface ExamPackage {
   id: string;
@@ -187,66 +171,37 @@ for (const list of Object.values(examPackagesByBlock)) {
   list.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export const summaries: Record<string, string> = Object.fromEntries(
-  Object.entries(summaryModules).map(([path, markdown]) => [
-    subjectFromMdPath(path),
-    markdown,
-  ]),
-);
+/** Summaries, keyed by "{blockId}/{subjectId}" (from content/summaries/block/{blockId}/{subject}.md). */
+export const summaries: Record<string, string> = keyedBy(summaryModules);
 
 export const tips: string[] = Object.values(tipsModule)[0] ?? [];
 
-const flashcardBlocks = blockBySubject(Object.keys(flashcardModules), subjectFromPath, "flashcards");
-export const flashcardSubjects: Subject[] = Object.keys(flashcardDecks)
-  .sort()
-  .map((id) => ({ id, label: labelize(id), blockId: flashcardBlocks[id] }));
+export const flashcardSubjects: Subject[] = subjectsFromKeys(Object.keys(flashcardDecks));
 
 export interface QuizGame {
   name: string;
   url: string;
 }
 
-export const quizGames: Record<string, QuizGame[]> = {};
-for (const [path, url] of Object.entries(quizGameModules)) {
-  const subjectId = quizGameSubject(path);
-  (quizGames[subjectId] ??= []).push({ name: htmlName(path), url });
-}
-for (const list of Object.values(quizGames)) {
-  list.sort((a, b) => a.name.localeCompare(b.name));
-}
+/** Interactive HTML quizzes, keyed by "{blockId}/{subjectId}". */
+export const quizGames: Record<string, QuizGame[]> = groupedBy(
+  quizGameModules,
+  (path, url) => ({ name: htmlName(path), url }),
+  (g) => g.name,
+);
 
-const quizBlocks = {
-  ...blockBySubject(Object.keys(quizGameModules), quizGameSubject, "quiz games"),
-  ...blockBySubject(Object.keys(quizModules), subjectFromPath, "quizzes"),
-};
-export const quizSubjects: Subject[] = Array.from(
-  new Set([...Object.keys(quizBanks), ...Object.keys(quizGames)]),
-)
-  .sort()
-  .map((id) => ({ id, label: labelize(id), blockId: quizBlocks[id] }));
+export const quizSubjects: Subject[] = subjectsFromKeys([...Object.keys(quizBanks), ...Object.keys(quizGames)]);
 
 /** Every quiz-bank question from the subjects whose quiz folder is in this block (pooled exam fallback). */
 export function quizQuestionsInBlock(blockId: string): QuizQuestion[] {
-  return quizSubjects.filter((s) => s.blockId === blockId).flatMap((s) => quizBanks[s.id] ?? []);
+  return quizSubjects.filter((s) => s.blockId === blockId).flatMap((s) => quizBanks[keyOf(s)] ?? []);
 }
 
-const summaryBlocks = blockBySubject(Object.keys(summaryModules), subjectFromMdPath, "summaries");
-export const summarySubjects: Subject[] = Object.keys(summaries)
-  .sort()
-  .map((id) => ({ id, label: labelize(id), blockId: summaryBlocks[id] }));
+export const summarySubjects: Subject[] = subjectsFromKeys(Object.keys(summaries));
 
-const ebookMetaFromFiles: Record<string, EbookMeta> = Object.fromEntries(
-  Object.entries(ebookMetaModules).map(([path, meta]) => [
-    subjectFromPath(path),
-    meta,
-  ]),
-);
-
+/** Ebook chapters, keyed by "{blockId}/{subjectId}/{chapterId}". */
 export const ebookChapters: Record<string, string> = Object.fromEntries(
-  Object.entries(ebookChapterModules).map(([path, markdown]) => [
-    ebookChapterKey(path),
-    markdown,
-  ]),
+  Object.entries(ebookChapterModules).map(([path, markdown]) => [ebookChapterKey(path), markdown]),
 );
 
 export interface EbookPdf {
@@ -254,36 +209,26 @@ export interface EbookPdf {
   url: string;
 }
 
-export const ebookPdfs: Record<string, EbookPdf[]> = {};
-for (const [path, url] of Object.entries(ebookPdfModules)) {
-  const subjectId = ebookPdfSubject(path);
-  (ebookPdfs[subjectId] ??= []).push({ name: pdfName(path), url });
-}
-for (const list of Object.values(ebookPdfs)) {
-  list.sort((a, b) => a.name.localeCompare(b.name));
-}
+/** Ebook reference PDFs, keyed by "{blockId}/{subjectId}". */
+export const ebookPdfs: Record<string, EbookPdf[]> = groupedBy(
+  ebookPdfModules,
+  (path, url) => ({ name: pdfName(path), url }),
+  (p) => p.name,
+);
 
 // A subject folder that only contains PDFs (no meta.json/chapters) still gets a book entry,
 // synthesized from the folder name — dropping a PDF in is enough on its own.
-export const ebookMeta: Record<string, EbookMeta> = { ...ebookMetaFromFiles };
-for (const subjectId of Object.keys(ebookPdfs)) {
-  if (!ebookMeta[subjectId]) {
-    ebookMeta[subjectId] = {
-      title: labelize(subjectId),
-      description: "PDF reference",
-      chapters: [],
-    };
-  }
+/** Ebook metadata, keyed by "{blockId}/{subjectId}". */
+export const ebookMeta: Record<string, EbookMeta> = keyedBy(ebookMetaModules);
+for (const key of Object.keys(ebookPdfs)) {
+  ebookMeta[key] ??= {
+    title: labelize(key.split("/")[1]),
+    description: "PDF reference",
+    chapters: [],
+  };
 }
 
-const ebookBlocks = {
-  ...blockBySubject(Object.keys(ebookPdfModules), ebookPdfSubject, "ebook PDFs"),
-  ...blockBySubject(Object.keys(ebookChapterModules), (p) => ebookChapterKey(p).split("/")[0], "ebook chapters"),
-  ...blockBySubject(Object.keys(ebookMetaModules), subjectFromPath, "ebooks"),
-};
-export const ebookSubjects: Subject[] = Object.keys(ebookMeta)
-  .sort()
-  .map((id) => ({ id, label: ebookMeta[id].title, blockId: ebookBlocks[id] }));
+export const ebookSubjects: Subject[] = subjectsFromKeys(Object.keys(ebookMeta), (key) => ebookMeta[key].title);
 
 export interface ModulePdf {
   name: string;
@@ -292,19 +237,11 @@ export interface ModulePdf {
 }
 
 /** Lecture-slide PDFs, keyed by "{blockId}/{subjectId}". */
-export const modulesByBlockSubject: Record<string, ModulePdf[]> = {};
-for (const [path, url] of Object.entries(moduleModules)) {
-  const key = moduleKey(path);
-  (modulesByBlockSubject[key] ??= []).push({ name: moduleName(path), url, section: moduleSection(path) });
-}
-for (const list of Object.values(modulesByBlockSubject)) {
-  list.sort((a, b) => a.name.localeCompare(b.name));
-}
+export const modulesByBlockSubject: Record<string, ModulePdf[]> = groupedBy(
+  moduleModules,
+  (path, url) => ({ name: moduleName(path), url, section: moduleSection(path) }),
+  (m) => m.name,
+);
 
-/** One entry per block a subject has module PDFs in; modules are already keyed by block. */
-export const moduleSubjects: Subject[] = Object.keys(modulesByBlockSubject)
-  .sort()
-  .map((key) => {
-    const [blockId, id] = key.split("/");
-    return { id, label: labelize(id), blockId };
-  });
+/** One entry per block a subject has module PDFs in. */
+export const moduleSubjects: Subject[] = subjectsFromKeys(Object.keys(modulesByBlockSubject));

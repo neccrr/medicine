@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { exportAllProgress, importAllProgress, readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
+import { migrateLegacyProgressKeys } from "../lib/progressMigration";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
-import { flashcardDecks, flashcardSubjects } from "../lib/content";
+import { flashcardDecks, flashcardSubjects, keyOf } from "../lib/content";
 import { groupByBlock } from "../lib/blocks";
 import { rankGlobalHardestCards } from "../lib/hardestCards";
 import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
@@ -15,18 +16,19 @@ import { useCountUp } from "../hooks/useCountUp";
 import type { CardStateMap } from "../types/content";
 
 function buildGlobalHardestCards() {
+  // id is the subject key ("{blockId}/{subjectId}"), which is also the deck's route suffix.
   const subjects = flashcardSubjects.map((s) => ({
-    id: s.id,
+    id: keyOf(s),
     label: s.label,
-    deck: flashcardDecks[s.id],
-    stateMap: readJSON<CardStateMap>(STORAGE_KEYS.cardState(s.id), {}),
+    deck: flashcardDecks[keyOf(s)],
+    stateMap: readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {}),
   }));
   return rankGlobalHardestCards(subjects, 8);
 }
 
-function buildDeckStats(subjectId: string) {
-  const deck = flashcardDecks[subjectId] ?? [];
-  const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(subjectId), {});
+function buildDeckStats(key: string) {
+  const deck = flashcardDecks[key] ?? [];
+  const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
   const total = deck.length;
   const mastered = deck.filter((c) => (stateMap[c.id]?.interval ?? 0) >= 21).length;
   const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
@@ -39,7 +41,7 @@ export function Progress() {
   const [activityDays, setActivityDays] = useState<string[]>(() => getActivityDays());
   const globalHardestCards = buildGlobalHardestCards();
 
-  const [planSubjectId, setPlanSubjectId] = useState(flashcardSubjects[0]?.id ?? "");
+  const [planSubjectId, setPlanSubjectId] = useState(flashcardSubjects[0] ? keyOf(flashcardSubjects[0]) : "");
   const [examDate, setExamDate] = useState<string>(() =>
     readJSON<string>(STORAGE_KEYS.examDate(planSubjectId), ""),
   );
@@ -90,6 +92,7 @@ export function Progress() {
       const text = await file.text();
       const data = JSON.parse(text);
       importAllProgress(data);
+      migrateLegacyProgressKeys();
       setActivityDays(getActivityDays());
       setMessage("Progress imported. Reload any open pages to see updated stats.");
     } catch {
@@ -146,7 +149,7 @@ export function Progress() {
                 <h3 className="block-section-heading">{block.label}</h3>
                 <ul className="mastery-list">
                   {subjects.map((s) => {
-                    const stats = buildDeckStats(s.id);
+                    const stats = buildDeckStats(keyOf(s));
                     const percent = stats.total > 0 ? (stats.mastered / stats.total) * 100 : 0;
                     return (
                       <li key={s.id}>
@@ -190,7 +193,7 @@ export function Progress() {
                 subjects.length > 0 ? (
                   <optgroup key={block.id} label={block.label}>
                     {subjects.map((s) => (
-                      <option key={s.id} value={s.id}>
+                      <option key={s.id} value={keyOf(s)}>
                         {s.label}
                       </option>
                     ))}
@@ -217,8 +220,8 @@ export function Progress() {
           <ul>
             {globalHardestCards.map(({ card, lapses, subjectId, subjectLabel }) => (
               <li key={`${subjectId}-${card.id}`}>
-                <Link to={`/flashcards/${flashcardSubjects.find((s) => s.id === subjectId)?.blockId}/${subjectId}`} className="global-hardest-card-link">
-                  <SubjectBadge id={subjectId} label={subjectLabel} />
+                <Link to={`/flashcards/${subjectId}`} className="global-hardest-card-link">
+                  <SubjectBadge id={subjectId.split("/")[1]} label={subjectLabel} />
                   <span className="global-hardest-card-front">{card.front}</span>
                   <span className="lapse-count">{lapses} lapse{lapses === 1 ? "" : "s"}</span>
                 </Link>

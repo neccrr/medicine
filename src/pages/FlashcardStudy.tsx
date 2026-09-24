@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { flashcardDecks, flashcardSubjects } from "../lib/content";
+import { flashcardDecks, flashcardSubjects, keyOf, subjectKey } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
@@ -30,14 +30,15 @@ const GRADES = [
 const EMPTY_DECK: Flashcard[] = [];
 
 export function FlashcardStudy() {
-  const { subjectId = "" } = useParams();
-  const subjectLabel = flashcardSubjects.find((s) => s.id === subjectId)?.label ?? subjectId;
-  const deck = flashcardDecks[subjectId] ?? EMPTY_DECK;
+  const { blockId = "", subjectId = "" } = useParams();
+  const key = subjectKey(blockId, subjectId);
+  const subjectLabel = flashcardSubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
+  const deck = flashcardDecks[key] ?? EMPTY_DECK;
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [session, setSession] = useState({ reviewed: 0, lapses: 0 });
   const [extraReview, setExtraReview] = useState(false);
-  const [selectedTags, setSelectedTags] = useLocalStorage<string[]>(STORAGE_KEYS.tagFilter(subjectId), []);
+  const [selectedTags, setSelectedTags] = useLocalStorage<string[]>(STORAGE_KEYS.tagFilter(key), []);
 
   const allTags = useMemo(
     () => Array.from(new Set(deck.flatMap((c) => c.tags))).sort(),
@@ -51,7 +52,7 @@ export function FlashcardStudy() {
     [deck, selectedTags],
   );
 
-  const { dueCards, grade, stats, hardestCards } = useSpacedRepetition(subjectId, filteredDeck);
+  const { dueCards, grade, stats, hardestCards } = useSpacedRepetition(key, filteredDeck);
 
   const resetSession = () => {
     setIndex(0);

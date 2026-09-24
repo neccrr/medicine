@@ -1,7 +1,7 @@
 import { useEffect, type CSSProperties } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { marked } from "marked";
-import { ebookChapters, ebookMeta, ebookPdfs } from "../lib/content";
+import { ebookChapters, ebookMeta, ebookPdfs, subjectKey } from "../lib/content";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { recordActivity } from "../lib/activity";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -42,16 +42,17 @@ function CheckIcon() {
 
 export function EbookReader() {
   const { blockId = "", subjectId = "", chapterId } = useParams();
-  const meta = ebookMeta[subjectId];
-  const pdfs = ebookPdfs[subjectId] ?? [];
+  const key = subjectKey(blockId, subjectId);
+  const meta = ebookMeta[key];
+  const pdfs = ebookPdfs[key] ?? [];
   const hasChapters = (meta?.chapters.length ?? 0) > 0;
 
   const position = readJSON<ReadingPosition | null>(
-    STORAGE_KEYS.ebookPosition(subjectId),
+    STORAGE_KEYS.ebookPosition(key),
     null,
   );
   const [completedChapters, setCompletedChapters] = useLocalStorage<string[]>(
-    STORAGE_KEYS.ebookCompleted(subjectId),
+    STORAGE_KEYS.ebookCompleted(key),
     [],
   );
   const [readingPrefs, setReadingPrefs] = useReadingPrefs();
@@ -68,14 +69,14 @@ export function EbookReader() {
     if (!meta) return;
     recordActivity();
     if (chapterId) {
-      writeJSON<ReadingPosition>(STORAGE_KEYS.ebookPosition(subjectId), {
+      writeJSON<ReadingPosition>(STORAGE_KEYS.ebookPosition(key), {
         chapterId,
         scroll: 0,
         updatedAt: new Date().toISOString(),
       });
     }
     window.scrollTo({ top: 0 });
-  }, [subjectId, chapterId, meta]);
+  }, [key, chapterId, meta]);
 
   if (!meta) {
     return (
@@ -93,7 +94,7 @@ export function EbookReader() {
 
   const chapterIndex = hasChapters ? meta.chapters.findIndex((c) => c.id === chapterId) : -1;
   const chapter = meta.chapters[chapterIndex];
-  const markdown = chapterId ? ebookChapters[`${subjectId}/${chapterId}`] : undefined;
+  const markdown = chapterId ? ebookChapters[`${key}/${chapterId}`] : undefined;
   const prevChapter = meta.chapters[chapterIndex - 1];
   const nextChapter = meta.chapters[chapterIndex + 1];
 

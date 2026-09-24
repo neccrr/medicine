@@ -84,8 +84,9 @@ host, including Vercel's free tier.
 | | Biochemistry | 45 flashcards · 42 quiz questions · 7-chapter ebook · summary · 3 lecture PDFs |
 | | Physiology | 23 flashcards · 26 quiz questions · 4 lecture PDFs |
 | | *Block exam* | 3 exam packages: Original Set (100 Q), Costraver (64 Q), UB 2025 (80 Q) |
-| **1.2**: Integument and Musculoskeletal System | Anatomy | 7-chapter ebook (22 original diagrams, 153 slide figures) · 9 practicum assistance PDFs *(flashcards, quizzes and lectures coming)* |
-| | Physiology | 5-chapter ebook on muscle contraction and reflexes (12 original diagrams, 41 slide figures) · 3 practicum assistance PDFs *(lectures and reports coming)* |
+| **1.2**: Integument and Musculoskeletal System | Anatomy | 144 flashcards · 134 quiz questions · 7-chapter ebook (22 original diagrams, 153 slide figures) · summary · 9 practicum assistance PDFs |
+| | Physiology | 57 flashcards · 59 quiz questions · 5-chapter ebook on muscle contraction and reflexes (12 original diagrams, 41 slide figures) · summary · 3 practicum assistance PDFs |
+| | *Block exam* | Pooled from the anatomy and physiology quiz banks (100 Q) |
 | **1.3**: Digestive System and Metabolism | — | Coming soon |
 
 ## Features
@@ -188,10 +189,13 @@ each block's display name:
 that's announced but has no content yet. A new block is a new entry in
 `studyBlocks` plus its content folders.
 
-One limitation: flashcard, quiz, ebook and summary progress is still keyed by
-subject id, so a subject may have a given content type in only one block
-(Block 1.2 physiology has an ebook and modules, but its flashcards and quizzes
-live in 1.1). `src/lib/contentIntegrity.test.ts` fails if two blocks clash.
+Every content map and every progress entry in localStorage is keyed by
+`{blockId}/{subjectId}` (`subjectKey` in `src/lib/content.ts`), so 1.1 and 1.2
+physiology keep separate decks, quizzes and progress. Progress saved by older
+versions under the bare subject id is renamed on startup (and after importing
+an old backup) by `src/lib/progressMigration.ts`. Flashcard and quiz-question
+ids must be unique across all decks; `src/lib/contentIntegrity.test.ts` checks
+this.
 
 ### Quizzes and exams
 
@@ -289,6 +293,7 @@ Key modules in `src/lib`:
 | `tipOfDay.ts` | Deterministic daily tip (same for everyone, no server) |
 | `subjectStyle.ts` | Stable per-subject hue from the subject id, avoiding the red and green used for wrong/right |
 | `storage.ts` | `localStorage` helpers and export/import of all `medicine:*` keys |
+| `progressMigration.ts` | Renames progress saved under old subject-only keys to per-block keys |
 
 ## Design
 

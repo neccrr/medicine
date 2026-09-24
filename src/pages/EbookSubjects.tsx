@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ebookMeta, ebookPdfs, ebookSubjects } from "../lib/content";
+import { ebookMeta, ebookPdfs, ebookSubjects, keyOf } from "../lib/content";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import { groupByBlock } from "../lib/blocks";
 import { SubjectBadge } from "../components/SubjectBadge";
@@ -18,17 +18,17 @@ export function EbookSubjects() {
           <h2 className="block-section-heading">{block.label}</h2>
           <div className="card-grid">
             {subjects.map((subject) => {
-              const meta = ebookMeta[subject.id];
-              const pdfs = ebookPdfs[subject.id] ?? [];
+              const meta = ebookMeta[keyOf(subject)];
+              const pdfs = ebookPdfs[keyOf(subject)] ?? [];
               const position = readJSON<ReadingPosition | null>(
-                STORAGE_KEYS.ebookPosition(subject.id),
+                STORAGE_KEYS.ebookPosition(keyOf(subject)),
                 null,
               );
               const chapterIndex = position
                 ? meta.chapters.findIndex((c) => c.id === position.chapterId)
                 : -1;
               const completedCount = readJSON<string[]>(
-                STORAGE_KEYS.ebookCompleted(subject.id),
+                STORAGE_KEYS.ebookCompleted(keyOf(subject)),
                 [],
               ).length;
 
