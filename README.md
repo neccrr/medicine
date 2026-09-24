@@ -127,6 +127,7 @@ host, including Vercel's free tier.
 **Search and navigation**
 - Fuzzy search (Fuse.js) across every flashcard, quiz question, summary section and ebook chapter, with type and subject filters
 - A **⌘K / Ctrl+K** command palette to jump to any page or subject
+- A collapsible sidebar that shrinks to an icon rail on desktop (remembered between visits)
 
 **Progress**
 - Study streaks, a GitHub-style activity heatmap, and mastery by subject (a card counts as mastered at a 21+ day interval)
@@ -244,6 +245,7 @@ Every page is code-split and loaded on demand.
 | Where | Keys |
 |---|---|
 | Anywhere | **⌘K / Ctrl+K**: command palette |
+| Anywhere (desktop) | **⌘\\ / Ctrl+\\**: collapse or expand the sidebar |
 | Flashcards | **Space / Enter**: flip · **1–5**: grade (Blackout → Easy) |
 | Quiz | **A–E** or **1–5**: answer · **Enter / Space**: continue · **← →**: previous/next question |
 | Exam | **A–E** or **1–5**: answer · **← →**: previous/next question |

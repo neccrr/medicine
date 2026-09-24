@@ -38,7 +38,9 @@
   -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: 0 1px 0 0 var(--glass-highlight) inset, var(--glass-shadow);
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 60;
+  transition: width 0.2s ease, padding 0.2s ease;
 }
 
 .sidebar-brand {
@@ -50,8 +52,24 @@
   font-size: 1.15rem;
   letter-spacing: -0.01em;
   color: var(--text);
-  padding: 0 0.5rem;
+  padding: 0 0.25rem 0 0.5rem;
   margin-bottom: 2rem;
+  justify-content: space-between;
+}
+
+.sidebar-brand-name {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+
+.sidebar-collapse-btn {
+  flex-shrink: 0;
+}
+
+.sidebar-link-label {
+  white-space: nowrap;
 }
 
 .sidebar-nav {
@@ -159,7 +177,59 @@
   gap: 0.4rem;
 }
 
+/* Collapsed sidebar (desktop only): an icon rail. Labels stay in the DOM, visually hidden, so
+   links keep their accessible names; the title attribute shows them on hover. */
+@media (min-width: 961px) {
+  .sidebar.collapsed {
+    width: 72px;
+    padding: 1.5rem 0.75rem;
+  }
+
+  .sidebar.collapsed .sidebar-brand {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .sidebar.collapsed .sidebar-brand-name {
+    display: none;
+  }
+
+  .sidebar.collapsed .sidebar-link {
+    justify-content: center;
+    padding: 0.6rem;
+  }
+
+  .sidebar.collapsed .sidebar-link-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .sidebar.collapsed .sidebar-footer,
+  .sidebar.collapsed .sidebar-footer-actions,
+  .sidebar.collapsed .sidebar-badges {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sidebar.collapsed .command-trigger kbd {
+    display: none;
+  }
+
+  .sidebar.collapsed .streak-badge,
+  .sidebar.collapsed .quiz-due-badge {
+    padding: 0.3rem 0.45rem;
+  }
+}
+
 @media (max-width: 960px) {
+  .sidebar .sidebar-collapse-btn {
+    display: none;
+  }
+
   .app-shell {
     display: block;
   }
@@ -245,4 +315,10 @@
 .subtitle {
   color: var(--text-muted);
   margin: 0 0 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar {
+    transition: none;
+  }
 }

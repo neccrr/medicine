@@ -5,6 +5,8 @@ import { StreakBadge } from "./StreakBadge";
 import { QuizDueBadge } from "./QuizDueBadge";
 import { PulseLine } from "./PulseLine";
 import { OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { STORAGE_KEYS } from "../lib/storage";
 import {
   BookIcon,
   CardsIcon,
@@ -35,8 +37,23 @@ function openCommandPalette() {
   window.dispatchEvent(new CustomEvent(OPEN_COMMAND_PALETTE_EVENT));
 }
 
+const collapseShortcut = isMac ? "⌘\\" : "Ctrl+\\";
+
 export function Sidebar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // Desktop only: shrinks the sidebar to an icon rail. The mobile drawer ignores it.
+  const [collapsed, setCollapsed] = useLocalStorage<boolean>(STORAGE_KEYS.sidebarCollapsed, false);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "\\") {
+        e.preventDefault();
+        setCollapsed((c) => !c);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [setCollapsed]);
 
   useEffect(() => {
     if (!drawerOpen) return;
@@ -94,10 +111,37 @@ export function Sidebar() {
         <div className="sidebar-backdrop" onClick={() => setDrawerOpen(false)} aria-hidden="true" />
       )}
 
-      <aside id="app-sidebar" className={drawerOpen ? "sidebar open" : "sidebar"}>
+      <aside
+        id="app-sidebar"
+        className={["sidebar", drawerOpen && "open", collapsed && "collapsed"].filter(Boolean).join(" ")}
+      >
         <div className="sidebar-brand">
-          <PulseLine width={28} height={17} />
-          Medicine
+          <span className="sidebar-brand-name">
+            <PulseLine width={28} height={17} />
+            Medicine
+          </span>
+          <button
+            type="button"
+            className="icon-btn sidebar-collapse-btn"
+            onClick={() => setCollapsed((c) => !c)}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-expanded={!collapsed}
+            aria-controls="app-sidebar"
+            title={`${collapsed ? "Expand" : "Collapse"} sidebar (${collapseShortcut})`}
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <rect x="3.5" y="4.5" width="17" height="15" rx="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M9.5 4.5v15" stroke="currentColor" strokeWidth="1.6" />
+              <path
+                d={collapsed ? "M13.5 10l2 2-2 2" : "M16 10l-2 2 2 2"}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
         </div>
 
         <nav className="sidebar-nav" aria-label="Primary">
@@ -108,9 +152,10 @@ export function Sidebar() {
               end={link.end}
               className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}
               onClick={() => setDrawerOpen(false)}
+              title={collapsed ? link.label : undefined}
             >
               <span className="sidebar-link-icon">{link.icon}</span>
-              {link.label}
+              <span className="sidebar-link-label">{link.label}</span>
             </NavLink>
           ))}
         </nav>

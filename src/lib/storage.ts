@@ -38,6 +38,7 @@ export const STORAGE_KEYS = {
   ebookCompleted: (key: string) => `medicine:ebookdone:${key}`,
   examDate: (key: string) => `medicine:examdate:${key}`,
   readingPrefs: "medicine:readingprefs",
+  sidebarCollapsed: "medicine:sidebarcollapsed",
   lastExport: "medicine:lastexport",
   theme: "medicine:theme",
   activity: "medicine:activity",
