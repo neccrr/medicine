@@ -1,7 +1,7 @@
-import { useEffect, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { marked } from "marked";
-import { ebookChapters, ebookMeta, ebookPdfs, subjectKey } from "../lib/content";
+import { ebookChapterKeys, ebookMeta, ebookPdfs, loadEbookChapter, subjectKey } from "../lib/content";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { recordActivity } from "../lib/activity";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -78,6 +78,22 @@ export function EbookReader() {
     window.scrollTo({ top: 0 });
   }, [key, chapterId, meta]);
 
+  // Each chapter is its own chunk, fetched when opened (precached by the service worker).
+  const chapterKey = chapterId ? `${key}/${chapterId}` : "";
+  const [loaded, setLoaded] = useState<{ key: string; markdown?: string; failed?: boolean } | null>(null);
+  useEffect(() => {
+    if (!chapterKey || !ebookChapterKeys.includes(chapterKey)) return;
+    let cancelled = false;
+    loadEbookChapter(chapterKey).then(
+      (markdown) => !cancelled && setLoaded({ key: chapterKey, markdown }),
+      () => !cancelled && setLoaded({ key: chapterKey, failed: true }),
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [chapterKey]);
+  const current = loaded?.key === chapterKey ? loaded : null;
+
   if (!meta) {
     return (
       <section className="page">
@@ -94,11 +110,11 @@ export function EbookReader() {
 
   const chapterIndex = hasChapters ? meta.chapters.findIndex((c) => c.id === chapterId) : -1;
   const chapter = meta.chapters[chapterIndex];
-  const markdown = chapterId ? ebookChapters[`${key}/${chapterId}`] : undefined;
+  const markdown = current?.markdown;
   const prevChapter = meta.chapters[chapterIndex - 1];
   const nextChapter = meta.chapters[chapterIndex + 1];
 
-  if (hasChapters && (!chapter || !markdown)) {
+  if (hasChapters && (!chapter || !ebookChapterKeys.includes(chapterKey))) {
     return (
       <section className="page">
         <p>Unknown chapter.</p>
@@ -215,6 +231,12 @@ export function EbookReader() {
                 )}
               </div>
             </>
+          ) : hasChapters && current?.failed ? (
+            <p className="ebook-status">Couldn't load this chapter. Check your connection and try again.</p>
+          ) : hasChapters ? (
+            <p className="ebook-status" role="status">
+              Loading chapter…
+            </p>
           ) : pdfs.length > 0 ? (
             <div className="pdf-viewer">
               <div className="pdf-viewer-bar">

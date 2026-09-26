@@ -34,9 +34,12 @@ const ebookMetaModules = import.meta.glob<EbookMeta>(
   "../../content/ebooks/block/*/*/meta.json",
   { eager: true, import: "default" },
 );
+// Chapters are the bulk of the content (~0.5MB of Markdown), so each one is its own chunk,
+// fetched when it's opened (or when Search indexes them) instead of on every page load.
+// The service worker still precaches them all, so they stay readable offline.
 const ebookChapterModules = import.meta.glob<string>(
   "../../content/ebooks/block/*/*/chapter-*.md",
-  { eager: true, import: "default", query: "?raw" },
+  { import: "default", query: "?raw" },
 );
 // PDFs dropped into a subject's folder are copied to the build output and exposed as a URL —
 // drop a file at content/ebooks/block/{blockId}/{subject}/anything.pdf and it shows up with no
@@ -199,10 +202,24 @@ export function quizQuestionsInBlock(blockId: string): QuizQuestion[] {
 
 export const summarySubjects: Subject[] = subjectsFromKeys(Object.keys(summaries));
 
-/** Ebook chapters, keyed by "{blockId}/{subjectId}/{chapterId}". */
-export const ebookChapters: Record<string, string> = Object.fromEntries(
-  Object.entries(ebookChapterModules).map(([path, markdown]) => [ebookChapterKey(path), markdown]),
+const ebookChapterLoaders: Record<string, () => Promise<string>> = Object.fromEntries(
+  Object.entries(ebookChapterModules).map(([path, load]) => [ebookChapterKey(path), load]),
 );
+
+/** Keys of every ebook chapter, "{blockId}/{subjectId}/{chapterId}". */
+export const ebookChapterKeys: string[] = Object.keys(ebookChapterLoaders).sort();
+
+/** One chapter's Markdown, or undefined when there's no such chapter. */
+export function loadEbookChapter(key: string): Promise<string | undefined> {
+  const load = ebookChapterLoaders[key];
+  return load ? load() : Promise.resolve(undefined);
+}
+
+/** Every chapter's Markdown, keyed like {@link ebookChapterKeys}. */
+export async function loadEbookChapters(): Promise<Record<string, string>> {
+  const entries = await Promise.all(ebookChapterKeys.map(async (key) => [key, await ebookChapterLoaders[key]()] as const));
+  return Object.fromEntries(entries);
+}
 
 export interface EbookPdf {
   name: string;

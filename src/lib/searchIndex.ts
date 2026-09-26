@@ -1,11 +1,11 @@
 import {
-  ebookChapters,
   ebookMeta,
   ebookSubjects,
   examPackagesByBlock,
   flashcardDecks,
   flashcardSubjects,
   keyOf,
+  loadEbookChapters,
   modulesByBlockSubject,
   quizBanks,
   quizQuestionsInBlock,
@@ -104,7 +104,7 @@ function subjectOf(key: string): string {
   return key.split("/")[1] ?? key;
 }
 
-function contentDocs(): SearchDoc[] {
+function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
   const flashcardDocs = Object.entries(flashcardDecks).flatMap(([key, cards]) =>
     cards.map((card) => ({
       type: "flashcard" as const,
@@ -193,9 +193,18 @@ function contentDocs(): SearchDoc[] {
   return [...flashcardDocs, ...quizDocs, ...summaryDocs, ...ebookDocs];
 }
 
-/** Full-content index (flashcards, quiz questions, summary sections, ebook sections), used by the Search page. */
-export function buildContentDocs(): SearchDoc[] {
-  return contentDocs();
+/**
+ * Full-content index (flashcards, quiz questions, summary sections, ebook sections), used by
+ * the Search page. Ebook chapters load on demand, so pass them in once they've arrived; without
+ * them the index covers everything else.
+ */
+export function buildContentDocs(ebookChapters: Record<string, string> = {}): SearchDoc[] {
+  return contentDocs(ebookChapters);
+}
+
+/** The full-content index including every ebook chapter. */
+export async function loadContentDocs(): Promise<SearchDoc[]> {
+  return contentDocs(await loadEbookChapters());
 }
 
 /** Lighter index (pages + subjects only), used by the command palette for fast navigation. */

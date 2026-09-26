@@ -1,7 +1,7 @@
-import { useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import Fuse from "fuse.js";
-import { buildContentDocs, type SearchDoc } from "../lib/searchIndex";
+import { buildContentDocs, loadContentDocs, type SearchDoc } from "../lib/searchIndex";
 import { ebookSubjects, flashcardSubjects, quizSubjects, summarySubjects } from "../lib/content";
 import { EmptyState } from "../components/EmptyState";
 import { HighlightText } from "../components/HighlightText";
@@ -48,7 +48,17 @@ export function Search() {
   const [activeIndex, setActiveIndex] = useState(0);
   const resultRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
-  const docs = useMemo(() => buildContentDocs(), []);
+  // Everything but the ebook chapters is indexed straight away; the chapters join once loaded.
+  const [docs, setDocs] = useState<SearchDoc[]>(() => buildContentDocs());
+  useEffect(() => {
+    let cancelled = false;
+    loadContentDocs().then((all) => {
+      if (!cancelled) setDocs(all);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const availableTypes = useMemo(
     () => Array.from(new Set(docs.map((d) => d.type))).sort(),

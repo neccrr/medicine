@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { buildContentDocs, buildNavigationDocs } from "./searchIndex";
+import { beforeAll, describe, expect, it } from "vitest";
+import { buildContentDocs, buildNavigationDocs, loadContentDocs, type SearchDoc } from "./searchIndex";
 
 describe("buildNavigationDocs", () => {
   const docs = buildNavigationDocs();
@@ -26,7 +26,16 @@ describe("buildNavigationDocs", () => {
 });
 
 describe("buildContentDocs", () => {
-  const docs = buildContentDocs();
+  let docs: SearchDoc[] = [];
+  beforeAll(async () => {
+    docs = await loadContentDocs();
+  });
+
+  it("indexes everything but ebooks before the chapters have loaded", () => {
+    const partial = buildContentDocs();
+    expect(partial.some((d) => d.type === "quiz")).toBe(true);
+    expect(partial.some((d) => d.type === "ebook")).toBe(false);
+  });
 
   it("produces at least one flashcard and one quiz doc", () => {
     expect(docs.some((d) => d.type === "flashcard")).toBe(true);

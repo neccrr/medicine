@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  ebookChapters,
+  ebookChapterKeys,
   ebookSubjects,
   flashcardDecks,
   flashcardSubjects,
@@ -25,7 +25,7 @@ describe("content folders", () => {
       ...Object.keys(flashcardDecks),
       ...Object.keys(quizBanks),
       ...Object.keys(summaries),
-      ...Object.keys(ebookChapters).map((k) => k.split("/").slice(0, 2).join("/")),
+      ...ebookChapterKeys.map((k) => k.split("/").slice(0, 2).join("/")),
     ];
     expect(keys.filter((k) => !/^[^/]+\/[^/]+$/.test(k))).toEqual([]);
     for (const s of flashcardSubjects) expect(flashcardDecks[keyOf(s)]?.length).toBeGreaterThan(0);

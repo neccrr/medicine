@@ -186,3 +186,8 @@
     position: static;
   }
 }
+
+.ebook-status {
+  padding: 2rem 0;
+  color: var(--text-muted);
+}

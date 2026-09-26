@@ -46,11 +46,28 @@ function devApi(): Plugin {
   }
 }
 
+// The deployed site's origin, for the canonical link and Open Graph/Twitter tags in index.html,
+// which link-preview crawlers only follow as absolute URLs. SITE_URL wins; otherwise the auth
+// URL, then Vercel's production domain (set on every Vercel build). Local builds fall back
+// to root-relative paths.
+function siteUrl(): Plugin {
+  const fromEnv =
+    process.env.SITE_URL ||
+    process.env.BETTER_AUTH_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '')
+  const origin = fromEnv.replace(/\/+$/, '')
+  return {
+    name: 'medicine-site-url',
+    transformIndexHtml: (html) => html.replaceAll('%SITE_URL%', origin),
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     devApi(),
+    siteUrl(),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
@@ -59,7 +76,8 @@ export default defineConfig({
         name: 'Medicine — Study Tool',
         short_name: 'Medicine',
         description:
-          'Flashcards, quizzes, ebooks, and summaries — fully offline, zero backend.',
+          'Flashcards, quizzes, timed block exams, ebooks and summaries for medical school. Works offline, with optional sync across devices.',
+        categories: ['education', 'medical'],
         theme_color: '#0a0f0d',
         background_color: '#0a0f0d',
         display: 'standalone',
@@ -77,6 +95,8 @@ export default defineConfig({
         // first visit before anyone's opened a single module would be a bad trade for an
         // "offline-first" app that's supposed to load fast. Cached lazily instead, below.
         globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,woff2}'],
+        // The link-preview image is only fetched by crawlers, never by the app.
+        globIgnores: ['og-image.png'],
         cleanupOutdatedCaches: true,
         // Without this, the SPA navigate-fallback (needed so client-side routes like
         // /quizzes/histology work offline) also swallows iframe/direct navigation to a real
@@ -118,15 +138,27 @@ export default defineConfig({
   ],
   build: {
     assetsInlineLimit: (filePath) => (filePath.endsWith('.pdf') ? false : undefined),
-    rollupOptions: {
+    rolldownOptions: {
+      // Build-time hook timings are a profiling aid, not a problem with the build.
+      checks: { pluginTimings: false },
       output: {
-        // React/react-dom/react-router change far less often than app code —
-        // splitting them out keeps that chunk cacheable across deploys instead
-        // of re-downloading it every time any page's code changes.
-        manualChunks(id) {
-          if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) {
-            return 'vendor';
-          }
+        codeSplitting: {
+          groups: [
+            // React/react-dom/react-router change far less often than app code —
+            // splitting them out keeps that chunk cacheable across deploys instead
+            // of re-downloading it every time any page's code changes.
+            { name: 'vendor', test: /node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/ },
+            // Study content (decks, quiz and exam banks, summaries) gets one chunk per kind, so
+            // editing a quiz only invalidates that chunk, and no single chunk grows past the
+            // size limit. Ebook chapters are loaded on demand and stay one chunk each.
+            {
+              name: (id) => {
+                const kind = id.match(/[\\/]content[\\/]([a-z]+)[\\/]/)?.[1]
+                return kind ? `content-${kind}` : null
+              },
+              test: (id) => /[\\/]content[\\/]/.test(id) && !/chapter-[^\\/]*\.md/.test(id),
+            },
+          ],
         },
       },
     },
