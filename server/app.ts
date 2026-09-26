@@ -1,5 +1,16 @@
 import { isSyncableKey, mergeEntry, type SyncEntry } from "../src/lib/syncMerge.js";
 import type { Auth } from "./auth.js";
+import {
+  affectsLeaderboard,
+  cleanDisplayName,
+  computeStats,
+  POINTS,
+  rankBoard,
+  scoreFor,
+  updateDoc,
+  type LeaderboardDoc,
+  type LeaderboardStore,
+} from "./leaderboard.js";
 import type { ProgressStore, StoredEntry } from "./progressStore.js";
 
 const MAX_BODY_BYTES = 2_000_000;
@@ -7,11 +18,19 @@ const MAX_CHANGES = 1000;
 // Changes written by another device while this request ran could get a slightly earlier rev
 // than our "since"; re-sending the last few seconds costs little (merging is idempotent).
 const OVERLAP_MS = 5000;
+const BOARD_SIZE = 100;
 
 export interface AppDeps {
   auth: Auth;
   store: ProgressStore;
+  leaderboard: LeaderboardStore;
   googleEnabled: boolean;
+}
+
+interface SessionUser {
+  id: string;
+  name: string;
+  cohort: string | null;
 }
 
 function json(data: unknown, status = 200): Response {
@@ -38,13 +57,76 @@ function isChange(c: unknown, now: number): c is SyncEntry {
 }
 
 /** The whole API as one fetch-style handler: auth, config, sync and account export. */
-export function createApp({ auth, store, googleEnabled }: AppDeps) {
-  async function userId(request: Request): Promise<string | null> {
+export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) {
+  async function sessionUser(request: Request): Promise<SessionUser | null> {
     const session = await auth.api.getSession({ headers: request.headers });
-    return session?.user.id ?? null;
+    if (!session) return null;
+    const user = session.user as { id: string; name?: string; cohort?: string | null };
+    return { id: user.id, name: user.name ?? "", cohort: user.cohort?.trim() || null };
   }
 
-  async function sync(request: Request, uid: string): Promise<Response> {
+  /** Recounts a student's points from everything they have synced. */
+  async function recount(user: SessionUser): Promise<LeaderboardDoc> {
+    const [prev, entries] = await Promise.all([leaderboard.get(user.id), store.all(user.id)]);
+    const displayName = cleanDisplayName(user.name) ?? "Student";
+    const doc = updateDoc(prev, { userId: user.id, displayName, cohort: user.cohort }, computeStats(entries));
+    await leaderboard.saveStats(doc);
+    return doc;
+  }
+
+  async function board(request: Request, user: SessionUser): Promise<Response> {
+    const params = new URL(request.url).searchParams;
+    const period = (["week", "all", "streak"] as const).find((p) => p === params.get("period")) ?? "week";
+    const scope = params.get("scope") === "cohort" && user.cohort ? "cohort" : "everyone";
+    const cohort = scope === "cohort" ? user.cohort : null;
+    let me = await leaderboard.get(user.id);
+    // Missing record, or a cohort changed on the Account page since the last recount.
+    if (!me || me.cohort !== user.cohort) me = await recount(user);
+    const rows = rankBoard(await leaderboard.joined(), { period, cohort, userId: user.id });
+    const myRow = rows.find((r) => r.me);
+    return json({
+      period,
+      scope,
+      cohort: user.cohort,
+      points: POINTS,
+      rows: rows.slice(0, BOARD_SIZE),
+      total: rows.length,
+      me: {
+        joined: me.joined,
+        displayName: me.displayName,
+        rank: myRow?.rank ?? null,
+        value: scoreFor(me, period),
+        stats: me.stats,
+        streak: scoreFor(me, "streak"),
+        week: scoreFor(me, "week"),
+      },
+    });
+  }
+
+  async function updateMe(request: Request, user: SessionUser): Promise<Response> {
+    let body: { joined?: unknown; displayName?: unknown };
+    try {
+      body = (await request.json()) ?? {};
+    } catch {
+      return error(400, "Invalid JSON.");
+    }
+    const patch: { joined?: boolean; displayName?: string } = {};
+    if (body.displayName !== undefined) {
+      const name = cleanDisplayName(body.displayName);
+      if (!name) return error(400, "Display names are 2 to 32 characters.");
+      patch.displayName = name;
+    }
+    if (body.joined !== undefined) {
+      if (typeof body.joined !== "boolean") return error(400, "Invalid 'joined'.");
+      patch.joined = body.joined;
+    }
+    const doc = (await leaderboard.get(user.id)) ?? (await recount(user));
+    await leaderboard.setMembership(user.id, patch);
+    return json({ joined: patch.joined ?? doc.joined, displayName: patch.displayName ?? doc.displayName });
+  }
+
+  async function sync(request: Request, user: SessionUser): Promise<Response> {
+    const uid = user.id;
     const text = await request.text();
     if (text.length > MAX_BODY_BYTES) return error(413, "Too much data in one sync.");
     let body: unknown;
@@ -69,6 +151,7 @@ export function createApp({ auth, store, googleEnabled }: AppDeps) {
       writes.set(change.key, { key: change.key, value: merged.value, updatedAt: merged.updatedAt, rev: start });
     }
     await store.put(uid, [...writes.values()]);
+    if (valid.some((c) => affectsLeaderboard(c.key))) await recount(user);
 
     const entries = await store.changedSince(uid, since > 0 ? since - OVERLAP_MS : 0);
     return json({
@@ -101,11 +184,13 @@ export function createApp({ auth, store, googleEnabled }: AppDeps) {
       if (pathname === "/api/config" && request.method === "GET") {
         return json({ accounts: true, google: googleEnabled });
       }
-      if (pathname === "/api/sync" || pathname === "/api/account/export") {
-        const uid = await userId(request);
-        if (!uid) return error(401, "Sign in to sync.");
-        if (pathname === "/api/sync" && request.method === "POST") return await sync(request, uid);
-        if (pathname === "/api/account/export" && request.method === "GET") return await exportAccount(request, uid);
+      if (["/api/sync", "/api/account/export", "/api/leaderboard", "/api/leaderboard/me"].includes(pathname)) {
+        const user = await sessionUser(request);
+        if (!user) return error(401, pathname.startsWith("/api/leaderboard") ? "Sign in to see the leaderboard." : "Sign in to sync.");
+        if (pathname === "/api/sync" && request.method === "POST") return await sync(request, user);
+        if (pathname === "/api/account/export" && request.method === "GET") return await exportAccount(request, user.id);
+        if (pathname === "/api/leaderboard" && request.method === "GET") return await board(request, user);
+        if (pathname === "/api/leaderboard/me" && request.method === "PUT") return await updateMe(request, user);
         return error(405, "Method not allowed.");
       }
       return error(404, "Not found.");

@@ -17,6 +17,7 @@ import {
   SlidesIcon,
   SummaryIcon,
   TimerIcon,
+  TrophyIcon,
   UserIcon,
 } from "./icons";
 
@@ -30,6 +31,7 @@ const links: { to: string; label: string; end?: boolean; icon: ReactNode }[] = [
   { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
   { to: "/search", label: "Search", icon: <SearchIcon /> },
   { to: "/progress", label: "Progress", icon: <ProgressIcon /> },
+  { to: "/leaderboard", label: "Leaderboard", icon: <TrophyIcon /> },
   { to: "/account", label: "Account", icon: <UserIcon /> },
 ];
 

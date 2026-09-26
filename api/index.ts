@@ -6,6 +6,7 @@ import { createApp, type App } from "../server/app.js";
 import { createAuth } from "../server/auth.js";
 import { publicUrlFromEnv, trustedOriginsFromEnv } from "../server/env.js";
 import { ensureAuthIndexes, getMongo } from "../server/mongo.js";
+import { MongoLeaderboardStore } from "../server/leaderboard.js";
 import { MongoProgressStore } from "../server/progressStore.js";
 
 let app: Promise<App> | null = null;
@@ -18,6 +19,7 @@ function build(): Promise<App> {
   return getMongo(uri, env.MONGODB_DB || "medicine").then(async ({ client, db }) => {
     await ensureAuthIndexes(db);
     const store = new MongoProgressStore(db);
+    const leaderboard = new MongoLeaderboardStore(db);
     const google =
       env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
         ? { clientId: env.GOOGLE_CLIENT_ID, clientSecret: env.GOOGLE_CLIENT_SECRET }
@@ -28,10 +30,12 @@ function build(): Promise<App> {
       baseURL: publicUrlFromEnv(env),
       trustedOrigins: trustedOriginsFromEnv(env),
       google,
-      onDeleteUser: (userId) => store.deleteAll(userId),
+      onDeleteUser: async (userId) => {
+        await Promise.all([store.deleteAll(userId), leaderboard.delete(userId)]);
+      },
       rateLimit: "database",
     });
-    return createApp({ auth, store, googleEnabled: Boolean(google) });
+    return createApp({ auth, store, leaderboard, googleEnabled: Boolean(google) });
   });
 }
 

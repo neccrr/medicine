@@ -42,6 +42,7 @@ const EbookReader = lazy(() =>
 );
 const Search = lazy(() => import("./pages/Search").then((m) => ({ default: m.Search })));
 const Progress = lazy(() => import("./pages/Progress").then((m) => ({ default: m.Progress })));
+const Leaderboard = lazy(() => import("./pages/Leaderboard").then((m) => ({ default: m.Leaderboard })));
 const Account = lazy(() => import("./pages/Account").then((m) => ({ default: m.Account })));
 
 function RouteFallback() {
@@ -81,6 +82,7 @@ function AppRoutes() {
           <Route path="/ebooks/:blockId/:subjectId/:chapterId" element={<EbookReader />} />
           <Route path="/search" element={<Search />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/account" element={<Account />} />
         </Routes>
       </Suspense>

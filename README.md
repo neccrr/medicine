@@ -144,6 +144,7 @@ account environment variables it runs as a plain static site.
 - Guest progress is merged into the account on first sign-in (per-card, per-attempt, per-day, so nothing studied on either device is lost)
 - Sign out keeps local progress; "sign out and clear" for shared computers; download all account data; delete the account
 - A "current block" setting (guests too) that puts your block first on Home
+- Opt-in **leaderboard**: this week, all time and study streak, for everyone or just your cohort. Points are worked out on the server from synced progress (1 per correct answer, 2 per learned flashcard, 10 per finished chapter, 5 per study day), and you choose the display name
 
 **App**
 - Installable PWA that works offline after the first visit (details in [Offline and updates](#offline-and-updates))
@@ -250,6 +251,7 @@ cached the first time it's opened.
 | `/summaries` → `/summaries/:blockId/:subjectId` | Summary list → rendered summary |
 | `/search` | Fuzzy search with type and subject filters |
 | `/progress` | Streaks, heatmap, mastery, study plan, hardest cards, export/import |
+| `/leaderboard` | Weekly, all-time and streak rankings, filtered to your cohort; join or leave, and pick a display name (signed-in only) |
 | `/account` | Sign in or create an account; profile, sync status, current block, sign out, data download, account deletion |
 
 Every page is code-split and loaded on demand.
@@ -344,7 +346,9 @@ grid. An EKG pulse trace is the logo and hero decoration.
 - With an account, the same `medicine:*` progress keys (not theme, sidebar
   state or half-finished quizzes) are stored in MongoDB under your user id,
   plus your name, email, optional cohort and a hashed password. Nothing is
-  shared with other users. **Account → Download my data** exports it all, and
+  shared with other users unless you join the leaderboard, which shows your
+  chosen display name, cohort and scores to other signed-in students (never
+  your email or answers). Leave it any time. **Account → Download my data** exports it all, and
   **Delete account** removes the account and its stored progress.
 - Content is the same for everyone.
 - Clearing site data erases progress. If saved progress from an older version
@@ -396,7 +400,7 @@ The link-preview tags in `index.html` (Open Graph, Twitter) point at
 time.
 
 Collections (`user`, `session`, `account`, `verification`, `rateLimit`,
-`progress`) and indexes are created automatically. Any static host with an SPA
+`progress`, `leaderboard`) and indexes are created automatically. Any static host with an SPA
 fallback works for guest-only mode, if it sends the same no-cache headers.
 
 ## Contributing

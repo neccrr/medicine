@@ -4,6 +4,7 @@ import { memoryAdapter } from "better-auth/adapters/memory";
 import { describe, expect, it } from "vitest";
 import { createApp } from "./app.js";
 import { createAuth } from "./auth.js";
+import { MemoryLeaderboardStore } from "./leaderboard.js";
 import { MemoryProgressStore } from "./progressStore.js";
 import { syncNow, pendingChangeCount } from "../src/lib/sync.js";
 import { writeDirty, readDirty } from "../src/lib/syncDirty.js";
@@ -42,7 +43,7 @@ async function setup() {
     onDeleteUser: (id) => store.deleteAll(id),
     rateLimit: false,
   });
-  const app = createApp({ auth, store, googleEnabled: false });
+  const app = createApp({ auth, store, leaderboard: new MemoryLeaderboardStore(), googleEnabled: false });
   const res = await app(
     new Request(`${ORIGIN}/api/auth/sign-up/email`, {
       method: "POST",

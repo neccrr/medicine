@@ -2,24 +2,29 @@ import { memoryAdapter } from "better-auth/adapters/memory";
 import { beforeEach, describe, expect, it } from "vitest";
 import { createApp, type App } from "./app.js";
 import { createAuth } from "./auth.js";
+import { MemoryLeaderboardStore } from "./leaderboard.js";
 import { MemoryProgressStore } from "./progressStore.js";
 
 const ORIGIN = "http://localhost:5173";
 
 let app: App;
 let store: MemoryProgressStore;
+let leaderboard: MemoryLeaderboardStore;
 
 beforeEach(() => {
   store = new MemoryProgressStore();
+  leaderboard = new MemoryLeaderboardStore();
   const auth = createAuth({
     database: memoryAdapter({ user: [], session: [], account: [], verification: [], rateLimit: [] }),
     secret: "test-secret-test-secret-test-secret-1234",
     baseURL: ORIGIN,
     trustedOrigins: [ORIGIN],
-    onDeleteUser: (id) => store.deleteAll(id),
+    onDeleteUser: async (id) => {
+      await Promise.all([store.deleteAll(id), leaderboard.delete(id)]);
+    },
     rateLimit: false,
   });
-  app = createApp({ auth, store, googleEnabled: false });
+  app = createApp({ auth, store, leaderboard, googleEnabled: false });
 });
 
 function req(path: string, init: { method?: string; body?: unknown; cookie?: string } = {}) {
@@ -35,8 +40,8 @@ function req(path: string, init: { method?: string; body?: unknown; cookie?: str
   );
 }
 
-async function signUp(email = "student@example.com") {
-  const res = await req("/api/auth/sign-up/email", { body: { email, password: "correct-horse-1", name: "Student" } });
+async function signUp(email = "student@example.com", name = "Student", cohort?: string) {
+  const res = await req("/api/auth/sign-up/email", { body: { email, password: "correct-horse-1", name, cohort } });
   expect(res.status).toBe(200);
   const cookie = res.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ");
   expect(cookie).toContain("session_token");
@@ -108,6 +113,68 @@ describe("API", () => {
     const del = await req("/api/auth/delete-user", { cookie, body: { password: "correct-horse-1" } });
     expect(del.status).toBe(200);
     expect(await store.all(exported.user.id)).toEqual([]);
+    expect(await leaderboard.get(exported.user.id)).toBeNull();
     expect((await req("/api/sync", { cookie, body: { since: 0, changes: [] } })).status).toBe(401);
+  });
+});
+
+describe("leaderboard", () => {
+  const today = new Date().toISOString().slice(0, 10);
+  const attempt = (score: number) => ({ score, total: 10, date: new Date().toISOString(), missedIds: [] });
+  const sync = (cookie: string, changes: { key: string; value: unknown }[]) =>
+    req("/api/sync", { cookie, body: { since: 0, changes: changes.map((c) => ({ ...c, updatedAt: Date.now() })) } });
+  const board = async (cookie: string, query = "") => (await req(`/api/leaderboard${query}`, { cookie })).json();
+
+  it("needs a session", async () => {
+    expect((await req("/api/leaderboard")).status).toBe(401);
+    expect((await req("/api/leaderboard/me", { method: "PUT", body: { joined: true } })).status).toBe(401);
+  });
+
+  it("lists only students who joined, ranked by points from their synced progress", async () => {
+    const alice = await signUp("alice@example.com", "Alice", "2025");
+    const bob = await signUp("bob@example.com", "Bob", "2024");
+    const carol = await signUp("carol@example.com", "Carol", "2025");
+    await sync(alice, [{ key: "medicine:activity", value: [today] }]);
+    await sync(bob, [{ key: "medicine:activity", value: [today] }]);
+    await sync(carol, [{ key: "medicine:activity", value: [today] }]);
+
+    await req("/api/leaderboard/me", { cookie: alice, method: "PUT", body: { joined: true } });
+    await req("/api/leaderboard/me", { cookie: bob, method: "PUT", body: { joined: true, displayName: "  Bobby  " } });
+    // Carol studies but never joins, so she is never listed.
+    await sync(carol, [{ key: "medicine:quiz:1.2/anatomy", value: [attempt(10)] }]);
+    await sync(alice, [{ key: "medicine:quiz:1.2/anatomy", value: [attempt(8)] }]);
+    await sync(bob, [{ key: "medicine:flashcards:1.2/anatomy", value: { a: card(1), b: card(0) } }]);
+
+    // All time: 5 per study day, 1 per correct answer, 2 per learned card.
+    const all = await board(alice, "?period=all");
+    expect(all.rows.map((r: { name: string; value: number }) => [r.name, r.value])).toEqual([
+      ["Alice", 13],
+      ["Bobby", 7],
+    ]);
+    expect(all.me).toMatchObject({ joined: true, rank: 1, value: 13, streak: 1 });
+
+    // This week counts only what was gained after joining the board's baseline.
+    const week = await board(alice);
+    expect(week.rows.map((r: { name: string; value: number }) => [r.name, r.value])).toEqual([
+      ["Alice", 8],
+      ["Bobby", 2],
+    ]);
+
+    const cohort = await board(alice, "?period=all&scope=cohort");
+    expect(cohort.scope).toBe("cohort");
+    expect(cohort.rows.map((r: { name: string }) => r.name)).toEqual(["Alice"]);
+
+    const carolView = await board(carol, "?period=all");
+    expect(carolView.me).toMatchObject({ joined: false, rank: null, value: 15 });
+  });
+
+  it("validates display names and can leave the board", async () => {
+    const cookie = await signUp();
+    expect((await req("/api/leaderboard/me", { cookie, method: "PUT", body: { displayName: "x" } })).status).toBe(400);
+    await req("/api/leaderboard/me", { cookie, method: "PUT", body: { joined: true } });
+    await sync(cookie, [{ key: "medicine:activity", value: [today] }]);
+    expect((await board(cookie, "?period=all")).rows).toHaveLength(1);
+    await req("/api/leaderboard/me", { cookie, method: "PUT", body: { joined: false } });
+    expect((await board(cookie, "?period=all")).rows).toHaveLength(0);
   });
 });

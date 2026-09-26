@@ -38,6 +38,7 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "ebooks", title: "Ebooks", detail: "Chapter readers", to: "/ebooks" },
   { type: "page", id: "summaries", title: "Summaries", detail: "Written subject summaries", to: "/summaries" },
   { type: "page", id: "search", title: "Search", detail: "Search everything", to: "/search" },
+  { type: "page", id: "leaderboard", title: "Leaderboard", detail: "Weekly, all-time and streak rankings", to: "/leaderboard" },
   { type: "page", id: "progress", title: "Progress", detail: "Streaks, export & import", to: "/progress" },
 ];
 
