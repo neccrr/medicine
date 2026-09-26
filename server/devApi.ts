@@ -28,8 +28,15 @@ export function getDevApp(): Promise<App> {
       leaderboard = new MemoryLeaderboardStore();
       database = memoryAdapter({ user: [], session: [], account: [], verification: [], rateLimit: [] });
     }
+    // Google works locally too with an OAuth client whose redirect URI is
+    // http://localhost:5173/api/auth/callback/google.
+    const google =
+      env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+        ? { clientId: env.GOOGLE_CLIENT_ID, clientSecret: env.GOOGLE_CLIENT_SECRET }
+        : undefined;
     const auth = createAuth({
       database,
+      google,
       secret: env.BETTER_AUTH_SECRET || "local-development-secret-not-for-production",
       trustedOrigins: ["http://localhost:*", "http://127.0.0.1:*"],
       onDeleteUser: async (id) => {
@@ -37,7 +44,7 @@ export function getDevApp(): Promise<App> {
       },
       rateLimit: false,
     });
-    return createApp({ auth, store, leaderboard, googleEnabled: false });
+    return createApp({ auth, store, leaderboard, googleEnabled: Boolean(google) });
   })();
   return app;
 }

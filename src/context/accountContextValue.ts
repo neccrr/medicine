@@ -26,7 +26,12 @@ export interface AccountContextValue {
   checkSession: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signUp: (input: { name: string; email: string; password: string; cohort?: string }) => Promise<AuthResult>;
+  /** Redirects to Google; the student comes back to the Account page (with ?error= on failure). */
   signInWithGoogle: () => Promise<AuthResult>;
+  /** Connects Google to the signed-in account (redirects to Google and back). */
+  connectGoogle: () => Promise<AuthResult>;
+  /** How this account can sign in: "credential" (email and password) and/or "google". */
+  signInMethods: () => Promise<string[]>;
   signOut: (options?: { clearDevice?: boolean }) => Promise<void>;
   updateProfile: (input: { name: string; cohort: string }) => Promise<AuthResult>;
   deleteAccount: (password?: string) => Promise<AuthResult>;

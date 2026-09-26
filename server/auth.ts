@@ -30,8 +30,29 @@ export function createAuth(config: AuthConfig) {
       maxPasswordLength: 128,
     },
     socialProviders: config.google
-      ? { google: { clientId: config.google.clientId, clientSecret: config.google.clientSecret } }
+      ? {
+          google: {
+            clientId: config.google.clientId,
+            clientSecret: config.google.clientSecret,
+            // Always show the account chooser: students often share laptops and phones.
+            prompt: "select_account",
+          },
+        }
       : undefined,
+    account: {
+      accountLinking: {
+        enabled: true,
+        // A signed-in student can connect Google to their account from the Account page (Google
+        // proves the address). Signing in with Google does NOT silently join an existing
+        // password account whose email was never verified: someone could have registered that
+        // address first with a password they know. Those students sign in with the password and
+        // connect Google instead (the Account page explains, from ?error=account_not_linked).
+        trustedProviders: ["google"],
+      },
+    },
+    // OAuth errors (a cancelled Google sign-in, an unlinked account) come back to the Account
+    // page as ?error=<code>, not to Better Auth's bare error page.
+    onAPIError: { errorURL: "/account" },
     user: {
       additionalFields: {
         // Cohort (angkatan), e.g. "2025"; used later to compare scores within a class.

@@ -139,7 +139,9 @@ account environment variables it runs as a plain static site.
 
 **Accounts (optional)**
 - Guest mode by default: everything works without signing in
-- Sign up with email and password, or Google; profile with name and cohort
+- Sign up with Google (one tap, with the account chooser) or email and password; profile with name and cohort
+- Connect Google to a password account from the Account page; a Google sign-in never silently joins an unverified password account with the same email
+- Clear messages when Google sign-in is cancelled or fails, and a hint to open the page in a real browser when it's inside an app (Instagram, LINE…) where Google blocks sign-in
 - Flashcard reviews, quiz and exam history, reading progress, streak days and settings sync across devices, offline-first
 - Guest progress is merged into the account on first sign-in (per-card, per-attempt, per-day, so nothing studied on either device is lost)
 - Sign out keeps local progress; "sign out and clear" for shared computers; download all account data; delete the account
@@ -424,10 +426,31 @@ accounts (see `.env.example`):
    Vercel ↔ Atlas integration.
 2. In Vercel → Settings → Environment Variables, set `MONGODB_URI`,
    `BETTER_AUTH_SECRET` (`openssl rand -base64 32`) and `BETTER_AUTH_URL`
-   (`https://medicine.necr.help`). For Google sign-in, also set `GOOGLE_CLIENT_ID` and
-   `GOOGLE_CLIENT_SECRET`, with the redirect URI
-   `<BETTER_AUTH_URL>/api/auth/callback/google`.
+   (`https://medicine.necr.help`).
 3. Redeploy. `/api/config` answering `{"accounts":true,...}` means it worked.
+
+### Google sign-in
+
+1. In the [Google Cloud console](https://console.cloud.google.com/), create a
+   project, then open **Google Auth Platform** and **Get started**: app name
+   "Medicine", your support email, audience **External**.
+2. **Branding**: home page `https://medicine.necr.help`, authorized domain
+   `necr.help`. Skip the logo (uploading one starts a Google review).
+3. **Audience**: **Publish app**. While it's in "Testing", only listed test
+   users can sign in. The app asks only for name, email and profile picture, so
+   publishing needs no review.
+4. **Clients → Create client → Web application**:
+   - Authorized JavaScript origin: `https://medicine.necr.help`
+   - Authorized redirect URI: `https://medicine.necr.help/api/auth/callback/google`
+5. Copy the client ID and secret into Vercel as `GOOGLE_CLIENT_ID` and
+   `GOOGLE_CLIENT_SECRET`, and redeploy. `/api/config` then answers
+   `"google":true` and the button appears.
+
+Google doesn't accept wildcard redirect URIs, so preview deployments on
+`*.vercel.app` can't use Google sign-in unless you add their exact callback
+URL. For local testing, add `http://localhost:5173` and
+`http://localhost:5173/api/auth/callback/google` to the client and run
+`npm run dev:api` with both variables set.
 
 The link-preview tags in `index.html` (Open Graph, Twitter) point at
 `https://medicine.necr.help`. A fork deployed elsewhere sets `SITE_URL` at build

@@ -145,8 +145,27 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       },
       signInWithGoogle: async () => {
         const client = await loadAuthClient();
-        const { error } = await client.signIn.social({ provider: "google", callbackURL: "/account" });
+        const { error } = await client.signIn.social({
+          provider: "google",
+          callbackURL: "/account",
+          newUserCallbackURL: "/account?welcome=1",
+          errorCallbackURL: "/account",
+        });
         return error ? { ok: false, message: errorMessage(error, "Couldn't start Google sign-in.") } : { ok: true };
+      },
+      connectGoogle: async () => {
+        const client = await loadAuthClient();
+        const { error } = await client.linkSocial({
+          provider: "google",
+          callbackURL: "/account?connected=google",
+          errorCallbackURL: "/account",
+        });
+        return error ? { ok: false, message: errorMessage(error, "Couldn't connect Google.") } : { ok: true };
+      },
+      signInMethods: async () => {
+        const client = await loadAuthClient();
+        const { data } = await client.listAccounts();
+        return (data ?? []).map((a) => a.providerId);
       },
       signOut: async ({ clearDevice = false } = {}) => {
         // Upload anything not yet synced before letting go of the session.

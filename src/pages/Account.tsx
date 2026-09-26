@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAccount } from "../hooks/useAccount";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { studyBlocks } from "../lib/blocks";
+import { googleErrorMessage, isInAppBrowser } from "../lib/googleSignIn";
 import { STORAGE_KEYS } from "../lib/storage";
 
 function timeAgo(ms: number | undefined): string {
@@ -26,6 +27,26 @@ function initials(name: string): string {
       .map((p) => p[0]!.toUpperCase())
       .join("") || "?"
   );
+}
+
+/**
+ * What Google sign-in came back with (?error=, ?welcome=1 for a new account, ?connected=google),
+ * read once and then removed from the address bar so a reload doesn't show it again.
+ */
+function useReturnNotice() {
+  const [notice] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get("error");
+    return {
+      error: error ? googleErrorMessage(error) : undefined,
+      welcome: params.get("welcome") === "1",
+      connected: params.get("connected") === "google",
+    };
+  });
+  useEffect(() => {
+    if (window.location.search) window.history.replaceState(null, "", window.location.pathname);
+  }, []);
+  return notice;
 }
 
 /** The block the student is currently in. Works for guests too; synced for accounts. */
@@ -58,15 +79,66 @@ function GoogleIcon() {
   );
 }
 
-function SignInPanel() {
-  const { config, signIn, signUp, signInWithGoogle } = useAccount();
+/** "Continue with Google", with a way out for app browsers where Google refuses to sign in. */
+function GoogleButton({ label, onError }: { label: string; onError: (message: string) => void }) {
+  const { signInWithGoogle } = useAccount();
+  const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const inApp = typeof navigator !== "undefined" && isInAppBrowser(navigator.userAgent);
+
+  return (
+    <div className="account-google-block">
+      <button
+        type="button"
+        className="btn btn-secondary account-google"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          const r = await signInWithGoogle();
+          // On success the page is already leaving for Google.
+          if (!r.ok) {
+            setBusy(false);
+            onError(r.message ?? "");
+          }
+        }}
+      >
+        <GoogleIcon />
+        {busy ? "Opening Google…" : label}
+      </button>
+      {inApp && (
+        <p className="account-note account-inapp">
+          Google doesn't allow signing in inside this app's browser. Open this page in Chrome or
+          Safari{" "}
+          <button
+            type="button"
+            className="btn-link"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+              } catch {
+                // Clipboard blocked: the address bar still has the link.
+              }
+            }}
+          >
+            {copied ? "(link copied)" : "(copy link)"}
+          </button>
+          , or use email below.
+        </p>
+      )}
+    </div>
+  );
+}
+
+function SignInPanel({ notice }: { notice?: string }) {
+  const { config, signIn, signUp } = useAccount();
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cohort, setCohort] = useState("");
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(notice ?? "");
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -97,6 +169,15 @@ function SignInPanel() {
           </button>
         ))}
       </div>
+
+      {config?.google && (
+        <>
+          <GoogleButton label={mode === "sign-in" ? "Continue with Google" : "Sign up with Google"} onError={setMessage} />
+          <div className="account-divider">
+            <span>or use email</span>
+          </div>
+        </>
+      )}
 
       <form className="account-form" onSubmit={submit}>
         {mode === "sign-up" && (
@@ -141,30 +222,73 @@ function SignInPanel() {
         </button>
       </form>
 
-      {config?.google && (
-        <>
-          <div className="account-divider">
-            <span>or</span>
-          </div>
-          <button
-            type="button"
-            className="btn btn-secondary account-google"
-            onClick={async () => {
-              const r = await signInWithGoogle();
-              if (!r.ok) setMessage(r.message ?? "");
-            }}
-          >
-            <GoogleIcon />
-            Continue with Google
-          </button>
-        </>
-      )}
     </div>
   );
 }
 
-function SignedInView() {
-  const { user, sync, syncNow, updateProfile, signOut, deleteAccount } = useAccount();
+/** Which ways this account can sign in, with "Connect Google" when it isn't connected yet. */
+function SignInMethods({ onMethods }: { onMethods: (methods: string[]) => void }) {
+  const { config, signInMethods, connectGoogle } = useAccount();
+  const [methods, setMethods] = useState<string[] | null>(null);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    signInMethods().then(
+      (m) => {
+        if (cancelled) return;
+        setMethods(m);
+        onMethods(m);
+      },
+      () => !cancelled && setMethods([]),
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [signInMethods, onMethods]);
+
+  if (!methods) return null;
+  const hasPassword = methods.includes("credential");
+  const hasGoogle = methods.includes("google");
+
+  return (
+    <div className="account-methods">
+      <h3>Sign-in methods</h3>
+      <ul>
+        <li>
+          <span>Email and password</span>
+          <span className={hasPassword ? "account-method-on" : "account-method-off"}>{hasPassword ? "Set" : "Not set"}</span>
+        </li>
+        <li>
+          <span className="account-method-google">
+            <GoogleIcon /> Google
+          </span>
+          {hasGoogle ? (
+            <span className="account-method-on">Connected</span>
+          ) : config?.google ? (
+            <button
+              type="button"
+              className="btn btn-secondary btn-small"
+              onClick={async () => {
+                const r = await connectGoogle();
+                if (!r.ok) setMessage(r.message ?? "");
+              }}
+            >
+              Connect Google
+            </button>
+          ) : (
+            <span className="account-method-off">Not available</span>
+          )}
+        </li>
+      </ul>
+      {message && <p className="account-error">{message}</p>}
+    </div>
+  );
+}
+
+function SignedInView({ notice }: { notice: ReturnType<typeof useReturnNotice> }) {
+  const { user, sync, syncNow, updateProfile, signOut, deleteAccount, signInWithGoogle } = useAccount();
+  const [methods, setMethods] = useState<string[] | null>(null);
   const [name, setName] = useState(user?.name ?? "");
   const [cohort, setCohort] = useState(user?.cohort ?? "");
   const [profileMessage, setProfileMessage] = useState("");
@@ -222,6 +346,15 @@ function SignedInView() {
             <p className="account-email">{user.email}</p>
           </div>
         </div>
+        {notice.error && (
+          <p className="account-error" role="alert">
+            {notice.error}
+          </p>
+        )}
+        {notice.connected && <p className="account-success">Google is connected. You can now sign in either way.</p>}
+        {notice.welcome && !user.cohort && (
+          <p className="account-success">Welcome! Add your cohort below to compare with your class on the leaderboard.</p>
+        )}
         <form className="account-form" onSubmit={saveProfile}>
           <label className="account-field">
             <span>Name</span>
@@ -239,6 +372,7 @@ function SignedInView() {
           </div>
         </form>
         <CurrentBlockPicker />
+        <SignInMethods onMethods={setMethods} />
       </div>
 
       <div className="account-card">
@@ -303,17 +437,27 @@ function SignedInView() {
               setDeleteMessage(r.ok ? "" : (r.message ?? "Couldn't delete the account."));
             }}
           >
-            <label className="account-field">
-              <span>Password</span>
-              <input
-                className="form-input"
-                type="password"
-                autoComplete="current-password"
-                value={deletePassword}
-                onChange={(e) => setDeletePassword(e.target.value)}
-              />
-              <small>Leave empty if you signed in with Google.</small>
-            </label>
+            {methods?.includes("credential") ? (
+              <label className="account-field">
+                <span>Password</span>
+                <input
+                  className="form-input"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                />
+              </label>
+            ) : (
+              <p className="account-note">
+                For your security, this needs a Google sign-in from the last 24 hours.{" "}
+                <button type="button" className="btn-link" onClick={() => void signInWithGoogle()}>
+                  Sign in with Google again
+                </button>{" "}
+                if it says your session expired.
+              </p>
+            )}
             <label className="account-field">
               <span>Type DELETE to confirm</span>
               <input className="form-input" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} />
@@ -335,6 +479,7 @@ function SignedInView() {
 
 export function Account() {
   const { status, config, checkSession } = useAccount();
+  const notice = useReturnNotice();
 
   // Coming back from Google sign-in, or a guest opening this page: look for a session.
   useEffect(() => {
@@ -368,7 +513,7 @@ export function Account() {
             you've done on this device comes with you.
           </p>
           <div className="account-grid account-grid-guest">
-            <SignInPanel />
+            <SignInPanel notice={notice.error} />
             <div className="account-card account-why">
               <h2>Why sign in?</h2>
               <ul>
@@ -397,7 +542,7 @@ export function Account() {
       {status === "signed-in" && (
         <>
           <p className="subtitle">Your progress syncs automatically across your devices.</p>
-          <SignedInView />
+          <SignedInView notice={notice} />
         </>
       )}
     </section>

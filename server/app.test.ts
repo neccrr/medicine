@@ -196,3 +196,48 @@ describe("leaderboard records from before per-key parts", () => {
     expect(board.rows).toEqual([expect.objectContaining({ name: "Old Timer", value: 5 })]);
   });
 });
+
+describe("Google sign-in", () => {
+  function googleApp() {
+    const auth = createAuth({
+      database: memoryAdapter({ user: [], session: [], account: [], verification: [], rateLimit: [] }),
+      secret: "test-secret-test-secret-test-secret-1234",
+      baseURL: ORIGIN,
+      trustedOrigins: [ORIGIN],
+      google: { clientId: "test-client.apps.googleusercontent.com", clientSecret: "test-secret" },
+      onDeleteUser: async () => {},
+      rateLimit: false,
+    });
+    return createApp({ auth, store: new MemoryProgressStore(), leaderboard: new MemoryLeaderboardStore(), googleEnabled: true });
+  }
+
+  it("is reported by /api/config when configured", async () => {
+    const res = await googleApp()(new Request(ORIGIN + "/api/config"));
+    expect(await res.json()).toEqual({ accounts: true, google: true });
+  });
+
+  it("sends the student to Google with this site's callback and the account chooser", async () => {
+    const res = await googleApp()(
+      new Request(ORIGIN + "/api/auth/sign-in/social", {
+        method: "POST",
+        headers: { origin: ORIGIN, "content-type": "application/json" },
+        body: JSON.stringify({ provider: "google", callbackURL: "/account", errorCallbackURL: "/account" }),
+      }),
+    );
+    expect(res.status).toBe(200);
+    const url = new URL((await res.json()).url);
+    expect(url.origin).toBe("https://accounts.google.com");
+    expect(url.searchParams.get("client_id")).toBe("test-client.apps.googleusercontent.com");
+    expect(url.searchParams.get("redirect_uri")).toBe(`${ORIGIN}/api/auth/callback/google`);
+    expect(url.searchParams.get("prompt")).toBe("select_account");
+    expect(url.searchParams.get("scope")).toContain("email");
+  });
+
+  it("sends a failed return from Google back to the Account page, not an error page", async () => {
+    const res = await googleApp()(new Request(ORIGIN + "/api/auth/callback/google?error=access_denied"));
+    expect(res.status).toBe(302);
+    const location = new URL(res.headers.get("location")!, ORIGIN);
+    expect(location.pathname).toBe("/account");
+    expect(location.searchParams.get("error")).toBeTruthy();
+  });
+});
