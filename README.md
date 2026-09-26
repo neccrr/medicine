@@ -291,9 +291,30 @@ src/
   context/      AccountContext: session, sync scheduling, sign-in actions
 api/
   index.ts      the Vercel Function; vercel.json rewrites /api/* here
-server/         the API behind it: auth (Better Auth), sync endpoint, MongoDB and
-                in-memory progress stores, the dev-server adapter, and its tests
+server/         the API behind it:
+  app.ts          routes: auth (Better Auth), config, sync, export, leaderboard
+  schema.ts       every MongoDB collection and its indexes, created once per cold start
+  progressStore.ts  synced progress, one document per user per key (MongoDB and in-memory)
+  leaderboard.ts  scoring and ranking, one document per user (MongoDB and in-memory)
+  mongo.ts        the shared client; devApi.ts serves the API from the Vite dev server
 ```
+
+### Storage
+
+Progress lives in the browser's `localStorage` as `medicine:{type}` or
+`medicine:{type}:{id}` keys. `src/lib/storageSchema.ts` declares every type in
+one table: what its id is, whether it syncs and which merge rule applies,
+whether it survives "sign out and clear". The storage helpers, the sync engine,
+the legacy-key migration and the server's scoring all read that table, so a new
+kind of progress is added in one place.
+
+With an account, each synced key is one MongoDB document (`progress`), indexed
+by user and key for merges and by user and revision for "what changed since my
+last sync". The leaderboard keeps one small document per student with a score
+part per scoring key. A sync rescores only the keys it wrote, as separate field
+updates, so it never re-reads a student's whole history and two syncs at once
+can't overwrite each other. Expired sessions and verification tokens are
+deleted by MongoDB TTL indexes.
 
 Key modules in `src/lib`:
 
@@ -315,9 +336,10 @@ Key modules in `src/lib`:
 | `backupReminder.ts` | When to show the export reminder |
 | `tipOfDay.ts` | Deterministic daily tip (same for everyone, no server) |
 | `subjectStyle.ts` | Stable per-subject hue from the subject id, avoiding the red and green used for wrong/right |
-| `storage.ts` | `localStorage` helpers and export/import of all `medicine:*` keys |
+| `storageSchema.ts` | The registry of every `localStorage` key type: id, sync and merge rule, clearing (shared with the server) |
+| `storage.ts` | `localStorage` helpers, the key builders, and export/import of all `medicine:*` keys |
 | `progressMigration.ts` | Renames progress saved under old subject-only keys to per-block keys |
-| `syncMerge.ts` | Which keys sync, and how two copies of one key are merged (shared with the server) |
+| `syncMerge.ts` | How two copies of one key are merged, by the key's rule in the registry (shared with the server) |
 | `sync.ts` | The sync round: upload changed keys, download the account's changes, apply them safely |
 | `syncDirty.ts` | Records which synced keys changed on this device since the last sync |
 
@@ -371,12 +393,24 @@ Tests cover the pure logic in `src/lib` (SM-2, scoring, shuffling, sections,
 exam format, module grouping, blocks, streaks, search indexing, text
 extraction, study plans, backup timing, tip of the day, sync merging) and the
 API in `server/`: sign-up, sync, per-user isolation, validation, export and
-deletion, plus a two-device sync run of the browser engine against the real
-handler. There are no DOM or component tests.
+deletion, leaderboard scoring and ranking, plus a two-device sync run of the
+browser engine against the real handler. There are no DOM or component tests.
+
+The MongoDB stores and indexes have an integration test that runs against a
+real server when `MONGODB_TEST_URI` is set, using a throwaway database:
+
+```bash
+MONGODB_TEST_URI="mongodb://127.0.0.1:27017/?replicaSet=rs0" npx vitest run server/mongo.integration.test.ts
+```
+
+Better Auth uses transactions, so a local MongoDB for `npm run dev:api` with
+`MONGODB_URI` must run as a replica set (a single node is fine); Atlas always is.
 
 ## Deploying
 
-`vercel.json` sets the build command, the `dist` output directory, a rewrite
+`vercel.json` sets the build command, the `dist` output directory, the
+function region (`sin1`, Singapore, next to the Atlas cluster; change both
+together if you move either), a rewrite
 of `/api/*` to the API function, and an SPA rewrite so deep links work on
 refresh. It also marks `sw.js`, the manifest and `index.html` as `no-cache`, so
 a new deploy reaches installed copies promptly.
@@ -399,8 +433,8 @@ The link-preview tags in `index.html` (Open Graph, Twitter) point at
 `https://medicine.necr.help`. A fork deployed elsewhere sets `SITE_URL` at build
 time.
 
-Collections (`user`, `session`, `account`, `verification`, `rateLimit`,
-`progress`, `leaderboard`) and indexes are created automatically. Any static host with an SPA
+Collections and indexes (listed in `server/schema.ts`) are created
+automatically. Any static host with an SPA
 fallback works for guest-only mode, if it sends the same no-cache headers.
 
 ## Contributing

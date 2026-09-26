@@ -19,34 +19,24 @@ interface ProgressDoc extends StoredEntry {
   userId: string;
 }
 
-const strip = ({ key, value, updatedAt, rev }: ProgressDoc): StoredEntry => ({ key, value, updatedAt, rev });
+// Reads return only the entry, not _id or the userId the query already names.
+const ENTRY_FIELDS = { _id: 0, key: 1, value: 1, updatedAt: 1, rev: 1 } as const;
 
 export class MongoProgressStore implements ProgressStore {
+  // Indexes are declared in schema.ts.
   private readonly col: Collection<ProgressDoc>;
-  private indexes: Promise<unknown> | null = null;
 
   constructor(db: Db) {
     this.col = db.collection<ProgressDoc>("progress");
   }
 
-  private ready() {
-    // createIndexes is idempotent; run once per cold start.
-    this.indexes ??= this.col.createIndexes([
-      { key: { userId: 1, key: 1 }, unique: true, name: "user_key" },
-      { key: { userId: 1, rev: 1 }, name: "user_rev" },
-    ]);
-    return this.indexes;
-  }
-
   async get(userId: string, keys: string[]) {
-    await this.ready();
-    const docs = await this.col.find({ userId, key: { $in: keys } }).toArray();
-    return new Map(docs.map((d) => [d.key, strip(d)]));
+    const docs = await this.col.find<StoredEntry>({ userId, key: { $in: keys } }, { projection: ENTRY_FIELDS }).toArray();
+    return new Map(docs.map((d) => [d.key, d]));
   }
 
   async put(userId: string, entries: StoredEntry[]) {
     if (entries.length === 0) return;
-    await this.ready();
     await this.col.bulkWrite(
       entries.map((e) => ({
         updateOne: {
@@ -60,8 +50,7 @@ export class MongoProgressStore implements ProgressStore {
   }
 
   async changedSince(userId: string, rev: number) {
-    await this.ready();
-    return (await this.col.find({ userId, rev: { $gte: rev } }).toArray()).map(strip);
+    return this.col.find<StoredEntry>({ userId, rev: { $gte: rev } }, { projection: ENTRY_FIELDS }).toArray();
   }
 
   async all(userId: string) {

@@ -1,6 +1,7 @@
 import type { Subject } from "../types/content";
 import { studyBlocks } from "./blocks";
 import { ebookSubjects, flashcardSubjects, keyOf, quizSubjects, summarySubjects } from "./content";
+import { storageKey, type KeyTypeName } from "./storageSchema";
 
 /**
  * Per-subject progress used to be stored under the bare subject id ("medicine:flashcards:physiology").
@@ -8,7 +9,7 @@ import { ebookSubjects, flashcardSubjects, keyOf, quizSubjects, summarySubjects 
  * This lists which subject list each old key type belongs to, so an old key can be matched to
  * the block that had that content.
  */
-const SUBJECT_SCOPED_TYPES: Record<string, Subject[]> = {
+export const SUBJECT_SCOPED_TYPES: Partial<Record<KeyTypeName, Subject[]>> = {
   flashcards: flashcardSubjects,
   tagfilter: flashcardSubjects,
   examdate: flashcardSubjects,
@@ -32,7 +33,7 @@ const blockOrder = (blockId: string) => {
  */
 export function migratedKey(
   key: string,
-  subjectsByType: Record<string, Subject[]> = SUBJECT_SCOPED_TYPES,
+  subjectsByType: Partial<Record<string, Subject[]>> = SUBJECT_SCOPED_TYPES,
 ): string | null {
   const match = key.match(/^medicine:([a-z]+):([^/]+)$/);
   if (!match) return null;
@@ -42,7 +43,7 @@ export function migratedKey(
   const candidates = subjects
     .filter((s) => s.id === subjectId)
     .sort((a, b) => blockOrder(a.blockId) - blockOrder(b.blockId));
-  return candidates.length ? `medicine:${type}:${keyOf(candidates[0])}` : null;
+  return candidates.length ? storageKey(type as KeyTypeName, keyOf(candidates[0])) : null;
 }
 
 /**

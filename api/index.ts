@@ -5,9 +5,10 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { createApp, type App } from "../server/app.js";
 import { createAuth } from "../server/auth.js";
 import { publicUrlFromEnv, trustedOriginsFromEnv } from "../server/env.js";
-import { ensureAuthIndexes, getMongo } from "../server/mongo.js";
+import { getMongo } from "../server/mongo.js";
 import { MongoLeaderboardStore } from "../server/leaderboard.js";
 import { MongoProgressStore } from "../server/progressStore.js";
+import { ensureIndexes } from "../server/schema.js";
 
 let app: Promise<App> | null = null;
 
@@ -17,7 +18,8 @@ function build(): Promise<App> {
   const secret = env.BETTER_AUTH_SECRET;
   if (!uri || !secret) throw new Error("MONGODB_URI and BETTER_AUTH_SECRET must be set.");
   return getMongo(uri, env.MONGODB_DB || "medicine").then(async ({ client, db }) => {
-    await ensureAuthIndexes(db);
+    // Once per cold start, off the request path: the indexes normally exist already.
+    ensureIndexes(db).catch((err) => console.error("Creating indexes failed", err));
     const store = new MongoProgressStore(db);
     const leaderboard = new MongoLeaderboardStore(db);
     const google =

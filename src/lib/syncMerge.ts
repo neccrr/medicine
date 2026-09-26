@@ -1,6 +1,9 @@
 // Rules for combining two copies of one progress entry (a `medicine:*` localStorage key), used
 // by the sync server when a device uploads a change and by the browser when a download races a
-// local edit. Pure and import-free so the server can load it without the app's module graph.
+// local edit. Which rule a key gets comes from the key registry in storageSchema.ts. Both files
+// are import-free apart from each other, so the server can load them without the app's module
+// graph.
+import { mergeRuleFor } from "./storageSchema.js";
 
 export interface SyncEntry {
   key: string;
@@ -9,10 +12,9 @@ export interface SyncEntry {
   updatedAt: number;
 }
 
-/** Keys that stay on one device: UI state, sync bookkeeping, and bulky mid-quiz snapshots. */
+/** Whether a key syncs: device-only keys (UI state, sync bookkeeping, mid-quiz snapshots) don't. */
 export function isSyncableKey(key: string): boolean {
-  if (!/^medicine:[a-z]+(?::[A-Za-z0-9._/-]{1,160})?$/.test(key)) return false;
-  return !/^medicine:(theme|lastexport|sidebarcollapsed|sync|quizinprogress)(:|$)/.test(key);
+  return mergeRuleFor(key) !== null;
 }
 
 type CardLike = { reps?: unknown; dueDate?: unknown };
@@ -67,19 +69,23 @@ export function mergeEntry(current: SyncEntry, incoming: SyncEntry): SyncEntry {
   const b = incoming.value;
   const newer = incoming.updatedAt >= current.updatedAt ? incoming : current;
 
-  if (/^medicine:flashcards:/.test(key) && isRecord(a) && isRecord(b)) {
-    return { key, value: mergeCardStates(a, b), updatedAt };
-  }
-  if (/^medicine:(quiz|examhistory):/.test(key) && Array.isArray(a) && Array.isArray(b)) {
-    return { key, value: mergeAttemptLists(a, b), updatedAt };
-  }
-  if (/^medicine:(activity$|ebookdone:)/.test(key) && Array.isArray(a) && Array.isArray(b)) {
-    return { key, value: mergeStringSets(a, b), updatedAt };
-  }
-  if (/^medicine:ebook:/.test(key) && isRecord(a) && isRecord(b)) {
-    // A reading position carries its own timestamp; the later position wins.
-    const later = String(b.updatedAt ?? "") >= String(a.updatedAt ?? "") ? b : a;
-    return { key, value: later, updatedAt };
+  switch (mergeRuleFor(key)) {
+    case "cards":
+      if (isRecord(a) && isRecord(b)) return { key, value: mergeCardStates(a, b), updatedAt };
+      break;
+    case "attempts":
+      if (Array.isArray(a) && Array.isArray(b)) return { key, value: mergeAttemptLists(a, b), updatedAt };
+      break;
+    case "set":
+      if (Array.isArray(a) && Array.isArray(b)) return { key, value: mergeStringSets(a, b), updatedAt };
+      break;
+    case "position":
+      if (isRecord(a) && isRecord(b)) {
+        // A reading position carries its own timestamp; the later position wins.
+        const later = String(b.updatedAt ?? "") >= String(a.updatedAt ?? "") ? b : a;
+        return { key, value: later, updatedAt };
+      }
+      break;
   }
   return { key, value: newer.value, updatedAt };
 }

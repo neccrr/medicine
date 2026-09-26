@@ -178,3 +178,21 @@ describe("leaderboard", () => {
     expect((await board(cookie, "?period=all")).rows).toHaveLength(0);
   });
 });
+
+describe("leaderboard records from before per-key parts", () => {
+  it("are rebuilt from synced progress when next read", async () => {
+    const cookie = await signUp("old@example.com", "Old Timer");
+    const today = new Date().toISOString().slice(0, 10);
+    await req("/api/sync", { cookie, body: { since: 0, changes: [{ key: "medicine:activity", value: [today], updatedAt: 1 }] } });
+    await req("/api/leaderboard/me", { cookie, method: "PUT", body: { joined: true } });
+    const [doc] = await leaderboard.joined();
+    // Simulate the first version's shape: totals, no parts.
+    const legacy = { ...doc, stats: { points: 5 } } as Partial<typeof doc>;
+    delete legacy.parts;
+    await leaderboard.delete(doc.userId);
+    await leaderboard.create(legacy as typeof doc);
+
+    const board = await (await req("/api/leaderboard?period=all", { cookie })).json();
+    expect(board.rows).toEqual([expect.objectContaining({ name: "Old Timer", value: 5 })]);
+  });
+});

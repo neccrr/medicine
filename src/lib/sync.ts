@@ -1,3 +1,4 @@
+import { KEY_PREFIX, keptOnClear, storageKey } from "./storageSchema";
 import { isSyncableKey, mergeEntry, type SyncEntry } from "./syncMerge";
 import { readDirty, writeDirty } from "./syncDirty";
 
@@ -6,7 +7,7 @@ import { readDirty, writeDirty } from "./syncDirty";
 // keys changed since the last one, and downloads what changed on the server since then, with
 // both sides merged by the rules in syncMerge.ts.
 
-export const SYNC_STATE_KEY = "medicine:sync:state";
+export const SYNC_STATE_KEY = storageKey("sync", "state");
 export const STORAGE_UPDATED_EVENT = "medicine:storage-updated";
 
 export interface SyncState {
@@ -160,7 +161,7 @@ export function clearLocalProgress(storage: Storage = window.localStorage): void
   const keys: string[] = [];
   for (let i = 0; i < storage.length; i++) {
     const k = storage.key(i);
-    if (k?.startsWith("medicine:") && k !== "medicine:theme") keys.push(k);
+    if (k?.startsWith(KEY_PREFIX) && !keptOnClear(k)) keys.push(k);
   }
   keys.forEach((k) => storage.removeItem(k));
 }

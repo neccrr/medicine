@@ -3,11 +3,13 @@ import type { Auth } from "./auth.js";
 import {
   affectsLeaderboard,
   cleanDisplayName,
-  computeStats,
+  newDoc,
+  partsFor,
   POINTS,
   rankBoard,
   scoreFor,
-  updateDoc,
+  scoreUpdate,
+  summarize,
   type LeaderboardDoc,
   type LeaderboardStore,
 } from "./leaderboard.js";
@@ -65,13 +67,28 @@ export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) 
     return { id: user.id, name: user.name ?? "", cohort: user.cohort?.trim() || null };
   }
 
-  /** Recounts a student's points from everything they have synced. */
-  async function recount(user: SessionUser): Promise<LeaderboardDoc> {
-    const [prev, entries] = await Promise.all([leaderboard.get(user.id), store.all(user.id)]);
-    const displayName = cleanDisplayName(user.name) ?? "Student";
-    const doc = updateDoc(prev, { userId: user.id, displayName, cohort: user.cohort }, computeStats(entries));
-    await leaderboard.saveStats(doc);
-    return doc;
+  /**
+   * The student's leaderboard record. All of their synced progress is read only to create it,
+   * or once to repair a record saved before per-key score parts existed.
+   */
+  async function scoreRecord(user: SessionUser): Promise<LeaderboardDoc> {
+    const existing = await leaderboard.get(user.id);
+    if (existing?.parts) return existing;
+    const entries = await store.all(user.id);
+    if (existing) {
+      await leaderboard.replaceParts(user.id, partsFor(entries), Date.now());
+    } else {
+      const displayName = cleanDisplayName(user.name) ?? "Student";
+      await leaderboard.create(newDoc({ userId: user.id, displayName, cohort: user.cohort }, entries));
+    }
+    return (await leaderboard.get(user.id))!;
+  }
+
+  /** Rescores just the keys a sync wrote (store.put has already saved them). */
+  async function rescore(user: SessionUser, written: StoredEntry[]): Promise<void> {
+    const prev = await leaderboard.get(user.id);
+    if (prev?.parts) await leaderboard.applyScore(user.id, scoreUpdate(prev, written));
+    else await scoreRecord(user);
   }
 
   async function board(request: Request, user: SessionUser): Promise<Response> {
@@ -79,9 +96,12 @@ export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) 
     const period = (["week", "all", "streak"] as const).find((p) => p === params.get("period")) ?? "week";
     const scope = params.get("scope") === "cohort" && user.cohort ? "cohort" : "everyone";
     const cohort = scope === "cohort" ? user.cohort : null;
-    let me = await leaderboard.get(user.id);
-    // Missing record, or a cohort changed on the Account page since the last recount.
-    if (!me || me.cohort !== user.cohort) me = await recount(user);
+    const me = await scoreRecord(user);
+    if (me.cohort !== user.cohort) {
+      // The cohort was changed on the Account page.
+      await leaderboard.setProfile(user.id, { cohort: user.cohort });
+      me.cohort = user.cohort;
+    }
     const rows = rankBoard(await leaderboard.joined(), { period, cohort, userId: user.id });
     const myRow = rows.find((r) => r.me);
     return json({
@@ -96,7 +116,7 @@ export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) 
         displayName: me.displayName,
         rank: myRow?.rank ?? null,
         value: scoreFor(me, period),
-        stats: me.stats,
+        stats: summarize(me.parts).stats,
         streak: scoreFor(me, "streak"),
         week: scoreFor(me, "week"),
       },
@@ -120,8 +140,8 @@ export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) 
       if (typeof body.joined !== "boolean") return error(400, "Invalid 'joined'.");
       patch.joined = body.joined;
     }
-    const doc = (await leaderboard.get(user.id)) ?? (await recount(user));
-    await leaderboard.setMembership(user.id, patch);
+    const doc = await scoreRecord(user);
+    await leaderboard.setProfile(user.id, patch);
     return json({ joined: patch.joined ?? doc.joined, displayName: patch.displayName ?? doc.displayName });
   }
 
@@ -151,7 +171,8 @@ export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) 
       writes.set(change.key, { key: change.key, value: merged.value, updatedAt: merged.updatedAt, rev: start });
     }
     await store.put(uid, [...writes.values()]);
-    if (valid.some((c) => affectsLeaderboard(c.key))) await recount(user);
+    const scored = [...writes.values()].filter((e) => affectsLeaderboard(e.key));
+    if (scored.length) await rescore(user, scored);
 
     const entries = await store.changedSince(uid, since > 0 ? since - OVERLAP_MS : 0);
     return json({

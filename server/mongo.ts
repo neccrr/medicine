@@ -6,7 +6,13 @@ const globalCache = globalThis as unknown as { __medicineMongo?: Promise<{ clien
 
 export function getMongo(uri: string, dbName: string): Promise<{ client: MongoClient; db: Db }> {
   globalCache.__medicineMongo ??= (async () => {
-    const client = new MongoClient(uri, { maxPoolSize: 5, appName: "medicine" });
+    const client = new MongoClient(uri, {
+      maxPoolSize: 5,
+      appName: "medicine",
+      // Give up after 5s instead of the driver's 30s when the cluster can't be reached (network
+      // access list, outage), so requests fail fast with a clear 503.
+      serverSelectionTimeoutMS: 5000,
+    });
     await client.connect();
     return { client, db: client.db(dbName) };
   })().catch((err) => {
@@ -14,20 +20,4 @@ export function getMongo(uri: string, dbName: string): Promise<{ client: MongoCl
     throw err;
   });
   return globalCache.__medicineMongo;
-}
-
-/**
- * Indexes for the lookups Better Auth makes (it doesn't create any itself on MongoDB). Idempotent;
- * run once per cold start.
- */
-export async function ensureAuthIndexes(db: Db): Promise<void> {
-  await Promise.all([
-    db.collection("user").createIndex({ email: 1 }, { unique: true }),
-    db.collection("session").createIndex({ token: 1 }, { unique: true }),
-    db.collection("session").createIndex({ userId: 1 }),
-    db.collection("account").createIndex({ userId: 1 }),
-    db.collection("account").createIndex({ providerId: 1, accountId: 1 }),
-    db.collection("verification").createIndex({ identifier: 1 }),
-    db.collection("rateLimit").createIndex({ key: 1 }, { unique: true }),
-  ]);
 }

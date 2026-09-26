@@ -1,3 +1,4 @@
+import { KEY_PREFIX, storageKey } from "./storageSchema";
 import { markDirty } from "./syncDirty";
 
 export function readJSON<T>(key: string, fallback: T): T {
@@ -31,37 +32,37 @@ export function writeJSON<T>(key: string, value: T): void {
   }
 }
 
+// Every key is declared in storageSchema.ts, which also says whether and how it syncs.
 // Per-subject keys take a subject key, "{blockId}/{subjectId}" (see subjectKey in content.ts).
 export const STORAGE_KEYS = {
-  cardState: (key: string) => `medicine:flashcards:${key}`,
-  tagFilter: (key: string) => `medicine:tagfilter:${key}`,
-  quizProgress: (key: string) => `medicine:quiz:${key}`,
-  quizDue: (key: string) => `medicine:quizdue:${key}`,
-  quizInProgress: (key: string) => `medicine:quizinprogress:${key}`,
+  cardState: (key: string) => storageKey("flashcards", key),
+  tagFilter: (key: string) => storageKey("tagfilter", key),
+  quizProgress: (key: string) => storageKey("quiz", key),
+  quizDue: (key: string) => storageKey("quizdue", key),
+  quizInProgress: (key: string) => storageKey("quizinprogress", key),
   /** Keyed by block id, or "{blockId}/{packageId}" for one exam package. */
-  examHistory: (id: string) => `medicine:examhistory:${id}`,
-  examMode: "medicine:exammode",
-  lastRead: (key: string) => `medicine:lastread:${key}`,
-  ebookPosition: (key: string) => `medicine:ebook:${key}`,
-  ebookCompleted: (key: string) => `medicine:ebookdone:${key}`,
-  examDate: (key: string) => `medicine:examdate:${key}`,
-  readingPrefs: "medicine:readingprefs",
-  sidebarCollapsed: "medicine:sidebarcollapsed",
+  examHistory: (id: string) => storageKey("examhistory", id),
+  examMode: storageKey("exammode"),
+  lastRead: (key: string) => storageKey("lastread", key),
+  ebookPosition: (key: string) => storageKey("ebook", key),
+  ebookCompleted: (key: string) => storageKey("ebookdone", key),
+  examDate: (key: string) => storageKey("examdate", key),
+  readingPrefs: storageKey("readingprefs"),
+  sidebarCollapsed: storageKey("sidebarcollapsed"),
   /** The block the student is in (synced); Home shows it first. */
-  currentBlock: "medicine:currentblock",
-  lastExport: "medicine:lastexport",
-  theme: "medicine:theme",
-  activity: "medicine:activity",
+  currentBlock: storageKey("currentblock"),
+  lastExport: storageKey("lastexport"),
+  theme: storageKey("theme"),
+  activity: storageKey("activity"),
 } as const;
 
-const PREFIX = "medicine:";
 
 /** Collect every app-owned localStorage key/value pair, for export. */
 export function exportAllProgress(): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (let i = 0; i < window.localStorage.length; i++) {
     const key = window.localStorage.key(i);
-    if (!key || !key.startsWith(PREFIX)) continue;
+    if (!key || !key.startsWith(KEY_PREFIX)) continue;
     try {
       out[key] = JSON.parse(window.localStorage.getItem(key) ?? "null");
     } catch {
@@ -74,7 +75,7 @@ export function exportAllProgress(): Record<string, unknown> {
 /** Restore a previously exported progress snapshot, overwriting existing keys. */
 export function importAllProgress(data: Record<string, unknown>): void {
   for (const [key, value] of Object.entries(data)) {
-    if (!key.startsWith(PREFIX)) continue;
+    if (!key.startsWith(KEY_PREFIX)) continue;
     writeJSON(key, value);
   }
 }

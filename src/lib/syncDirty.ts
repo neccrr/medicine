@@ -1,8 +1,9 @@
+import { storageKey } from "./storageSchema";
 import { isSyncableKey } from "./syncMerge";
 
 // Which synced keys changed on this device since the last successful sync, and when. Kept in
 // localStorage directly (not through writeJSON) so recording a change never records itself.
-export const DIRTY_KEY = "medicine:sync:dirty";
+export const DIRTY_KEY = storageKey("sync", "dirty");
 export const DIRTY_EVENT = "medicine:sync-dirty";
 
 export type DirtyMap = Record<string, number>;
