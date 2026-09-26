@@ -49,6 +49,8 @@ export function createAuth(config: AuthConfig) {
         // connect Google instead (the Account page explains, from ?error=account_not_linked).
         trustedProviders: ["google"],
       },
+      // Google's tokens are only needed during sign-in; keep the stored copies encrypted.
+      encryptOAuthTokens: true,
     },
     // OAuth errors (a cancelled Google sign-in, an unlinked account) come back to the Account
     // page as ?error=<code>, not to Better Auth's bare error page.

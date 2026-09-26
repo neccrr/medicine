@@ -108,6 +108,13 @@ export default function App() {
               <main className="main" id="main-content">
                 <AppRoutes />
               </main>
+              <footer className="site-footer">
+                <a href="/privacy.html">Privacy</a>
+                <a href="/terms.html">Terms</a>
+                <a href="https://github.com/neccrr/medicine" target="_blank" rel="noopener noreferrer">
+                  Source
+                </a>
+              </footer>
             </div>
           </div>
         </BrowserRouter>

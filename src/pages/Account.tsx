@@ -221,6 +221,10 @@ function SignInPanel({ notice }: { notice?: string }) {
           {busy ? "Please wait…" : mode === "sign-in" ? "Sign in" : "Create account"}
         </button>
       </form>
+      <p className="account-legal">
+        By continuing you agree to the <a href="/terms.html">Terms of Service</a> and{" "}
+        <a href="/privacy.html">Privacy Policy</a>.
+      </p>
 
     </div>
   );

@@ -374,6 +374,9 @@ grid. An EKG pulse trace is the logo and hero decoration.
   chosen display name, cohort and scores to other signed-in students (never
   your email or answers). Leave it any time. **Account → Download my data** exports it all, and
   **Delete account** removes the account and its stored progress.
+- The public [Privacy Policy](https://medicine.necr.help/privacy.html) and
+  [Terms of Service](https://medicine.necr.help/terms.html) are static pages in
+  `public/`; update them if what the app stores changes.
 - Content is the same for everyone.
 - Clearing site data erases progress. If saved progress from an older version
   ever breaks a page, the recovery screen offers **Reload** or **Clear local
@@ -434,8 +437,10 @@ accounts (see `.env.example`):
 1. In the [Google Cloud console](https://console.cloud.google.com/), create a
    project, then open **Google Auth Platform** and **Get started**: app name
    "Medicine", your support email, audience **External**.
-2. **Branding**: home page `https://medicine.necr.help`, authorized domain
-   `necr.help`. Skip the logo (uploading one starts a Google review).
+2. **Branding**: home page `https://medicine.necr.help`, privacy policy
+   `https://medicine.necr.help/privacy.html`, terms of service
+   `https://medicine.necr.help/terms.html`, authorized domain `necr.help`. Skip
+   the logo (uploading one starts a Google review).
 3. **Audience**: **Publish app**. While it's in "Testing", only listed test
    users can sign in. The app asks only for name, email and profile picture, so
    publishing needs no review.

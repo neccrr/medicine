@@ -362,6 +362,30 @@
   transition: max-width var(--dur-morph) var(--ease-glass);
 }
 
+.site-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 0 1.5rem 1.75rem;
+  font-size: 0.8rem;
+}
+
+.site-footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+@media print {
+  .site-footer {
+    display: none;
+  }
+}
+
 /* With the sidebar collapsed to its icon rail, let pages (ebooks, PDFs, card grids) use the
    width it gave back instead of leaving it as empty margin. */
 @media (min-width: 961px) {
