@@ -17,6 +17,7 @@ import {
   SlidesIcon,
   SummaryIcon,
   TimerIcon,
+  UserIcon,
 } from "./icons";
 
 const links: { to: string; label: string; end?: boolean; icon: ReactNode }[] = [
@@ -29,6 +30,7 @@ const links: { to: string; label: string; end?: boolean; icon: ReactNode }[] = [
   { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
   { to: "/search", label: "Search", icon: <SearchIcon /> },
   { to: "/progress", label: "Progress", icon: <ProgressIcon /> },
+  { to: "/account", label: "Account", icon: <UserIcon /> },
 ];
 
 const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform ?? navigator.userAgent);

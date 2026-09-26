@@ -1,22 +1,23 @@
-# Medicine — static study tool
+# Medicine: study tool
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-2dd4a7.svg)](./LICENSE)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
 ![PWA](https://img.shields.io/badge/PWA-installable-2dd4a7)
-![No backend](https://img.shields.io/badge/backend-none-lightgrey)
+![Guest mode](https://img.shields.io/badge/guest_mode-no_sign--in_needed-lightgrey)
 
-A fully static, zero-backend study app for medical school, organized the way
+A study app for medical school, organized the way
 the curriculum is: by **study block**, then by **subject**. Each subject can
 have spaced-repetition flashcards, quizzes, chaptered ebooks, summaries and the
 original lecture and practicum PDFs. Each block can have timed practice exams
 built from past papers.
 
-All content ships as JSON, Markdown and PDF files in the repo, and all progress
-lives in the browser's `localStorage`. There are no accounts, no database and no
-server round-trips. It installs as an offline-capable PWA and runs on any static
-host, including Vercel's free tier.
+All content ships as JSON, Markdown and PDF files in the repo, and progress
+lives in the browser's `localStorage`, so it works with no sign-in, offline, as
+a PWA. Optional **accounts** (email and password, or Google) sync that progress
+across devices through one Vercel Function and MongoDB Atlas. Without the
+account environment variables it runs as a plain static site.
 
 ## Screenshots
 
@@ -134,6 +135,14 @@ host, including Vercel's free tier.
 - A study-plan generator: pick an exam date and get the daily review pace to clear the deck in time
 - One-click export and import of all progress as a JSON file, plus a reminder if you haven't backed up in 14 days
 
+**Accounts (optional)**
+- Guest mode by default: everything works without signing in
+- Sign up with email and password, or Google; profile with name and cohort
+- Flashcard reviews, quiz and exam history, reading progress, streak days and settings sync across devices, offline-first
+- Guest progress is merged into the account on first sign-in (per-card, per-attempt, per-day, so nothing studied on either device is lost)
+- Sign out keeps local progress; "sign out and clear" for shared computers; download all account data; delete the account
+- A "current block" setting (guests too) that puts your block first on Home
+
 **App**
 - Installable PWA that works offline after the first visit (details in [Offline and updates](#offline-and-updates))
 - Light and dark themes, with a color per content type and per subject
@@ -149,7 +158,9 @@ npm install
 npm run dev       # http://localhost:5173
 ```
 
-There are no environment variables, API keys or database to set up.
+That runs the guest-only app; nothing else is needed. To try accounts
+locally, run `npm run dev:api` instead: it serves the real API from the Vite dev
+server with in-memory storage (or your database, if `MONGODB_URI` is set).
 
 ## Adding content
 
@@ -237,6 +248,7 @@ cached the first time it's opened.
 | `/summaries` → `/summaries/:blockId/:subjectId` | Summary list → rendered summary |
 | `/search` | Fuzzy search with type and subject filters |
 | `/progress` | Streaks, heatmap, mastery, study plan, hardest cards, export/import |
+| `/account` | Sign in or create an account; profile, sync status, current block, sign out, data download, account deletion |
 
 Every page is code-split and loaded on demand.
 
@@ -272,6 +284,11 @@ src/
   lib/          pure logic (each piece has a *.test.ts beside it)
   styles/       theme.css (design tokens) plus one stylesheet per area, imported by index.css
   types/        content.ts: Flashcard, QuizQuestion, ExamAttempt, EbookMeta…
+  context/      AccountContext: session, sync scheduling, sign-in actions
+api/
+  index.ts      the Vercel Function; vercel.json rewrites /api/* here
+server/         the API behind it: auth (Better Auth), sync endpoint, MongoDB and
+                in-memory progress stores, the dev-server adapter, and its tests
 ```
 
 Key modules in `src/lib`:
@@ -296,6 +313,9 @@ Key modules in `src/lib`:
 | `subjectStyle.ts` | Stable per-subject hue from the subject id, avoiding the red and green used for wrong/right |
 | `storage.ts` | `localStorage` helpers and export/import of all `medicine:*` keys |
 | `progressMigration.ts` | Renames progress saved under old subject-only keys to per-block keys |
+| `syncMerge.ts` | Which keys sync, and how two copies of one key are merged (shared with the server) |
+| `sync.ts` | The sync round: upload changed keys, download the account's changes, apply them safely |
+| `syncDirty.ts` | Records which synced keys changed on this device since the last sync |
 
 ## Design
 
@@ -317,10 +337,14 @@ grid. An EKG pulse trace is the logo and hero decoration.
 
 ## Data and privacy
 
-- Progress stays in this browser on this device. Use **Progress → Export** to
-  back up, and **Import** to restore on another device.
-- Content is the same for everyone. There are no accounts, per-user content,
-  shared stats or leaderboards.
+- As a guest, progress stays in this browser on this device. Use **Progress →
+  Export** to back up, and **Import** to restore on another device.
+- With an account, the same `medicine:*` progress keys (not theme, sidebar
+  state or half-finished quizzes) are stored in MongoDB under your user id,
+  plus your name, email, optional cohort and a hashed password. Nothing is
+  shared with other users. **Account → Download my data** exports it all, and
+  **Delete account** removes the account and its stored progress.
+- Content is the same for everyone.
 - Clearing site data erases progress. If saved progress from an older version
   ever breaks a page, the recovery screen offers **Reload** or **Clear local
   data and reload**.
@@ -328,7 +352,8 @@ grid. An EKG pulse trace is the logo and hero decoration.
 ## Development
 
 ```bash
-npm run dev          # dev server on http://localhost:5173
+npm run dev          # dev server on http://localhost:5173 (guest-only)
+npm run dev:api      # same, plus the account API with in-memory storage
 npm run build        # type-check (tsc -b), build to dist/, generate the service worker
 npm run preview      # serve the production build locally
 npm run lint         # oxlint
@@ -338,17 +363,35 @@ npm run test:watch   # vitest, watch mode
 
 Tests cover the pure logic in `src/lib` (SM-2, scoring, shuffling, sections,
 exam format, module grouping, blocks, streaks, search indexing, text
-extraction, study plans, backup timing, tip of the day). There are no DOM or
-component tests.
+extraction, study plans, backup timing, tip of the day, sync merging) and the
+API in `server/`: sign-up, sync, per-user isolation, validation, export and
+deletion, plus a two-device sync run of the browser engine against the real
+handler. There are no DOM or component tests.
 
 ## Deploying
 
-`vercel.json` sets the build command, the `dist` output directory, and an SPA
-rewrite so deep links work on refresh. It also marks `sw.js`, the manifest and
-`index.html` as `no-cache`, so a new deploy reaches installed copies promptly.
-Import the repo in Vercel; it needs no environment variables or serverless
-functions. Any static host with an SPA fallback to `index.html` works too, if it
-sends the same no-cache headers for those three files.
+`vercel.json` sets the build command, the `dist` output directory, a rewrite
+of `/api/*` to the API function, and an SPA rewrite so deep links work on
+refresh. It also marks `sw.js`, the manifest and `index.html` as `no-cache`, so
+a new deploy reaches installed copies promptly.
+
+Without environment variables the app deploys as guest-only. To turn on
+accounts (see `.env.example`):
+
+1. In MongoDB Atlas, create a database user with **readWrite** on the
+   `medicine` database only, and allow network access from Vercel: either
+   `0.0.0.0/0` (the database user's password is then the protection) or the
+   Vercel ↔ Atlas integration.
+2. In Vercel → Settings → Environment Variables, set `MONGODB_URI`,
+   `BETTER_AUTH_SECRET` (`openssl rand -base64 32`) and `BETTER_AUTH_URL`
+   (your production URL). For Google sign-in, also set `GOOGLE_CLIENT_ID` and
+   `GOOGLE_CLIENT_SECRET`, with the redirect URI
+   `<BETTER_AUTH_URL>/api/auth/callback/google`.
+3. Redeploy. `/api/config` answering `{"accounts":true,...}` means it worked.
+
+Collections (`user`, `session`, `account`, `verification`, `rateLimit`,
+`progress`) and indexes are created automatically. Any static host with an SPA
+fallback works for guest-only mode, if it sends the same no-cache headers.
 
 ## Contributing
 

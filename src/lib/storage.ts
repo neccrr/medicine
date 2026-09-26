@@ -1,3 +1,5 @@
+import { markDirty } from "./syncDirty";
+
 export function readJSON<T>(key: string, fallback: T): T {
   try {
     const raw = window.localStorage.getItem(key);
@@ -17,7 +19,13 @@ export function readJSON<T>(key: string, fallback: T): T {
 
 export function writeJSON<T>(key: string, value: T): void {
   try {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    const raw = JSON.stringify(value);
+    // Skipping identical writes matters for sync: components that re-save an unchanged value
+    // on mount must not look like a fresh edit, or they would overwrite newer progress from
+    // another device.
+    if (window.localStorage.getItem(key) === raw) return;
+    window.localStorage.setItem(key, raw);
+    markDirty(key);
   } catch {
     // localStorage unavailable (private browsing, quota exceeded, etc.) — fail silently.
   }
@@ -39,6 +47,8 @@ export const STORAGE_KEYS = {
   examDate: (key: string) => `medicine:examdate:${key}`,
   readingPrefs: "medicine:readingprefs",
   sidebarCollapsed: "medicine:sidebarcollapsed",
+  /** The block the student is in (synced); Home shows it first. */
+  currentBlock: "medicine:currentblock",
   lastExport: "medicine:lastexport",
   theme: "medicine:theme",
   activity: "medicine:activity",

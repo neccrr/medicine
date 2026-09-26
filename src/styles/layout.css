@@ -313,13 +313,18 @@
     top: 0;
     left: 0;
     height: 100vh;
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
+    /* Past its own width plus the floating margin, so no edge peeks in; hidden while closed
+       so its links can't be tabbed to off-screen. */
+    transform: translateX(calc(-100% - 1rem));
+    visibility: hidden;
+    transition: transform 0.35s var(--ease-glass), visibility 0s linear 0.35s;
     box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.5);
   }
 
   .sidebar.open {
     transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.35s var(--ease-glass), visibility 0s;
   }
 
   .sidebar-backdrop {

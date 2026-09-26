@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "A fully static, zero-backend study app — flashcards, quizzes, ebooks, and summaries, installable offline as a PWA.",
+  "description": "A study app for flashcards, quizzes, ebooks and summaries: works offline as a guest, with optional accounts that sync progress across devices.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,11 +15,14 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "dev:api": "MEDICINE_API=memory vite"
   },
   "dependencies": {
+    "better-auth": "^1.7.6",
     "fuse.js": "^7.5.0",
     "marked": "^18.0.13",
+    "mongodb": "^7.6.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"

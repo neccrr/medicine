@@ -246,7 +246,14 @@ function buildSubjectOverviews() {
     });
 }
 
+/** Puts the student's current block (set on the Account page) first. */
+function orderByCurrentBlock<T extends { block: { id: string } }>(groups: T[], currentBlock: string): T[] {
+  if (!currentBlock) return groups;
+  return [...groups.filter((g) => g.block.id === currentBlock), ...groups.filter((g) => g.block.id !== currentBlock)];
+}
+
 export function Home() {
+  const currentBlock = readJSON<string>(STORAGE_KEYS.currentBlock, "");
   const tip = tipOfDay(tips);
   const activityDays = getActivityDays();
   const streak = getCurrentStreak(activityDays);
@@ -359,7 +366,7 @@ export function Home() {
             )}
           </div>
 
-          {groupByBlock(subjects).map(({ block, subjects: blockSubjects, upcoming }) => {
+          {orderByCurrentBlock(groupByBlock(subjects), currentBlock).map(({ block, subjects: blockSubjects, upcoming }) => {
             const packages = examPackagesByBlock[block.id] ?? [];
             const examPool =
               packages.length > 0
@@ -377,6 +384,7 @@ export function Home() {
               <h2 className="section-heading">
                 <AtomIcon />
                 {block.label}
+                {block.id === currentBlock && <span className="your-block-pill">Your block</span>}
               </h2>
               {examPool > 0 && (
                 <Link to={`/exam/${block.id}`} className="block-exam-link">

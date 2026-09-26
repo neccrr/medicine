@@ -1,11 +1,56 @@
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+
+// Serves the real API (server/app.ts) from the Vite dev server when MEDICINE_API=memory or
+// MONGODB_URI is set (`npm run dev:api`). Plain `npm run dev` stays a static, guest-only app.
+function devApi(): Plugin {
+  return {
+    name: 'medicine-dev-api',
+    apply: 'serve',
+    configureServer(server) {
+      if (process.env.MEDICINE_API !== 'memory' && !process.env.MONGODB_URI) return
+      server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
+        if (!req.url?.startsWith('/api/')) return next()
+        try {
+          const { getDevApp } = await server.ssrLoadModule('/server/devApi.ts')
+          const chunks: Buffer[] = []
+          for await (const chunk of req) chunks.push(chunk as Buffer)
+          const headers = new Headers()
+          for (const [k, v] of Object.entries(req.headers)) {
+            if (Array.isArray(v)) v.forEach((x) => headers.append(k, x))
+            else if (v !== undefined) headers.set(k, v)
+          }
+          const hasBody = req.method !== 'GET' && req.method !== 'HEAD'
+          const request = new Request(`http://${req.headers.host}${req.url}`, {
+            method: req.method,
+            headers,
+            body: hasBody ? Buffer.concat(chunks) : undefined,
+          })
+          const response: Response = await (await getDevApp())(request)
+          res.statusCode = response.status
+          response.headers.forEach((value, key) => {
+            if (key !== 'set-cookie') res.setHeader(key, value)
+          })
+          const cookies = response.headers.getSetCookie()
+          if (cookies.length) res.setHeader('set-cookie', cookies)
+          res.end(Buffer.from(await response.arrayBuffer()))
+        } catch (err) {
+          console.error(err)
+          res.statusCode = 500
+          res.end('Dev API error')
+        }
+      })
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
+    devApi(),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
@@ -38,7 +83,8 @@ export default defineConfig({
         // static file under /assets/ — e.g. opening a module PDF was silently served
         // index.html instead. Scoped to /assets/ specifically (not a general ".ext$" pattern)
         // since a route param can itself contain a dot, e.g. /exam/1.1.
-        navigateFallbackDenylist: [/\/assets\//],
+        // /api/ must reach the network too: the Google sign-in callback is a full navigation.
+        navigateFallbackDenylist: [/\/assets\//, /^\/api\//],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.endsWith('.pdf'),

@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { exportAllProgress, importAllProgress, readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { migrateLegacyProgressKeys } from "../lib/progressMigration";
+import { useAccount } from "../hooks/useAccount";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
 import { flashcardDecks, flashcardSubjects, keyOf } from "../lib/content";
 import { groupByBlock } from "../lib/blocks";
@@ -37,6 +38,7 @@ function buildDeckStats(key: string) {
 
 export function Progress() {
   const fileInput = useRef<HTMLInputElement>(null);
+  const { status } = useAccount();
   const [message, setMessage] = useState("");
   const [activityDays, setActivityDays] = useState<string[]>(() => getActivityDays());
   const globalHardestCards = buildGlobalHardestCards();
@@ -112,8 +114,9 @@ export function Progress() {
     <section className="page">
       <h1>Progress</h1>
       <p className="subtitle">
-        Everything lives in this browser's local storage — nothing is sent to a
-        server. Export a backup, or move your progress to another device.
+        {status === "signed-in"
+          ? "Your progress syncs to your account automatically. You can still export a backup file."
+          : "As a guest, everything lives in this browser's local storage. Export a backup, or sign in from Account to sync across devices."}
       </p>
 
       <BackupNudge showLink={false} />

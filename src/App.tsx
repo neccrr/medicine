@@ -6,6 +6,8 @@ import { PulseLine } from "./components/PulseLine";
 import { UpdateNudge } from "./components/UpdateNudge";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { useCardSpotlight } from "./hooks/useCardSpotlight";
+import { AccountProvider } from "./context/AccountContext";
+import { useAccount } from "./hooks/useAccount";
 
 // Each page ships as its own chunk, fetched only when its route is visited, so the initial
 // load doesn't pay for e.g. the ebook reader or quiz engine before the user ever opens them.
@@ -40,6 +42,7 @@ const EbookReader = lazy(() =>
 );
 const Search = lazy(() => import("./pages/Search").then((m) => ({ default: m.Search })));
 const Progress = lazy(() => import("./pages/Progress").then((m) => ({ default: m.Progress })));
+const Account = lazy(() => import("./pages/Account").then((m) => ({ default: m.Account })));
 
 function RouteFallback() {
   return (
@@ -53,9 +56,12 @@ function RouteFallback() {
 // instead of requiring a full reload to escape it.
 function AppRoutes() {
   const { pathname } = useLocation();
+  // Signing in merges the account's progress into this device; remount the pages so they
+  // re-read it instead of showing the guest numbers until the next navigation.
+  const { dataVersion } = useAccount();
 
   return (
-    <ErrorBoundary key={pathname}>
+    <ErrorBoundary key={`${pathname}#${dataVersion}`}>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -75,6 +81,7 @@ function AppRoutes() {
           <Route path="/ebooks/:blockId/:subjectId/:chapterId" element={<EbookReader />} />
           <Route path="/search" element={<Search />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </Suspense>
     </ErrorBoundary>
@@ -86,21 +93,23 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <a href="#main-content" className="skip-link">
-          Skip to content
-        </a>
-        <div className="app-shell">
-          <Sidebar />
-          <div className="app-content">
-            <CommandPalette />
-            <UpdateNudge />
-            <main className="main" id="main-content">
-              <AppRoutes />
-            </main>
+      <AccountProvider>
+        <BrowserRouter>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
+          <div className="app-shell">
+            <Sidebar />
+            <div className="app-content">
+              <CommandPalette />
+              <UpdateNudge />
+              <main className="main" id="main-content">
+                <AppRoutes />
+              </main>
+            </div>
           </div>
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      </AccountProvider>
     </ErrorBoundary>
   );
 }
