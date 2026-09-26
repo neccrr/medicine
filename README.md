@@ -7,6 +7,8 @@
 ![PWA](https://img.shields.io/badge/PWA-installable-2dd4a7)
 ![Guest mode](https://img.shields.io/badge/guest_mode-no_sign--in_needed-lightgrey)
 
+**Live:** [medicine.necr.help](https://medicine.necr.help)
+
 A study app for medical school, organized the way
 the curriculum is: by **study block**, then by **subject**. Each subject can
 have spaced-repetition flashcards, quizzes, chaptered ebooks, summaries and the
@@ -384,10 +386,14 @@ accounts (see `.env.example`):
    Vercel ↔ Atlas integration.
 2. In Vercel → Settings → Environment Variables, set `MONGODB_URI`,
    `BETTER_AUTH_SECRET` (`openssl rand -base64 32`) and `BETTER_AUTH_URL`
-   (your production URL). For Google sign-in, also set `GOOGLE_CLIENT_ID` and
+   (`https://medicine.necr.help`). For Google sign-in, also set `GOOGLE_CLIENT_ID` and
    `GOOGLE_CLIENT_SECRET`, with the redirect URI
    `<BETTER_AUTH_URL>/api/auth/callback/google`.
 3. Redeploy. `/api/config` answering `{"accounts":true,...}` means it worked.
+
+The link-preview tags in `index.html` (Open Graph, Twitter) point at
+`https://medicine.necr.help`. A fork deployed elsewhere sets `SITE_URL` at build
+time.
 
 Collections (`user`, `session`, `account`, `verification`, `rateLimit`,
 `progress`) and indexes are created automatically. Any static host with an SPA

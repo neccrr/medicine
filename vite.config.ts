@@ -46,16 +46,13 @@ function devApi(): Plugin {
   }
 }
 
-// The deployed site's origin, for the canonical link and Open Graph/Twitter tags in index.html,
-// which link-preview crawlers only follow as absolute URLs. SITE_URL wins; otherwise the auth
-// URL, then Vercel's production domain (set on every Vercel build). Local builds fall back
-// to root-relative paths.
+// The production site, used for the canonical link and the Open Graph/Twitter tags in
+// index.html (link-preview crawlers only follow absolute URLs). Set SITE_URL to override it,
+// e.g. for a fork deployed elsewhere.
+const SITE_URL = 'https://medicine.necr.help'
+
 function siteUrl(): Plugin {
-  const fromEnv =
-    process.env.SITE_URL ||
-    process.env.BETTER_AUTH_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '')
-  const origin = fromEnv.replace(/\/+$/, '')
+  const origin = (process.env.SITE_URL || SITE_URL).replace(/\/+$/, '')
   return {
     name: 'medicine-site-url',
     transformIndexHtml: (html) => html.replaceAll('%SITE_URL%', origin),
