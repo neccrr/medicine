@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#0a0f0d" />
     <meta
       name="description"
-      content="Flashcards, quizzes, timed block exams, ebooks and summaries for medical school. Works offline as a guest, with optional accounts that sync progress across devices."
+      content="Free flashcards, quizzes, timed block exams, ebooks and summaries for medical school. Works offline, with optional accounts that sync across devices."
     />
     <meta name="application-name" content="Medicine" />
     <meta name="apple-mobile-web-app-title" content="Medicine" />
@@ -20,10 +20,10 @@
     <meta property="og:site_name" content="Medicine" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="%SITE_URL%/" />
-    <meta property="og:title" content="Medicine — Study Tool" />
+    <meta property="og:title" content="Medicine — Free Study Tool for Medical Students" />
     <meta
       property="og:description"
-      content="Flashcards, quizzes, timed block exams, ebooks and summaries for medical school. Works offline, with optional sync across devices."
+      content="Free flashcards, quizzes, timed block exams, ebooks and summaries for medical school. Works offline, with optional accounts that sync across devices."
     />
     <meta property="og:image" content="%SITE_URL%/og-image.png" />
     <meta property="og:image:type" content="image/png" />
@@ -36,12 +36,23 @@
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Medicine — Study Tool" />
+    <meta name="twitter:title" content="Medicine — Free Study Tool for Medical Students" />
     <meta
       name="twitter:description"
-      content="Flashcards, quizzes, timed block exams, ebooks and summaries for medical school. Works offline, with optional sync across devices."
+      content="Free flashcards, quizzes, timed block exams, ebooks and summaries for medical school. Works offline, with optional accounts that sync across devices."
     />
     <meta name="twitter:image" content="%SITE_URL%/og-image.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Medicine",
+        "alternateName": "Medicine Study Tool",
+        "url": "%SITE_URL%/",
+        "description": "Free flashcards, quizzes, timed block exams, ebooks and summaries for medical school.",
+        "inLanguage": "en"
+      }
+    </script>
     <meta
       name="twitter:image:alt"
       content="Medicine: flashcards, quizzes, timed exams, ebooks and summaries. Works offline, with optional sync across devices."
@@ -52,7 +63,15 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <title>Medicine — Study Tool</title>
+    <noscript>
+      <style>
+        /* Without JavaScript nothing would ever hide the splash; show the page's text instead. */
+        #app-splash {
+          display: none !important;
+        }
+      </style>
+    </noscript>
+    <title>Medicine — Free Study Tool for Medical Students</title>
     <style>
       /* Critical, inlined so the splash paints before any bundled CSS/JS loads. */
       #app-splash {
@@ -160,7 +179,6 @@
       <span class="app-splash-word">Medicine</span>
       <span class="app-splash-kicker">Booting the monitor…</span>
     </div>
-    <div id="root"></div>
     <noscript>
       <main style="max-width: 640px; margin: 3rem auto; padding: 0 1.25rem; font-family: sans-serif; line-height: 1.6">
         <h1>Medicine: study tool</h1>
@@ -173,6 +191,7 @@
         <p><a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms of Service</a></p>
       </main>
     </noscript>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
       (function () {

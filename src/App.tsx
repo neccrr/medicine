@@ -8,6 +8,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { useCardSpotlight } from "./hooks/useCardSpotlight";
 import { AccountProvider } from "./context/AccountContext";
 import { useAccount } from "./hooks/useAccount";
+import { usePageMeta } from "./hooks/usePageMeta";
 
 // Each page ships as its own chunk, fetched only when its route is visited, so the initial
 // load doesn't pay for e.g. the ebook reader or quiz engine before the user ever opens them.
@@ -60,6 +61,7 @@ function AppRoutes() {
   // Signing in merges the account's progress into this device; remount the pages so they
   // re-read it instead of showing the guest numbers until the next navigation.
   const { dataVersion } = useAccount();
+  usePageMeta(pathname);
 
   return (
     <ErrorBoundary key={`${pathname}#${dataVersion}`}>

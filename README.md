@@ -339,6 +339,7 @@ Key modules in `src/lib`:
 | `tipOfDay.ts` | Deterministic daily tip (same for everyone, no server) |
 | `subjectStyle.ts` | Stable per-subject hue from the subject id, avoiding the red and green used for wrong/right |
 | `storageSchema.ts` | The registry of every `localStorage` key type: id, sync and merge rule, clearing (shared with the server) |
+| `routeMeta.ts` | Title, description, breadcrumbs and indexability for every route (the app and the prerendered pages) |
 | `storage.ts` | `localStorage` helpers, the key builders, and export/import of all `medicine:*` keys |
 | `progressMigration.ts` | Renames progress saved under old subject-only keys to per-block keys |
 | `syncMerge.ts` | How two copies of one key are merged, by the key's rule in the registry (shared with the server) |
@@ -431,6 +432,33 @@ accounts (see `.env.example`):
    `BETTER_AUTH_SECRET` (`openssl rand -base64 32`) and `BETTER_AUTH_URL`
    (`https://medicine.necr.help`).
 3. Redeploy. `/api/config` answering `{"accounts":true,...}` means it worked.
+
+### Search engines
+
+`npm run build` ends with `scripts/prerender.mjs`, which writes a static page for
+every public route into `dist/`: its own title, description, canonical URL and
+breadcrumbs, with the content itself (card fronts, quiz questions, full ebook
+chapters and summaries) as plain HTML. Past exam papers are listed by name only.
+`vercel.json` serves those pages directly, so search engines don't have to run
+the app to read them, and people get the app as usual (React replaces the static
+content on start). The same step writes `sitemap.xml`, `robots.txt` (which keeps
+the API, lecture PDFs, slide figures and past-paper images out of search) and
+`404.html`. Titles and descriptions come from `src/lib/routeMeta.ts`, which the
+app also uses to update the page title while you navigate. Personal pages
+(progress, account, leaderboard, search) are `noindex`, and preview deployments
+on `*.vercel.app` send `X-Robots-Tag: noindex`.
+
+To get indexed:
+
+1. In [Google Search Console](https://search.google.com/search-console), add a
+   **Domain** property for `necr.help` and verify it with the DNS TXT record it
+   shows you (at your domain registrar). Alternatively add a URL-prefix property
+   for `https://medicine.necr.help`, choose the **HTML tag** method, and put the
+   token (the `content` value only) in Vercel as `GOOGLE_SITE_VERIFICATION`, then
+   redeploy.
+2. **Sitemaps**: submit `https://medicine.necr.help/sitemap.xml`.
+3. **URL inspection**: inspect the home page and a chapter page, and **Request
+   indexing**.
 
 ### Google sign-in
 

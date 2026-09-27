@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { SITE_ORIGIN } from './src/lib/site.ts'
 
 // Serves the real API (server/app.ts) from the Vite dev server when MEDICINE_API=memory or
 // MONGODB_URI is set (`npm run dev:api`). Plain `npm run dev` stays a static, guest-only app.
@@ -46,16 +47,21 @@ function devApi(): Plugin {
   }
 }
 
-// The production site, used for the canonical link and the Open Graph/Twitter tags in
-// index.html (link-preview crawlers only follow absolute URLs). Set SITE_URL to override it,
-// e.g. for a fork deployed elsewhere.
-const SITE_URL = 'https://medicine.necr.help'
-
+// The production site (src/lib/site.ts), used for the canonical link and the Open Graph/Twitter
+// tags in index.html (link-preview crawlers only follow absolute URLs). Set SITE_URL to override
+// it, e.g. for a fork deployed elsewhere. GOOGLE_SITE_VERIFICATION adds Search Console's
+// verification tag.
 function siteUrl(): Plugin {
-  const origin = (process.env.SITE_URL || SITE_URL).replace(/\/+$/, '')
+  const origin = (process.env.SITE_URL || SITE_ORIGIN).replace(/\/+$/, '')
+  const verification = process.env.GOOGLE_SITE_VERIFICATION?.replace(/[^A-Za-z0-9_-]/g, '')
   return {
     name: 'medicine-site-url',
-    transformIndexHtml: (html) => html.replaceAll('%SITE_URL%', origin),
+    transformIndexHtml: (html) => {
+      const withOrigin = html.replaceAll('%SITE_URL%', origin)
+      return verification
+        ? withOrigin.replace('</head>', `  <meta name="google-site-verification" content="${verification}" />\n  </head>`)
+        : withOrigin
+    },
   }
 }
 

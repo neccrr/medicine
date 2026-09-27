@@ -5,10 +5,19 @@
   "regions": [
     "sin1"
   ],
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "/api"
+    },
+    {
+      "source": "/:section(flashcards|quizzes|exam|modules|ebooks|summaries|search|progress|leaderboard|account)",
+      "destination": "/:section/index.html"
+    },
+    {
+      "source": "/:section(flashcards|quizzes|exam|modules|ebooks|summaries)/:rest+",
+      "destination": "/:section/:rest+/index.html"
     },
     {
       "source": "/((?!api/).*)",
@@ -40,6 +49,21 @@
         {
           "key": "Cache-Control",
           "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": ".*\\.vercel\\.app"
+        }
+      ],
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
         }
       ]
     }
