@@ -121,13 +121,11 @@ export function AccountProvider({ children }: { children: ReactNode }) {
     };
   }, [userId, runSync]);
 
-  const value = useMemo<AccountContextValue>(
+  // The actions keep one identity for the provider's lifetime (they use only stable callbacks,
+  // refs and state setters). Pages can safely list them as effect dependencies: if they changed
+  // with every sync status update, an effect that syncs would re-run on its own result, forever.
+  const actions = useMemo<Omit<AccountContextValue, "status" | "config" | "user" | "sync" | "dataVersion">>(
     () => ({
-      status,
-      config,
-      user,
-      sync,
-      dataVersion,
       checkSession,
       signIn: async (email, password) => {
         const client = await loadAuthClient();
@@ -198,7 +196,12 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       },
       syncNow: () => runSync(),
     }),
-    [status, config, user, sync, dataVersion, checkSession, applySession, runSync],
+    [checkSession, applySession, runSync],
+  );
+
+  const value = useMemo<AccountContextValue>(
+    () => ({ status, config, user, sync, dataVersion, ...actions }),
+    [status, config, user, sync, dataVersion, actions],
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

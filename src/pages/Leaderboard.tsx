@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type CSSProperties, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { FlameIcon, TrophyIcon } from "../components/icons";
 import { useAccount } from "../hooks/useAccount";
@@ -141,8 +141,12 @@ function SignedInBoard() {
   const [synced, setSynced] = useState(false);
   const [reload, setReload] = useState(0);
 
-  // Upload anything unsynced first, so your own score on the board is current.
+  // Upload anything unsynced first, so your own score on the board is current. Once per visit:
+  // the sync itself updates account state, and must never trigger another one.
+  const syncedOnce = useRef(false);
   useEffect(() => {
+    if (syncedOnce.current) return;
+    syncedOnce.current = true;
     void syncNow().finally(() => setSynced(true));
   }, [syncNow]);
 
