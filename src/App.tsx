@@ -43,6 +43,7 @@ const EbookReader = lazy(() =>
 );
 const Search = lazy(() => import("./pages/Search").then((m) => ({ default: m.Search })));
 const Progress = lazy(() => import("./pages/Progress").then((m) => ({ default: m.Progress })));
+const NotFound = lazy(() => import("./pages/NotFound").then((m) => ({ default: m.NotFound })));
 const Leaderboard = lazy(() => import("./pages/Leaderboard").then((m) => ({ default: m.Leaderboard })));
 const Account = lazy(() => import("./pages/Account").then((m) => ({ default: m.Account })));
 
@@ -86,6 +87,7 @@ function AppRoutes() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/account" element={<Account />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </ErrorBoundary>

@@ -72,7 +72,11 @@ export default defineConfig({
     devApi(),
     siteUrl(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // "prompt": a new version waits until the student taps the update nudge (UpdateNudge /
+      // useServiceWorkerUpdate), so a quiz or timed exam is never reloaded out from under them.
+      // ("autoUpdate" with injectRegister: false never prompted and never took over: new versions
+      // sat waiting until every tab was closed.)
+      registerType: 'prompt',
       injectRegister: false,
       includeAssets: ['pwa-icon.svg'],
       manifest: {
@@ -107,7 +111,8 @@ export default defineConfig({
         // index.html instead. Scoped to /assets/ specifically (not a general ".ext$" pattern)
         // since a route param can itself contain a dot, e.g. /exam/1.1.
         // /api/ must reach the network too: the Google sign-in callback is a full navigation.
-        navigateFallbackDenylist: [/\/assets\//, /^\/api\//],
+        // So must the sitemap and robots.txt: opened in a browser, they'd otherwise show the app.
+        navigateFallbackDenylist: [/\/assets\//, /^\/api\//, /\.(xml|txt)$/],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.endsWith('.pdf'),

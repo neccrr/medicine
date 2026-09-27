@@ -119,7 +119,7 @@ export function blockHasExam(blockId: string): boolean {
   return (examPackagesByBlock[blockId]?.length ?? 0) > 0 || quizQuestionsInBlock(blockId).length > 0;
 }
 
-const NOT_FOUND: PageMeta = { title: HOME_TITLE, description: HOME_DESCRIPTION, indexable: false };
+const NOT_FOUND: PageMeta = { title: titled("Page not found"), description: HOME_DESCRIPTION, indexable: false };
 
 /** Metadata for a pathname (no query string). */
 export function pageMeta(pathname: string): PageMeta {
