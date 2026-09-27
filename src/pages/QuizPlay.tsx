@@ -59,6 +59,9 @@ export function QuizPlay() {
   const [finished, setFinished] = useState(false);
   const [result, setResult] = useState<QuizAttempt | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
+  // Enlarged question figure: atlas diagrams carry small labels that are hard to read at card width.
+  const [zoomSrc, setZoomSrc] = useState<string | null>(null);
+  const [zoomFull, setZoomFull] = useState(false);
 
   const bank = sessionBank ?? [];
   const sections = useMemo(() => buildSections(fullBank), [fullBank]);
@@ -174,6 +177,13 @@ export function QuizPlay() {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (zoomSrc) {
+        if (e.key === "Escape") {
+          e.preventDefault();
+          setZoomSrc(null);
+        }
+        return;
+      }
       if (e.key === "ArrowLeft") {
         e.preventDefault();
         goPrev();
@@ -202,7 +212,7 @@ export function QuizPlay() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started, finished, currentQuestion, revealed, answers, currentIndex, isLast]);
+  }, [started, finished, currentQuestion, revealed, answers, currentIndex, isLast, zoomSrc]);
 
   const missedQuestions = result ? bank.filter((q) => result.missedIds.includes(q.id)) : [];
 
@@ -418,8 +428,54 @@ export function QuizPlay() {
 
           <p className="quiz-question-text">{currentQuestion.question}</p>
 
-          {currentQuestion.image && (
-            <div className="quiz-question-image" dangerouslySetInnerHTML={{ __html: currentQuestion.image }} />
+          {currentQuestion.image &&
+            (currentQuestion.image.includes("<img") ? (
+              <div
+                className="quiz-question-image quiz-question-image-zoomable"
+                role="button"
+                tabIndex={0}
+                aria-label="Enlarge figure"
+                title="Enlarge figure"
+                onClick={(e) => {
+                  const img = e.currentTarget.querySelector("img");
+                  if (img) {
+                    setZoomFull(false);
+                    setZoomSrc(img.currentSrc || img.src);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key !== "Enter" && e.key !== " ") return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  e.currentTarget.click();
+                }}
+                dangerouslySetInnerHTML={{ __html: currentQuestion.image }}
+              />
+            ) : (
+              <div className="quiz-question-image" dangerouslySetInnerHTML={{ __html: currentQuestion.image }} />
+            ))}
+
+          {zoomSrc && (
+            <div
+              className="quiz-zoom"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Enlarged figure. Tap outside the image or press Escape to close."
+              onClick={() => setZoomSrc(null)}
+            >
+              <img
+                className={zoomFull ? "quiz-zoom-full" : undefined}
+                src={zoomSrc}
+                alt=""
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setZoomFull((v) => !v);
+                }}
+              />
+              <button type="button" className="quiz-zoom-close" onClick={() => setZoomSrc(null)} aria-label="Close">
+                ×
+              </button>
+            </div>
           )}
 
           <div className="quiz-options" role="radiogroup" aria-label={currentQuestion.question}>

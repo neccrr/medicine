@@ -218,7 +218,10 @@ this.
 
 - `image` is an optional HTML string rendered above the question. Use an `<img>`
   pointing into `public/`, or an inline `<svg>` that uses the theme's CSS
-  variables (e.g. `var(--accent)`) so it follows light and dark mode.
+  variables (e.g. `var(--accent)`) so it follows light and dark mode. An `<img>`
+  can be tapped to open it full screen. Wrap labelled diagrams in
+  `<div class="quiz-photo-diagram quiz-diagram-wide" style="aspect-ratio: W / H;">`
+  so they use the full card width on a white background.
 - A bank with more than 50 questions is split into sections automatically.
 - A block with folders under `content/exams/block/{blockId}/` offers those
   packages on its Exam page. A block with no packages gets a pooled exam built
@@ -518,5 +521,7 @@ their respective lecturers and lab assistants. They remain their authors'
 work, are included only as study references, and are not covered by the MIT
 license. The same applies to the slide figures under `public/ebook-figures/`,
 which are cropped from those decks (many reproduce figures from published
-atlases and textbooks); each is captioned with its source deck and slide. To have a
-file removed, open an issue.
+atlases and textbooks); each is captioned with its source deck and slide. The
+anatomy quiz figures in `public/ebook-figures/anatomy-quiz/` come from the same
+decks, some with labels covered by a "?" so the figure doesn't give the answer
+away. To have a file removed, open an issue.

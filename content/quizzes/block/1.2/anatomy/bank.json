@@ -23,7 +23,8 @@
       "Frontal (coronal) plane"
     ],
     "answer": 3,
-    "explanation": "Transverse planes lie at right angles to both the median and coronal planes and separate upper from lower parts."
+    "explanation": "Transverse planes lie at right angles to both the median and coronal planes and separate upper from lower parts.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 673;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-002.webp\" alt=\"A standing figure shown three times with the anatomical planes drawn through it; one plane label is hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-003",
@@ -49,7 +50,8 @@
       "Contralateral to the lesion"
     ],
     "answer": 4,
-    "explanation": "Motor pathways cross, so a hemisphere lesion affects the opposite (contralateral) side."
+    "explanation": "Motor pathways cross, so a hemisphere lesion affects the opposite (contralateral) side.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1097 / 604;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-004.webp\" alt=\"Four figures with shaded limbs illustrating terms of laterality; the last label is hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-005",
@@ -62,7 +64,8 @@
       "Midaxillary line"
     ],
     "answer": 0,
-    "explanation": "The posterior axillary line follows the posterior axillary fold (latissimus dorsi); the anterior line follows pectoralis major."
+    "explanation": "The posterior axillary line follows the posterior axillary fold (latissimus dorsi); the anterior line follows pectoralis major.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 898;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-005.webp\" alt=\"Vertical reference lines drawn on the front, side and back of the trunk; the names of the lines on the side view are hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-006",
@@ -101,7 +104,8 @@
       "Long"
     ],
     "answer": 0,
-    "explanation": "Sesamoid bones develop within a tendon; the patella lies in the quadriceps tendon."
+    "explanation": "Sesamoid bones develop within a tendon; the patella lies in the quadriceps tendon.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 890 / 990;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-008.webp\" alt=\"Skeleton with an example of each bone shape; the shape names are hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-009",
@@ -114,7 +118,8 @@
       "Articular cartilage"
     ],
     "answer": 0,
-    "explanation": "The metaphysis is the flared zone between epiphysis and shaft that contains the growth plate."
+    "explanation": "The metaphysis is the flared zone between epiphysis and shaft that contains the growth plate.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 717 / 993;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-009.webp\" alt=\"Longitudinal diagram of a long bone with its regions labelled in Indonesian; one region label is hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-010",
@@ -127,7 +132,8 @@
       "Gomphosis"
     ],
     "answer": 4,
-    "explanation": "Gomphosis is the fibrous 'peg-in-socket' joint of a tooth."
+    "explanation": "Gomphosis is the fibrous 'peg-in-socket' joint of a tooth.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1076;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-010.webp\" alt=\"Chart of fibrous and cartilaginous joints with the joint names hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-011",
@@ -205,7 +211,8 @@
       "The cortical (zona) reaction"
     ],
     "answer": 4,
-    "explanation": "Cortical granule enzymes alter the zona pellucida so no other sperm can bind or penetrate."
+    "explanation": "Cortical granule enzymes alter the zona pellucida so no other sperm can bind or penetrate.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 760;\"><img src=\"/ebook-figures/anatomy/chapter-02-embryo_p06_0.webp\" alt=\"Stages of fertilization from sperm penetration of the corona radiata to the first cleavage\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-017",
@@ -218,7 +225,8 @@
       "Zona pellucida"
     ],
     "answer": 2,
-    "explanation": "Inner cell mass → embryoblast (embryo); outer cell mass → trophoblast (placenta)."
+    "explanation": "Inner cell mass → embryoblast (embryo); outer cell mass → trophoblast (placenta).",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 393;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-017.webp\" alt=\"Early and later blastocyst with the embryoblast, trophoblast and blastocystic cavity labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-018",
@@ -231,7 +239,8 @@
       "Corpus luteum only"
     ],
     "answer": 2,
-    "explanation": "The syncytiotrophoblast produces hCG from the second week."
+    "explanation": "The syncytiotrophoblast produces hCG from the second week.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 825;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-018.webp\" alt=\"Implanting embryo at about day 8; the names of the two trophoblast layers are hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-019",
@@ -244,7 +253,8 @@
       "Hypoblast"
     ],
     "answer": 2,
-    "explanation": "During gastrulation epiblast cells pass through the primitive streak to form endoderm and mesoderm; those left behind form ectoderm."
+    "explanation": "During gastrulation epiblast cells pass through the primitive streak to form endoderm and mesoderm; those left behind form ectoderm.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 410;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-019.webp\" alt=\"Gastrulation: cells migrating through the primitive streak between the two layers of the embryonic disc; one layer name is hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-020",
@@ -257,7 +267,8 @@
       "Spinal cord"
     ],
     "answer": 3,
-    "explanation": "The notochord regresses as vertebral bodies form around it, persisting only as the nucleus pulposus."
+    "explanation": "The notochord regresses as vertebral bodies form around it, persisting only as the nucleus pulposus.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 627 / 402;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-020.webp\" alt=\"Sagittal section of the early embryo showing the notochordal process\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-021",
@@ -270,7 +281,8 @@
       "Hydrocephalus only"
     ],
     "answer": 1,
-    "explanation": "Caudal neuropore failure → spina bifida; cranial neuropore failure → anencephaly."
+    "explanation": "Caudal neuropore failure → spina bifida; cranial neuropore failure → anencephaly.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 751 / 867;\"><img src=\"/ebook-figures/anatomy/chapter-02-embryo_p21_2.webp\" alt=\"Dorsal view of a day-23 embryo showing the anterior and posterior neuropores\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-022",
@@ -296,7 +308,8 @@
       "Skeletal muscle of the trunk"
     ],
     "answer": 3,
-    "explanation": "Sclerotome → axial skeleton; dermatome → dermis; myotome → skeletal muscle."
+    "explanation": "Sclerotome → axial skeleton; dermatome → dermis; myotome → skeletal muscle.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 596;\"><img src=\"/ebook-figures/anatomy/chapter-02-embryo_p26_0.webp\" alt=\"Transverse sections through a somite differentiating into sclerotome, dermatome and myotome\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-024",
@@ -309,7 +322,8 @@
       "Somatic lateral plate mesoderm"
     ],
     "answer": 3,
-    "explanation": "Intermediate mesoderm forms the urogenital system."
+    "explanation": "Intermediate mesoderm forms the urogenital system.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 731;\"><img src=\"/ebook-figures/anatomy/chapter-02-embryo_p24_0.webp\" alt=\"Transverse sections of the embryo showing the mesoderm dividing into its parts\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-025",
@@ -322,7 +336,8 @@
       "Internal iliac artery"
     ],
     "answer": 0,
-    "explanation": "Foregut – coeliac trunk; midgut – superior mesenteric artery; hindgut – inferior mesenteric artery."
+    "explanation": "Foregut – coeliac trunk; midgut – superior mesenteric artery; hindgut – inferior mesenteric artery.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 418 / 549;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-025.webp\" alt=\"The gut tube divided into foregut, midgut and hindgut, each with its artery; the midgut artery label is hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-026",
@@ -335,7 +350,8 @@
       "PITX2"
     ],
     "answer": 4,
-    "explanation": "FGF8 → Nodal and Lefty2 → PITX2 on the left; Lefty1 acts as a midline barrier."
+    "explanation": "FGF8 → Nodal and Lefty2 → PITX2 on the left; Lefty1 acts as a midline barrier.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 571;\"><img src=\"/ebook-figures/anatomy/chapter-02-embryo_p33_0.webp\" alt=\"Signalling at the primitive node that sets up left-sided identity\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-027",
@@ -348,7 +364,8 @@
       "T2/T3 disc"
     ],
     "answer": 3,
-    "explanation": "The manubriosternal joint is level with the T4/T5 disc, the boundary between the superior and inferior mediastinum."
+    "explanation": "The manubriosternal joint is level with the T4/T5 disc, the boundary between the superior and inferior mediastinum.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 870 / 797;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p08_0.webp\" alt=\"The sternum from the front and from the side, with its costal notches\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-028",
@@ -361,7 +378,8 @@
       "The first"
     ],
     "answer": 3,
-    "explanation": "Rib II meets the sternum at the manubriosternal joint, which is why rib counting starts at the sternal angle."
+    "explanation": "Rib II meets the sternum at the manubriosternal joint, which is why rib counting starts at the sternal angle.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 805 / 893;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p20_0.webp\" alt=\"The sternum and costal cartilages with the sternal angle and its joints labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-029",
@@ -374,7 +392,8 @@
       "Attach directly to the sternum"
     ],
     "answer": 2,
-    "explanation": "False ribs VIII–X join the cartilage above and form the costal margin."
+    "explanation": "False ribs VIII–X join the cartilage above and form the costal margin.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 950 / 700;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p05_0.webp\" alt=\"The thoracic skeleton with the true, false and floating ribs marked\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-030",
@@ -387,7 +406,8 @@
       "Rib X"
     ],
     "answer": 3,
-    "explanation": "The tuberculum m. scaleni anterioris on rib I separates the grooves for the subclavian vein (in front) and artery (behind)."
+    "explanation": "The tuberculum m. scaleni anterioris on rib I separates the grooves for the subclavian vein (in front) and artery (behind).",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 979 / 428;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-030.webp\" alt=\"A rib seen from above, with grooves for the subclavian vessels and a tubercle for scalenus anterior\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-031",
@@ -400,7 +420,8 @@
       "Rib VII"
     ],
     "answer": 0,
-    "explanation": "Rib II has the tuberositas m. serrati anterioris on its outer surface."
+    "explanation": "Rib II has the tuberositas m. serrati anterioris on its outer surface.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1065 / 703;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-031.webp\" alt=\"A rib seen from above with the tuberosity for serratus anterior underlined\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-032",
@@ -413,7 +434,8 @@
       "The internal thoracic artery runs along the upper border"
     ],
     "answer": 2,
-    "explanation": "The VAN bundle lies in the sulcus costae under each rib, so needles pass over the top of the rib below."
+    "explanation": "The VAN bundle lies in the sulcus costae under each rib, so needles pass over the top of the rib below.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 847 / 513;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-032.webp\" alt=\"Layers of an intercostal space; the three structures in the groove under the rib are marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-033",
@@ -426,7 +448,8 @@
       "Run downward and forward and raise the ribs in inspiration"
     ],
     "answer": 4,
-    "explanation": "External intercostals run like hands in front pockets and elevate the ribs."
+    "explanation": "External intercostals run like hands in front pockets and elevate the ribs.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 865 / 711;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p23_0.webp\" alt=\"The external intercostal muscles on the front of the rib cage\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-034",
@@ -452,7 +475,8 @@
       "The phrenic nerve"
     ],
     "answer": 0,
-    "explanation": "Thoracic outlet syndrome compresses the lower trunk and subclavian vessels as they cross rib I."
+    "explanation": "Thoracic outlet syndrome compresses the lower trunk and subclavian vessels as they cross rib I.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 792 / 792;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p29_2.webp\" alt=\"Thoracic outlet syndrome: nerves and vessels compressed between the clavicle, first rib and scalene muscles\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-036",
@@ -465,7 +489,8 @@
       "Cervical lordosis and thoracic kyphosis"
     ],
     "answer": 0,
-    "explanation": "The primary curves are present in the fetus; cervical and lumbar lordoses develop after birth."
+    "explanation": "The primary curves are present in the fetus; cervical and lumbar lordoses develop after birth.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 493;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p31_0.webp\" alt=\"The vertebral column from the side with its four curvatures\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-037",
@@ -543,7 +568,8 @@
       "Anterior sacral foramina"
     ],
     "answer": 3,
-    "explanation": "The sacral hiatus, flanked by the sacral cornua, opens into the sacral canal."
+    "explanation": "The sacral hiatus, flanked by the sacral cornua, opens into the sacral canal.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 691;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-042.webp\" alt=\"Dorsal surface of the sacrum; the opening at its lower end is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-043",
@@ -569,7 +595,8 @@
       "Into the vertebral body above"
     ],
     "answer": 3,
-    "explanation": "The posterior longitudinal ligament is narrow, so herniation goes posterolaterally, usually at L4–L5 or L5–S1."
+    "explanation": "The posterior longitudinal ligament is narrow, so herniation goes posterolaterally, usually at L4–L5 or L5–S1.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 477;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p40_0.webp\" alt=\"An intervertebral disc from above and from the side, with the nucleus pulposus and anulus fibrosus\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-045",
@@ -582,7 +609,8 @@
       "Alar ligament"
     ],
     "answer": 1,
-    "explanation": "The broad anterior longitudinal ligament runs down the front of the bodies and discs."
+    "explanation": "The broad anterior longitudinal ligament runs down the front of the bodies and discs.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 550 / 764;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p44_1.webp\" alt=\"Lateral view of vertebral bodies with the anterior and posterior longitudinal ligaments\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-046",
@@ -608,7 +636,8 @@
       "Dorsal rami of spinal nerves"
     ],
     "answer": 4,
-    "explanation": "Deep back muscles are supplied by dorsal rami; the superficial group by ventral rami (trapezius by CN XI)."
+    "explanation": "Deep back muscles are supplied by dorsal rami; the superficial group by ventral rami (trapezius by CN XI).",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 570;\"><img src=\"/ebook-figures/anatomy/chapter-03-trunci_p46_0.webp\" alt=\"Superficial and deep muscles of the back\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-048",
@@ -621,7 +650,8 @@
       "Mastoid fontanelle"
     ],
     "answer": 3,
-    "explanation": "The anterior fontanelle, at the future bregma, is the largest and closes last."
+    "explanation": "The anterior fontanelle, at the future bregma, is the largest and closes last.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 825;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-048.webp\" alt=\"Neonatal skull from the side and from above with its fontanelles; their names are hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-049",
@@ -634,7 +664,8 @@
       "Hypocalcaemia"
     ],
     "answer": 0,
-    "explanation": "A bulging fontanelle suggests raised intracranial pressure; a sunken one suggests dehydration."
+    "explanation": "A bulging fontanelle suggests raised intracranial pressure; a sunken one suggests dehydration.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 810;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p06_0.webp\" alt=\"The neonatal skull from the side and from above, with its sutures and fontanelles\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-050",
@@ -647,7 +678,8 @@
       "Vomer"
     ],
     "answer": 4,
-    "explanation": "The unpaired viscerocranial bones are the mandible and vomer."
+    "explanation": "The unpaired viscerocranial bones are the mandible and vomer.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1103;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p14_0.webp\" alt=\"Lateral view of the skull with the bones of the neurocranium colour-coded\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-051",
@@ -660,7 +692,8 @@
       "Superficial temporal vein"
     ],
     "answer": 2,
-    "explanation": "Its tear causes an epidural haematoma, often with a lucid interval."
+    "explanation": "Its tear causes an epidural haematoma, often with a lucid interval.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 841;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p39_0.webp\" alt=\"Lateral view of the skull (norma lateralis) with pterion circled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-052",
@@ -673,7 +706,8 @@
       "Body of the sphenoid"
     ],
     "answer": 4,
-    "explanation": "The sella turcica sits on the upper surface of the sphenoid body."
+    "explanation": "The sella turcica sits on the upper surface of the sphenoid body.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 986 / 773;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-052.webp\" alt=\"Floor of the cranial cavity with the bones colour-coded; the bone names are hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-053",
@@ -686,7 +720,8 @@
       "Superior orbital fissure"
     ],
     "answer": 3,
-    "explanation": "Olfactory filaments pass through the foramina of the lamina cribrosa."
+    "explanation": "Olfactory filaments pass through the foramina of the lamina cribrosa.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1013;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p47_0.webp\" alt=\"Internal surface of the cranial base with its foramina labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-054",
@@ -699,7 +734,8 @@
       "Foramen spinosum"
     ],
     "answer": 0,
-    "explanation": "Standing Room Only: superior orbital fissure (V1), rotundum (V2), ovale (V3)."
+    "explanation": "Standing Room Only: superior orbital fissure (V1), rotundum (V2), ovale (V3).",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1013;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p47_0.webp\" alt=\"Internal surface of the cranial base with its foramina labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-055",
@@ -712,7 +748,8 @@
       "Foramen lacerum"
     ],
     "answer": 3,
-    "explanation": "Foramen spinosum lies just behind foramen ovale in the greater wing."
+    "explanation": "Foramen spinosum lies just behind foramen ovale in the greater wing.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1013;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p47_0.webp\" alt=\"Internal surface of the cranial base with its foramina labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-056",
@@ -725,7 +762,8 @@
       "V3 only"
     ],
     "answer": 2,
-    "explanation": "The jugular foramen carries CN IX, X and XI and the sigmoid sinus draining to the internal jugular vein."
+    "explanation": "The jugular foramen carries CN IX, X and XI and the sigmoid sinus draining to the internal jugular vein.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1013;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p47_0.webp\" alt=\"Internal surface of the cranial base with its foramina labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-057",
@@ -738,7 +776,8 @@
       "Condylar canal"
     ],
     "answer": 2,
-    "explanation": "The hypoglossal canal lies above each occipital condyle. The condylar canal carries only an emissary vein."
+    "explanation": "The hypoglossal canal lies above each occipital condyle. The condylar canal carries only an emissary vein.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1013;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p47_0.webp\" alt=\"Internal surface of the cranial base with its foramina labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-058",
@@ -764,7 +803,8 @@
       "Coronoid process"
     ],
     "answer": 0,
-    "explanation": "The mental foramen is on the outer body; the mandibular foramen is on the inner ramus."
+    "explanation": "The mental foramen is on the outer body; the mandibular foramen is on the inner ramus.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 620;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-059.webp\" alt=\"The mandible from behind; the opening on the ramus is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-060",
@@ -790,7 +830,8 @@
       "Lateral nasal and mandibular prominences"
     ],
     "answer": 0,
-    "explanation": "The two medial nasal prominences form the philtrum; failure to fuse with the maxillary prominence gives cleft lip."
+    "explanation": "The two medial nasal prominences form the philtrum; failure to fuse with the maxillary prominence gives cleft lip.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 853;\"><img src=\"/ebook-figures/anatomy/chapter-04-cranium_p05_0.webp\" alt=\"Four stages in the development of the face, with the facial prominences labelled\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-062",
@@ -803,7 +844,8 @@
       "Galea aponeurotica"
     ],
     "answer": 0,
-    "explanation": "Infection spreads through the loose areolar layer and can reach the dural sinuses via emissary veins."
+    "explanation": "Infection spreads through the loose areolar layer and can reach the dural sinuses via emissary veins.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 836 / 1256;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-062.webp\" alt=\"The five layers of the scalp (S, C, A, L, P)\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-063",
@@ -816,7 +858,8 @@
       "Right facial nerve (lower motor neuron, Bell's palsy)"
     ],
     "answer": 4,
-    "explanation": "Loss of the whole side of the face including the forehead indicates a lower motor neuron lesion of CN VII on that side."
+    "explanation": "Loss of the whole side of the face including the forehead indicates a lower motor neuron lesion of CN VII on that side.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1398;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-063.webp\" alt=\"Face of a patient with drooping of the eyebrow, lower eyelid and corner of the mouth on one side\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-064",
@@ -829,7 +872,8 @@
       "M. buccinator"
     ],
     "answer": 4,
-    "explanation": "Buccinator presses the cheek against the teeth during chewing and is also used in blowing."
+    "explanation": "Buccinator presses the cheek against the teeth during chewing and is also used in blowing.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 733;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-064.webp\" alt=\"Muscles around the mouth; the deep muscle of the cheek is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-065",
@@ -842,7 +886,8 @@
       "M. buccinator"
     ],
     "answer": 1,
-    "explanation": "Only the lateral pterygoid depresses and protrudes the mandible; the other three close it."
+    "explanation": "Only the lateral pterygoid depresses and protrudes the mandible; the other three close it.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 503 / 652;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-065.webp\" alt=\"Elevation and depression of the mandible\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-066",
@@ -868,7 +913,8 @@
       "Lingual artery"
     ],
     "answer": 3,
-    "explanation": "External carotid branches from below up: superior thyroid, ascending pharyngeal, lingual, facial, occipital, posterior auricular, maxillary, superficial temporal."
+    "explanation": "External carotid branches from below up: superior thyroid, ascending pharyngeal, lingual, facial, occipital, posterior auricular, maxillary, superficial temporal.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 878;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p13_0.webp\" alt=\"Branches of the external carotid artery in the face and neck\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-068",
@@ -894,7 +940,8 @@
       "External jugular vein"
     ],
     "answer": 1,
-    "explanation": "The valveless facial vein connects with the cavernous sinus: the danger triangle of the face."
+    "explanation": "The valveless facial vein connects with the cavernous sinus: the danger triangle of the face.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 956;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p14_0.webp\" alt=\"Veins of the face and scalp, including the facial vein, angular vein and pterygoid plexus\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-070",
@@ -907,7 +954,8 @@
       "Maxillary nerve (V2)"
     ],
     "answer": 3,
-    "explanation": "The angle of the jaw is outside the trigeminal territory."
+    "explanation": "The angle of the jaw is outside the trigeminal territory.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 483;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-070.webp\" alt=\"Sensory territories of the head; the area over the angle of the mandible is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-071",
@@ -920,7 +968,8 @@
       "Submandibular gland"
     ],
     "answer": 2,
-    "explanation": "CN VII enters the parotid and fans out into temporal, zygomatic, buccal, marginal mandibular and cervical branches; it does not supply the gland."
+    "explanation": "CN VII enters the parotid and fans out into temporal, zygomatic, buccal, marginal mandibular and cervical branches; it does not supply the gland.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 753;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-071.webp\" alt=\"Terminal branches of the facial nerve fanning out over the face; the gland they emerge from is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-072",
@@ -933,7 +982,8 @@
       "Common carotid artery"
     ],
     "answer": 2,
-    "explanation": "The sheath contains the carotid arteries, internal jugular vein and vagus; the sympathetic trunk lies behind it."
+    "explanation": "The sheath contains the carotid arteries, internal jugular vein and vagus; the sympathetic trunk lies behind it.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 529;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p19_0.webp\" alt=\"Cross-section of the neck showing its fascial layers and the carotid sheath\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-073",
@@ -946,7 +996,8 @@
       "C1"
     ],
     "answer": 3,
-    "explanation": "The hyoid lies at C3, between the mandible and the thyroid cartilage."
+    "explanation": "The hyoid lies at C3, between the mandible and the thyroid cartilage.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1471;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p21_0.webp\" alt=\"The hyoid bone alone and in place in the neck\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-074",
@@ -959,7 +1010,8 @@
       "Superior belly of omohyoid"
     ],
     "answer": 4,
-    "explanation": "The carotid triangle contains the carotid bifurcation, internal jugular vein, and CN X and XII."
+    "explanation": "The carotid triangle contains the carotid bifurcation, internal jugular vein, and CN X and XII.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1045;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p23_0.webp\" alt=\"Anterior view of the neck with the infrahyoid muscles and the carotid artery\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-075",
@@ -972,7 +1024,8 @@
       "Accessory nerve (CN XI)"
     ],
     "answer": 4,
-    "explanation": "CN XI crosses the occipital part of the posterior triangle to supply trapezius."
+    "explanation": "CN XI crosses the occipital part of the posterior triangle to supply trapezius.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 440;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p24_0.webp\" alt=\"The posterior triangle of the neck and its subdivisions\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-076",
@@ -998,7 +1051,8 @@
       "Hypoglossal nerve"
     ],
     "answer": 3,
-    "explanation": "The recurrent laryngeal nerve runs in the tracheo-oesophageal groove close to the inferior thyroid artery."
+    "explanation": "The recurrent laryngeal nerve runs in the tracheo-oesophageal groove close to the inferior thyroid artery.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1109;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-077.webp\" alt=\"The thyroid gland and its vessels; the nerves running up behind it are marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-078",
@@ -1011,11 +1065,12 @@
       "Is controlled mainly by sympathetic nerves"
     ],
     "answer": 3,
-    "explanation": "PTH releases calcium from bone, increases renal reabsorption and activates vitamin D."
+    "explanation": "PTH releases calcium from bone, increases renal reabsorption and activates vitamin D.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1100;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p27_0.webp\" alt=\"Posterior view of the thyroid lobes with the parathyroid glands\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-079",
-    "question": "T lymphocytes mature in the:",
+    "question": "T lymphocytes mature in the organ marked ? in the figure. It is the:",
     "options": [
       "Bone marrow only",
       "Parathyroid glands",
@@ -1024,7 +1079,8 @@
       "Thymus"
     ],
     "answer": 4,
-    "explanation": "The thymus, in the superior/anterior mediastinum, is where T cells mature and learn self-tolerance."
+    "explanation": "The thymus, in the superior/anterior mediastinum, is where T cells mature and learn self-tolerance.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 776;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-079.webp\" alt=\"The superior mediastinum; the lobulated organ in front of the great vessels is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-080",
@@ -1037,7 +1093,8 @@
       "Parotitis"
     ],
     "answer": 2,
-    "explanation": "The thoracic duct drains past the left supraclavicular nodes."
+    "explanation": "The thoracic duct drains past the left supraclavicular nodes.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 583;\"><img src=\"/ebook-figures/anatomy/chapter-05-sfc_p30_0.webp\" alt=\"The thoracic duct ending at the left venous angle among the deep cervical lymph nodes\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-081",
@@ -1050,7 +1107,8 @@
       "At the junction of its middle and lateral thirds"
     ],
     "answer": 4,
-    "explanation": "Falls on the outstretched hand transmit force along the clavicle, which breaks at its weakest point."
+    "explanation": "Falls on the outstretched hand transmit force along the clavicle, which breaks at its weakest point.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 948;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p04_0.webp\" alt=\"The right clavicle and scapula articulating, anterior view\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-082",
@@ -1063,7 +1121,8 @@
       "Acromion"
     ],
     "answer": 2,
-    "explanation": "The short head arises from the coracoid process; triceps long head from the infraglenoid tubercle."
+    "explanation": "The short head arises from the coracoid process; triceps long head from the infraglenoid tubercle.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 901 / 1112;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p06_0.webp\" alt=\"An unlabelled scapula from the front, side and back\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-083",
@@ -1076,7 +1135,8 @@
       "Axillary nerve at the surgical neck"
     ],
     "answer": 2,
-    "explanation": "The radial nerve lies in the spiral groove; injury gives wrist drop."
+    "explanation": "The radial nerve lies in the spiral groove; injury gives wrist drop.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 626 / 1084;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p63_0.webp\" alt=\"Radiograph of a fracture through the shaft of the humerus\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-084",
@@ -1089,7 +1149,8 @@
       "Lunate"
     ],
     "answer": 1,
-    "explanation": "The scaphoid forms the floor of the snuffbox; waist fractures risk avascular necrosis."
+    "explanation": "The scaphoid forms the floor of the snuffbox; waist fractures risk avascular necrosis.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 579;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p49_0.webp\" alt=\"The anatomical snuffbox between the thumb tendons, lateral view of the wrist\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-085",
@@ -1115,7 +1176,8 @@
       "Deltoid"
     ],
     "answer": 2,
-    "explanation": "Supraspinatus initiates abduction; deltoid continues it to 90°."
+    "explanation": "Supraspinatus initiates abduction; deltoid continues it to 90°.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 480;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-086.webp\" alt=\"The rotator cuff muscles; the one above the spine of the scapula is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-087",
@@ -1141,7 +1203,8 @@
       "Suprascapular nerve"
     ],
     "answer": 2,
-    "explanation": "The axillary nerve winds around the surgical neck through the quadrangular space."
+    "explanation": "The axillary nerve winds around the surgical neck through the quadrangular space.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 715 / 1022;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p30_0.webp\" alt=\"The deltoid muscle covering the shoulder\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-089",
@@ -1154,7 +1217,8 @@
       "Palmaris longus"
     ],
     "answer": 0,
-    "explanation": "FCU and the medial half of FDP are the ulnar nerve's forearm muscles."
+    "explanation": "FCU and the medial half of FDP are the ulnar nerve's forearm muscles.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 742;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p37_0.webp\" alt=\"The flexor muscles of the forearm, layer by layer\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-090",
@@ -1180,7 +1244,8 @@
       "Cubital fossa"
     ],
     "answer": 0,
-    "explanation": "The quadrangular space lies between teres minor, teres major, triceps long head and the humerus."
+    "explanation": "The quadrangular space lies between teres minor, teres major, triceps long head and the humerus.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 882;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-091.webp\" alt=\"Posterior view of the shoulder with the spaces between the teres muscles; the space containing the axillary nerve is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-092",
@@ -1193,7 +1258,8 @@
       "Ulnar nerve"
     ],
     "answer": 0,
-    "explanation": "The ulnar nerve and artery pass through Guyon's canal, superficial to the flexor retinaculum."
+    "explanation": "The ulnar nerve and artery pass through Guyon's canal, superficial to the flexor retinaculum.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 655;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-092.webp\" alt=\"Cross-section of the wrist through the carpal tunnel; the nerve among the flexor tendons is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-093",
@@ -1206,7 +1272,8 @@
       "Medial to the biceps tendon and lateral to the median nerve"
     ],
     "answer": 4,
-    "explanation": "From lateral to medial: (radial nerve), biceps tendon, brachial artery, median nerve."
+    "explanation": "From lateral to medial: (radial nerve), biceps tendon, brachial artery, median nerve.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1058 / 1025;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p46_0.webp\" alt=\"The boundaries of the cubital fossa\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-094",
@@ -1219,7 +1286,8 @@
       "Deep palmar arch"
     ],
     "answer": 2,
-    "explanation": "The radial artery crosses the floor of the snuffbox."
+    "explanation": "The radial artery crosses the floor of the snuffbox.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 579;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-094.webp\" alt=\"The anatomical snuffbox; the artery crossing its floor is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-095",
@@ -1232,7 +1300,8 @@
       "Axillary nerve"
     ],
     "answer": 3,
-    "explanation": "Lateral cord: lateral pectoral, musculocutaneous and lateral root of the median nerve."
+    "explanation": "Lateral cord: lateral pectoral, musculocutaneous and lateral root of the median nerve.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 866;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p56_0.webp\" alt=\"The brachial plexus from roots to terminal branches\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-096",
@@ -1245,7 +1314,8 @@
       "Accessory nerve"
     ],
     "answer": 3,
-    "explanation": "The long thoracic nerve (C5–C7) supplies serratus anterior, which holds the scapula against the thorax."
+    "explanation": "The long thoracic nerve (C5–C7) supplies serratus anterior, which holds the scapula against the thorax.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 846 / 1128;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p62_0.webp\" alt=\"Back of a patient whose scapula stands off the chest wall\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-097",
@@ -1284,7 +1354,8 @@
       "Lateral axillary nodes"
     ],
     "answer": 1,
-    "explanation": "The pectoral group lies along the lower border of pectoralis minor."
+    "explanation": "The pectoral group lies along the lower border of pectoralis minor.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 774;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p57_0.webp\" alt=\"Axillary lymph node groups and the lymphatic drainage of the breast\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-100",
@@ -1297,7 +1368,8 @@
       "Cubital tunnel syndrome"
     ],
     "answer": 2,
-    "explanation": "Overuse of the common extensor origin, especially ECRB."
+    "explanation": "Overuse of the common extensor origin, especially ECRB.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1001 / 996;\"><img src=\"/ebook-figures/anatomy/chapter-06-sup_p39_0.webp\" alt=\"The superficial extensor muscles of the forearm arising around the lateral epicondyle\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-101",
@@ -1310,7 +1382,8 @@
       "Greater sciatic notch"
     ],
     "answer": 0,
-    "explanation": "Ilium, ischium and pubis fuse in the acetabulum, the socket for the femoral head."
+    "explanation": "Ilium, ischium and pubis fuse in the acetabulum, the socket for the femoral head.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 499;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-101.webp\" alt=\"The hip bone from the lateral and medial sides, with the ilium, ischium and pubis coloured; the socket where they meet is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-102",
@@ -1323,7 +1396,8 @@
       "Spina iliaca posterior superior"
     ],
     "answer": 2,
-    "explanation": "The ischial tuberosity bears weight in sitting and gives origin to the hamstrings."
+    "explanation": "The ischial tuberosity bears weight in sitting and gives origin to the hamstrings.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 872;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-102.webp\" alt=\"The right hip bone from the lateral side; the lowest point of the ischium is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-103",
@@ -1336,7 +1410,8 @@
       "Medial epicondyle of the femur"
     ],
     "answer": 4,
-    "explanation": "The tuberculum adductorium sits on the medial epicondyle of the femur."
+    "explanation": "The tuberculum adductorium sits on the medial epicondyle of the femur.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1078 / 1232;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-103.webp\" alt=\"The femur from the front and back; the small tubercle at the lower end is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-104",
@@ -1349,7 +1424,8 @@
       "Fibula"
     ],
     "answer": 4,
-    "explanation": "The fibula ends as the lateral malleolus, which reaches lower than the medial malleolus."
+    "explanation": "The fibula ends as the lateral malleolus, which reaches lower than the medial malleolus.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 500;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-104.webp\" alt=\"The tibia and fibula from the front and back; the bone names are hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-105",
@@ -1388,7 +1464,8 @@
       "Posterior displacement of the tibia"
     ],
     "answer": 3,
-    "explanation": "An ACL tear gives a positive anterior drawer and Lachman test."
+    "explanation": "An ACL tear gives a positive anterior drawer and Lachman test.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 546;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p14_0.webp\" alt=\"The knee joint in flexion and extension with the cruciate and collateral ligaments\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-108",
@@ -1440,7 +1517,8 @@
       "M. sartorius"
     ],
     "answer": 0,
-    "explanation": "Iliopsoas passes from the lumbar spine and iliac fossa to the lesser trochanter."
+    "explanation": "Iliopsoas passes from the lumbar spine and iliac fossa to the lesser trochanter.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1071 / 1112;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-111.webp\" alt=\"Psoas major and iliacus passing from the lumbar spine and iliac fossa to the femur; the combined muscle name is hidden\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-112",
@@ -1453,7 +1531,8 @@
       "Adductor longus"
     ],
     "answer": 2,
-    "explanation": "Gluteus maximus is the powerful hip extensor used in climbing stairs and rising from sitting."
+    "explanation": "Gluteus maximus is the powerful hip extensor used in climbing stairs and rising from sitting.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 845 / 1051;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-112.webp\" alt=\"Lateral view of the hip and thigh; the large muscle of the buttock is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-113",
@@ -1479,7 +1558,8 @@
       "Femoral nerve"
     ],
     "answer": 3,
-    "explanation": "The sciatic nerve emerges below piriformis in the lower medial part of the buttock."
+    "explanation": "The sciatic nerve emerges below piriformis in the lower medial part of the buttock.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 676 / 790;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p27_2.webp\" alt=\"Deep muscles of the gluteal region around piriformis and the greater sciatic foramen\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-115",
@@ -1492,7 +1572,8 @@
       "Vastus medialis"
     ],
     "answer": 3,
-    "explanation": "Rectus femoris arises from the AIIS, crossing the hip joint."
+    "explanation": "Rectus femoris arises from the AIIS, crossing the hip joint.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1081 / 1158;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-115.webp\" alt=\"Anterior and medial thigh muscles; the central part of quadriceps femoris is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-116",
@@ -1505,7 +1586,8 @@
       "Adductor brevis"
     ],
     "answer": 2,
-    "explanation": "Pectineus is usually supplied by the femoral nerve, sometimes also by the obturator nerve."
+    "explanation": "Pectineus is usually supplied by the femoral nerve, sometimes also by the obturator nerve.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 644 / 1314;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-116.webp\" alt=\"The adductor muscles of the medial thigh\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-117",
@@ -1518,7 +1600,8 @@
       "Femoral nerve"
     ],
     "answer": 1,
-    "explanation": "All other hamstring heads are supplied by the tibial part."
+    "explanation": "All other hamstring heads are supplied by the tibial part.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 892 / 1222;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p33_0.webp\" alt=\"The hamstring muscles from behind\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-118",
@@ -1531,7 +1614,8 @@
       "Deep fibular nerve"
     ],
     "answer": 3,
-    "explanation": "Fibularis longus and brevis in the lateral compartment evert the foot."
+    "explanation": "Fibularis longus and brevis in the lateral compartment evert the foot.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1071;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p50_0.webp\" alt=\"Cross-section of the leg with its compartments, muscles, nerves and vessels\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-119",
@@ -1544,7 +1628,8 @@
       "Superficial posterior compartment, supplied by the tibial nerve"
     ],
     "answer": 1,
-    "explanation": "Tibialis anterior, EDL, EHL and fibularis tertius dorsiflex the ankle."
+    "explanation": "Tibialis anterior, EDL, EHL and fibularis tertius dorsiflex the ankle.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 1071;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p50_0.webp\" alt=\"Cross-section of the leg with its compartments, muscles, nerves and vessels\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-120",
@@ -1570,7 +1655,8 @@
       "Obturator canal"
     ],
     "answer": 1,
-    "explanation": "The lesser sciatic foramen transmits the obturator internus tendon and the pudendal nerve and vessels."
+    "explanation": "The lesser sciatic foramen transmits the obturator internus tendon and the pudendal nerve and vessels.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 972 / 1067;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p41_0.webp\" alt=\"Old engraving of the gluteal region showing piriformis and the tendons below it\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-122",
@@ -1583,7 +1669,8 @@
       "Lacuna musculorum"
     ],
     "answer": 4,
-    "explanation": "The lacuna musculorum contains iliopsoas, the femoral nerve and the lateral femoral cutaneous nerve."
+    "explanation": "The lacuna musculorum contains iliopsoas, the femoral nerve and the lateral femoral cutaneous nerve.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 978 / 1004;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p44_0.webp\" alt=\"The space under the inguinal ligament, with iliacus, the femoral nerve and the femoral vessels\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-123",
@@ -1596,7 +1683,8 @@
       "Lacunar ligament"
     ],
     "answer": 4,
-    "explanation": "Femoral ring: inguinal ligament anteriorly, lacunar ligament medially, femoral vein laterally, pectineal ligament posteriorly."
+    "explanation": "Femoral ring: inguinal ligament anteriorly, lacunar ligament medially, femoral vein laterally, pectineal ligament posteriorly.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1077 / 1057;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-123.webp\" alt=\"The femoral sheath, canal and ring; the ligament at the medial side of the ring is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-124",
@@ -1635,7 +1723,8 @@
       "Small saphenous vein"
     ],
     "answer": 3,
-    "explanation": "The artery lies against the bone, which is why the popliteal pulse is hard to feel."
+    "explanation": "The artery lies against the bone, which is why the popliteal pulse is hard to feel.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 915;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p48_0.webp\" alt=\"The popliteal fossa and its contents, posterior view\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-127",
@@ -1648,7 +1737,8 @@
       "Posterior tibial artery and vein"
     ],
     "answer": 4,
-    "explanation": "Tom, Dick And Very Nervous Harry: tibialis posterior, FDL, artery and vein, nerve, FHL."
+    "explanation": "Tom, Dick And Very Nervous Harry: tibialis posterior, FDL, artery and vein, nerve, FHL.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1100 / 855;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-127.webp\" alt=\"Structures passing behind the medial malleolus; the third structure is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-128",
@@ -1661,7 +1751,8 @@
       "Fibular artery"
     ],
     "answer": 1,
-    "explanation": "Its pulse is felt lateral to the extensor hallucis longus tendon."
+    "explanation": "Its pulse is felt lateral to the extensor hallucis longus tendon.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 1072 / 576;\"><img src=\"/ebook-figures/anatomy-quiz/q-anat-128.webp\" alt=\"Flow chart of the arteries of the lower limb; the artery that continues as dorsalis pedis is marked ?\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-129",
@@ -1700,7 +1791,8 @@
       "Obturator nerve"
     ],
     "answer": 3,
-    "explanation": "The common fibular nerve winds around the fibular neck; its injury causes foot drop and steppage gait."
+    "explanation": "The common fibular nerve winds around the fibular neck; its injury causes foot drop and steppage gait.",
+    "image": "<div class=\"quiz-photo-diagram quiz-diagram-wide\" style=\"aspect-ratio: 862 / 1184;\"><img src=\"/ebook-figures/anatomy/chapter-07-inf_p55_0.webp\" alt=\"Cutaneous nerve territories of the lower limb\" loading=\"lazy\" /></div>"
   },
   {
     "id": "q-anat-132",
