@@ -121,6 +121,12 @@ account environment variables it runs as a plain static site.
 - The original lecture slides and practicum PDFs, viewable in-app with an "open in new tab" fallback
 - Grouped as **Lecture**, then **Practicum** (Reports, Assistance), with empty sections marked "To be added"
 
+**Virtual Lab**
+- A practice simulator for the PhysioEx 9.1 Exercise 2 (skeletal muscle) dry lab: all seven activities, from the twitch and latent period to the load–velocity relationship
+- A muscle on a force transducer with an oscilloscope trace, voltage, length, stimulus rate and weight controls, and a **Measure** line for the latent period
+- Summation, unfused and fused tetanus, fatigue with rest periods, length–tension (active, passive, total) and isotonic lifts, from one tested model (`src/lib/muscleSim.ts`) tuned to the practicum's numbers (threshold 0.8 V, maximal 8.5 V, 1.82 g twitch, optimal length 75 mm)
+- **Record Data** into a table that is kept per activity, **Plot Data**, CSV download, and check questions with explanations
+
 **Ebooks and summaries**
 - Chaptered Markdown with original inline SVG diagrams, a table of contents, and previous/next navigation
 - Resume position and chapter-completion tracking
@@ -254,6 +260,7 @@ cached the first time it's opened.
 | `/modules` → `/modules/:blockId/:subjectId` | Subjects with PDFs → sectioned PDF viewer |
 | `/ebooks` → `/ebooks/:blockId/:subjectId/:chapterId` | Book list with resume position → chapter reader |
 | `/summaries` → `/summaries/:blockId/:subjectId` | Summary list → rendered summary |
+| `/lab` → `/lab/:exerciseId/:activity` | Virtual Lab activities → simulator bench, data table, plot and check questions |
 | `/search` | Fuzzy search with type and subject filters |
 | `/progress` | Streaks, heatmap, mastery, study plan, hardest cards, export/import |
 | `/leaderboard` | Weekly, all-time and streak rankings, filtered to your cohort; join or leave, and pick a display name (signed-in only) |

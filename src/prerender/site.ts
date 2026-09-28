@@ -24,6 +24,7 @@ import {
   summarySubjects,
 } from "../lib/content";
 import { blockHasExam, breadcrumbs, indexablePaths, pageMeta, PRIVATE_PATHS, type PageMeta } from "../lib/routeMeta";
+import { findLabActivity, labExercises } from "../lib/labActivities";
 import { SITE_NAME } from "../lib/site";
 import type { Subject } from "../types/content";
 
@@ -37,6 +38,7 @@ const SECTION_LINKS: [string, string][] = [
   ["/modules", "Modules"],
   ["/ebooks", "Ebooks"],
   ["/summaries", "Summaries"],
+  ["/lab", "Virtual Lab"],
 ];
 
 function subjectList(section: string, subjects: Subject[], detail: (s: Subject) => string): string {
@@ -72,6 +74,26 @@ async function content(path: string): Promise<string> {
           return `<li><a href="/ebooks/${keyOf(s)}">${esc(book.title)}</a>: ${esc(book.description)}</li>`;
         })
         .join("")}</ul>`;
+    case "lab":
+      return labExercises
+        .map(
+          (e) =>
+            `<h2>${esc(e.title)}</h2><p>${esc(e.description)}</p><ol>${e.activities
+              .map((a) => `<li><a href="/lab/${e.id}/${a.slug}">${esc(a.title)}</a>: ${esc(a.summary)}</li>`)
+              .join("")}</ol>`,
+        )
+        .join("");
+    case "lab/*": {
+      const found = findLabActivity(blockId, subjectId);
+      if (!found) return "";
+      const { activity } = found;
+      return [
+        `<h2>Background</h2>${activity.background.map((p) => `<p>${esc(p)}</p>`).join("")}`,
+        `<h2>Steps</h2><ol>${activity.steps.map((st) => `<li>${esc(st)}</li>`).join("")}</ol>`,
+        `<h2>What you should find</h2><p>${esc(activity.expected)}</p>`,
+        `<h2>Check your understanding</h2><ol>${activity.questions.map((q) => `<li>${esc(q.question)}</li>`).join("")}</ol>`,
+      ].join("");
+    }
     case "exam":
       return `<ul>${studyBlocks
         .filter((b) => blockHasExam(b.id))

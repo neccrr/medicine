@@ -39,6 +39,7 @@ export const KEY_TYPES = {
   readingprefs: { id: null, sync: "latest", about: "Reader font size and font" },
   currentblock: { id: null, sync: "latest", about: "The block the student is in" },
   activity: { id: null, sync: "set", about: "Study days (UTC dates)" },
+  labdata: { id: "name", sync: "latest", about: "Virtual Lab data table per activity, e.g. skeletal-muscle/voltage" },
   theme: { id: null, sync: false, keepOnClear: true, about: "Light or dark theme" },
   sidebarcollapsed: { id: null, sync: false, about: "Sidebar collapsed on desktop" },
   lastexport: { id: null, sync: false, about: "When progress was last exported (backup nudge)" },

@@ -45,6 +45,10 @@ const Search = lazy(() => import("./pages/Search").then((m) => ({ default: m.Sea
 const Progress = lazy(() => import("./pages/Progress").then((m) => ({ default: m.Progress })));
 const NotFound = lazy(() => import("./pages/NotFound").then((m) => ({ default: m.NotFound })));
 const Leaderboard = lazy(() => import("./pages/Leaderboard").then((m) => ({ default: m.Leaderboard })));
+const Lab = lazy(() => import("./pages/Lab").then((m) => ({ default: m.Lab })));
+const LabActivityPage = lazy(() =>
+  import("./pages/LabActivity").then((m) => ({ default: m.LabActivityPage })),
+);
 const Account = lazy(() => import("./pages/Account").then((m) => ({ default: m.Account })));
 
 function RouteFallback() {
@@ -83,6 +87,8 @@ function AppRoutes() {
           <Route path="/ebooks" element={<EbookSubjects />} />
           <Route path="/ebooks/:blockId/:subjectId" element={<EbookReader />} />
           <Route path="/ebooks/:blockId/:subjectId/:chapterId" element={<EbookReader />} />
+          <Route path="/lab" element={<Lab />} />
+          <Route path="/lab/:exerciseId/:activitySlug" element={<LabActivityPage />} />
           <Route path="/search" element={<Search />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/leaderboard" element={<Leaderboard />} />

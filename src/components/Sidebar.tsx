@@ -10,6 +10,7 @@ import { STORAGE_KEYS } from "../lib/storage";
 import {
   BookIcon,
   CardsIcon,
+  FlaskIcon,
   HomeIcon,
   ProgressIcon,
   QuizIcon,
@@ -29,6 +30,7 @@ const links: { to: string; label: string; end?: boolean; icon: ReactNode }[] = [
   { to: "/modules", label: "Modules", icon: <SlidesIcon /> },
   { to: "/ebooks", label: "Ebooks", icon: <BookIcon /> },
   { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
+  { to: "/lab", label: "Virtual Lab", icon: <FlaskIcon /> },
   { to: "/search", label: "Search", icon: <SearchIcon /> },
   { to: "/progress", label: "Progress", icon: <ProgressIcon /> },
   { to: "/leaderboard", label: "Leaderboard", icon: <TrophyIcon /> },

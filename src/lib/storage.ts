@@ -54,6 +54,8 @@ export const STORAGE_KEYS = {
   lastExport: storageKey("lastexport"),
   theme: storageKey("theme"),
   activity: storageKey("activity"),
+  /** Recorded runs for one Virtual Lab activity, keyed "{exerciseId}/{activitySlug}". */
+  labData: (id: string) => storageKey("labdata", id),
 } as const;
 
 

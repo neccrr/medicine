@@ -1,3 +1,4 @@
+import { labExercises } from "./labActivities";
 import {
   ebookMeta,
   ebookSubjects,
@@ -37,6 +38,17 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "modules", title: "Modules", detail: "Original lecture slide PDFs", to: "/modules" },
   { type: "page", id: "ebooks", title: "Ebooks", detail: "Chapter readers", to: "/ebooks" },
   { type: "page", id: "summaries", title: "Summaries", detail: "Written subject summaries", to: "/summaries" },
+  { type: "page", id: "lab", title: "Virtual Lab", detail: "PhysioEx-style skeletal muscle simulator", to: "/lab", keywords: "physioex dry lab praktikum simulation muscle" },
+  ...labExercises.flatMap((e) =>
+    e.activities.map((a) => ({
+      type: "page" as const,
+      id: `lab-${e.id}-${a.slug}`,
+      title: `Lab ${a.number}: ${a.title}`,
+      detail: a.summary,
+      to: `/lab/${e.id}/${a.slug}`,
+      keywords: `physioex virtual lab ${e.title} activity ${a.number}`,
+    })),
+  ),
   { type: "page", id: "search", title: "Search", detail: "Search everything", to: "/search" },
   { type: "page", id: "leaderboard", title: "Leaderboard", detail: "Weekly, all-time and streak rankings", to: "/leaderboard" },
   { type: "page", id: "progress", title: "Progress", detail: "Streaks, export & import", to: "/progress" },

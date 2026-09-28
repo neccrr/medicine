@@ -19,6 +19,7 @@ import {
   summaries,
   summarySubjects,
 } from "./content";
+import { findLabActivity, labExercises } from "./labActivities";
 import { HOME_DESCRIPTION, HOME_TITLE, SITE_NAME } from "./site";
 import { markdownToPlainText, truncate } from "./textExtract";
 import type { Subject } from "../types/content";
@@ -108,6 +109,16 @@ const SECTIONS: Record<string, { name: string; meta: PageMeta }> = {
       indexable: true,
     },
   },
+  lab: {
+    name: "Virtual Lab",
+    meta: {
+      title: titled("Virtual Physiology Lab: PhysioEx Practice"),
+      description: describe(
+        "Practise the PhysioEx skeletal muscle dry lab online: stimulate a simulated muscle and record twitch, summation, tetanus, fatigue, length–tension and load–velocity data.",
+      ),
+      indexable: true,
+    },
+  },
   search: { name: "Search", meta: { title: titled("Search"), description: HOME_DESCRIPTION, indexable: false } },
   progress: { name: "Progress", meta: { title: titled("Your Progress"), description: HOME_DESCRIPTION, indexable: false } },
   leaderboard: { name: "Leaderboard", meta: { title: titled("Leaderboard"), description: HOME_DESCRIPTION, indexable: false } },
@@ -145,6 +156,17 @@ export function pageMeta(pathname: string): PageMeta {
     return {
       title: titled(`${pkg.name} (${blockShort(blockId)})`),
       description: describe(`${pkg.name}: a timed practice exam for ${blockLabel(blockId)}, scored at the end with explanations.`),
+      indexable: true,
+    };
+  }
+
+  if (section === "lab") {
+    const found = parts.length === 3 ? findLabActivity(blockId, subjectId) : undefined;
+    if (!found) return NOT_FOUND;
+    const { exercise, activity } = found;
+    return {
+      title: titled(`${activity.title} (Virtual Lab)`),
+      description: describe(`Activity ${activity.number} of the ${exercise.title} virtual lab. ${activity.summary} ${activity.expected}`),
       indexable: true,
     };
   }
@@ -239,7 +261,8 @@ export function breadcrumbs(pathname: string): Crumb[] {
 
 /** Every page that should be in search results, in a stable order. */
 export function indexablePaths(): string[] {
-  const paths = ["/", "/flashcards", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries"];
+  const paths = ["/", "/flashcards", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab"];
+  for (const e of labExercises) for (const a of e.activities) paths.push(`/lab/${e.id}/${a.slug}`);
   for (const s of flashcardSubjects) paths.push(`/flashcards/${keyOf(s)}`);
   for (const s of quizSubjects) paths.push(`/quizzes/${keyOf(s)}`);
   for (const block of studyBlocks) {

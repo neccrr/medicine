@@ -367,3 +367,18 @@ export function TrophyIcon() {
     </svg>
   );
 }
+
+export function FlaskIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path
+        d="M9.5 3.5h5M10.5 3.5v5.6L5.2 18.2a1.6 1.6 0 0 0 1.4 2.3h10.8a1.6 1.6 0 0 0 1.4-2.3l-5.3-9.1V3.5M7.6 14h8.8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
