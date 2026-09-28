@@ -1,9 +1,5 @@
-import { useRef, type PointerEvent } from "react";
-
-export interface Tracing {
-  id: number;
-  points: [number, number][];
-}
+import { memo, useMemo, useRef, useState, type PointerEvent } from "react";
+import { TRACE_COLORS, valueAt, type Tracing } from "../../lib/labTraces";
 
 interface Props {
   xMax: number;
@@ -11,14 +7,15 @@ interface Props {
   xTicks: number[];
   yMax: number;
   yLabel: string;
-  /** Finished tracings, drawn dimmer; the live tracing is drawn bright on top. */
+  /** Unit of the y value, for the legend readout. */
+  yUnit: string;
+  /** Finished tracings, oldest first. */
   tracings: Tracing[];
-  live: [number, number][] | null;
+  /** The sweep in progress, drawn on top. */
+  live: Tracing | null;
   /** Measure cursor position on the x axis, or null when off. */
   measureX?: number | null;
   onMeasure?: (x: number) => void;
-  /** Horizontal reference line (e.g. the load in Activity 7). */
-  refLine?: { y: number; label: string } | null;
 }
 
 const W = 560;
@@ -34,59 +31,55 @@ function niceStep(max: number): number {
   return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
 }
 
-function path(points: [number, number][], xMax: number, yMax: number): string {
+/**
+ * SVG path for a tracing, reduced to at most a minimum and a maximum per screen column (in the
+ * order they occur), so a 2,000-sample tetanus draws the same as the full data with a fraction
+ * of the vertices, ripples included.
+ */
+function tracePath(points: [number, number][], xMax: number, yMax: number): string {
+  const sx = PW / xMax;
+  const sy = PH / yMax;
+  const px = (x: number) => PAD.l + Math.min(x, xMax) * sx;
+  const py = (y: number) => PAD.t + PH - Math.min(Math.max(y, 0), yMax) * sy;
   let d = "";
-  for (let i = 0; i < points.length; i++) {
-    const [x, y] = points[i];
-    const px = PAD.l + (Math.min(x, xMax) / xMax) * PW;
-    const py = PAD.t + PH - (Math.min(Math.max(y, 0), yMax) / yMax) * PH;
-    d += `${i === 0 ? "M" : "L"}${px.toFixed(1)},${py.toFixed(1)}`;
+  let col = -1;
+  let lo: [number, number] | null = null;
+  let hi: [number, number] | null = null;
+  const flush = () => {
+    if (!lo || !hi) return;
+    const [a, b] = lo[0] <= hi[0] ? [lo, hi] : [hi, lo];
+    d += `${d ? "L" : "M"}${px(a[0]).toFixed(1)},${py(a[1]).toFixed(1)}`;
+    if (b !== a) d += `L${px(b[0]).toFixed(1)},${py(b[1]).toFixed(1)}`;
+  };
+  for (const p of points) {
+    const c = Math.floor(px(p[0]));
+    if (c !== col) {
+      flush();
+      col = c;
+      lo = p;
+      hi = p;
+    } else {
+      if (p[1] < lo![1]) lo = p;
+      if (p[1] > hi![1]) hi = p;
+    }
   }
+  flush();
   return d;
 }
 
-/** The force display: a dark screen with a grid, earlier tracings and the live one. */
-export function Oscilloscope({ xMax, xLabel, xTicks, yMax, yLabel, tracings, live, measureX, onMeasure, refLine }: Props) {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const dragging = useRef(false);
+/** A finished tracing's path is built once: its points never change. */
+const TracePath = memo(function TracePath({ points, xMax, yMax, color, emphasis }: { points: [number, number][]; xMax: number; yMax: number; color: string; emphasis: "latest" | "normal" | "muted" }) {
+  const d = useMemo(() => tracePath(points, xMax, yMax), [points, xMax, yMax]);
+  return <path d={d} className={`lab-scope-trace is-${emphasis}`} style={{ stroke: color }} />;
+});
+
+/** The static part of the screen: grid, ticks and axis labels. */
+const ScopeGrid = memo(function ScopeGrid({ xMax, xTicks, xLabel, yMax, yLabel }: { xMax: number; xTicks: number[]; xLabel: string; yMax: number; yLabel: string }) {
   const yStep = niceStep(yMax);
   const yTicks: number[] = [];
   for (let y = 0; y <= yMax + 1e-9; y += yStep) yTicks.push(Number(y.toFixed(4)));
-
-  const toX = (clientX: number) => {
-    const svg = svgRef.current;
-    if (!svg) return 0;
-    const box = svg.getBoundingClientRect();
-    const px = ((clientX - box.left) / box.width) * W;
-    return Math.min(xMax, Math.max(0, ((px - PAD.l) / PW) * xMax));
-  };
-  const onPointerDown = (e: PointerEvent<SVGSVGElement>) => {
-    if (measureX == null || !onMeasure) return;
-    dragging.current = true;
-    e.currentTarget.setPointerCapture(e.pointerId);
-    onMeasure(toX(e.clientX));
-  };
-  const onPointerMove = (e: PointerEvent<SVGSVGElement>) => {
-    if (dragging.current && onMeasure) onMeasure(toX(e.clientX));
-  };
-  const stop = () => {
-    dragging.current = false;
-  };
-
-  const mx = measureX == null ? null : PAD.l + (measureX / xMax) * PW;
-
   return (
-    <svg
-      ref={svgRef}
-      className={`lab-scope${measureX != null ? " is-measuring" : ""}`}
-      viewBox={`0 0 ${W} ${H}`}
-      role="img"
-      aria-label={`${yLabel} against ${xLabel}`}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={stop}
-      onPointerCancel={stop}
-    >
+    <g>
       <rect x={PAD.l} y={PAD.t} width={PW} height={PH} className="lab-scope-screen" rx="4" />
       {xTicks.map((x) => {
         const px = PAD.l + (x / xMax) * PW;
@@ -116,37 +109,117 @@ export function Oscilloscope({ xMax, xLabel, xTicks, yMax, yLabel, tracings, liv
       <text x={12} y={PAD.t + PH / 2} className="lab-scope-label" textAnchor="middle" transform={`rotate(-90 12 ${PAD.t + PH / 2})`}>
         {yLabel}
       </text>
-      {refLine && (
-        <g>
-          <line
-            x1={PAD.l}
-            x2={PAD.l + PW}
-            y1={PAD.t + PH - (refLine.y / yMax) * PH}
-            y2={PAD.t + PH - (refLine.y / yMax) * PH}
-            className="lab-scope-ref"
-          />
-          <text x={PAD.l + PW - 4} y={PAD.t + PH - (refLine.y / yMax) * PH - 5} className="lab-scope-reflabel" textAnchor="end">
-            {refLine.label}
-          </text>
+    </g>
+  );
+});
+
+/** The force display: a dark screen with every tracing in its own colour, and a legend. */
+export function Oscilloscope({ xMax, xLabel, xTicks, yMax, yLabel, yUnit, tracings, live, measureX, onMeasure }: Props) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const dragging = useRef(false);
+  const [hoverX, setHoverX] = useState<number | null>(null);
+  const [focusId, setFocusId] = useState<number | null>(null);
+
+  const toX = (clientX: number) => {
+    const svg = svgRef.current;
+    if (!svg) return 0;
+    const box = svg.getBoundingClientRect();
+    const px = ((clientX - box.left) / box.width) * W;
+    return Math.min(xMax, Math.max(0, ((px - PAD.l) / PW) * xMax));
+  };
+  const onPointerDown = (e: PointerEvent<SVGSVGElement>) => {
+    if (measureX == null || !onMeasure) return;
+    dragging.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    onMeasure(toX(e.clientX));
+  };
+  const onPointerMove = (e: PointerEvent<SVGSVGElement>) => {
+    const x = toX(e.clientX);
+    if (dragging.current && onMeasure) onMeasure(x);
+    else if (e.pointerType === "mouse") setHoverX(x);
+  };
+  const stop = () => {
+    dragging.current = false;
+  };
+
+  // The readout follows the measure line when it's on, otherwise the mouse.
+  const readX = measureX ?? hoverX;
+  const all = live ? [...tracings, live] : tracings;
+  const latestId = all.length > 0 ? all[all.length - 1].id : null;
+  const cursor = readX == null ? null : PAD.l + (readX / xMax) * PW;
+  const emphasis = (t: Tracing) => (focusId != null ? (t.id === focusId ? "latest" : "muted") : t.id === latestId ? "latest" : "normal");
+  const fmtX = (x: number) => (xMax <= 60 ? x.toFixed(2) : x.toFixed(1));
+
+  return (
+    <div className="lab-scope-box">
+      <svg
+        ref={svgRef}
+        className={`lab-scope${measureX != null ? " is-measuring" : ""}`}
+        viewBox={`0 0 ${W} ${H}`}
+        role="img"
+        aria-label={`${yLabel} against ${xLabel}, ${all.length} tracing${all.length === 1 ? "" : "s"}`}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={stop}
+        onPointerCancel={stop}
+        onPointerLeave={() => setHoverX(null)}
+      >
+        <ScopeGrid xMax={xMax} xTicks={xTicks} xLabel={xLabel} yMax={yMax} yLabel={yLabel} />
+        <g clipPath="url(#lab-scope-clip)">
+          {tracings.map((t) => (
+            <TracePath key={t.id} points={t.points} xMax={xMax} yMax={yMax} color={TRACE_COLORS[t.slot]} emphasis={emphasis(t)} />
+          ))}
+          {live && live.points.length > 1 && (
+            <path d={tracePath(live.points, xMax, yMax)} className={`lab-scope-trace is-${emphasis(live)}`} style={{ stroke: TRACE_COLORS[live.slot] }} />
+          )}
         </g>
+        <defs>
+          <clipPath id="lab-scope-clip">
+            <rect x={PAD.l} y={PAD.t - 2} width={PW} height={PH + 4} />
+          </clipPath>
+        </defs>
+        {cursor != null && (
+          <g pointerEvents="none">
+            <line x1={cursor} x2={cursor} y1={PAD.t} y2={PAD.t + PH} className={measureX != null ? "lab-scope-measure" : "lab-scope-crosshair"} />
+            {measureX != null && <rect x={cursor - 7} y={PAD.t + PH - 14} width="14" height="14" rx="3" className="lab-scope-measure-handle" />}
+            {readX != null &&
+              all.map((t) => {
+                const v = valueAt(t.points, readX);
+                if (v == null) return null;
+                const cy = PAD.t + PH - (Math.min(Math.max(v, 0), yMax) / yMax) * PH;
+                return <circle key={t.id} cx={cursor} cy={cy} r="3.5" className="lab-scope-dot" style={{ fill: TRACE_COLORS[t.slot] }} />;
+              })}
+          </g>
+        )}
+      </svg>
+      {all.length > 0 && (
+        <ul className="lab-scope-legend" aria-label="Tracings">
+          {readX != null && (
+            <li className="lab-scope-legend-x">
+              {xLabel.replace(/ \(.*/, "")} {fmtX(readX)}
+            </li>
+          )}
+          {all.map((t) => {
+            const v = readX == null ? null : valueAt(t.points, readX);
+            return (
+              <li
+                key={t.id}
+                className={focusId === t.id ? "is-focus" : undefined}
+                onMouseEnter={() => setFocusId(t.id)}
+                onMouseLeave={() => setFocusId(null)}
+              >
+                <i style={{ background: TRACE_COLORS[t.slot] }} aria-hidden="true" />
+                {t.label}
+                {v != null && (
+                  <b>
+                    {v.toFixed(2)} {yUnit}
+                  </b>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       )}
-      <g clipPath="url(#lab-scope-clip)">
-        {tracings.map((t) => (
-          <path key={t.id} d={path(t.points, xMax, yMax)} className="lab-scope-trace is-old" />
-        ))}
-        {live && live.length > 1 && <path d={path(live, xMax, yMax)} className="lab-scope-trace" />}
-      </g>
-      <defs>
-        <clipPath id="lab-scope-clip">
-          <rect x={PAD.l} y={PAD.t - 2} width={PW} height={PH + 4} />
-        </clipPath>
-      </defs>
-      {mx != null && (
-        <g>
-          <line x1={mx} x2={mx} y1={PAD.t} y2={PAD.t + PH} className="lab-scope-measure" />
-          <rect x={mx - 7} y={PAD.t + PH - 14} width="14" height="14" rx="3" className="lab-scope-measure-handle" />
-        </g>
-      )}
-    </svg>
+    </div>
   );
 }

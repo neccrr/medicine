@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Oscilloscope, type Tracing } from "../components/lab/Oscilloscope";
+import { Oscilloscope } from "../components/lab/Oscilloscope";
+import { TRACE_COLORS, freeSlot, valueAt, type Tracing } from "../lib/labTraces";
 import { MuscleRig } from "../components/lab/MuscleRig";
 import { DataPlot, type PlotSeries } from "../components/lab/DataPlot";
 import { LabQuestions } from "../components/lab/LabQuestions";
@@ -161,25 +162,38 @@ const DEFAULTS: Record<LabMode, { voltage: number; length: number; rate: number;
 };
 
 const WEIGHTS = [0.5, 1.0, 1.5, 2.0];
-const MAX_TRACINGS = 10;
+/** One colour each: past this, the oldest tracing is dropped and its colour reused. */
+const MAX_TRACINGS = TRACE_COLORS.length;
+
+interface RunSettings {
+  voltage: number;
+  length: number;
+  rate: number;
+  weight: number;
+  stimuli: number;
+  rest?: number | null;
+}
+
+/** Legend label for a tracing: the variable the activity changes. */
+function traceLabel(mode: LabMode, r: RunSettings): string {
+  switch (mode) {
+    case "length":
+      return `${r.length} mm`;
+    case "frequency":
+      return `${r.stimuli} stimul${r.stimuli === 1 ? "us" : "i"}`;
+    case "tetanus":
+      return `${r.rate}/sec`;
+    case "fatigue":
+      return r.rest != null ? `${r.rate}/sec, rest ${r.rest.toFixed(1)} s` : `${r.rate}/sec`;
+    case "load":
+      return `${r.weight.toFixed(1)} g`;
+    default:
+      return `${r.voltage.toFixed(1)} V`;
+  }
+}
 
 function fmt(v: number | null | undefined, digits: number): string {
   return v == null || Number.isNaN(v) ? "—" : v.toFixed(digits);
-}
-
-/** Force (or shortening) on a tracing at `x`, by linear interpolation. */
-function valueAt(points: [number, number][], x: number): number | null {
-  if (points.length === 0 || x < points[0][0] || x > points[points.length - 1][0]) return null;
-  let lo = 0;
-  let hi = points.length - 1;
-  while (hi - lo > 1) {
-    const mid = (lo + hi) >> 1;
-    if (points[mid][0] <= x) lo = mid;
-    else hi = mid;
-  }
-  const [x0, y0] = points[lo];
-  const [x1, y1] = points[hi];
-  return x1 === x0 ? y0 : y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
 }
 
 interface StepperProps {
@@ -255,6 +269,8 @@ interface SimState {
   iso: IsotonicTwitch | null;
   peakActive: number;
   peak: number;
+  /** Fatigue: the fresh tetanic plateau for this sweep's voltage and rate. */
+  plateau: number;
   /** Settings captured when the sweep started. */
   voltage: number;
   length: number;
@@ -277,6 +293,7 @@ function newSim(): SimState {
     iso: null,
     peakActive: 0,
     peak: 0,
+    plateau: 0,
     voltage: 0,
     length: 75,
     rate: 50,
@@ -292,9 +309,112 @@ interface View {
   trainOn: boolean;
   voltage: number;
   length: number;
+  rate: number;
+  weight: number;
+  stimuli: number;
 }
 
-const IDLE_VIEW: View = { running: false, points: [], t: 0, trainOn: false, voltage: 0, length: MUSCLE.optimalLengthMm };
+const IDLE_VIEW: View = { running: false, points: [], t: 0, trainOn: false, voltage: 0, length: MUSCLE.optimalLengthMm, rate: 0, weight: 0, stimuli: 0 };
+
+/** The data table, CSV export and plot. Memoised: it changes only when rows do, not every frame. */
+const DataPanel = memo(function DataPanel({
+  cfg,
+  rows,
+  setRows,
+  fileName,
+}: {
+  cfg: ModeConfig;
+  rows: Row[];
+  setRows: Dispatch<SetStateAction<Row[]>>;
+  fileName: string;
+}) {
+  const [showPlot, setShowPlot] = useState(false);
+  const plot = cfg.plot;
+
+  const downloadCsv = () => {
+    const header = cfg.columns.map((c) => `"${c.label}"`).join(",");
+    const body = rows.map((r) => cfg.columns.map((c) => fmt(r[c.key], c.digits).replace("—", "")).join(",")).join("\n");
+    const blob = new Blob([`${header}\n${body}\n`], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="lab-data">
+      <div className="lab-data-head">
+        <h2>Data</h2>
+        <div className="lab-data-actions">
+          {plot && (
+            <button type="button" className="btn btn-small btn-secondary" onClick={() => setShowPlot((v) => !v)} disabled={rows.length === 0} aria-expanded={showPlot}>
+              {showPlot ? "Hide plot" : "Plot Data"}
+            </button>
+          )}
+          <button type="button" className="btn btn-small btn-secondary" onClick={downloadCsv} disabled={rows.length === 0}>
+            Download CSV
+          </button>
+          <button type="button" className="btn btn-small btn-secondary" onClick={() => setRows([])} disabled={rows.length === 0}>
+            Clear data
+          </button>
+        </div>
+      </div>
+      <div className="lab-table-wrap">
+        <table className="lab-table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              {cfg.columns.map((c) => (
+                <th key={c.key} scope="col">
+                  {c.label}
+                </th>
+              ))}
+              <th scope="col">
+                <span className="lab-sr">Delete</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 ? (
+              <tr>
+                <td colSpan={cfg.columns.length + 2} className="lab-empty">
+                  Stimulate, then Record Data to add a row.
+                </td>
+              </tr>
+            ) : (
+              rows.map((r, i) => (
+                <tr key={i}>
+                  <td>{i + 1}</td>
+                  {cfg.columns.map((c) => (
+                    <td key={c.key}>{fmt(r[c.key], c.digits)}</td>
+                  ))}
+                  <td>
+                    <button type="button" className="lab-row-delete" onClick={() => setRows((prev) => prev.filter((_, j) => j !== i))} aria-label={`Delete row ${i + 1}`}>
+                      ×
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      {plot && showPlot && rows.length > 0 && (
+        <DataPlot
+          xLabel={plot.xLabel}
+          yLabel={plot.yLabel}
+          series={plot.series.map((ser) => ({
+            label: ser.label,
+            tone: ser.tone,
+            points: rows.filter((r) => r[plot.x] != null && r[ser.key] != null).map((r) => [r[plot.x] as number, r[ser.key] as number]),
+          }))}
+        />
+      )}
+    </div>
+  );
+});
 
 function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabActivity }) {
   const mode = activity.mode;
@@ -309,7 +429,6 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
   const [result, setResult] = useState<Row | null>(null);
   const [rows, setRows] = useState<Row[]>(() => readJSON<Row[]>(storageId, []));
   const [measure, setMeasure] = useState<number | null>(null);
-  const [showPlot, setShowPlot] = useState(false);
   const [view, setView] = useState<View>(IDLE_VIEW);
   const [flash, setFlash] = useState(false);
   const sim = useRef<SimState>(newSim());
@@ -319,14 +438,23 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
   useEffect(() => () => cancelAnimationFrame(sim.current.raf), []);
 
   const s = view;
-  const lastPoints = s.running || tracings.length === 0 ? s.points : tracings[tracings.length - 1].points;
 
   /** Copy what the page shows out of the simulation. */
   const publish = useCallback(() => {
     const st = sim.current;
     const trainOn =
       st.running && (mode === "fatigue" ? st.bouts.some(([, b]) => b === Infinity) : st.train !== null && st.train.next < st.train.to);
-    setView({ running: st.running, points: st.points.slice(), t: st.t, trainOn, voltage: st.voltage, length: st.length });
+    setView({
+      running: st.running,
+      points: st.points.slice(),
+      t: st.t,
+      trainOn,
+      voltage: st.voltage,
+      length: st.length,
+      rate: st.rate,
+      weight: st.weight,
+      stimuli: st.stimuli.length,
+    });
   }, [mode]);
 
   const blink = useCallback(() => {
@@ -334,20 +462,20 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
     window.setTimeout(() => setFlash(false), 180);
   }, []);
 
-  /** Advance the sweep to sweep time `to`, one sample at a time. */
+  /** Advance the sweep to sweep time `to`, one sample at a time; returns the samples added. */
   const advance = useCallback(
     (to: number) => {
       const st = sim.current;
       const step = cfg.sampleStep;
+      let added = 0;
       while (st.t + step <= to + 1e-9) {
         const t = st.t + step;
         let y = 0;
         if (mode === "fatigue") {
-          const stimulating = st.bouts.some(([a, b]) => t >= a && t < b);
-          st.fatigue = fatigueTick(st.fatigue, step, stimulating, tetanicForce(st.rate, recruitment(st.voltage)));
+          const bout = st.bouts.findIndex(([a, b]) => t >= a && t < b);
+          st.fatigue = fatigueTick(st.fatigue, step, bout !== -1, st.plateau);
           y = st.fatigue.force;
-          const i = st.bouts.findIndex(([a, b]) => t >= a && t < b);
-          if (i !== -1) st.boutPeaks[i] = Math.max(st.boutPeaks[i] ?? 0, y);
+          if (bout !== -1) st.boutPeaks[bout] = Math.max(st.boutPeaks[bout] ?? 0, y);
         } else if (mode === "load") {
           y = st.iso ? (valueAt(st.iso.points, t) ?? 0) : 0;
         } else {
@@ -362,7 +490,9 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
         st.peak = Math.max(st.peak, y);
         st.points.push([t, y]);
         st.t = t;
+        added++;
       }
+      return added;
     },
     [cfg.sampleStep, mode],
   );
@@ -371,8 +501,6 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
     const st = sim.current;
     st.running = false;
     st.train = null;
-    const points = st.points;
-    setTracings((prev) => [...prev, { id: nextId.current++, points }].slice(-MAX_TRACINGS));
     let row: Row;
     switch (mode) {
       case "twitch":
@@ -411,6 +539,13 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
         };
         break;
     }
+    const id = nextId.current++;
+    const label = traceLabel(mode, { ...st, stimuli: st.stimuli.length, rest: row.rest });
+    const points = st.points;
+    setTracings((prev) => {
+      const kept = prev.slice(-(MAX_TRACINGS - 1));
+      return [...kept, { id, points, label, slot: freeSlot(kept) }];
+    });
     setResult(row);
     publish();
   }, [mode, publish]);
@@ -421,12 +556,13 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
       if (!st.running) return;
       const target = Math.min(cfg.xMax, st.t + (now - st.lastReal) * cfg.simPerRealMs);
       st.lastReal = now;
-      advance(target);
+      const added = advance(target);
       if (st.t >= cfg.xMax - cfg.sampleStep / 2) {
         finish();
         return;
       }
-      publish();
+      // A frame too short for a new sample has nothing new to draw.
+      if (added > 0) publish();
       st.raf = requestAnimationFrame(tick);
     },
     [advance, cfg.xMax, cfg.sampleStep, cfg.simPerRealMs, finish, publish],
@@ -443,6 +579,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
     st.lastReal = performance.now();
     st.points = [[0, mode === "length" || mode === "voltage" || mode === "twitch" ? passiveForce(st.length) : 0]];
     if (mode === "load") st.iso = isotonicTwitch(weight, recruitment(voltage), cfg.xMax);
+    if (mode === "fatigue") st.plateau = tetanicForce(rate, recruitment(voltage));
     sim.current = st;
     setResult(null);
     st.raf = requestAnimationFrame(loop);
@@ -490,18 +627,6 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
     setRows((prev) => [...prev, row]);
   };
 
-  const downloadCsv = () => {
-    const header = cfg.columns.map((c) => `"${c.label}"`).join(",");
-    const body = rows.map((r) => cfg.columns.map((c) => fmt(r[c.key], c.digits).replace("—", "")).join(",")).join("\n");
-    const blob = new Blob([`${header}\n${body}\n`], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${exercise.id}-activity-${activity.number}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   // Current readouts: live while the sweep runs, else the last run.
   const liveNow = s.points.length > 0 ? s.points[s.points.length - 1][1] : 0;
   const activation =
@@ -513,8 +638,6 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
         ? Math.min(1, Math.max(0, (liveNow - (mode === "length" || mode === "voltage" || mode === "twitch" ? passiveForce(s.length) : 0)) / cfg.yMax) * 1.6)
         : 0;
   const shortening = mode === "load" && s.running ? liveNow : 0;
-  const measureValue = measure != null ? valueAt(lastPoints, measure) : null;
-  const plot = cfg.plot;
   const running = s.running;
 
   const readouts: [string, string][] = (() => {
@@ -542,8 +665,9 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
             xTicks={cfg.xTicks}
             yMax={cfg.yMax}
             yLabel={cfg.yLabel}
-            tracings={running ? tracings : tracings.slice(0, -1)}
-            live={running ? s.points : (tracings[tracings.length - 1]?.points ?? null)}
+            yUnit={mode === "load" ? "mm" : "g"}
+            tracings={running ? tracings.slice(-(MAX_TRACINGS - 1)) : tracings}
+            live={running ? { id: 0, points: s.points, label: traceLabel(mode, s), slot: freeSlot(tracings.slice(-(MAX_TRACINGS - 1))) } : null}
             measureX={measure}
             onMeasure={setMeasure}
           />
@@ -564,9 +688,6 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
                     onChange={(e) => setMeasure(Number(e.target.value))}
                     aria-label="Measure line time (msec)"
                   />
-                  <span className="lab-measure-read">
-                    t = <b>{measure.toFixed(1)}</b> msec · force = <b>{fmt(measureValue, 2)}</b> g
-                  </span>
                 </>
               )}
             </div>
@@ -621,75 +742,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
         )}
       </div>
 
-      <div className="lab-data">
-        <div className="lab-data-head">
-          <h2>Data</h2>
-          <div className="lab-data-actions">
-            {plot && (
-              <button type="button" className="btn btn-small btn-secondary" onClick={() => setShowPlot((v) => !v)} disabled={rows.length === 0} aria-expanded={showPlot}>
-                {showPlot ? "Hide plot" : "Plot Data"}
-              </button>
-            )}
-            <button type="button" className="btn btn-small btn-secondary" onClick={downloadCsv} disabled={rows.length === 0}>
-              Download CSV
-            </button>
-            <button type="button" className="btn btn-small btn-secondary" onClick={() => setRows([])} disabled={rows.length === 0}>
-              Clear data
-            </button>
-          </div>
-        </div>
-        <div className="lab-table-wrap">
-          <table className="lab-table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                {cfg.columns.map((c) => (
-                  <th key={c.key} scope="col">
-                    {c.label}
-                  </th>
-                ))}
-                <th scope="col">
-                  <span className="lab-sr">Delete</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.length === 0 ? (
-                <tr>
-                  <td colSpan={cfg.columns.length + 2} className="lab-empty">
-                    Stimulate, then Record Data to add a row.
-                  </td>
-                </tr>
-              ) : (
-                rows.map((r, i) => (
-                  <tr key={i}>
-                    <td>{i + 1}</td>
-                    {cfg.columns.map((c) => (
-                      <td key={c.key}>{fmt(r[c.key], c.digits)}</td>
-                    ))}
-                    <td>
-                      <button type="button" className="lab-row-delete" onClick={() => setRows((prev) => prev.filter((_, j) => j !== i))} aria-label={`Delete row ${i + 1}`}>
-                        ×
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-        {plot && showPlot && rows.length > 0 && (
-          <DataPlot
-            xLabel={plot.xLabel}
-            yLabel={plot.yLabel}
-            series={plot.series.map((ser) => ({
-              label: ser.label,
-              tone: ser.tone,
-              points: rows.filter((r) => r[plot.x] != null && r[ser.key] != null).map((r) => [r[plot.x] as number, r[ser.key] as number]),
-            }))}
-          />
-        )}
-      </div>
+      <DataPanel cfg={cfg} rows={rows} setRows={setRows} fileName={`${exercise.id}-activity-${activity.number}.csv`} />
     </div>
   );
 }

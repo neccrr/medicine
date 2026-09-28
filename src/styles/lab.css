@@ -3,8 +3,6 @@
 .lab-page {
   --lab-screen: #0b1612;
   --lab-screen-grid: rgba(120, 220, 180, 0.13);
-  --lab-trace: #7cf3c8;
-  --lab-trace-old: rgba(124, 243, 200, 0.38);
   --lab-screen-text: #9cc7b6;
   --lab-measure: #f5d565;
   --lab-metal: #9aa5a1;
@@ -309,14 +307,71 @@
 
 .lab-scope-trace {
   fill: none;
-  stroke: var(--lab-trace);
-  stroke-width: 2;
+  stroke-width: 1.6;
   stroke-linejoin: round;
+  stroke-linecap: round;
+  transition: opacity 0.15s ease;
 }
 
-.lab-scope-trace.is-old {
-  stroke: var(--lab-trace-old);
-  stroke-width: 1.4;
+/* Each tracing has its own colour (set inline); the newest, or the one hovered in the legend,
+   is drawn heavier, and hovering one fades the rest. */
+.lab-scope-trace.is-latest {
+  stroke-width: 2.4;
+}
+
+.lab-scope-trace.is-muted {
+  opacity: 0.25;
+}
+
+.lab-scope-crosshair {
+  stroke: var(--lab-screen-text);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.lab-scope-dot {
+  stroke: var(--lab-screen);
+  stroke-width: 2;
+}
+
+.lab-scope-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.9rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.lab-scope-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: default;
+}
+
+.lab-scope-legend li.is-focus {
+  color: var(--text);
+}
+
+.lab-scope-legend i {
+  display: inline-block;
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.lab-scope-legend b {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lab-scope-legend-x {
+  font-family: var(--font-mono);
+  color: var(--text);
 }
 
 .lab-scope-measure {
@@ -357,10 +412,6 @@
   accent-color: var(--lab-measure);
 }
 
-.lab-measure-read {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-}
 
 .lab-controls {
   display: grid;
@@ -705,7 +756,7 @@
   }
 
   .lab-scope-label {
-    font-size: 18px;
+    font-size: 15px;
   }
 
   /* The trace gets the full width; the apparatus sits small underneath. */
@@ -718,7 +769,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .lab-activity-link,
-  .lab-rig-muscle {
+  .lab-rig-muscle,
+  .lab-scope-trace {
     transition: none;
   }
 }
