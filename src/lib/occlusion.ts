@@ -1,4 +1,5 @@
-import type { Flashcard, OcclusionMask, OcclusionNote } from "../types/content";
+import type { CardState, Flashcard, OcclusionMask, OcclusionNote } from "../types/content";
+import { isDue } from "./sm2";
 
 /** One card per hidden label: "{noteId}:{maskId}". */
 export function occlusionCardId(note: OcclusionNote, mask: OcclusionMask): string {
@@ -8,6 +9,9 @@ export function occlusionCardId(note: OcclusionNote, mask: OcclusionMask): strin
 export interface OcclusionCard extends Flashcard {
   note: OcclusionNote;
   mask: OcclusionMask;
+  /** Position in the whole deck, and of its figure among the figures: navigation follows these. */
+  order: number;
+  noteIndex: number;
 }
 
 /**
@@ -16,7 +20,8 @@ export interface OcclusionCard extends Flashcard {
  * "hardest cards" work on it unchanged.
  */
 export function occlusionCards(notes: readonly OcclusionNote[]): OcclusionCard[] {
-  return notes.flatMap((note) =>
+  let order = 0;
+  return notes.flatMap((note, noteIndex) =>
     note.masks.map((mask) => ({
       id: occlusionCardId(note, mask),
       front: `${note.title}: ${mask.label}`,
@@ -24,8 +29,47 @@ export function occlusionCards(notes: readonly OcclusionNote[]): OcclusionCard[]
       tags: [note.region],
       note,
       mask,
+      order: order++,
+      noteIndex,
     })),
   );
+}
+
+type Positioned = Pick<OcclusionCard, "order" | "noteIndex">;
+
+/**
+ * The label after (dir 1) or before (dir -1) `current` in `queue`, by deck order, wrapping round.
+ * `current` need not be in the queue (a label just graded, or one opened from another figure).
+ */
+export function stepLabel<T extends Positioned>(queue: readonly T[], current: Positioned, dir: 1 | -1): T | undefined {
+  if (queue.length === 0) return undefined;
+  if (dir === 1) return queue.find((c) => c.order > current.order) ?? queue[0];
+  return queue.findLast((c) => c.order < current.order) ?? queue[queue.length - 1];
+}
+
+/** The first queued label of the next (dir 1) or previous (dir -1) figure that has any, wrapping round. */
+export function stepFigure<T extends Positioned>(queue: readonly T[], current: Positioned, dir: 1 | -1): T | undefined {
+  if (queue.length === 0) return undefined;
+  if (dir === 1) return queue.find((c) => c.noteIndex > current.noteIndex) ?? queue[0];
+  const prev = queue.findLast((c) => c.noteIndex < current.noteIndex) ?? queue[queue.length - 1];
+  return queue.find((c) => c.noteIndex === prev.noteIndex);
+}
+
+export type LabelStatus = "new" | "due" | "learning" | "mastered";
+
+/** Where a label stands: never seen, due now, scheduled, or on an interval of three weeks or more. */
+export function labelStatus(state: CardState | undefined, at = new Date()): LabelStatus {
+  if (!state) return "new";
+  if (isDue(state, at)) return "due";
+  return state.interval >= 21 ? "mastered" : "learning";
+}
+
+/** A review interval in days as a short label: "1d", "6d", "3w", "4mo". */
+export function formatInterval(days: number): string {
+  if (days < 14) return `${Math.max(1, Math.round(days))}d`;
+  if (days < 60) return `${Math.round(days / 7)}w`;
+  if (days < 365) return `${Math.round(days / 30)}mo`;
+  return `${(days / 365).toFixed(1).replace(/\.0$/, "")}y`;
 }
 
 export interface ViewBox {

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { flashcardDecks, flashcardSubjects, keyOf, occlusionKeys, subjectKey } from "../lib/content";
+import { flashcardDecks, flashcardSubjects, keyOf, subjectKey } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
 import { GRADES } from "../lib/grades";
 import { EmptyState } from "../components/EmptyState";
-import { OcclusionIcon, SpeakerIcon } from "../components/icons";
+import { SpeakerIcon } from "../components/icons";
 import { subjectHue, subjectHueStyle } from "../lib/subjectStyle";
 import type { Flashcard } from "../types/content";
 
@@ -131,19 +131,6 @@ export function FlashcardStudy() {
         {stats.due} due · {stats.mastered}/{stats.total} mastered
         {selectedTags.length > 0 && ` · filtered to ${filteredDeck.length} card${filteredDeck.length === 1 ? "" : "s"}`}
       </p>
-
-      {occlusionKeys.includes(key) && (
-        <Link to={`/flashcards/${blockId}/${subjectId}/occlusion`} className="io-callout">
-          <span className="io-callout-icon">
-            <OcclusionIcon />
-          </span>
-          <span>
-            <strong>Image occlusion</strong>
-            <span>Atlas figures with their labels covered: name each one, Anki-style.</span>
-          </span>
-          <span aria-hidden="true">→</span>
-        </Link>
-      )}
 
       {allTags.length > 0 && (
         <div className="tag-filter-row">

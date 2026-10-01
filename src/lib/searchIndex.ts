@@ -39,6 +39,7 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "modules", title: "Modules", detail: "Original lecture slide PDFs", to: "/modules" },
   { type: "page", id: "ebooks", title: "Ebooks", detail: "Chapter readers", to: "/ebooks" },
   { type: "page", id: "summaries", title: "Summaries", detail: "Written subject summaries", to: "/summaries" },
+  { type: "page", id: "occlusion", title: "Image Occlusion", detail: "Anki-style labelled atlas figures", to: "/occlusion", keywords: "anki image occlusion anatomy labels figures atlas" },
   { type: "page", id: "lab", title: "Virtual Lab", detail: "PhysioEx-style skeletal muscle simulator", to: "/lab", keywords: "physioex dry lab praktikum simulation muscle" },
   ...labExercises.flatMap((e) =>
     e.activities.map((a) => ({
@@ -67,11 +68,11 @@ function subjectDocs(): SearchDoc[] {
     ...flashcardSubjects
       .filter((s) => occlusionKeys.includes(keyOf(s)))
       .map((s) => ({
-        type: "flashcard" as const,
-        id: `fo-${keyOf(s)}`,
+        type: "page" as const,
+        id: `io-${keyOf(s)}`,
         title: `${s.label} image occlusion`,
         detail: `Block ${s.blockId} atlas figures with hidden labels`,
-        to: `/flashcards/${s.blockId}/${s.id}/occlusion`,
+        to: `/occlusion/${s.blockId}/${s.id}`,
         keywords: "anki image occlusion labels atlas figures diagram",
       })),
     ...quizSubjects.map((s) => ({

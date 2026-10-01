@@ -18,7 +18,7 @@ describe("pageMeta", () => {
   it("covers every subject and ebook chapter", () => {
     const paths = indexablePaths();
     for (const s of flashcardSubjects) expect(paths).toContain(`/flashcards/${keyOf(s)}`);
-    for (const key of occlusionKeys) expect(paths).toContain(`/flashcards/${key}/occlusion`);
+    for (const key of occlusionKeys) expect(paths).toContain(`/occlusion/${key}`);
     const [key, book] = Object.entries(ebookMeta)[0];
     expect(paths).toContain(`/ebooks/${key}/${book.chapters[0].id}`);
   });
@@ -28,7 +28,8 @@ describe("pageMeta", () => {
     expect(pageMeta("/flashcards/9.9/nothing").indexable).toBe(false);
     expect(pageMeta("/nope").indexable).toBe(false);
     expect(pageMeta("/ebooks/1.2/anatomy/chapter-99").indexable).toBe(false);
-    expect(pageMeta("/flashcards/1.1/biochem/occlusion").indexable).toBe(false);
+    expect(pageMeta("/occlusion/1.1/biochem").indexable).toBe(false);
+    expect(pageMeta("/flashcards/1.2/anatomy/occlusion").indexable).toBe(false);
   });
 });
 
@@ -40,9 +41,9 @@ describe("breadcrumbs", () => {
     expect(trail.at(-1)!.path).toBe(`/ebooks/${key}/${book.chapters[0].id}`);
   });
 
-  it("names the image-occlusion page under its subject's flashcards", () => {
-    const trail = breadcrumbs("/flashcards/1.2/anatomy/occlusion");
-    expect(trail.map((c) => c.name).slice(0, 2)).toEqual(["Home", "Flashcards"]);
-    expect(trail.at(-1)).toEqual({ name: "Image occlusion", path: "/flashcards/1.2/anatomy/occlusion" });
+  it("puts image occlusion in its own section", () => {
+    const trail = breadcrumbs("/occlusion/1.2/anatomy");
+    expect(trail.map((c) => c.name).slice(0, 2)).toEqual(["Home", "Image Occlusion"]);
+    expect(trail.at(-1)!.path).toBe("/occlusion/1.2/anatomy");
   });
 });

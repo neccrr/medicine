@@ -35,6 +35,9 @@ export function migratedKey(
   key: string,
   subjectsByType: Partial<Record<string, Subject[]>> = SUBJECT_SCOPED_TYPES,
 ): string | null {
+  // Image-occlusion reviews were briefly kept inside the flashcard keys.
+  const occlusion = key.match(/^medicine:flashcards:([^/]+\/[^/]+)\/occlusion$/);
+  if (occlusion) return storageKey("occlusion", occlusion[1]);
   const match = key.match(/^medicine:([a-z]+):([^/]+)$/);
   if (!match) return null;
   const [, type, subjectId] = match;

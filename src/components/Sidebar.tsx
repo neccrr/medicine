@@ -12,6 +12,7 @@ import {
   CardsIcon,
   FlaskIcon,
   HomeIcon,
+  OcclusionIcon,
   ProgressIcon,
   QuizIcon,
   SearchIcon,
@@ -25,6 +26,7 @@ import {
 const links: { to: string; label: string; end?: boolean; icon: ReactNode }[] = [
   { to: "/", label: "Home", end: true, icon: <HomeIcon /> },
   { to: "/flashcards", label: "Flashcards", icon: <CardsIcon /> },
+  { to: "/occlusion", label: "Image Occlusion", icon: <OcclusionIcon /> },
   { to: "/quizzes", label: "Quizzes", icon: <QuizIcon /> },
   { to: "/exam", label: "Exam", icon: <TimerIcon /> },
   { to: "/modules", label: "Modules", icon: <SlidesIcon /> },

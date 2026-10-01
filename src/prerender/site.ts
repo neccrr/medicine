@@ -15,6 +15,7 @@ import {
   keyOf,
   loadEbookChapter,
   loadOcclusionNotes,
+  occlusionKeys,
   modulesByBlockSubject,
   moduleSubjects,
   quizBanks,
@@ -34,6 +35,7 @@ const esc = (s: string) =>
 
 const SECTION_LINKS: [string, string][] = [
   ["/flashcards", "Flashcards"],
+  ["/occlusion", "Image Occlusion"],
   ["/quizzes", "Quizzes"],
   ["/exam", "Exam"],
   ["/modules", "Modules"],
@@ -101,13 +103,13 @@ async function content(path: string): Promise<string> {
         .map((b) => `<li><a href="/exam/${b.id}">${esc(b.label)}</a></li>`)
         .join("")}</ul>`;
 
+    case "occlusion":
+      return `<ul>${occlusionKeys.map((k) => `<li><a href="/occlusion/${k}">${esc(flashcardSubjects.find((s) => keyOf(s) === k)?.label ?? k)}</a></li>`).join("")}</ul>`;
+    case "occlusion/*": {
+      const notes = (await loadOcclusionNotes(key)) ?? [];
+      return `<h2>Figures</h2><ul>${notes.map((n) => `<li>${esc(n.title)} (${n.masks.length} labels)</li>`).join("")}</ul>`;
+    }
     case "flashcards/*":
-      if (chapterId === "occlusion") {
-        const notes = (await loadOcclusionNotes(key)) ?? [];
-        return `<h2>Figures in this deck</h2><ul>${notes
-          .map((n) => `<li>${esc(n.title)} (${n.masks.length} labels)</li>`)
-          .join("")}</ul>`;
-      }
       return `<h2>Cards in this deck</h2><ul>${(flashcardDecks[key] ?? []).map((c) => `<li>${esc(c.front)}</li>`).join("")}</ul>`;
     case "quizzes/*":
       return `<h2>Questions</h2><ol>${(quizBanks[key] ?? []).map((q) => `<li>${esc(q.question)}</li>`).join("")}</ol>`;

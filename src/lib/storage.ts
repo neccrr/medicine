@@ -37,6 +37,8 @@ export function writeJSON<T>(key: string, value: T): void {
 export const STORAGE_KEYS = {
   cardState: (key: string) => storageKey("flashcards", key),
   tagFilter: (key: string) => storageKey("tagfilter", key),
+  occlusionState: (key: string) => storageKey("occlusion", key),
+  occlusionPrefs: (key: string) => storageKey("occlusionprefs", key),
   quizProgress: (key: string) => storageKey("quiz", key),
   quizDue: (key: string) => storageKey("quizdue", key),
   quizInProgress: (key: string) => storageKey("quizinprogress", key),

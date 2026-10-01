@@ -20,7 +20,7 @@ export const POINTS = {
 } as const;
 
 /** The progress types that score, from the key registry. */
-const SCORED_TYPES: ReadonlySet<string> = new Set<KeyTypeName>(["flashcards", "quiz", "examhistory", "ebookdone", "activity"]);
+const SCORED_TYPES: ReadonlySet<string> = new Set<KeyTypeName>(["flashcards", "occlusion", "quiz", "examhistory", "ebookdone", "activity"]);
 
 /** What one progress key contributes. Only the fields that key's type produces are set. */
 export interface ScorePart {
@@ -84,7 +84,7 @@ export function partField(key: string): string {
 /** What one progress key's value contributes to the score. */
 export function partFor(key: string, value: unknown, now = Date.now()): ScorePart {
   const type = parseKey(key)?.type;
-  if (type === "flashcards") {
+  if (type === "flashcards" || type === "occlusion") {
     const cards = isRecord(value) ? Object.values(value).slice(0, 5000) : [];
     return { cardsLearned: cards.filter((c) => isRecord(c) && isInt(c.reps, 10_000) && c.reps >= 1).length };
   }

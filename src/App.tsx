@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { CommandPalette } from "./components/CommandPalette";
 import { PulseLine } from "./components/PulseLine";
@@ -18,6 +18,9 @@ const FlashcardSubjects = lazy(() =>
 );
 const FlashcardStudy = lazy(() =>
   import("./pages/FlashcardStudy").then((m) => ({ default: m.FlashcardStudy })),
+);
+const OcclusionSubjects = lazy(() =>
+  import("./pages/OcclusionSubjects").then((m) => ({ default: m.OcclusionSubjects })),
 );
 const OcclusionStudy = lazy(() =>
   import("./pages/OcclusionStudy").then((m) => ({ default: m.OcclusionStudy })),
@@ -54,6 +57,12 @@ const LabActivityPage = lazy(() =>
 );
 const Account = lazy(() => import("./pages/Account").then((m) => ({ default: m.Account })));
 
+/** Image occlusion briefly lived under the flashcards. */
+function OldOcclusionRedirect() {
+  const { blockId, subjectId } = useParams();
+  return <Navigate to={`/occlusion/${blockId}/${subjectId}`} replace />;
+}
+
 function RouteFallback() {
   return (
     <div className="route-loading" role="status" aria-label="Loading page">
@@ -78,7 +87,9 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/flashcards" element={<FlashcardSubjects />} />
           <Route path="/flashcards/:blockId/:subjectId" element={<FlashcardStudy />} />
-          <Route path="/flashcards/:blockId/:subjectId/occlusion" element={<OcclusionStudy />} />
+          <Route path="/flashcards/:blockId/:subjectId/occlusion" element={<OldOcclusionRedirect />} />
+          <Route path="/occlusion" element={<OcclusionSubjects />} />
+          <Route path="/occlusion/:blockId/:subjectId" element={<OcclusionStudy />} />
           <Route path="/quizzes" element={<QuizSubjects />} />
           <Route path="/quizzes/:blockId/:subjectId" element={<QuizPlay />} />
           <Route path="/exam" element={<ExamBlocks />} />

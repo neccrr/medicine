@@ -23,6 +23,7 @@ describe("computeStats", () => {
     const { stats, runEnd, runLength } = computeStats(
       [
         { key: "medicine:flashcards:1.2/anatomy", value: { a: card(2), b: card(0), c: card(1) } },
+        { key: "medicine:occlusion:1.2/anatomy", value: { "fig:m0": card(1), "fig:m1": card(0) } },
         { key: quizKey, value: attempts(7, 9) },
         { key: "medicine:examhistory:1.1", value: [{ score: 60, total: 100 }] },
         { key: "medicine:ebookdone:1.2/anatomy", value: ["chapter-01", "chapter-02", "chapter-01"] },
@@ -31,7 +32,7 @@ describe("computeStats", () => {
       ],
       NOW,
     );
-    expect(stats).toEqual({ correctAnswers: 76, cardsLearned: 2, chaptersFinished: 2, studyDays: 4, points: 76 + 4 + 20 + 20 });
+    expect(stats).toEqual({ correctAnswers: 76, cardsLearned: 3, chaptersFinished: 2, studyDays: 4, points: 76 + 6 + 20 + 20 });
     expect([runEnd, runLength]).toEqual(["2026-09-26", 3]);
   });
 

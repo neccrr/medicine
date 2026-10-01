@@ -30,6 +30,10 @@ describe("migratedKey", () => {
     expect(migratedKey("medicine:ebook:physiology", subjects)).toBe("medicine:ebook:1.2/physiology");
   });
 
+  it("moves image-occlusion reviews out of the flashcard keys", () => {
+    expect(migratedKey("medicine:flashcards:1.2/anatomy/occlusion", subjects)).toBe("medicine:occlusion:1.2/anatomy");
+  });
+
   it("leaves new keys, global keys and unknown subjects alone", () => {
     expect(migratedKey("medicine:flashcards:1.1/physiology", subjects)).toBeNull();
     expect(migratedKey("medicine:theme", subjects)).toBeNull();

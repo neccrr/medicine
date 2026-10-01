@@ -27,6 +27,8 @@ export interface KeyType {
 export const KEY_TYPES = {
   flashcards: { id: "subject", sync: "cards", about: "SM-2 review state per card id" },
   tagfilter: { id: "subject", sync: "latest", about: "Selected flashcard tags" },
+  occlusion: { id: "subject", sync: "cards", about: "SM-2 review state per image-occlusion label" },
+  occlusionprefs: { id: "subject", sync: "latest", about: "Image occlusion: mode, regions, last label, view toggles" },
   quiz: { id: "subject", sync: "attempts", about: "Quiz attempts: score, total, date, missed ids" },
   quizdue: { id: "subject", sync: "latest", about: "Quiz question ids due for review" },
   quizinprogress: { id: "subject", sync: false, about: "Snapshot of an unfinished quiz (large, device-only)" },

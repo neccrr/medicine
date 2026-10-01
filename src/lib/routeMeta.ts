@@ -66,6 +66,16 @@ const SECTIONS: Record<string, { name: string; meta: PageMeta }> = {
       indexable: true,
     },
   },
+  occlusion: {
+    name: "Image Occlusion",
+    meta: {
+      title: titled("Anatomy Image Occlusion"),
+      description: describe(
+        "Anki-style image occlusion for anatomy: atlas figures with their labels covered. Name each label, reveal it and grade yourself; every label has its own review schedule.",
+      ),
+      indexable: true,
+    },
+  },
   quizzes: {
     name: "Quizzes",
     meta: {
@@ -176,7 +186,7 @@ export function pageMeta(pathname: string): PageMeta {
   const key = subjectKey(blockId, subjectId);
   const where = `${blockLabel(blockId)}`;
 
-  if (section === "flashcards" && parts.length === 4 && chapterId === "occlusion") {
+  if (section === "occlusion" && parts.length === 3) {
     const subject = findSubject(flashcardSubjects, blockId, subjectId);
     if (!subject || !occlusionKeys.includes(key)) return NOT_FOUND;
     return {
@@ -259,9 +269,7 @@ export function breadcrumbs(pathname: string): Crumb[] {
   if (section !== "exam" && blockId && subjectId) {
     const bookTitle = section === "ebooks" ? ebookMeta[subjectKey(blockId, subjectId)]?.title : undefined;
     crumbs.push({ name: bookTitle ?? pageMeta(`/${section}/${blockId}/${subjectId}`).title.replace(` · ${SITE_NAME}`, ""), path: `/${section}/${blockId}/${subjectId}` });
-    if (section === "flashcards" && chapterId === "occlusion") {
-      crumbs.push({ name: "Image occlusion", path: `/flashcards/${blockId}/${subjectId}/occlusion` });
-    } else if (chapterId) {
+    if (chapterId) {
       const chapter = ebookMeta[subjectKey(blockId, subjectId)]?.chapters.find((c) => c.id === chapterId);
       if (chapter) crumbs.push({ name: chapter.title, path: `/${section}/${blockId}/${subjectId}/${chapterId}` });
     }
@@ -275,10 +283,10 @@ export function breadcrumbs(pathname: string): Crumb[] {
 
 /** Every page that should be in search results, in a stable order. */
 export function indexablePaths(): string[] {
-  const paths = ["/", "/flashcards", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab"];
+  const paths = ["/", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab"];
   for (const e of labExercises) for (const a of e.activities) paths.push(`/lab/${e.id}/${a.slug}`);
   for (const s of flashcardSubjects) paths.push(`/flashcards/${keyOf(s)}`);
-  for (const key of occlusionKeys) paths.push(`/flashcards/${key}/occlusion`);
+  for (const key of occlusionKeys) paths.push(`/occlusion/${key}`);
   for (const s of quizSubjects) paths.push(`/quizzes/${keyOf(s)}`);
   for (const block of studyBlocks) {
     if (!blockHasExam(block.id)) continue;

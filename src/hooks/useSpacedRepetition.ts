@@ -6,11 +6,9 @@ import { recordActivity } from "../lib/activity";
 import { rankHardestCards } from "../lib/hardestCards";
 import { useLocalStorage } from "./useLocalStorage";
 
-export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
-  const [stateMap, setStateMap] = useLocalStorage<CardStateMap>(
-    STORAGE_KEYS.cardState(deckId),
-    {},
-  );
+/** `storageKey` defaults to the flashcard deck's key; image occlusion keeps its own. */
+export function useSpacedRepetition(deckId: string, cards: Flashcard[], storageKey = STORAGE_KEYS.cardState(deckId)) {
+  const [stateMap, setStateMap] = useLocalStorage<CardStateMap>(storageKey, {});
 
   const stateFor = (cardId: string): CardState =>
     stateMap[cardId] ?? INITIAL_CARD_STATE;
@@ -29,6 +27,16 @@ export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
     recordActivity();
   };
 
+  /** Puts a card back to an earlier state (undo); undefined makes it new again. */
+  const restore = (cardId: string, state: CardState | undefined) => {
+    setStateMap((prev) => {
+      const next = { ...prev };
+      if (state) next[cardId] = state;
+      else delete next[cardId];
+      return next;
+    });
+  };
+
   const stats = useMemo(() => {
     const total = cards.length;
     const seen = cards.filter((c) => stateMap[c.id]).length;
@@ -43,5 +51,5 @@ export function useSpacedRepetition(deckId: string, cards: Flashcard[]) {
     [cards, stateMap],
   );
 
-  return { stateFor, dueCards, grade, stats, hardestCards };
+  return { stateMap, stateFor, dueCards, grade, restore, stats, hardestCards };
 }

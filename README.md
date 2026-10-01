@@ -99,7 +99,11 @@ account environment variables it runs as a plain static site.
 - Tag filtering (remembered per deck), with color-coded tag pills
 - "Hardest cards" ranked by lapses, per deck and globally on the Progress page
 - Optional card images and read-aloud (Web Speech API)
-- Anki-style **image occlusion** (anatomy): atlas figures with their labels covered, one label asked at a time, each on its own SM-2 schedule; hide all or just the asked label, zoom in on small labels, filter by body region
+
+**Image Occlusion** (anatomy)
+- Anki-style: atlas figures with their labels covered; name the one under the red box, reveal it, grade it. Every label has its own SM-2 schedule, with the next interval shown on each grade button
+- Review (what's due) or Browse all (every figure in order): previous/next label and figure, tap any box or numbered chip to ask that label, swipe on phones
+- Gallery of every figure with its progress, colour-coded label chips (new, due, learning, mastered), undo the last grade, show every label to study a figure whole, zoom, hide all or one, filter by region; picks up where you left off
 
 **Quizzes**
 - One question at a time with instant feedback and an explanation for every answer
@@ -257,7 +261,7 @@ cached the first time it's opened.
 |---|---|
 | `/` | Home: streak, stat tiles, "continue" list, tip of the day, per-block subject cards |
 | `/flashcards` → `/flashcards/:blockId/:subjectId` | Subject list with due counts → SM-2 review session |
-| `/flashcards/:blockId/:subjectId/occlusion` | Image occlusion: name the covered label, reveal, grade |
+| `/occlusion` → `/occlusion/:blockId/:subjectId` | Subjects with figures → image occlusion (review or browse, figure gallery) |
 | `/quizzes` → `/quizzes/:blockId/:subjectId` | Subject list with last score and due counts → quiz (with section picker for large banks) |
 | `/exam` → `/exam/:blockId[/:packageId]` | Block list → package picker → timed exam |
 | `/modules` → `/modules/:blockId/:subjectId` | Subjects with PDFs → sectioned PDF viewer |
@@ -278,7 +282,7 @@ Every page is code-split and loaded on demand.
 | Anywhere | **⌘K / Ctrl+K**: command palette |
 | Anywhere (desktop) | **⌘\\ / Ctrl+\\**: collapse or expand the sidebar |
 | Flashcards | **Space / Enter**: flip · **1–5**: grade (Blackout → Easy) |
-| Image occlusion | **Space / Enter**: reveal · **1–5**: grade · **H**: hide all / hide one · **Z**: zoom |
+| Image occlusion | **Space**: reveal · **1–5**: grade · **← →**: previous/next label · **Shift+← →** or **[ ]**: previous/next figure · **G**: gallery · **A**: show all labels · **H**: hide all / one · **Z**: zoom · **U** or **Ctrl+Z**: undo |
 | Quiz | **A–E** or **1–5**: answer · **Enter / Space**: continue · **← →**: previous/next question |
 | Exam | **A–E** or **1–5**: answer · **← →**: previous/next question |
 
