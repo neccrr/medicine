@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ebookMeta, flashcardSubjects, keyOf, occlusionKeys } from "./content";
-import { breadcrumbs, indexablePaths, pageMeta, PRIVATE_PATHS } from "./routeMeta";
+import { allSubjects, breadcrumbs, indexablePaths, pageMeta, PRIVATE_PATHS, subjectSections } from "./routeMeta";
 
 describe("pageMeta", () => {
   it("gives every indexable page its own title and a description within the snippet length", () => {
@@ -19,6 +19,7 @@ describe("pageMeta", () => {
     const paths = indexablePaths();
     for (const s of flashcardSubjects) expect(paths).toContain(`/flashcards/${keyOf(s)}`);
     for (const key of occlusionKeys) expect(paths).toContain(`/occlusion/${key}`);
+    for (const s of allSubjects()) expect(paths).toContain(`/subjects/${s.key}`);
     const [key, book] = Object.entries(ebookMeta)[0];
     expect(paths).toContain(`/ebooks/${key}/${book.chapters[0].id}`);
   });
@@ -29,6 +30,7 @@ describe("pageMeta", () => {
     expect(pageMeta("/nope").indexable).toBe(false);
     expect(pageMeta("/ebooks/1.2/anatomy/chapter-99").indexable).toBe(false);
     expect(pageMeta("/occlusion/1.1/biochem").indexable).toBe(false);
+    expect(pageMeta("/subjects/9.9/nothing").indexable).toBe(false);
     expect(pageMeta("/flashcards/1.2/anatomy/occlusion").indexable).toBe(false);
   });
 });
@@ -45,5 +47,11 @@ describe("breadcrumbs", () => {
     const trail = breadcrumbs("/occlusion/1.2/anatomy");
     expect(trail.map((c) => c.name).slice(0, 2)).toEqual(["Home", "Image Occlusion"]);
     expect(trail.at(-1)!.path).toBe("/occlusion/1.2/anatomy");
+  });
+
+  it("gives every subject page at least one section to link to", () => {
+    for (const s of allSubjects()) expect(subjectSections(s.key).length, s.key).toBeGreaterThan(0);
+    expect(subjectSections("1.2/anatomy").map((x) => x.path)).toContain("/occlusion/1.2/anatomy");
+    expect(breadcrumbs("/subjects/1.2/anatomy").map((c) => c.name).slice(0, 2)).toEqual(["Home", "Subjects"]);
   });
 });

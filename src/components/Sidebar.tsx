@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { StreakBadge } from "./StreakBadge";
@@ -11,6 +11,7 @@ import {
   BookIcon,
   CardsIcon,
   FlaskIcon,
+  GridIcon,
   HomeIcon,
   OcclusionIcon,
   ProgressIcon,
@@ -23,21 +24,126 @@ import {
   UserIcon,
 } from "./icons";
 
-const links: { to: string; label: string; end?: boolean; icon: ReactNode }[] = [
-  { to: "/", label: "Home", end: true, icon: <HomeIcon /> },
-  { to: "/flashcards", label: "Flashcards", icon: <CardsIcon /> },
-  { to: "/occlusion", label: "Image Occlusion", icon: <OcclusionIcon /> },
-  { to: "/quizzes", label: "Quizzes", icon: <QuizIcon /> },
-  { to: "/exam", label: "Exam", icon: <TimerIcon /> },
-  { to: "/modules", label: "Modules", icon: <SlidesIcon /> },
-  { to: "/ebooks", label: "Ebooks", icon: <BookIcon /> },
-  { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
-  { to: "/lab", label: "Virtual Lab", icon: <FlaskIcon /> },
-  { to: "/search", label: "Search", icon: <SearchIcon /> },
-  { to: "/progress", label: "Progress", icon: <ProgressIcon /> },
-  { to: "/leaderboard", label: "Leaderboard", icon: <TrophyIcon /> },
-  { to: "/account", label: "Account", icon: <UserIcon /> },
+interface NavItem {
+  to: string;
+  label: string;
+  end?: boolean;
+  icon: ReactNode;
+}
+
+interface NavGroup {
+  /** Shown above the group in the sidebar; the first group has none. */
+  label?: string;
+  items: NavItem[];
+}
+
+// Grouped by what the student is doing. Search lives in the sidebar footer (and the phone tab
+// bar), so it isn't repeated here.
+const groups: NavGroup[] = [
+  {
+    items: [
+      { to: "/", label: "Home", end: true, icon: <HomeIcon /> },
+      { to: "/subjects", label: "Subjects", icon: <GridIcon /> },
+    ],
+  },
+  {
+    label: "Study",
+    items: [
+      { to: "/flashcards", label: "Flashcards", icon: <CardsIcon /> },
+      { to: "/occlusion", label: "Image Occlusion", icon: <OcclusionIcon /> },
+      { to: "/quizzes", label: "Quizzes", icon: <QuizIcon /> },
+      { to: "/exam", label: "Exam", icon: <TimerIcon /> },
+    ],
+  },
+  {
+    label: "Read",
+    items: [
+      { to: "/ebooks", label: "Ebooks", icon: <BookIcon /> },
+      { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
+      { to: "/modules", label: "Modules", icon: <SlidesIcon /> },
+    ],
+  },
+  { label: "Practise", items: [{ to: "/lab", label: "Virtual Lab", icon: <FlaskIcon /> }] },
+  {
+    label: "You",
+    items: [
+      { to: "/progress", label: "Progress", icon: <ProgressIcon /> },
+      { to: "/leaderboard", label: "Leaderboard", icon: <TrophyIcon /> },
+      { to: "/account", label: "Account", icon: <UserIcon /> },
+    ],
+  },
 ];
+
+/** The phone tab bar: two direct tabs and three that open their group as a sheet. */
+const tabs: { id: string; label: string; icon: ReactNode; to?: string; items?: NavItem[] }[] = [
+  { id: "home", label: "Home", icon: <HomeIcon />, to: "/" },
+  { id: "study", label: "Study", icon: <CardsIcon />, items: [...groups[1].items, ...groups[3].items] },
+  { id: "read", label: "Read", icon: <BookIcon />, items: groups[2].items },
+  { id: "search", label: "Search", icon: <SearchIcon />, to: "/search" },
+  { id: "me", label: "Me", icon: <UserIcon />, items: groups[4].items },
+];
+
+const inSection = (pathname: string, to: string) => (to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`));
+
+/** Bottom navigation for phones; the sidebar stays reachable from the top bar's menu button. */
+export function MobileTabBar() {
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState<string | null>(null);
+  // A new page closes the sheet that led to it.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (lastPath !== pathname) {
+    setLastPath(pathname);
+    setOpen(null);
+  }
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  const sheet = tabs.find((t) => t.id === open);
+  return (
+    <>
+      {sheet?.items && (
+        <div className="tabsheet-backdrop" onClick={() => setOpen(null)}>
+          <div className="tabsheet" role="dialog" aria-modal="true" aria-label={sheet.label} onClick={(e) => e.stopPropagation()}>
+            <span className="tabsheet-handle" aria-hidden="true" />
+            <h2 className="tabsheet-title">{sheet.label}</h2>
+            <div className="tabsheet-grid">
+              {sheet.items.map((item) => (
+                <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? "tabsheet-link active" : "tabsheet-link")}>
+                  <span className="tabsheet-icon">{item.icon}</span>
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      <nav className="tabbar" aria-label="Sections">
+        {tabs.map((tab) => {
+          // Subject pages sit under Home: they're reached from its subject cards.
+          const active = tab.to
+            ? inSection(pathname, tab.to) || (tab.id === "home" && inSection(pathname, "/subjects"))
+            : tab.items!.some((i) => inSection(pathname, i.to));
+          const cls = `tabbar-item${active ? " active" : ""}${open === tab.id ? " open" : ""}`;
+          return tab.to ? (
+            <NavLink key={tab.id} to={tab.to} end={tab.to === "/"} className={cls} aria-current={active ? "page" : undefined}>
+              {tab.icon}
+              <span>{tab.label}</span>
+            </NavLink>
+          ) : (
+            <button key={tab.id} type="button" className={cls} aria-expanded={open === tab.id} aria-haspopup="dialog" onClick={() => setOpen((o) => (o === tab.id ? null : tab.id))}>
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+    </>
+  );
+}
 
 const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform ?? navigator.userAgent);
 
@@ -179,15 +285,6 @@ export function Sidebar() {
           <div className="topbar-actions">
             <StreakBadge />
             <QuizDueBadge />
-            <button
-              type="button"
-              className="icon-btn"
-              onClick={openCommandPalette}
-              aria-label="Open command palette"
-              title="Search & jump to anything"
-            >
-              <SearchIcon />
-            </button>
             <ThemeToggle />
           </div>
         </div>
@@ -239,18 +336,27 @@ export function Sidebar() {
         >
           <span className="sidebar-lens sidebar-lens-active" aria-hidden="true" />
           <span className="sidebar-lens sidebar-lens-hover" aria-hidden="true" />
-          {links.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.end}
-              className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}
-              onClick={() => setDrawerOpen(false)}
-              title={collapsed ? link.label : undefined}
-            >
-              <span className="sidebar-link-icon">{link.icon}</span>
-              <span className="sidebar-link-label">{link.label}</span>
-            </NavLink>
+          {groups.map((group, gi) => (
+            <Fragment key={group.label ?? gi}>
+              {group.label && (
+                <span className="sidebar-group-label" aria-hidden="true">
+                  {group.label}
+                </span>
+              )}
+              {group.items.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.end}
+                  className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}
+                  onClick={() => setDrawerOpen(false)}
+                  title={collapsed ? link.label : undefined}
+                >
+                  <span className="sidebar-link-icon">{link.icon}</span>
+                  <span className="sidebar-link-label">{link.label}</span>
+                </NavLink>
+              ))}
+            </Fragment>
           ))}
         </nav>
 

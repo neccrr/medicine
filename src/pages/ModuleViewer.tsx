@@ -47,7 +47,13 @@ export function ModuleViewer() {
           <button
             type="button"
             className={pdf.url === current.url ? "ebook-toc-link active" : "ebook-toc-link"}
-            onClick={() => setSelectedUrl(pdf.url)}
+            onClick={() => {
+              setSelectedUrl(pdf.url);
+              // On phones the list sits above the viewer: bring the chosen file into view.
+              if (window.matchMedia("(max-width: 720px)").matches) {
+                requestAnimationFrame(() => document.getElementById("module-viewer")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+              }
+            }}
           >
             {pdf.name}
           </button>
@@ -89,7 +95,7 @@ export function ModuleViewer() {
           </nav>
 
           <div className="ebook-content">
-            <div className="pdf-viewer">
+            <div className="pdf-viewer" id="module-viewer">
               <div className="pdf-viewer-bar">
                 <p>{current.name}</p>
                 <a href={current.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">

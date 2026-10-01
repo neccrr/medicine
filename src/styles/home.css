@@ -657,3 +657,55 @@
     position: static;
   }
 }
+
+/* Phones, returning students: a short greeting and one row of numbers, so Continue is on the
+   first screen. */
+@media (max-width: 720px) {
+  .hero-returning {
+    padding-top: 0.25rem;
+  }
+
+  .hero-returning .kicker,
+  .hero-returning .hero-subtitle,
+  .hero-returning .hero-pulse {
+    display: none;
+  }
+
+  .hero-returning .hero-title {
+    font-size: 1.7rem;
+    max-width: none;
+    margin-bottom: 0.25rem;
+  }
+
+  .hero-returning ~ .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .hero-returning ~ .dashboard-stats .stat-tile {
+    min-width: 0;
+    padding: 0.55rem 0.4rem 0.5rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-returning ~ .dashboard-stats .stat-tile::before,
+  .hero-returning ~ .dashboard-stats .stat-tile-icon {
+    display: none;
+  }
+
+  .hero-returning ~ .dashboard-stats .stat-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-returning ~ .dashboard-stats .stat-value {
+    font-size: 1.35rem;
+  }
+
+  .hero-returning ~ .section-divider {
+    margin: 0.75rem 0;
+  }
+}

@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
-import { Sidebar } from "./components/Sidebar";
+import { MobileTabBar, Sidebar } from "./components/Sidebar";
 import { CommandPalette } from "./components/CommandPalette";
 import { PulseLine } from "./components/PulseLine";
 import { UpdateNudge } from "./components/UpdateNudge";
@@ -25,6 +25,8 @@ const OcclusionSubjects = lazy(() =>
 const OcclusionStudy = lazy(() =>
   import("./pages/OcclusionStudy").then((m) => ({ default: m.OcclusionStudy })),
 );
+const SubjectsIndex = lazy(() => import("./pages/SubjectsIndex").then((m) => ({ default: m.SubjectsIndex })));
+const SubjectHub = lazy(() => import("./pages/SubjectHub").then((m) => ({ default: m.SubjectHub })));
 const QuizSubjects = lazy(() =>
   import("./pages/QuizSubjects").then((m) => ({ default: m.QuizSubjects })),
 );
@@ -85,6 +87,8 @@ function AppRoutes() {
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/subjects" element={<SubjectsIndex />} />
+          <Route path="/subjects/:blockId/:subjectId" element={<SubjectHub />} />
           <Route path="/flashcards" element={<FlashcardSubjects />} />
           <Route path="/flashcards/:blockId/:subjectId" element={<FlashcardStudy />} />
           <Route path="/flashcards/:blockId/:subjectId/occlusion" element={<OldOcclusionRedirect />} />
@@ -141,6 +145,7 @@ export default function App() {
                 </a>
               </footer>
             </div>
+            <MobileTabBar />
           </div>
         </BrowserRouter>
       </AccountProvider>

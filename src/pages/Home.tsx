@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import {
   ebookMeta,
@@ -6,15 +6,9 @@ import {
   examPackagesByBlock,
   flashcardDecks,
   flashcardSubjects,
-  moduleSubjects,
-  modulesByBlockSubject,
-  quizBanks,
-  quizGames,
   keyOf,
   quizQuestionsInBlock,
   quizSubjects,
-  summaries,
-  summarySubjects,
   tips,
 } from "../lib/content";
 import { tipOfDay } from "../lib/tipOfDay";
@@ -31,6 +25,7 @@ import { useCountUp } from "../hooks/useCountUp";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
 import { EmptyState } from "../components/EmptyState";
 import { BackupNudge } from "../components/BackupNudge";
+import { buildSubjectOverviews } from "../lib/subjectOverview";
 import {
   AtomIcon,
   BookIcon,
@@ -41,7 +36,6 @@ import {
   PlayCircleIcon,
   QuizIcon,
   SearchIcon,
-  SlidesIcon,
   SummaryIcon,
   TimerIcon,
 } from "../components/icons";
@@ -55,12 +49,6 @@ interface ContinueItem {
   subjectLabel: string;
 }
 
-interface SubjectFacet {
-  label: string;
-  detail: string;
-  to: string;
-  icon: ReactNode;
-}
 
 function buildContinueItems(): ContinueItem[] {
   const items: ContinueItem[] = [];
@@ -148,105 +136,6 @@ function buildContinueItems(): ContinueItem[] {
   return items.slice(0, 4);
 }
 
-function buildSubjectOverviews() {
-  // A subject can have material in more than one block (e.g. physiology in 1.1 and 1.2), so
-  // each block gets its own card, showing only the content whose folder is in that block.
-  const all = [
-    ...flashcardSubjects,
-    ...quizSubjects,
-    ...ebookSubjects,
-    ...summarySubjects,
-    ...moduleSubjects,
-  ];
-  const pairs = new Map<string, { id: string; blockId: string }>();
-  all.forEach((s) => pairs.set(keyOf(s), { id: s.id, blockId: s.blockId }));
-
-  return Array.from(pairs.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, { id, blockId }]) => {
-      const label =
-        all.find((s) => s.id === id && s.blockId === blockId && !moduleSubjects.includes(s))?.label ??
-        id.charAt(0).toUpperCase() + id.slice(1);
-
-      const facets: SubjectFacet[] = [];
-      let activityScore = 0;
-      let mastery: number | null = null;
-
-      const deck = flashcardDecks[key];
-      if (deck) {
-        const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
-        const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
-        const masteredCount = deck.filter((c) => (stateMap[c.id]?.interval ?? 0) >= 21).length;
-        mastery = deck.length > 0 ? (masteredCount / deck.length) * 100 : 0;
-        activityScore += due;
-        facets.push({
-          label: "Flashcards",
-          detail: due > 0 ? `${deck.length} · ${due} due` : `${deck.length} cards`,
-          to: `/flashcards/${blockId}/${id}`,
-          icon: <CardsIcon />,
-        });
-      }
-
-      const bank = quizBanks[key];
-      const games = quizGames[key];
-      if (bank || games) {
-        const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
-        const last = history[history.length - 1];
-        const due = readJSON<string[]>(STORAGE_KEYS.quizDue(key), []).length;
-        activityScore += due;
-        facets.push({
-          label: "Quiz",
-          detail: bank
-            ? due > 0
-              ? `${bank.length} · ${due} due`
-              : last
-                ? `${bank.length} · last ${last.score}/${last.total}`
-                : `${bank.length} questions`
-            : "Interactive",
-          to: `/quizzes/${blockId}/${id}`,
-          icon: <QuizIcon />,
-        });
-      }
-
-      const meta = ebookMeta[key];
-      if (meta) {
-        const completedCount = readJSON<string[]>(STORAGE_KEYS.ebookCompleted(key), []).length;
-        facets.push({
-          label: "Ebook",
-          detail:
-            meta.chapters.length > 0
-              ? completedCount > 0
-                ? `${completedCount}/${meta.chapters.length} complete`
-                : `${meta.chapters.length} chapters`
-              : "Reference PDF",
-          to: `/ebooks/${blockId}/${id}`,
-          icon: <BookIcon />,
-        });
-      }
-
-      if (summaries[key]) {
-        facets.push({
-          label: "Summary",
-          detail: "Written summary",
-          to: `/summaries/${blockId}/${id}`,
-          icon: <SummaryIcon />,
-        });
-      }
-
-      const modulePdfs = modulesByBlockSubject[key];
-      if (modulePdfs) {
-        facets.push({
-          label: "Modules",
-          detail: `${modulePdfs.length} PDF${modulePdfs.length === 1 ? "" : "s"}`,
-          to: `/modules/${blockId}/${id}`,
-          icon: <SlidesIcon />,
-        });
-      }
-
-      return { key, id, blockId, label, facets, activityScore, mastery };
-    });
-}
-
 /** Puts the student's current block (set on the Account page) first. */
 function orderByCurrentBlock<T extends { block: { id: string } }>(groups: T[], currentBlock: string): T[] {
   if (!currentBlock) return groups;
@@ -292,13 +181,13 @@ export function Home() {
 
   return (
     <section className="page dashboard">
-      <div className="hero">
+      <div className={hasActivity ? "hero hero-returning" : "hero"}>
         <PulseLine width={640} height={120} className="hero-pulse" />
         <span className="kicker">Offline-first study tool</span>
         <h1 className="hero-title">{heroTitle}</h1>
         <p className="subtitle hero-subtitle">
-          Flashcards, quizzes, ebooks, and summaries — all static, all local.
-          Your progress lives in this browser. No account, no server round-trip.
+          Flashcards, image occlusion, quizzes, timed exams, ebooks, summaries and a virtual lab, organised by
+          block and subject. Works offline; progress saves on this device and syncs when you sign in.
         </p>
       </div>
 
@@ -414,7 +303,12 @@ export function Home() {
                   <SubjectCover subjectKey={subject.key} />
                   <div className="subject-card-head">
                     <SubjectBadge id={subject.id} label={subject.label} />
-                    <h3>{subject.label}</h3>
+                    <h3>
+                      <Link to={`/subjects/${subject.key}`} className="subject-card-title-link">
+                        {subject.label}
+                        <span aria-hidden="true"> →</span>
+                      </Link>
+                    </h3>
                     {subject.mastery !== null && (
                       <RadialGauge
                         percent={subject.mastery}

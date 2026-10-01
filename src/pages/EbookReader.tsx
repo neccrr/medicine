@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { CheckIcon } from "../components/icons";
 import { marked } from "marked";
 import { ebookChapterKeys, ebookMeta, ebookPdfs, loadEbookChapter, subjectKey } from "../lib/content";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
@@ -18,21 +19,6 @@ function ExternalIcon() {
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-      <path
-        d="M5 12.5 10 17 19 7"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -80,6 +66,13 @@ export function EbookReader() {
 
   // Each chapter is its own chunk, fetched when opened (precached by the service worker).
   const chapterKey = chapterId ? `${key}/${chapterId}` : "";
+  const [tocOpen, setTocOpen] = useState(false);
+  // Picking a chapter folds the contents away again.
+  const [tocChapter, setTocChapter] = useState(chapterId);
+  if (tocChapter !== chapterId) {
+    setTocChapter(chapterId);
+    setTocOpen(false);
+  }
   const [loaded, setLoaded] = useState<{ key: string; markdown?: string; failed?: boolean } | null>(null);
   useEffect(() => {
     if (!chapterKey || !ebookChapterKeys.includes(chapterKey)) return;
@@ -124,7 +117,14 @@ export function EbookReader() {
   }
 
   const sidebar = (
-    <nav className="ebook-toc" aria-label="Book contents">
+    <nav className={tocOpen ? "ebook-toc ebook-toc-collapsible is-open" : "ebook-toc ebook-toc-collapsible"} aria-label="Book contents">
+      {/* Phones: the contents fold into one line, so each chapter starts at its text. */}
+      <button type="button" className="ebook-toc-toggle" onClick={() => setTocOpen((o) => !o)} aria-expanded={tocOpen}>
+        <span>{chapter ? `Chapter ${chapterIndex + 1} of ${meta.chapters.length}` : meta.title}</span>
+        <span className="ebook-toc-toggle-hint">
+          Contents <span aria-hidden="true">{tocOpen ? "▴" : "▾"}</span>
+        </span>
+      </button>
       <h2 className="ebook-toc-title">{meta.title}</h2>
 
       {hasChapters && (

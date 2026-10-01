@@ -55,7 +55,39 @@ function findSubject(list: Subject[], blockId: string, subjectId: string): Subje
   return list.find((s) => s.blockId === blockId && s.id === subjectId);
 }
 
+/** Every subject that has material anywhere, with its display label, by "{blockId}/{subjectId}". */
+export function allSubjects(): { key: string; blockId: string; id: string; label: string }[] {
+  const byKey = new Map<string, { key: string; blockId: string; id: string; label: string }>();
+  // Module folders are named by id only, so their label is the weakest; other lists win.
+  for (const s of [...moduleSubjects, ...summarySubjects, ...ebookSubjects, ...quizSubjects, ...flashcardSubjects]) {
+    byKey.set(keyOf(s), { key: keyOf(s), blockId: s.blockId, id: s.id, label: s.label });
+  }
+  return [...byKey.values()].sort((a, b) => a.key.localeCompare(b.key));
+}
+
+/** The sections that have material for a subject, as links: the subject page's static content. */
+export function subjectSections(key: string): { name: string; path: string }[] {
+  const out: { name: string; path: string }[] = [];
+  if (flashcardDecks[key]) out.push({ name: `Flashcards (${flashcardDecks[key].length})`, path: `/flashcards/${key}` });
+  if (occlusionKeys.includes(key)) out.push({ name: "Image occlusion", path: `/occlusion/${key}` });
+  if (quizBanks[key]) out.push({ name: `Quiz (${quizBanks[key].length} questions)`, path: `/quizzes/${key}` });
+  if (ebookMeta[key]) out.push({ name: `Ebook: ${ebookMeta[key].title}`, path: `/ebooks/${key}` });
+  if (summaries[key] !== undefined) out.push({ name: "Summary", path: `/summaries/${key}` });
+  if (modulesByBlockSubject[key]) out.push({ name: `Modules (${modulesByBlockSubject[key].length} PDFs)`, path: `/modules/${key}` });
+  return out;
+}
+
 const SECTIONS: Record<string, { name: string; meta: PageMeta }> = {
+  subjects: {
+    name: "Subjects",
+    meta: {
+      title: titled("Subjects: Everything by Subject"),
+      description: describe(
+        "Every subject with all its material in one place: flashcards, image occlusion, quizzes, ebook, summary, lecture slides and virtual labs, by study block.",
+      ),
+      indexable: true,
+    },
+  },
   flashcards: {
     name: "Flashcards",
     meta: {
@@ -186,6 +218,16 @@ export function pageMeta(pathname: string): PageMeta {
   const key = subjectKey(blockId, subjectId);
   const where = `${blockLabel(blockId)}`;
 
+  if (section === "subjects" && parts.length === 3) {
+    const subject = allSubjects().find((s) => s.key === key);
+    if (!subject) return NOT_FOUND;
+    const names = subjectSections(key).map((s) => s.name.replace(/ \(.*\)$/, "").replace(/:.*$/, "").toLowerCase());
+    return {
+      title: titled(`${subject.label} (${blockShort(blockId)}): All Study Material`),
+      description: describe(`Everything for ${subject.label}, ${where}, in one place: ${names.join(", ")}, with what's due next.`),
+      indexable: true,
+    };
+  }
   if (section === "occlusion" && parts.length === 3) {
     const subject = findSubject(flashcardSubjects, blockId, subjectId);
     if (!subject || !occlusionKeys.includes(key)) return NOT_FOUND;
@@ -283,10 +325,11 @@ export function breadcrumbs(pathname: string): Crumb[] {
 
 /** Every page that should be in search results, in a stable order. */
 export function indexablePaths(): string[] {
-  const paths = ["/", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab"];
+  const paths = ["/", "/subjects", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab"];
   for (const e of labExercises) for (const a of e.activities) paths.push(`/lab/${e.id}/${a.slug}`);
   for (const s of flashcardSubjects) paths.push(`/flashcards/${keyOf(s)}`);
   for (const key of occlusionKeys) paths.push(`/occlusion/${key}`);
+  for (const s of allSubjects()) paths.push(`/subjects/${s.key}`);
   for (const s of quizSubjects) paths.push(`/quizzes/${keyOf(s)}`);
   for (const block of studyBlocks) {
     if (!blockHasExam(block.id)) continue;

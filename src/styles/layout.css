@@ -173,6 +173,21 @@
   color: var(--accent);
 }
 
+.sidebar-group-label {
+  display: block;
+  margin: 0.9rem 0 0.2rem;
+  padding: 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  max-height: 1.2rem;
+  transition: opacity 0.15s ease, max-height var(--dur-morph) var(--ease-glass), margin var(--dur-morph) var(--ease-glass);
+}
+
 .sidebar-link-icon {
   display: flex;
   flex-shrink: 0;
@@ -255,6 +270,14 @@
     padding: 0 5px 0 0;
   }
 
+  /* On the icon rail a group heading shrinks to a thin rule between groups. */
+  .sidebar.collapsed .sidebar-group-label {
+    opacity: 0;
+    max-height: 0;
+    margin: 0.55rem 0.6rem;
+    border-top: 1px solid var(--border);
+  }
+
   .sidebar.collapsed .sidebar-brand-name,
   .sidebar.collapsed .sidebar-link-label {
     opacity: 0;
@@ -316,6 +339,11 @@
     /* Past its own width plus the floating margin, so no edge peeks in; hidden while closed
        so its links can't be tabbed to off-screen. */
     transform: translateX(calc(-100% - 1rem));
+    /* Opaque: through the glass, the page behind the drawer was legible enough to clash with
+       the links. */
+    background: var(--surface-solid);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     visibility: hidden;
     transition: transform 0.35s var(--ease-glass), visibility 0s linear 0.35s;
     box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.5);
@@ -487,4 +515,149 @@
 .prerender svg {
   max-width: 100%;
   height: auto;
+}
+
+/* Phone tab bar: Home, Study, Read, Search, Me. Study, Read and Me open their group as a sheet. */
+.tabbar,
+.tabsheet-backdrop {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .tabbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom));
+    background: var(--surface-solid);
+    border-top: 1px solid var(--glass-border);
+    box-shadow: 0 -8px 24px -18px rgba(0, 0, 0, 0.35);
+  }
+
+  .tabbar-item {
+    font: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.35rem 0 0.25rem;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tabbar-item svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .tabbar-item.active,
+  .tabbar-item.open {
+    color: var(--accent);
+  }
+
+  .tabbar-item.open {
+    background: var(--accent-soft);
+  }
+
+  .tabsheet-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 65;
+    background: rgba(0, 0, 0, 0.4);
+    animation: backdrop-in 0.2s ease;
+  }
+
+  .tabsheet {
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: calc(4.4rem + env(safe-area-inset-bottom));
+    padding: 0.5rem 1rem 1rem;
+    border-radius: var(--radius-xl);
+    background: var(--surface-solid);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.5);
+    animation: tabsheet-in 0.25s var(--ease-glass);
+  }
+
+  @keyframes tabsheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  .tabsheet-handle {
+    display: block;
+    width: 2.5rem;
+    height: 4px;
+    margin: 0 auto 0.6rem;
+    border-radius: 2px;
+    background: var(--border-strong);
+  }
+
+  .tabsheet-title {
+    margin: 0 0 0.6rem;
+    font-size: 1rem;
+  }
+
+  .tabsheet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .tabsheet-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  .tabsheet-link.active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .tabsheet-icon {
+    display: flex;
+    color: var(--accent);
+  }
+
+  /* Room for the tab bar under the last content and the footer. */
+  .app-content {
+    padding-bottom: calc(4.2rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 960px) and (prefers-reduced-motion: reduce) {
+  .tabsheet {
+    animation: none;
+  }
+}
+
+@media print {
+  .tabbar {
+    display: none;
+  }
 }

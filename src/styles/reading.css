@@ -36,6 +36,15 @@
   font-size: 0.9rem;
 }
 
+/* On phones a wide table scrolls inside its own box instead of dragging the whole page sideways. */
+@media (max-width: 720px) {
+  .summary-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 .summary-content th,
 .summary-content td {
   border: 1px solid var(--border);

@@ -268,3 +268,77 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+/* The topic filter: a button that opens the deck's tags, with the chosen ones kept in view. */
+.topic-filter {
+  margin: 0.25rem 0 1rem;
+}
+
+.topic-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.topic-filter-toggle {
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.topic-filter-toggle.is-open,
+.topic-filter-toggle:hover {
+  border-color: var(--accent);
+}
+
+.topic-filter-count {
+  min-width: 1.3rem;
+  padding: 0 0.35rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-ink, #fff);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.topic-filter-panel {
+  margin-top: 0.6rem;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  background: var(--surface);
+  display: grid;
+  gap: 0.6rem;
+}
+
+.topic-filter-search {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  max-width: 20rem;
+}
+
+.topic-filter-panel .tag-filter-row {
+  margin: 0;
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.topic-filter-n {
+  opacity: 0.6;
+  font-size: 0.85em;
+}

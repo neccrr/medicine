@@ -25,7 +25,7 @@ import {
   summaries,
   summarySubjects,
 } from "../lib/content";
-import { blockHasExam, breadcrumbs, indexablePaths, pageMeta, PRIVATE_PATHS, type PageMeta } from "../lib/routeMeta";
+import { allSubjects, blockHasExam, breadcrumbs, indexablePaths, pageMeta, PRIVATE_PATHS, subjectSections, type PageMeta } from "../lib/routeMeta";
 import { findLabActivity, labExercises } from "../lib/labActivities";
 import { SITE_NAME } from "../lib/site";
 import type { Subject } from "../types/content";
@@ -34,6 +34,7 @@ const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 const SECTION_LINKS: [string, string][] = [
+  ["/subjects", "Subjects"],
   ["/flashcards", "Flashcards"],
   ["/occlusion", "Image Occlusion"],
   ["/quizzes", "Quizzes"],
@@ -103,6 +104,15 @@ async function content(path: string): Promise<string> {
         .map((b) => `<li><a href="/exam/${b.id}">${esc(b.label)}</a></li>`)
         .join("")}</ul>`;
 
+    case "subjects":
+      return groupByBlock(allSubjects())
+        .filter((g) => g.subjects.length > 0)
+        .map((g) => `<h2>${esc(g.block.label)}</h2><ul>${g.subjects.map((s) => `<li><a href="/subjects/${s.key}">${esc(s.label)}</a></li>`).join("")}</ul>`)
+        .join("");
+    case "subjects/*":
+      return `<ul>${subjectSections(key)
+        .map((s) => `<li><a href="${s.path}">${esc(s.name)}</a></li>`)
+        .join("")}</ul>${(ebookMeta[key]?.chapters ?? []).length ? `<h2>Chapters</h2><ol>${ebookMeta[key].chapters.map((c) => `<li><a href="/ebooks/${key}/${c.id}">${esc(c.title)}</a></li>`).join("")}</ol>` : ""}`;
     case "occlusion":
       return `<ul>${occlusionKeys.map((k) => `<li><a href="/occlusion/${k}">${esc(flashcardSubjects.find((s) => keyOf(s) === k)?.label ?? k)}</a></li>`).join("")}</ul>`;
     case "occlusion/*": {

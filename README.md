@@ -260,6 +260,7 @@ cached the first time it's opened.
 | Route | What's there |
 |---|---|
 | `/` | Home: streak, stat tiles, "continue" list, tip of the day, per-block subject cards |
+| `/subjects` → `/subjects/:blockId/:subjectId` | Every subject → its page: cover, what's due next, every section, chapters and labs |
 | `/flashcards` → `/flashcards/:blockId/:subjectId` | Subject list with due counts → SM-2 review session |
 | `/occlusion` → `/occlusion/:blockId/:subjectId` | Subjects with figures → image occlusion (review or browse, figure gallery) |
 | `/quizzes` → `/quizzes/:blockId/:subjectId` | Subject list with last score and due counts → quiz (with section picker for large banks) |

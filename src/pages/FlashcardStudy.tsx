@@ -33,6 +33,13 @@ export function FlashcardStudy() {
   const [extraReview, setExtraReview] = useState(false);
   const [selectedTags, setSelectedTags] = useLocalStorage<string[]>(STORAGE_KEYS.tagFilter(key), []);
 
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [tagQuery, setTagQuery] = useState("");
+  const tagCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const c of deck) for (const t of c.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+    return counts;
+  }, [deck]);
   const allTags = useMemo(
     () => Array.from(new Set(deck.flatMap((c) => c.tags))).sort(),
     [deck],
@@ -133,23 +140,57 @@ export function FlashcardStudy() {
       </p>
 
       {allTags.length > 0 && (
-        <div className="tag-filter-row">
-          {allTags.map((tag) => (
+        <div className="topic-filter">
+          <div className="topic-filter-bar">
             <button
-              key={tag}
               type="button"
-              className={selectedTags.includes(tag) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
-              style={tagHueStyle(tag)}
-              onClick={() => toggleTag(tag)}
-              aria-pressed={selectedTags.includes(tag)}
+              className={`topic-filter-toggle${filterOpen ? " is-open" : ""}`}
+              onClick={() => setFilterOpen((o) => !o)}
+              aria-expanded={filterOpen}
+              aria-controls="topic-filter-panel"
             >
-              {tag}
+              Filter by topic
+              {selectedTags.length > 0 && <span className="topic-filter-count">{selectedTags.length}</span>}
+              <span aria-hidden="true">{filterOpen ? "▴" : "▾"}</span>
             </button>
-          ))}
-          {selectedTags.length > 0 && (
-            <button type="button" className="tag-filter-clear" onClick={clearTags}>
-              Clear
-            </button>
+            {selectedTags.map((tag) => (
+              <button key={tag} type="button" className="tag tag-toggle tag-colored active" style={tagHueStyle(tag)} onClick={() => toggleTag(tag)} aria-label={`Remove ${tag} filter`}>
+                {tag} ×
+              </button>
+            ))}
+            {selectedTags.length > 0 && (
+              <button type="button" className="tag-filter-clear" onClick={clearTags}>
+                Clear
+              </button>
+            )}
+          </div>
+          {filterOpen && (
+            <div className="topic-filter-panel" id="topic-filter-panel">
+              <input
+                type="search"
+                className="topic-filter-search"
+                placeholder={`Find a topic (${allTags.length})`}
+                value={tagQuery}
+                onChange={(e) => setTagQuery(e.target.value)}
+                aria-label="Find a topic"
+              />
+              <div className="tag-filter-row">
+                {allTags
+                  .filter((tag) => tag.includes(tagQuery.trim().toLowerCase()))
+                  .map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      className={selectedTags.includes(tag) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
+                      style={tagHueStyle(tag)}
+                      onClick={() => toggleTag(tag)}
+                      aria-pressed={selectedTags.includes(tag)}
+                    >
+                      {tag} <span className="topic-filter-n">{tagCounts.get(tag)}</span>
+                    </button>
+                  ))}
+              </div>
+            </div>
           )}
         </div>
       )}

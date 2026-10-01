@@ -1,3 +1,4 @@
+import { allSubjects } from "./routeMeta";
 import { labExercises } from "./labActivities";
 import {
   ebookMeta,
@@ -39,6 +40,7 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "modules", title: "Modules", detail: "Original lecture slide PDFs", to: "/modules" },
   { type: "page", id: "ebooks", title: "Ebooks", detail: "Chapter readers", to: "/ebooks" },
   { type: "page", id: "summaries", title: "Summaries", detail: "Written subject summaries", to: "/summaries" },
+  { type: "page", id: "subjects", title: "Subjects", detail: "Everything for each subject in one place", to: "/subjects", keywords: "subject overview hub" },
   { type: "page", id: "occlusion", title: "Image Occlusion", detail: "Anki-style labelled atlas figures", to: "/occlusion", keywords: "anki image occlusion anatomy labels figures atlas" },
   { type: "page", id: "lab", title: "Virtual Lab", detail: "PhysioEx-style skeletal muscle simulator", to: "/lab", keywords: "physioex dry lab praktikum simulation muscle" },
   ...labExercises.flatMap((e) =>
@@ -64,6 +66,14 @@ function subjectDocs(): SearchDoc[] {
       title: `${s.label} flashcards`,
       detail: `Block ${s.blockId} deck`,
       to: `/flashcards/${s.blockId}/${s.id}`,
+    })),
+    ...allSubjects().map((s) => ({
+      type: "page" as const,
+      id: `subject-${s.key}`,
+      title: `${s.label} (Block ${s.blockId})`,
+      detail: "Everything for this subject",
+      to: `/subjects/${s.key}`,
+      keywords: "subject overview all material",
     })),
     ...flashcardSubjects
       .filter((s) => occlusionKeys.includes(keyOf(s)))

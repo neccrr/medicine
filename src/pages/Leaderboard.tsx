@@ -320,7 +320,17 @@ export function Leaderboard() {
 
       {status === "unavailable" && (
         <>
-          <p className="subtitle">The leaderboard needs accounts, which aren't set up on this site.</p>
+          <p className="subtitle">See how your studying compares with other students.</p>
+          <div className="account-card">
+            <p>
+              Signed-in students can join a weekly and an all-time board, scored from correct answers, learned cards, finished
+              chapters and study days, under a display name they choose. Accounts aren't switched on for this copy of the site, so
+              there's no board to show yet.
+            </p>
+            <p>
+              Your own numbers are on <Link to="/progress">Progress</Link>.
+            </p>
+          </div>
         </>
       )}
 

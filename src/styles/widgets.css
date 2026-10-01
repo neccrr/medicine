@@ -185,7 +185,8 @@
   .update-nudge {
     left: 1rem;
     right: 1rem;
-    bottom: 1rem;
+    /* Above the phone tab bar. */
+    bottom: calc(5rem + env(safe-area-inset-bottom));
     transform: none;
   }
 
