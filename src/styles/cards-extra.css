@@ -227,3 +227,41 @@ kbd {
   width: 14px;
   height: 14px;
 }
+
+/* A subject's cover picture across the top of its card, fading into the card below. */
+.subject-cover {
+  display: block;
+  height: 8.5rem;
+  object-fit: cover;
+  background: #fff;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent);
+  transition: transform 0.6s var(--ease-spring);
+}
+
+.nav-card > .subject-cover {
+  width: calc(100% + 2.7rem);
+  max-width: none;
+  margin: -1.35rem -1.35rem 0.4rem;
+}
+
+.subject-card > .subject-cover {
+  width: calc(100% + 2.5rem);
+  max-width: none;
+  height: 7rem;
+  margin: -1.1rem -1.25rem 0.5rem;
+}
+
+.nav-card:hover > .subject-cover {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subject-cover {
+    transition: none;
+  }
+
+  .nav-card:hover > .subject-cover {
+    transform: none;
+  }
+}

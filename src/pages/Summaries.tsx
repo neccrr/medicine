@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { summarySubjects } from "../lib/content";
 import { groupByBlock } from "../lib/blocks";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { SubjectCover } from "../components/SubjectCover";
 import { UpcomingSubjectCard } from "../components/UpcomingSubjectCard";
 
 export function Summaries() {
@@ -17,6 +18,7 @@ export function Summaries() {
           <div className="card-grid">
             {subjects.map((subject) => (
               <Link key={subject.id} to={`/summaries/${block.id}/${subject.id}`} className="nav-card">
+                  <SubjectCover subjectKey={`${block.id}/${subject.id}`} />
                 <div className="nav-card-header">
                   <SubjectBadge id={subject.id} label={subject.label} />
                   <h2>{subject.label}</h2>

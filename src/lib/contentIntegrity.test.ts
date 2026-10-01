@@ -66,3 +66,16 @@ describe("image-occlusion decks", () => {
     }
   });
 });
+
+describe("subject covers", () => {
+  it("point at existing images for real subjects", async () => {
+    const { coveredSubjects, subjectCover } = await import("./subjectCovers");
+    const files = new Set(Object.keys(import.meta.glob("../../public/covers/*.webp")).map((p) => p.replace("../../public", "")));
+    const subjects = new Set([...flashcardSubjects, ...quizSubjects, ...ebookSubjects, ...summarySubjects, ...moduleSubjects].map(keyOf));
+    for (const key of coveredSubjects) {
+      expect(subjects.has(key), key).toBe(true);
+      expect(files.has(subjectCover(key)!.src), key).toBe(true);
+    }
+    expect(subjectCover("9.9/nothing")).toBeUndefined();
+  });
+});

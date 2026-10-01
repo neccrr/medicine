@@ -504,20 +504,6 @@
 
 /* Landing page */
 
-.io-subject-card {
-  overflow: hidden;
-}
-
-.io-subject-cover {
-  display: block;
-  width: calc(100% + 2.7rem);
-  height: 9rem;
-  margin: -1.35rem -1.35rem 0.75rem;
-  object-fit: cover;
-  object-position: center top;
-  background: #fff;
-}
-
 .io-howto {
   margin-top: 1.5rem;
   max-width: 46rem;

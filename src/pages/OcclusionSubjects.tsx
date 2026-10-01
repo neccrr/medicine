@@ -6,6 +6,7 @@ import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
 import { groupByBlock } from "../lib/blocks";
 import { occlusionCards } from "../lib/occlusion";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { SubjectCover } from "../components/SubjectCover";
 import type { CardStateMap, OcclusionNote } from "../types/content";
 
 const subjects = flashcardSubjects.filter((s) => occlusionKeys.includes(keyOf(s)));
@@ -19,7 +20,6 @@ function counts(notes: OcclusionNote[] | undefined, key: string) {
     labels: cards.length,
     due: cards.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length,
     mastered: cards.filter((c) => (stateMap[c.id]?.interval ?? 0) >= 21).length,
-    cover: notes[0]?.image,
   };
 }
 
@@ -49,8 +49,8 @@ export function OcclusionSubjects() {
               {list.map((subject) => {
                 const c = counts(notesByKey[keyOf(subject)], keyOf(subject));
                 return (
-                  <Link key={subject.id} to={`/occlusion/${block.id}/${subject.id}`} className="nav-card io-subject-card">
-                    {c?.cover && <img className="io-subject-cover" src={c.cover} alt="" loading="lazy" decoding="async" />}
+                  <Link key={subject.id} to={`/occlusion/${block.id}/${subject.id}`} className="nav-card">
+                    <SubjectCover subjectKey={keyOf(subject)} />
                     <div className="nav-card-header">
                       <SubjectBadge id={subject.id} label={subject.label} />
                       <h2>{subject.label}</h2>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { moduleSubjects, modulesByBlockSubject } from "../lib/content";
 import { groupByBlock } from "../lib/blocks";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { SubjectCover } from "../components/SubjectCover";
 import { UpcomingSubjectCard } from "../components/UpcomingSubjectCard";
 
 export function Modules() {
@@ -28,6 +29,7 @@ export function Modules() {
               const pdfs = modulesByBlockSubject[`${block.id}/${subject.id}`] ?? [];
               return (
                 <Link key={subject.id} to={`/modules/${block.id}/${subject.id}`} className="nav-card">
+                  <SubjectCover subjectKey={`${block.id}/${subject.id}`} />
                   <div className="nav-card-header">
                     <SubjectBadge id={subject.id} label={subject.label} />
                     <h2>{subject.label}</h2>

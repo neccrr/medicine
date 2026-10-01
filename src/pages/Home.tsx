@@ -25,6 +25,7 @@ import { subjectAccent, subjectHueStyle } from "../lib/subjectStyle";
 import { groupByBlock } from "../lib/blocks";
 import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
+import { SubjectCover } from "../components/SubjectCover";
 import { RadialGauge } from "../components/RadialGauge";
 import { useCountUp } from "../hooks/useCountUp";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
@@ -410,6 +411,7 @@ export function Home() {
                     } as CSSProperties
                   }
                 >
+                  <SubjectCover subjectKey={subject.key} />
                   <div className="subject-card-head">
                     <SubjectBadge id={subject.id} label={subject.label} />
                     <h3>{subject.label}</h3>
