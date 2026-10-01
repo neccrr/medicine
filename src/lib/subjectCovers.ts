@@ -5,7 +5,7 @@ const COVERS: Readonly<Record<string, string>> = {
   "1.1/biochem": "50% 70%",
   "1.1/histology": "50% 45%",
   "1.1/physiology": "50% 50%",
-  "1.2/anatomy": "50% 12%",
+  "1.2/anatomy": "50% 45%",
   "1.2/histology": "50% 30%",
   "1.2/physiology": "50% 30%",
 };
