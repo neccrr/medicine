@@ -40,3 +40,29 @@ describe("content folders", () => {
     expect(questionIds.filter((id, i) => questionIds.indexOf(id) !== i)).toEqual([]);
   });
 });
+
+describe("image-occlusion decks", () => {
+  it("cover existing figures with in-bounds, uniquely named masks", async () => {
+    const figures = new Set(Object.keys(import.meta.glob("../../public/ebook-figures/**/*.webp")).map((p) => p.replace("../../public", "")));
+    const { loadOcclusionNotes, occlusionKeys } = await import("./content");
+    const { REGION_LABELS } = await import("./occlusion");
+    expect(occlusionKeys.length).toBeGreaterThan(0);
+    for (const key of occlusionKeys) {
+      expect(flashcardSubjects.some((s) => keyOf(s) === key)).toBe(true);
+      const notes = (await loadOcclusionNotes(key)) ?? [];
+      const noteIds = notes.map((n) => n.id);
+      expect(noteIds.filter((id, i) => noteIds.indexOf(id) !== i)).toEqual([]);
+      for (const n of notes) {
+        expect(figures.has(n.image), n.image).toBe(true);
+        expect(REGION_LABELS[n.region], n.id).toBeDefined();
+        expect(n.title.trim()).not.toBe("");
+        const maskIds = n.masks.map((m) => m.id);
+        expect(maskIds.filter((id, i) => maskIds.indexOf(id) !== i), n.id).toEqual([]);
+        for (const m of n.masks) {
+          expect(m.label.trim(), `${n.id}:${m.id}`).not.toBe("");
+          expect(m.x >= 0 && m.y >= 0 && m.w > 0 && m.h > 0 && m.x + m.w <= n.width + 1 && m.y + m.h <= n.height + 1, `${n.id}:${m.id}`).toBe(true);
+        }
+      }
+    }
+  });
+});

@@ -8,6 +8,7 @@ import {
   keyOf,
   loadEbookChapters,
   modulesByBlockSubject,
+  occlusionKeys,
   quizBanks,
   quizQuestionsInBlock,
   quizSubjects,
@@ -63,6 +64,16 @@ function subjectDocs(): SearchDoc[] {
       detail: `Block ${s.blockId} deck`,
       to: `/flashcards/${s.blockId}/${s.id}`,
     })),
+    ...flashcardSubjects
+      .filter((s) => occlusionKeys.includes(keyOf(s)))
+      .map((s) => ({
+        type: "flashcard" as const,
+        id: `fo-${keyOf(s)}`,
+        title: `${s.label} image occlusion`,
+        detail: `Block ${s.blockId} atlas figures with hidden labels`,
+        to: `/flashcards/${s.blockId}/${s.id}/occlusion`,
+        keywords: "anki image occlusion labels atlas figures diagram",
+      })),
     ...quizSubjects.map((s) => ({
       type: "quiz" as const,
       id: `qs-${keyOf(s)}`,

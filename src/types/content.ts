@@ -6,6 +6,32 @@ export interface Flashcard {
   image?: string;
 }
 
+/** One hidden label on an image-occlusion figure, in the image's own pixels. */
+export interface OcclusionMask {
+  id: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  /** The label under the mask (read from the figure; the figure itself is the answer). */
+  label: string;
+}
+
+/** An atlas figure whose labels are hidden and recalled one at a time (Anki-style image occlusion). */
+export interface OcclusionNote {
+  id: string;
+  /** URL of the figure under public/. */
+  image: string;
+  width: number;
+  height: number;
+  title: string;
+  /** Body region, used as the filter tag (e.g. "upper-limb"). */
+  region: string;
+  /** Path of the ebook chapter the figure comes from. */
+  chapter: string;
+  masks: OcclusionMask[];
+}
+
 export interface QuizQuestion {
   id: string;
   question: string;

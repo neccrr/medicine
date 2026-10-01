@@ -1,4 +1,4 @@
-import type { EbookMeta, Flashcard, QuizQuestion, Subject } from "../types/content";
+import type { EbookMeta, Flashcard, OcclusionNote, QuizQuestion, Subject } from "../types/content";
 
 // Every content type lives under content/{type}/block/{blockId}/... — one folder tree, laid
 // out to match the curriculum's own block structure, sectioned the same way content/modules is.
@@ -41,6 +41,11 @@ const ebookChapterModules = import.meta.glob<string>(
   "../../content/ebooks/block/*/*/chapter-*.md",
   { import: "default", query: "?raw" },
 );
+// Image-occlusion figures (atlas figures with their labels hidden), one file per subject. Loaded
+// when the occlusion page opens rather than with every page: they are only needed there.
+const occlusionModules = import.meta.glob<OcclusionNote[]>("../../content/occlusion/block/*/*/notes.json", {
+  import: "default",
+});
 // PDFs dropped into a subject's folder are copied to the build output and exposed as a URL —
 // drop a file at content/ebooks/block/{blockId}/{subject}/anything.pdf and it shows up with no
 // code changes.
@@ -212,6 +217,19 @@ export const ebookChapterKeys: string[] = Object.keys(ebookChapterLoaders).sort(
 /** One chapter's Markdown, or undefined when there's no such chapter. */
 export function loadEbookChapter(key: string): Promise<string | undefined> {
   const load = ebookChapterLoaders[key];
+  return load ? load() : Promise.resolve(undefined);
+}
+
+const occlusionLoaders: Record<string, () => Promise<OcclusionNote[]>> = Object.fromEntries(
+  Object.entries(occlusionModules).map(([path, load]) => [keyFromPath(path), load]),
+);
+
+/** Subjects ("{blockId}/{subjectId}") with an image-occlusion deck. */
+export const occlusionKeys: string[] = Object.keys(occlusionLoaders).sort();
+
+/** A subject's image-occlusion figures, or undefined when it has none. */
+export function loadOcclusionNotes(key: string): Promise<OcclusionNote[] | undefined> {
+  const load = occlusionLoaders[key];
   return load ? load() : Promise.resolve(undefined);
 }
 

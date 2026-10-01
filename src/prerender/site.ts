@@ -14,6 +14,7 @@ import {
   flashcardSubjects,
   keyOf,
   loadEbookChapter,
+  loadOcclusionNotes,
   modulesByBlockSubject,
   moduleSubjects,
   quizBanks,
@@ -101,6 +102,12 @@ async function content(path: string): Promise<string> {
         .join("")}</ul>`;
 
     case "flashcards/*":
+      if (chapterId === "occlusion") {
+        const notes = (await loadOcclusionNotes(key)) ?? [];
+        return `<h2>Figures in this deck</h2><ul>${notes
+          .map((n) => `<li>${esc(n.title)} (${n.masks.length} labels)</li>`)
+          .join("")}</ul>`;
+      }
       return `<h2>Cards in this deck</h2><ul>${(flashcardDecks[key] ?? []).map((c) => `<li>${esc(c.front)}</li>`).join("")}</ul>`;
     case "quizzes/*":
       return `<h2>Questions</h2><ol>${(quizBanks[key] ?? []).map((q) => `<li>${esc(q.question)}</li>`).join("")}</ol>`;

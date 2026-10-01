@@ -12,6 +12,7 @@ import {
   keyOf,
   modulesByBlockSubject,
   moduleSubjects,
+  occlusionKeys,
   quizBanks,
   quizQuestionsInBlock,
   quizSubjects,
@@ -175,6 +176,17 @@ export function pageMeta(pathname: string): PageMeta {
   const key = subjectKey(blockId, subjectId);
   const where = `${blockLabel(blockId)}`;
 
+  if (section === "flashcards" && parts.length === 4 && chapterId === "occlusion") {
+    const subject = findSubject(flashcardSubjects, blockId, subjectId);
+    if (!subject || !occlusionKeys.includes(key)) return NOT_FOUND;
+    return {
+      title: titled(`${subject.label} Image Occlusion (${blockShort(blockId)})`),
+      description: describe(
+        `Anki-style image occlusion for ${subject.label}, ${where}: atlas figures with their labels covered, one label at a time, on a spaced-repetition schedule.`,
+      ),
+      indexable: true,
+    };
+  }
   if (section === "flashcards" && parts.length === 3) {
     const subject = findSubject(flashcardSubjects, blockId, subjectId);
     if (!subject) return NOT_FOUND;
@@ -247,7 +259,9 @@ export function breadcrumbs(pathname: string): Crumb[] {
   if (section !== "exam" && blockId && subjectId) {
     const bookTitle = section === "ebooks" ? ebookMeta[subjectKey(blockId, subjectId)]?.title : undefined;
     crumbs.push({ name: bookTitle ?? pageMeta(`/${section}/${blockId}/${subjectId}`).title.replace(` · ${SITE_NAME}`, ""), path: `/${section}/${blockId}/${subjectId}` });
-    if (chapterId) {
+    if (section === "flashcards" && chapterId === "occlusion") {
+      crumbs.push({ name: "Image occlusion", path: `/flashcards/${blockId}/${subjectId}/occlusion` });
+    } else if (chapterId) {
       const chapter = ebookMeta[subjectKey(blockId, subjectId)]?.chapters.find((c) => c.id === chapterId);
       if (chapter) crumbs.push({ name: chapter.title, path: `/${section}/${blockId}/${subjectId}/${chapterId}` });
     }
@@ -264,6 +278,7 @@ export function indexablePaths(): string[] {
   const paths = ["/", "/flashcards", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab"];
   for (const e of labExercises) for (const a of e.activities) paths.push(`/lab/${e.id}/${a.slug}`);
   for (const s of flashcardSubjects) paths.push(`/flashcards/${keyOf(s)}`);
+  for (const key of occlusionKeys) paths.push(`/flashcards/${key}/occlusion`);
   for (const s of quizSubjects) paths.push(`/quizzes/${keyOf(s)}`);
   for (const block of studyBlocks) {
     if (!blockHasExam(block.id)) continue;

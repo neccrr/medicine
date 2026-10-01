@@ -382,3 +382,14 @@ export function FlaskIcon() {
     </svg>
   );
 }
+
+/** A picture with one region covered: image occlusion. */
+export function OcclusionIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <rect x="3.5" y="4.5" width="17" height="15" rx="2.2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M6.5 16.5l3.6-4 2.6 2.6 1.8-1.8 3 3.2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="12.5" y="7" width="5.5" height="3.6" rx="0.8" fill="currentColor" />
+    </svg>
+  );
+}

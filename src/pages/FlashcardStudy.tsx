@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { flashcardDecks, flashcardSubjects, keyOf, subjectKey } from "../lib/content";
+import { flashcardDecks, flashcardSubjects, keyOf, occlusionKeys, subjectKey } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
+import { GRADES } from "../lib/grades";
 import { EmptyState } from "../components/EmptyState";
-import { SpeakerIcon } from "../components/icons";
+import { OcclusionIcon, SpeakerIcon } from "../components/icons";
 import { subjectHue, subjectHueStyle } from "../lib/subjectStyle";
 import type { Flashcard } from "../types/content";
 
@@ -18,14 +19,6 @@ function speak(text: string) {
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
 }
-
-const GRADES = [
-  { quality: 0, key: "1", label: "Blackout", hint: "No idea" },
-  { quality: 2, key: "2", label: "Hard", hint: "Barely recalled" },
-  { quality: 3, key: "3", label: "Okay", hint: "Recalled with effort" },
-  { quality: 4, key: "4", label: "Good", hint: "Recalled easily" },
-  { quality: 5, key: "5", label: "Easy", hint: "Instant recall" },
-];
 
 const EMPTY_DECK: Flashcard[] = [];
 
@@ -138,6 +131,19 @@ export function FlashcardStudy() {
         {stats.due} due · {stats.mastered}/{stats.total} mastered
         {selectedTags.length > 0 && ` · filtered to ${filteredDeck.length} card${filteredDeck.length === 1 ? "" : "s"}`}
       </p>
+
+      {occlusionKeys.includes(key) && (
+        <Link to={`/flashcards/${blockId}/${subjectId}/occlusion`} className="io-callout">
+          <span className="io-callout-icon">
+            <OcclusionIcon />
+          </span>
+          <span>
+            <strong>Image occlusion</strong>
+            <span>Atlas figures with their labels covered: name each one, Anki-style.</span>
+          </span>
+          <span aria-hidden="true">→</span>
+        </Link>
+      )}
 
       {allTags.length > 0 && (
         <div className="tag-filter-row">

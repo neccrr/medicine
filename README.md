@@ -87,7 +87,7 @@ account environment variables it runs as a plain static site.
 | | Biochemistry | 45 flashcards · 42 quiz questions · 7-chapter ebook · summary · 3 lecture PDFs |
 | | Physiology | 23 flashcards · 26 quiz questions · 4 lecture PDFs |
 | | *Block exam* | 3 exam packages: Original Set (100 Q), Costraver (64 Q), UB 2025 (80 Q) |
-| **1.2**: Integument and Musculoskeletal System | Anatomy | 144 flashcards · 134 quiz questions · 7-chapter ebook (22 original diagrams, 153 slide figures) · summary · 9 practicum assistance PDFs |
+| **1.2**: Integument and Musculoskeletal System | Anatomy | 144 flashcards · 986 image-occlusion labels on 88 figures · 134 quiz questions · 7-chapter ebook (22 original diagrams, 153 slide figures) · summary · 9 practicum assistance PDFs |
 | | Physiology | 57 flashcards · 59 quiz questions · 5-chapter ebook on muscle contraction and reflexes (12 original diagrams, 41 slide figures) · summary · 3 practicum assistance PDFs |
 | | *Block exam* | Pooled from the anatomy and physiology quiz banks (100 Q) |
 | **1.3**: Digestive System and Metabolism | — | Coming soon |
@@ -99,6 +99,7 @@ account environment variables it runs as a plain static site.
 - Tag filtering (remembered per deck), with color-coded tag pills
 - "Hardest cards" ranked by lapses, per deck and globally on the Progress page
 - Optional card images and read-aloud (Web Speech API)
+- Anki-style **image occlusion** (anatomy): atlas figures with their labels covered, one label asked at a time, each on its own SM-2 schedule; hide all or just the asked label, zoom in on small labels, filter by body region
 
 **Quizzes**
 - One question at a time with instant feedback and an explanation for every answer
@@ -182,6 +183,7 @@ any code. Nothing is fetched at runtime.
 ```
 content/
   flashcards/block/{blockId}/{subject}/deck.json       → Flashcard[]     { id, front, back, tags, image? }
+  occlusion/block/{blockId}/{subject}/notes.json       → OcclusionNote[] { id, image, width, height, title, region, chapter, masks: [{ id, x, y, w, h, label }] }
   quizzes/block/{blockId}/{subject}/bank.json          → QuizQuestion[]  { id, question, options, answer, explanation, image? }
   quizzes/block/{blockId}/{subject}/*.html             → self-contained interactive quiz, embedded in an iframe
   exams/block/{blockId}/{packageId}/bank.json          → QuizQuestion[], one exam package
@@ -255,6 +257,7 @@ cached the first time it's opened.
 |---|---|
 | `/` | Home: streak, stat tiles, "continue" list, tip of the day, per-block subject cards |
 | `/flashcards` → `/flashcards/:blockId/:subjectId` | Subject list with due counts → SM-2 review session |
+| `/flashcards/:blockId/:subjectId/occlusion` | Image occlusion: name the covered label, reveal, grade |
 | `/quizzes` → `/quizzes/:blockId/:subjectId` | Subject list with last score and due counts → quiz (with section picker for large banks) |
 | `/exam` → `/exam/:blockId[/:packageId]` | Block list → package picker → timed exam |
 | `/modules` → `/modules/:blockId/:subjectId` | Subjects with PDFs → sectioned PDF viewer |
@@ -275,6 +278,7 @@ Every page is code-split and loaded on demand.
 | Anywhere | **⌘K / Ctrl+K**: command palette |
 | Anywhere (desktop) | **⌘\\ / Ctrl+\\**: collapse or expand the sidebar |
 | Flashcards | **Space / Enter**: flip · **1–5**: grade (Blackout → Easy) |
+| Image occlusion | **Space / Enter**: reveal · **1–5**: grade · **H**: hide all / hide one · **Z**: zoom |
 | Quiz | **A–E** or **1–5**: answer · **Enter / Space**: continue · **← →**: previous/next question |
 | Exam | **A–E** or **1–5**: answer · **← →**: previous/next question |
 

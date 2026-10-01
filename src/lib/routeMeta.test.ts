@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ebookMeta, flashcardSubjects, keyOf } from "./content";
+import { ebookMeta, flashcardSubjects, keyOf, occlusionKeys } from "./content";
 import { breadcrumbs, indexablePaths, pageMeta, PRIVATE_PATHS } from "./routeMeta";
 
 describe("pageMeta", () => {
@@ -18,6 +18,7 @@ describe("pageMeta", () => {
   it("covers every subject and ebook chapter", () => {
     const paths = indexablePaths();
     for (const s of flashcardSubjects) expect(paths).toContain(`/flashcards/${keyOf(s)}`);
+    for (const key of occlusionKeys) expect(paths).toContain(`/flashcards/${key}/occlusion`);
     const [key, book] = Object.entries(ebookMeta)[0];
     expect(paths).toContain(`/ebooks/${key}/${book.chapters[0].id}`);
   });
@@ -27,6 +28,7 @@ describe("pageMeta", () => {
     expect(pageMeta("/flashcards/9.9/nothing").indexable).toBe(false);
     expect(pageMeta("/nope").indexable).toBe(false);
     expect(pageMeta("/ebooks/1.2/anatomy/chapter-99").indexable).toBe(false);
+    expect(pageMeta("/flashcards/1.1/biochem/occlusion").indexable).toBe(false);
   });
 });
 
@@ -36,5 +38,11 @@ describe("breadcrumbs", () => {
     const trail = breadcrumbs(`/ebooks/${key}/${book.chapters[0].id}`);
     expect(trail.map((c) => c.name)).toEqual(["Home", "Ebooks", book.title, book.chapters[0].title]);
     expect(trail.at(-1)!.path).toBe(`/ebooks/${key}/${book.chapters[0].id}`);
+  });
+
+  it("names the image-occlusion page under its subject's flashcards", () => {
+    const trail = breadcrumbs("/flashcards/1.2/anatomy/occlusion");
+    expect(trail.map((c) => c.name).slice(0, 2)).toEqual(["Home", "Flashcards"]);
+    expect(trail.at(-1)).toEqual({ name: "Image occlusion", path: "/flashcards/1.2/anatomy/occlusion" });
   });
 });
