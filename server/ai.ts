@@ -128,23 +128,27 @@ function sseText() {
   };
 }
 
-type Attempt = { ok: true; response: Response } | { ok: false; status: number; reason: string };
+/** Why a model gave no answer. */
+interface Failure {
+  status: number;
+  reason: string;
+}
 
 /**
  * One model: waits for the first words of the answer before replying, so a failure up to then
  * is still a proper error (and the next model can be tried), then streams the rest as plain text.
  */
-async function attempt(config: AiConfig, model: string, request: ExplainRequest, fetchImpl: typeof fetch, deadline: number): Promise<Attempt> {
+async function attempt(config: AiConfig, model: string, request: ExplainRequest, fetchImpl: typeof fetch, deadline: number): Promise<Response | Failure> {
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   const arm = (ms: number) => {
     clearTimeout(timer);
     timer = setTimeout(() => controller.abort(), Math.max(0, Math.min(ms, deadline - Date.now())));
   };
-  const failed = (status: number, reason: string): Attempt => {
+  const failed = (status: number, reason: string): Failure => {
     clearTimeout(timer);
     controller.abort();
-    return { ok: false, status, reason };
+    return { status, reason };
   };
 
   arm(AI_TIMEOUTS.firstText);
@@ -229,7 +233,7 @@ async function attempt(config: AiConfig, model: string, request: ExplainRequest,
       if (!finished) controller.abort();
     },
   });
-  return { ok: true, response: new Response(body, { headers: { "content-type": "text/plain; charset=utf-8", "x-content-type-options": "nosniff", ...NO_STORE } }) };
+  return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8", "x-content-type-options": "nosniff", ...NO_STORE } });
 }
 
 /**
@@ -239,12 +243,12 @@ async function attempt(config: AiConfig, model: string, request: ExplainRequest,
  */
 export async function streamExplanation(config: AiConfig, request: ExplainRequest, fetchImpl: typeof fetch = fetch): Promise<Response> {
   const deadline = Date.now() + AI_TIMEOUTS.total;
-  let last: Extract<Attempt, { ok: false }> | undefined;
+  let last: Failure | undefined;
   for (const model of config.models) {
     // A fallback only starts if it has a fair chance of finishing.
     if (last && deadline - Date.now() < AI_TIMEOUTS.idle) break;
     const result = await attempt(config, model, request, fetchImpl, deadline);
-    if (result.ok) return result.response;
+    if (result instanceof Response) return result;
     console.error(`AI model ${model}: ${result.reason}`);
     last = result;
   }
