@@ -209,35 +209,35 @@ export function quizQuestionsInBlock(blockId: string): QuizQuestion[] {
 
 export const summarySubjects: Subject[] = subjectsFromKeys(Object.keys(summaries));
 
-const ebookChapterLoaders: Record<string, () => Promise<string>> = Object.fromEntries(
+const ebookChapterLoaders = new Map<string, () => Promise<string>>(
   Object.entries(ebookChapterModules).map(([path, load]) => [ebookChapterKey(path), load]),
 );
 
 /** Keys of every ebook chapter, "{blockId}/{subjectId}/{chapterId}". */
-export const ebookChapterKeys: string[] = Object.keys(ebookChapterLoaders).sort();
+export const ebookChapterKeys: string[] = [...ebookChapterLoaders.keys()].sort();
 
 /** One chapter's Markdown, or undefined when there's no such chapter. */
 export function loadEbookChapter(key: string): Promise<string | undefined> {
-  const load = ebookChapterLoaders[key];
+  const load = ebookChapterLoaders.get(key);
   return load ? load() : Promise.resolve(undefined);
 }
 
-const occlusionLoaders: Record<string, () => Promise<OcclusionNote[]>> = Object.fromEntries(
+const occlusionLoaders = new Map<string, () => Promise<OcclusionNote[]>>(
   Object.entries(occlusionModules).map(([path, load]) => [keyFromPath(path), load]),
 );
 
 /** Subjects ("{blockId}/{subjectId}") with an image-occlusion deck. */
-export const occlusionKeys: string[] = Object.keys(occlusionLoaders).sort();
+export const occlusionKeys: string[] = [...occlusionLoaders.keys()].sort();
 
 /** A subject's image-occlusion figures, or undefined when it has none. */
 export function loadOcclusionNotes(key: string): Promise<OcclusionNote[] | undefined> {
-  const load = occlusionLoaders[key];
+  const load = occlusionLoaders.get(key);
   return load ? load() : Promise.resolve(undefined);
 }
 
 /** Every chapter's Markdown, keyed like {@link ebookChapterKeys}. */
 export async function loadEbookChapters(): Promise<Record<string, string>> {
-  const entries = await Promise.all(ebookChapterKeys.map(async (key) => [key, await ebookChapterLoaders[key]()] as const));
+  const entries = await Promise.all([...ebookChapterLoaders.entries()].map(async ([key, load]) => [key, await load()] as const));
   return Object.fromEntries(entries);
 }
 
