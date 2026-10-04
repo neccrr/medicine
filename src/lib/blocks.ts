@@ -1,6 +1,11 @@
 export interface StudyBlock {
   id: string;
   label: string;
+  /**
+   * The block exam's official date ("YYYY-MM-DD"), when known: every student's exam plan counts
+   * down to it unless they set their own.
+   */
+  examDate?: string;
 }
 
 export interface UpcomingSubject {

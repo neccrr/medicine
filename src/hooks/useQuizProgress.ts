@@ -1,6 +1,6 @@
 import type { QuizAttempt, QuizQuestion } from "../types/content";
 import { STORAGE_KEYS } from "../lib/storage";
-import { recordActivity } from "../lib/activity";
+import { logStudy, recordActivity } from "../lib/activity";
 import { scoreQuiz, updateDueIds } from "../lib/quizScoring";
 import { useLocalStorage } from "./useLocalStorage";
 
@@ -25,6 +25,7 @@ export function useQuizProgress(quizId: string) {
     setHistory((prev) => [...prev, attempt]);
     setDueIds((prev) => updateDueIds(prev, questions, scored.missedIds));
     recordActivity();
+    logStudy(quizId, "questions", scored.total);
     return attempt;
   };
 

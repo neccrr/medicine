@@ -52,8 +52,16 @@ export interface LeaderboardDoc {
   parts: Record<string, ScorePart>;
   /** Points gained per UTC day over the last two weeks, for the weekly board. */
   daily: Record<string, number>;
+  /** Exam readiness (0–100) per block, under readinessField(blockId), for the class average. */
+  readiness?: Record<string, number>;
   updatedAt: number;
 }
+
+/** Block ids contain dots, which MongoDB reads as nesting: "1.2" is stored as "1_2". */
+export const readinessField = (blockId: string) => blockId.replace(/\./g, "_");
+
+/** A class average is only shown once this many students have one, so no one's number shows through. */
+export const MIN_CLASS_SIZE = 3;
 
 export type Period = "week" | "all" | "streak";
 
@@ -262,6 +270,9 @@ export interface LeaderboardStore {
   /** Every student who joined the board. */
   joined(): Promise<LeaderboardDoc[]>;
   delete(userId: string): Promise<void>;
+  setReadiness(userId: string, blockId: string, value: number): Promise<void>;
+  /** The average readiness for a block, among one cohort (or everyone), and how many it covers. */
+  classReadiness(blockId: string, cohort: string | null): Promise<{ average: number | null; count: number }>;
 }
 
 const MAX_BOARD = 5000;
@@ -307,6 +318,21 @@ export class MongoLeaderboardStore implements LeaderboardStore {
   async delete(userId: string) {
     await this.col.deleteOne({ userId });
   }
+
+  async setReadiness(userId: string, blockId: string, value: number) {
+    await this.col.updateOne({ userId }, { $set: { [`readiness.${readinessField(blockId)}`]: value } });
+  }
+
+  async classReadiness(blockId: string, cohort: string | null) {
+    const field = `readiness.${readinessField(blockId)}`;
+    const [row] = await this.col
+      .aggregate<{ average: number; count: number }>([
+        { $match: { [field]: { $type: "number" }, ...(cohort ? { cohort } : {}) } },
+        { $group: { _id: null, average: { $avg: `$${field}` }, count: { $sum: 1 } } },
+      ])
+      .toArray();
+    return { average: row?.average ?? null, count: row?.count ?? 0 };
+  }
 }
 
 /** In-memory store for tests and the local dev server, with the same update semantics. */
@@ -347,5 +373,18 @@ export class MemoryLeaderboardStore implements LeaderboardStore {
 
   async delete(userId: string) {
     this.docs.delete(userId);
+  }
+
+  async setReadiness(userId: string, blockId: string, value: number) {
+    const d = this.docs.get(userId);
+    if (d) d.readiness = { ...d.readiness, [readinessField(blockId)]: value };
+  }
+
+  async classReadiness(blockId: string, cohort: string | null) {
+    const values = [...this.docs.values()]
+      .filter((d) => !cohort || d.cohort === cohort)
+      .map((d) => d.readiness?.[readinessField(blockId)])
+      .filter((v): v is number => typeof v === "number");
+    return { average: values.length ? values.reduce((a, b) => a + b, 0) / values.length : null, count: values.length };
   }
 }

@@ -53,3 +53,57 @@ export function getLongestStreak(days: string[] = getActivityDays()): number {
   }
   return longest;
 }
+
+// ---------------------------------------------------------------------------------------------
+// The study log: how much was studied each day, per subject, for the heatmap's shading, the
+// trend charts and today's plan ticking itself off.
+
+export type StudyKind = "cards" | "labels" | "questions" | "chapters" | "exams";
+
+/** Counts for one day: by subject key ("1.2/anatomy"), or "block:1.2" for a block's exams. */
+export type DayLog = Record<string, Partial<Record<StudyKind, number>>>;
+
+export interface StudyLog {
+  /** By local date ("YYYY-MM-DD" in the student's own time zone). */
+  days: Record<string, DayLog>;
+  /** Actions by local hour of day ("0"–"23"), for "you study best at…". */
+  hours: Record<string, number>;
+}
+
+/** About a year of days is kept; older ones only matter to the study-day streaks. */
+const LOG_DAYS = 400;
+
+export function getStudyLog(): StudyLog {
+  const log = readJSON<Partial<StudyLog>>(STORAGE_KEYS.studyLog, {});
+  return { days: log.days && typeof log.days === "object" ? log.days : {}, hours: log.hours && typeof log.hours === "object" ? log.hours : {} };
+}
+
+/** Records `n` of something studied now, in a subject (or "block:{id}" for exams). */
+export function logStudy(subject: string, kind: StudyKind, n = 1, at: Date = new Date()): void {
+  if (!(n > 0)) return;
+  const log = getStudyLog();
+  const day = localDateKey(at);
+  const today = (log.days[day] ??= {});
+  const counts = (today[subject] ??= {});
+  counts[kind] = (counts[kind] ?? 0) + n;
+  const hour = String(at.getHours());
+  log.hours[hour] = (log.hours[hour] ?? 0) + n;
+  const keep = Object.keys(log.days).sort().slice(-LOG_DAYS);
+  if (keep.length < Object.keys(log.days).length) log.days = Object.fromEntries(keep.map((d) => [d, log.days[d]]));
+  writeJSON(STORAGE_KEYS.studyLog, log);
+}
+
+/** One day's totals by kind, across subjects (optionally only those matching `subject`). */
+export function dayTotals(log: StudyLog, day: string, subject?: (key: string) => boolean): Record<StudyKind, number> {
+  const out: Record<StudyKind, number> = { cards: 0, labels: 0, questions: 0, chapters: 0, exams: 0 };
+  for (const [key, counts] of Object.entries(log.days[day] ?? {})) {
+    if (subject && !subject(key)) continue;
+    for (const kind of Object.keys(out) as StudyKind[]) out[kind] += Number(counts[kind]) || 0;
+  }
+  return out;
+}
+
+/** "YYYY-MM-DD" of a date in the local time zone. */
+export function localDateKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}

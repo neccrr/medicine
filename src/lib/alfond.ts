@@ -221,3 +221,19 @@ export function readPageContext(): PageContext | null {
   if (!text) return null;
   return { title: document.title.replace(new RegExp(`\\s*·\\s*${SITE_NAME}$`), ""), path: window.location.pathname, text };
 }
+
+// ---------------------------------------------------------------------------------------------
+// Asking from elsewhere in the app ("Ask Alfond about my progress")
+
+/** Opens the floating chat window (the overlay listens for it). */
+export const OPEN_ALFOND_EVENT = "alfond:open";
+
+/**
+ * Asks Alfond a question about the page on screen, then shows the answer: in the floating
+ * window when it's on, else on Alfond's own page (via `goToPage`).
+ */
+export function askAlfondAbout(question: string, goToPage: () => void): void {
+  void sendToAlfond(question, readPageContext());
+  if (prefs.overlay !== false) window.dispatchEvent(new CustomEvent(OPEN_ALFOND_EVENT));
+  else goToPage();
+}

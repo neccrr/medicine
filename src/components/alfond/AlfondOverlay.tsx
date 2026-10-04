@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAccount } from "../../hooks/useAccount";
-import { useAlfond, useAlfondPrefs } from "../../lib/alfond";
+import { OPEN_ALFOND_EVENT, useAlfond, useAlfondPrefs } from "../../lib/alfond";
 import { AlfondIcon } from "../icons";
 
 // The chat itself loads the first time it's opened, so the button costs next to nothing.
@@ -19,6 +19,13 @@ export function AlfondOverlay() {
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
   const enabled = config?.ai === true && prefs.overlay !== false && pathname !== "/alfond";
+
+  // "Ask Alfond" buttons elsewhere open the window.
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener(OPEN_ALFOND_EVENT, show);
+    return () => window.removeEventListener(OPEN_ALFOND_EVENT, show);
+  }, []);
 
   useEffect(() => {
     if (!open || !enabled) return;

@@ -10,10 +10,12 @@
  * - attempts: union of quiz or exam attempts
  * - set: union of strings (study days, finished chapters)
  * - position: the later reading position, by its own timestamp
+ * - counts: nested daily counters; per counter, the larger copy (a day studied on two devices
+ *   keeps the bigger count rather than double-counting)
  * - latest: the most recently changed copy
  * false keeps the key on this device only.
  */
-export type MergeRule = "cards" | "attempts" | "set" | "position" | "latest";
+export type MergeRule = "cards" | "attempts" | "set" | "position" | "counts" | "latest";
 
 export interface KeyType {
   /** What the id part of the key is, or null for a single value. */
@@ -34,7 +36,10 @@ export const KEY_TYPES = {
   quizinprogress: { id: "subject", sync: false, about: "Snapshot of an unfinished quiz (large, device-only)" },
   examhistory: { id: "exam", sync: "attempts", about: "Exam attempts, per block or block/package" },
   exammode: { id: null, sync: "latest", about: "Preferred exam mode" },
-  examdate: { id: "subject", sync: "latest", about: "Exam date for the study plan" },
+  examdate: { id: "subject", sync: "latest", about: "Old per-deck exam date (read as a fallback for the block's exam plan)" },
+  examplan: { id: "exam", sync: "latest", about: "A block's exam plan: date, minutes a day, target score, study time" },
+  studylog: { id: null, sync: "counts", about: "How much was studied each day, per subject and kind, and at which hours" },
+  todayplan: { id: null, sync: false, about: "Today's plan as drawn up this morning (device-only snapshot)" },
   lastread: { id: "subject", sync: "latest", about: "When a summary was last opened" },
   ebook: { id: "subject", sync: "position", about: "Reading position in an ebook" },
   ebookdone: { id: "subject", sync: "set", about: "Finished ebook chapter ids" },

@@ -4,7 +4,7 @@ import { CheckIcon } from "../components/icons";
 import { marked } from "marked";
 import { ebookChapterKeys, ebookMeta, ebookPdfs, loadEbookChapter, subjectKey } from "../lib/content";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
-import { recordActivity } from "../lib/activity";
+import { logStudy, recordActivity } from "../lib/activity";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useReadingPrefs } from "../hooks/useReadingPrefs";
 import { ReadingControls } from "../components/ReadingControls";
@@ -46,6 +46,7 @@ export function EbookReader() {
 
   const toggleComplete = () => {
     if (!chapterId) return;
+    if (!completedChapters.includes(chapterId)) logStudy(key, "chapters");
     setCompletedChapters((prev) =>
       prev.includes(chapterId) ? prev.filter((id) => id !== chapterId) : [...prev, chapterId],
     );

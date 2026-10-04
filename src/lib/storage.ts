@@ -49,6 +49,10 @@ export const STORAGE_KEYS = {
   ebookPosition: (key: string) => storageKey("ebook", key),
   ebookCompleted: (key: string) => storageKey("ebookdone", key),
   examDate: (key: string) => storageKey("examdate", key),
+  /** A block's exam plan, keyed by block id. */
+  examPlan: (blockId: string) => storageKey("examplan", blockId),
+  studyLog: storageKey("studylog"),
+  todayPlan: storageKey("todayplan"),
   readingPrefs: storageKey("readingprefs"),
   sidebarCollapsed: storageKey("sidebarcollapsed"),
   /** Alfond's settings, e.g. { overlay: false } to hide its floating button. */

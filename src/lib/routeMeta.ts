@@ -166,6 +166,7 @@ const SECTIONS: Record<string, { name: string; meta: PageMeta }> = {
   progress: { name: "Progress", meta: { title: titled("Your Progress"), description: HOME_DESCRIPTION, indexable: false } },
   leaderboard: { name: "Leaderboard", meta: { title: titled("Leaderboard"), description: HOME_DESCRIPTION, indexable: false } },
   account: { name: "Account", meta: { title: titled("Account"), description: HOME_DESCRIPTION, indexable: false } },
+  plan: { name: "Exam plan", meta: { title: titled("Exam Plan"), description: HOME_DESCRIPTION, indexable: false } },
   alfond: { name: "Alfond", meta: { title: titled("Alfond, Your Study Assistant"), description: HOME_DESCRIPTION, indexable: false } },
 };
 
@@ -184,6 +185,7 @@ export function pageMeta(pathname: string): PageMeta {
   const sectionInfo = SECTIONS[section];
   if (!sectionInfo) return NOT_FOUND;
   if (parts.length === 1) return sectionInfo.meta;
+  if (section === "plan") return parts.length === 2 ? { ...sectionInfo.meta, title: titled(`Exam Plan: ${blockShort(blockId)}`) } : NOT_FOUND;
 
   if (section === "exam") {
     const packages = examPackagesByBlock[blockId] ?? [];
@@ -348,4 +350,4 @@ export function indexablePaths(): string[] {
 }
 
 /** App pages that are rendered for everyone but kept out of search. */
-export const PRIVATE_PATHS = ["/search", "/progress", "/leaderboard", "/account", "/alfond"];
+export const PRIVATE_PATHS = ["/search", "/progress", "/leaderboard", "/account", "/alfond", "/plan"];

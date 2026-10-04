@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ExplainPanel } from "../components/ExplainPanel";
 import { flashcardDecks, flashcardSubjects, keyOf, subjectKey } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
@@ -33,6 +33,14 @@ export function FlashcardStudy() {
   const [session, setSession] = useState({ reviewed: 0, lapses: 0 });
   const [extraReview, setExtraReview] = useState(false);
   const [selectedTags, setSelectedTags] = useLocalStorage<string[]>(STORAGE_KEYS.tagFilter(key), []);
+  // "Drill" links from weak spots open the deck filtered to one topic: ?tag=…
+  const [searchParams] = useSearchParams();
+  const tagParam = searchParams.get("tag");
+  const [appliedTag, setAppliedTag] = useState<string | null>(null);
+  if (tagParam && tagParam !== appliedTag && deck.some((c) => c.tags.includes(tagParam))) {
+    setAppliedTag(tagParam);
+    setSelectedTags([tagParam]);
+  }
 
   const [filterOpen, setFilterOpen] = useState(false);
   const [tagQuery, setTagQuery] = useState("");

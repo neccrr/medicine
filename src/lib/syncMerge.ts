@@ -53,6 +53,17 @@ function mergeAttemptLists(a: unknown[], b: unknown[]): unknown[] {
   );
 }
 
+/** Nested counters (the study log): every number is the larger of the two copies. */
+function mergeCounts(a: unknown, b: unknown): unknown {
+  if (typeof a === "number" && typeof b === "number") return Math.max(a, b);
+  if (isRecord(a) && isRecord(b)) {
+    const out: Record<string, unknown> = { ...a };
+    for (const [k, v] of Object.entries(b)) out[k] = k in out ? mergeCounts(out[k], v) : v;
+    return out;
+  }
+  return b ?? a;
+}
+
 function mergeStringSets(a: unknown[], b: unknown[]): string[] {
   return [...new Set([...a, ...b].filter((x): x is string => typeof x === "string"))].sort();
 }
@@ -78,6 +89,9 @@ export function mergeEntry(current: SyncEntry, incoming: SyncEntry): SyncEntry {
       break;
     case "set":
       if (Array.isArray(a) && Array.isArray(b)) return { key, value: mergeStringSets(a, b), updatedAt };
+      break;
+    case "counts":
+      if (isRecord(a) && isRecord(b)) return { key, value: mergeCounts(a, b), updatedAt };
       break;
     case "position":
       if (isRecord(a) && isRecord(b)) {

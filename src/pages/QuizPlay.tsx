@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ExplainPanel } from "../components/ExplainPanel";
 import { keyOf, quizBanks, quizGames, quizSubjects, subjectKey } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
@@ -27,11 +27,13 @@ type SessionKind =
   | { type: "full" }
   | { type: "due" }
   | { type: "missed" }
+  | { type: "drill" }
   | { type: "section"; section: QuizSection };
 
 function sessionSubtitle(kind: SessionKind): string | null {
   if (kind.type === "due") return "Reviewing due questions only";
   if (kind.type === "missed") return "Reviewing missed questions only";
+  if (kind.type === "drill") return "Drilling the questions you miss most";
   if (kind.type === "section") return `Studying ${kind.section.label}`;
   return null;
 }
@@ -52,9 +54,25 @@ export function QuizPlay() {
   const games = quizGames[key] ?? [];
   const subjectLabel = quizSubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
   const { history, dueIds, recordAttempt } = useQuizProgress(key);
-  const [started, setStarted] = useState(false);
-  const [sessionBank, setSessionBank] = useState<QuizQuestion[] | null>(null);
-  const [sessionKind, setSessionKind] = useState<SessionKind>({ type: "full" });
+  // Links from the exam plan and Progress start a session straight away: ?drill=id,id (those
+  // questions) or ?practice=due (the ones waiting for a retry).
+  const [searchParams] = useSearchParams();
+  const [linkedSession] = useState<{ bank: QuizQuestion[]; kind: SessionKind } | null>(() => {
+    const drill = searchParams.get("drill");
+    if (drill) {
+      const ids = new Set(drill.split(","));
+      const questions = fullBank.filter((q) => ids.has(q.id));
+      return questions.length ? { bank: buildSessionBank(questions), kind: { type: "drill" } } : null;
+    }
+    if (searchParams.get("practice") === "due") {
+      const questions = fullBank.filter((q) => dueIds.includes(q.id));
+      return questions.length ? { bank: buildSessionBank(questions), kind: { type: "due" } } : null;
+    }
+    return null;
+  });
+  const [started, setStarted] = useState(linkedSession !== null);
+  const [sessionBank, setSessionBank] = useState<QuizQuestion[] | null>(linkedSession?.bank ?? null);
+  const [sessionKind, setSessionKind] = useState<SessionKind>(linkedSession?.kind ?? { type: "full" });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);

@@ -10,6 +10,7 @@ import { STORAGE_KEYS } from "../lib/storage";
 import {
   AlfondIcon,
   BookIcon,
+  CalendarIcon,
   CardsIcon,
   FlaskIcon,
   GridIcon,
@@ -51,6 +52,7 @@ const groups: NavGroup[] = [
   {
     label: "Study",
     items: [
+      { to: "/plan", label: "Exam plan", icon: <CalendarIcon /> },
       { to: "/flashcards", label: "Flashcards", icon: <CardsIcon /> },
       { to: "/occlusion", label: "Image Occlusion", icon: <OcclusionIcon /> },
       { to: "/quizzes", label: "Quizzes", icon: <QuizIcon /> },

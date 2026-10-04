@@ -3,6 +3,7 @@ import type { Auth } from "./auth.js";
 import {
   affectsLeaderboard,
   cleanDisplayName,
+  MIN_CLASS_SIZE,
   newDoc,
   partsFor,
   POINTS,
@@ -23,6 +24,7 @@ const MAX_CHANGES = 1000;
 const OVERLAP_MS = 5000;
 const BOARD_SIZE = 100;
 const MAX_AI_BODY_BYTES = 20_000;
+const BLOCK_RE = /^[0-9A-Za-z.-]{1,20}$/;
 // A chat carries its recent turns and the page on screen.
 const MAX_AI_CHAT_BYTES = 64_000;
 
@@ -151,6 +153,30 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDe
     return json({ joined: patch.joined ?? doc.joined, displayName: patch.displayName ?? doc.displayName });
   }
 
+  /**
+   * Exam readiness against the class: PUT records the student's own number for a block, GET
+   * answers the class average (their cohort, or everyone without one) once enough have one.
+   */
+  async function readiness(request: Request, user: SessionUser): Promise<Response> {
+    if (request.method === "PUT") {
+      let body: { block?: unknown; value?: unknown };
+      try {
+        body = (await request.json()) ?? {};
+      } catch {
+        return error(400, "Invalid JSON.");
+      }
+      if (typeof body.block !== "string" || !BLOCK_RE.test(body.block)) return error(400, "Invalid 'block'.");
+      if (typeof body.value !== "number" || !Number.isFinite(body.value) || body.value < 0 || body.value > 100) return error(400, "Invalid 'value'.");
+      await scoreRecord(user);
+      await leaderboard.setReadiness(user.id, body.block, Math.round(body.value * 10) / 10);
+      return json({ ok: true });
+    }
+    const block = new URL(request.url).searchParams.get("block") ?? "";
+    if (!BLOCK_RE.test(block)) return error(400, "Invalid 'block'.");
+    const { average, count } = await leaderboard.classReadiness(block, user.cohort ?? null);
+    return json({ cohort: user.cohort ?? null, count, average: count >= MIN_CLASS_SIZE && average !== null ? Math.round(average) : null });
+  }
+
   async function sync(request: Request, user: SessionUser): Promise<Response> {
     const uid = user.id;
     const text = await request.text();
@@ -246,6 +272,12 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDe
         const user = await sessionUser(request);
         if (!user) return error(401, "Sign in to ask the AI.");
         return await askAi(request, user, pathname === "/api/ai/chat" ? "chat" : "explain");
+      }
+      if (pathname === "/api/readiness") {
+        if (request.method !== "GET" && request.method !== "PUT") return error(405, "Method not allowed.");
+        const user = await sessionUser(request);
+        if (!user) return error(401, "Sign in to compare with your class.");
+        return await readiness(request, user);
       }
       if (["/api/sync", "/api/account/export", "/api/leaderboard", "/api/leaderboard/me"].includes(pathname)) {
         const user = await sessionUser(request);

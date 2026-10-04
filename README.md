@@ -75,7 +75,7 @@ account environment variables it runs as a plain static site.
 **Ebook**: chapters with original diagrams, reading controls, further reading
 
 ![Progress page](docs/screenshots/progress-light.png)
-**Progress**: streaks, activity heatmap, mastery by subject, study plan, backup
+**Progress**: readiness, subject meters, trends, activity heatmap, weak spots, milestones, backup
 
 </details>
 
@@ -154,10 +154,21 @@ account environment variables it runs as a plain static site.
 - A **⌘K / Ctrl+K** command palette to jump to any page or subject
 - A collapsible sidebar that shrinks to an icon rail on desktop (remembered between visits), giving pages such as the ebook reader a wider column
 
+**Exam plan** (`/plan`)
+- One exam date per block: the block's official date (`examDate` in `src/lib/blocks.ts`) unless the student sets their own
+- A readiness score per subject and block, from card and image-occlusion mastery, quiz accuracy and coverage, chapters read and timed mock scores
+- **Today's plan**, also on Home: a checklist sized to the minutes the student has, which ticks itself off as they study and spreads a missed day over the days left
+- Phases that change the plan as the exam nears: Learn (new material) → Strengthen (2 weeks out: weak spots) → Mock exams (last 3 days) → Final review
+- Mock score trend against a target score, projected to exam day
+- Weak spots by name (flashcard topics, most-missed questions, slipping labels), each with a one-tap drill
+- "Add to calendar" (.ics), "Plan my week with Alfond", and readiness against the class average (signed in; shown once 3+ classmates have one)
+
 **Progress**
-- Study streaks, a GitHub-style activity heatmap, and mastery by subject (a card counts as mastered at a 21+ day interval)
-- A study-plan generator: pick an exam date and get the daily review pace to clear the deck in time
-- One-click export and import of all progress as a JSON file, plus a reminder if you haven't backed up in 14 days
+- A summary of the current block (readiness, countdown, weakest subject) and every subject with meters for cards, labels, quiz, reading and mocks
+- This week against last week, reviews per day, quiz and mock score trends
+- An activity heatmap shaded by how much was studied; tap a day to see what; the time of day you study most
+- Weak spots, milestones, and "Ask Alfond about my progress"
+- Export and import of all progress as a JSON file, plus a reminder if you haven't backed up in 14 days
 
 **Accounts (optional)**
 - Guest mode by default: everything works without signing in
@@ -281,7 +292,8 @@ cached the first time it's opened.
 | `/summaries` → `/summaries/:blockId/:subjectId` | Summary list → rendered summary |
 | `/lab` → `/lab/:exerciseId/:activity` | Virtual Lab activities → simulator bench, data table, plot and check questions |
 | `/search` | Fuzzy search with type and subject filters |
-| `/progress` | Streaks, heatmap, mastery, study plan, hardest cards, export/import |
+| `/progress` | Readiness, subject meters, trends, heatmap, weak spots, milestones, export/import |
+| `/plan`, `/plan/:block` | Exam plan: today's plan, phases, readiness, mock trend, weak spots, class average |
 | `/leaderboard` | Weekly, all-time and streak rankings, filtered to your cohort; join or leave, and pick a display name (signed-in only) |
 | `/account` | Sign in or create an account; profile, sync status, current block, sign out, data download, account deletion |
 

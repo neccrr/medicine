@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
+import { TodayPlanCard } from "../components/plan/TodayPlanCard";
 import {
   ebookMeta,
   ebookSubjects,
@@ -220,6 +221,8 @@ export function Home() {
 
       <div className="dashboard-layout">
         <div className="dashboard-main">
+          <TodayPlanCard />
+
           <div className="dashboard-section">
             <h2 className="section-heading">
               <PlayCircleIcon />

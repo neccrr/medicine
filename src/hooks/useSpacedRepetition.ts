@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { CardState, CardStateMap, Flashcard } from "../types/content";
 import { INITIAL_CARD_STATE, isDue, reviewCard } from "../lib/sm2";
 import { STORAGE_KEYS } from "../lib/storage";
-import { recordActivity } from "../lib/activity";
+import { logStudy, recordActivity } from "../lib/activity";
 import { rankHardestCards } from "../lib/hardestCards";
 import { useLocalStorage } from "./useLocalStorage";
 
@@ -25,6 +25,7 @@ export function useSpacedRepetition(deckId: string, cards: Flashcard[], storageK
       [cardId]: reviewCard(prev[cardId] ?? INITIAL_CARD_STATE, quality),
     }));
     recordActivity();
+    logStudy(deckId, storageKey === STORAGE_KEYS.occlusionState(deckId) ? "labels" : "cards");
   };
 
   /** Puts a card back to an earlier state (undo); undefined makes it new again. */
