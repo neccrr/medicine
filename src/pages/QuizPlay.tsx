@@ -51,8 +51,8 @@ function scoreMessage(score: number, total: number): string {
 export function QuizPlay() {
   const { blockId = "", subjectId = "" } = useParams();
   const key = subjectKey(blockId, subjectId);
-  const fullBank = quizBanks[key] ?? EMPTY_BANK;
-  const games = quizGames[key] ?? [];
+  const fullBank = quizBanks.get(key) ?? EMPTY_BANK;
+  const games = quizGames.get(key) ?? [];
   const subjectLabel = quizSubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
   const { history, dueIds, recordAttempt } = useQuizProgress(key);
   // Links from the exam plan and Progress start a session straight away: ?drill=id,id (those
@@ -519,7 +519,7 @@ export function QuizPlay() {
                   role="radio"
                   aria-checked={selected === oi}
                 >
-                  <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
+                  <span className="quiz-option-letter">{OPTION_LETTERS.charAt(oi)}</span>
                   <span className="quiz-option-text">{opt}</span>
                 </button>
               );
@@ -546,8 +546,8 @@ export function QuizPlay() {
               subjectLabel={subjectLabel}
               question={currentQuestion.question}
               options={currentQuestion.options}
-              answer={currentQuestion.options[currentQuestion.answer]}
-              chosen={currentQuestion.options[selected]}
+              answer={currentQuestion.options.at(currentQuestion.answer) ?? ""}
+              chosen={currentQuestion.options.at(selected)}
               explanation={currentQuestion.explanation}
             />
           )}
@@ -639,7 +639,7 @@ export function QuizPlay() {
                           else if (oi === chosen) cls += " incorrect";
                           return (
                             <div key={oi} className={cls}>
-                              <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
+                              <span className="quiz-option-letter">{OPTION_LETTERS.charAt(oi)}</span>
                               <span className="quiz-option-text">{opt}</span>
                             </div>
                           );

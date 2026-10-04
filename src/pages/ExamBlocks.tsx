@@ -16,7 +16,7 @@ export function ExamBlocks() {
       </p>
       <div className="card-grid">
         {studyBlocks.map((block) => {
-          const packages = examPackagesByBlock[block.id] ?? [];
+          const packages = examPackagesByBlock.get(block.id) ?? [];
           const pooledSize = quizQuestionsInBlock(block.id).length;
           const poolSize = packages.length > 0 ? Math.max(...packages.map((p) => p.questionCount)) : pooledSize;
           const format = buildExamFormat(poolSize);

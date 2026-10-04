@@ -21,7 +21,7 @@ describe("storage key registry", () => {
 
   it("only migrates types that are keyed by subject", () => {
     for (const type of Object.keys(SUBJECT_SCOPED_TYPES) as KeyTypeName[]) {
-      expect(KEY_TYPES[type].id, type).toBe("subject");
+      expect(Object.entries(KEY_TYPES).find(([name]) => name === type)?.[1].id, type).toBe("subject");
     }
   });
 

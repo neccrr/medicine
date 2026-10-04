@@ -17,14 +17,14 @@ const PASSAGE_CHARS = 1500;
 /** Every section of a subject's summary and ebook, as plain-text passages. */
 async function subjectPassages(key: string): Promise<NotePassage[]> {
   const out: NotePassage[] = [];
-  const summary = summaries[key];
+  const summary = summaries.get(key);
   if (summary) {
     for (const s of splitMarkdownSections(summary)) {
       const text = markdownToPlainText(s.body);
       if (text) out.push({ title: `Summary: ${s.heading}`, text, to: `/summaries/${key}` });
     }
   }
-  const book = ebookMeta[key];
+  const book = ebookMeta.get(key);
   if (book) {
     const chapters = await Promise.all(book.chapters.map(async (c) => ({ c, md: await loadEbookChapter(`${key}/${c.id}`) })));
     for (const { c, md } of chapters) {
@@ -70,11 +70,12 @@ export async function findNotes(key: string, query: string, limit = 3): Promise<
   );
   return all
     .map((p, i) => {
+      const hay = haystacks.at(i);
       let score = 0;
       for (const t of terms) {
         const w = idf.get(t) ?? 0;
-        if (haystacks[i].title.includes(t)) score += w * 1.5;
-        else if (haystacks[i].text.includes(t)) score += w;
+        if (hay?.title.includes(t)) score += w * 1.5;
+        else if (hay?.text.includes(t)) score += w;
       }
       return { p, score };
     })

@@ -5,6 +5,7 @@ import type { BlockReadiness, SubjectReadiness } from "./readiness";
 import { readJSON, STORAGE_KEYS, writeJSON } from "./storage";
 import { drillLink, missedQuestions, weakTopics } from "./weakSpots";
 import { EXAM_QUESTION_TARGET, SECONDS_PER_QUESTION } from "./examFormat";
+import { entry } from "./records";
 
 // Today's plan: a short list of what to study today, sized to the minutes the student has,
 // built from what's due, what's left to learn and the days left before the exam. It's drawn up
@@ -48,10 +49,12 @@ const NEW_LABELS_CAP = 20;
 const NO_DATE_NEW_CARDS = 15;
 const NO_DATE_NEW_LABELS = 10;
 
-const minutesFor = (kind: PlanKind, n: number) => Math.max(1, Math.round(MINUTES_PER[kind] * n));
+const minutesPer = (kind: PlanKind): number => entry(MINUTES_PER, kind);
+
+const minutesFor = (kind: PlanKind, n: number) => Math.max(1, Math.round(minutesPer(kind) * n));
 
 /** Units of `kind` that fit in `minutes`. */
-const fits = (kind: PlanKind, minutes: number) => Math.floor(minutes / MINUTES_PER[kind]);
+const fits = (kind: PlanKind, minutes: number) => Math.floor(minutes / minutesPer(kind));
 
 /** New material per day so it's all seen before the strengthen phase (or the mock phase, if already past it). */
 function newQuota(unseen: number, daysLeft: number | null, phase: Phase, noDate: number, cap: number): number {
@@ -79,7 +82,7 @@ function candidates(br: BlockReadiness, phase: Phase, daysLeft: number | null): 
 
   if (phase === "exam-day" || phase === "past") {
     for (const s of subjects) {
-      if (summaries[s.key] !== undefined) out.push({ id: `summary:${s.key}`, kind: "summary", subject: s.key, title: `Skim the ${short(s)} summary`, detail: "Calm, quick look", target: 1, to: `/summaries/${s.key}`, priority: 1 });
+      if (summaries.has(s.key)) out.push({ id: `summary:${s.key}`, kind: "summary", subject: s.key, title: `Skim the ${short(s)} summary`, detail: "Calm, quick look", target: 1, to: `/summaries/${s.key}`, priority: 1 });
     }
     return phase === "exam-day" ? out.slice(0, 2) : [];
   }
@@ -92,12 +95,12 @@ function candidates(br: BlockReadiness, phase: Phase, daysLeft: number | null): 
   }
 
   if (phase === "final") {
-    if (weakest && summaries[weakest.key] !== undefined) out.push({ id: `summary:${weakest.key}`, kind: "summary", subject: weakest.key, title: `Read the ${short(weakest)} summary`, detail: "Weakest subject; light review", target: 1, to: `/summaries/${weakest.key}`, priority: 2 });
+    if (weakest && summaries.has(weakest.key)) out.push({ id: `summary:${weakest.key}`, kind: "summary", subject: weakest.key, title: `Read the ${short(weakest)} summary`, detail: "Weakest subject; light review", target: 1, to: `/summaries/${weakest.key}`, priority: 2 });
     return out;
   }
 
   if (phase === "mock") {
-    const papers = examPackagesByBlock[br.blockId] ?? [];
+    const papers = examPackagesByBlock.get(br.blockId) ?? [];
     const taken = new Set(br.mocks.map((m) => m.paper));
     const next = papers.find((p) => !taken.has(p.name));
     out.push({
@@ -139,7 +142,7 @@ function candidates(br: BlockReadiness, phase: Phase, daysLeft: number | null): 
     const reader = subjects.filter((s) => s.reading && s.reading.done < s.reading.chapters).sort((a, b) => a.reading!.done / a.reading!.chapters - b.reading!.done / b.reading!.chapters).at(0);
     if (reader && phase !== "strengthen") {
       const done = new Set(readJSON<string[]>(STORAGE_KEYS.ebookCompleted(reader.key), []));
-      const chapter = ebookMeta[reader.key]?.chapters.find((c) => !done.has(c.id));
+      const chapter = ebookMeta.get(reader.key)?.chapters.find((c) => !done.has(c.id));
       if (chapter) out.push({ id: `chapter:${reader.key}:${chapter.id}`, kind: "chapters", subject: reader.key, title: `Read "${chapter.title}"`, detail: `${short(reader)} ebook; mark it finished at the end`, target: 1, to: `/ebooks/${reader.key}/${chapter.id}`, priority: 2.5 });
     }
     // A quiz sitting in the subject whose quiz is least covered (or weakest).

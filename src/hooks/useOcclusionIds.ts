@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { loadOcclusionNotes, occlusionKeys } from "../lib/content";
 import { occlusionCards } from "../lib/occlusion";
 import type { OcclusionIds } from "../lib/readiness";
+import { setOwn } from "../lib/records";
 
 let cache: { ids: OcclusionIds; labels: Record<string, string> } | null = null;
 
@@ -19,8 +20,8 @@ export function useOcclusionIds(): { ids: OcclusionIds; labels: Record<string, s
       const labels: Record<string, string> = {};
       for (const [key, notes] of entries) {
         const cards = occlusionCards(notes);
-        ids[key] = cards.map((c) => c.id);
-        for (const c of cards) labels[c.id] = c.mask.label;
+        setOwn(ids, key, cards.map((c) => c.id));
+        for (const c of cards) setOwn(labels, c.id, c.mask.label);
       }
       cache = { ids, labels };
       if (live) setData(cache);

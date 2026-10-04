@@ -24,20 +24,20 @@ describe("content folders", () => {
 
   it("keys every content map by block and subject", () => {
     const keys = [
-      ...Object.keys(flashcardDecks),
-      ...Object.keys(quizBanks),
-      ...Object.keys(summaries),
+      ...[...flashcardDecks.keys()],
+      ...[...quizBanks.keys()],
+      ...[...summaries.keys()],
       ...ebookChapterKeys.map((k) => k.split("/").slice(0, 2).join("/")),
     ];
     expect(keys.filter((k) => !/^[^/]+\/[^/]+$/.test(k))).toEqual([]);
-    for (const s of flashcardSubjects) expect(flashcardDecks[keyOf(s)]?.length).toBeGreaterThan(0);
+    for (const s of flashcardSubjects) expect(flashcardDecks.get(keyOf(s))?.length).toBeGreaterThan(0);
   });
 
   it("uses unique flashcard and quiz ids across all decks", () => {
     // Card state and missed-question lists are stored by id, so an id reused across decks
     // would share progress.
-    const cardIds = Object.values(flashcardDecks).flatMap((deck = []) => deck.map((c) => c.id));
-    const questionIds = Object.values(quizBanks).flatMap((bank = []) => bank.map((q) => q.id));
+    const cardIds = [...flashcardDecks.values()].flatMap((deck) => deck.map((c) => c.id));
+    const questionIds = [...quizBanks.values()].flatMap((bank = []) => bank.map((q) => q.id));
     expect(cardIds.filter((id, i) => cardIds.indexOf(id) !== i)).toEqual([]);
     expect(questionIds.filter((id, i) => questionIds.indexOf(id) !== i)).toEqual([]);
   });
@@ -90,7 +90,7 @@ describe("subject covers", () => {
 describe("exam packages", () => {
   it("state their real question count in meta.json", async () => {
     const { examPackagesByBlock } = await import("./content");
-    const packages = Object.values(examPackagesByBlock).flatMap((list = []) => list);
+    const packages = [...examPackagesByBlock.values()].flat();
     expect(packages.length).toBeGreaterThan(0);
     for (const p of packages) expect((await p.load()).length, p.id).toBe(p.questionCount);
   });

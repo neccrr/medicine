@@ -1,3 +1,4 @@
+import { setOwn } from "./records";
 import { KEY_PREFIX, storageKey } from "./storageSchema";
 import { markDirty } from "./syncDirty";
 
@@ -75,7 +76,7 @@ export function exportAllProgress(): Record<string, unknown> {
     const key = window.localStorage.key(i);
     if (!key || !key.startsWith(KEY_PREFIX)) continue;
     try {
-      out[key] = JSON.parse(window.localStorage.getItem(key) ?? "null");
+      setOwn(out, key, JSON.parse(window.localStorage.getItem(key) ?? "null"));
     } catch {
       // skip unparsable entries
     }

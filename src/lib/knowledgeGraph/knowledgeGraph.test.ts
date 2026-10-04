@@ -24,13 +24,13 @@ describe("concept terms", () => {
 describe("building the map", () => {
   const md = (body: string) => `# Chapter\n\n${body}`;
   const input = {
-    chapters: {
-      "8.1/histology/ch1": md("## Junctions\n\n**Desmosomes** anchor cells in the **epidermis**.\n\nThe **epidermis** has desmosomes.\n\nDesmosomes and epidermis again."),
-      "8.2/anatomy/ch1": md("## Skin\n\nThe **epidermis** covers the body over the **dermis**.\n\nEpidermis on dermis.\n\nThe dermis lies under the epidermis."),
-    },
-    summaries: {},
-    occlusion: {},
-    relations: { "desmosome|epidermis": "found in" },
+    chapters: new Map([
+      ["8.1/histology/ch1", md("## Junctions\n\n**Desmosomes** anchor cells in the **epidermis**.\n\nThe **epidermis** has desmosomes.\n\nDesmosomes and epidermis again.")],
+      ["8.2/anatomy/ch1", md("## Skin\n\nThe **epidermis** covers the body over the **dermis**.\n\nEpidermis on dermis.\n\nThe dermis lies under the epidermis.")],
+    ]),
+    summaries: new Map<string, string>(),
+    occlusion: new Map(),
+    relations: new Map([["desmosome|epidermis", "found in"]]),
     minMentions: 1,
   };
 
@@ -45,7 +45,7 @@ describe("building the map", () => {
 
   it("links concepts that come up together, with AI labels when there are any", () => {
     const g = buildKnowledgeGraph(input);
-    const name = (i: number) => g.nodes[i].id;
+    const name = (i: number) => g.nodes.at(i)?.id;
     const links = g.edges.map((e) => [name(e.s), name(e.t)].sort().join("|"));
     expect(links).toContain("dermis|epidermis");
     expect(links).toContain("desmosome|epidermis");
@@ -67,7 +67,7 @@ describe("the course's map", () => {
     const bridging = g.nodes.filter((n) => new Set(n.subjects.map((s) => s.split("/")[0])).size > 1);
     expect(bridging.length).toBeGreaterThan(10);
     const json = JSON.stringify(g);
-    const first = Object.values(examPackagesByBlock).flat()[0];
+    const first = [...examPackagesByBlock.values()].flat()[0];
     const question = first ? (await first.load())[0]?.question : undefined;
     if (question) expect(json.includes(question.slice(0, 40))).toBe(false);
   }, 60_000);

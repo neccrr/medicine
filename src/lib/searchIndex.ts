@@ -98,7 +98,7 @@ function subjectDocs(): SearchDoc[] {
     ...studyBlocks
       .filter(
         (b) =>
-          (examPackagesByBlock[b.id]?.length ?? 0) > 0 ||
+          (examPackagesByBlock.get(b.id)?.length ?? 0) > 0 ||
           quizQuestionsInBlock(b.id).length > 0,
       )
       .map((b) => ({
@@ -108,10 +108,10 @@ function subjectDocs(): SearchDoc[] {
         detail: "Timed block exam",
         to: `/exam/${b.id}`,
       })),
-    ...Object.keys(modulesByBlockSubject).map((key) => {
+    ...[...modulesByBlockSubject.keys()].map((key) => {
       const [blockId, subjectId] = key.split("/");
       const label = subjectId.charAt(0).toUpperCase() + subjectId.slice(1);
-      const count = modulesByBlockSubject[key]?.length ?? 0;
+      const count = modulesByBlockSubject.get(key)?.length ?? 0;
       return {
         type: "module" as const,
         id: `md-${key}`,
@@ -142,8 +142,8 @@ function subjectOf(key: string): string {
   return key.split("/")[1] ?? key;
 }
 
-function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
-  const flashcardDocs = Object.entries(flashcardDecks).flatMap(([key, cards = []]) =>
+function contentDocs(ebookChapters: ReadonlyMap<string, string>): SearchDoc[] {
+  const flashcardDocs = [...flashcardDecks].flatMap(([key, cards]) =>
     cards.map((card) => ({
       type: "flashcard" as const,
       id: card.id,
@@ -154,7 +154,7 @@ function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
       keywords: card.tags.join(" "),
     })),
   );
-  const quizDocs = Object.entries(quizBanks).flatMap(([key, bank = []]) =>
+  const quizDocs = [...quizBanks].flatMap(([key, bank]) =>
     bank.map((q) => ({
       type: "quiz" as const,
       id: q.id,
@@ -165,7 +165,7 @@ function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
       keywords: q.options.join(" "),
     })),
   );
-  const summaryDocs = Object.entries(summaries).flatMap(([key, markdown = ""]) => {
+  const summaryDocs = [...summaries].flatMap(([key, markdown = ""]) => {
     const subjectId = subjectOf(key);
     const label = summarySubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
     const to = `/summaries/${key}`;
@@ -196,9 +196,9 @@ function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
       }))
       .filter((doc) => doc.detail.length > 0);
   });
-  const ebookDocs = Object.entries(ebookChapters).flatMap(([key, markdown]) => {
+  const ebookDocs = [...ebookChapters].flatMap(([key, markdown]) => {
     const [blockId, subjectId, chapterId] = key.split("/");
-    const meta = ebookMeta[`${blockId}/${subjectId}`];
+    const meta = ebookMeta.get(`${blockId}/${subjectId}`);
     const chapterTitle = meta?.chapters.find((c) => c.id === chapterId)?.title ?? chapterId;
     const to = `/ebooks/${blockId}/${subjectId}/${chapterId}`;
     const sections = splitMarkdownSections(markdown);
@@ -236,7 +236,7 @@ function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
  * the Search page. Ebook chapters load on demand, so pass them in once they've arrived; without
  * them the index covers everything else.
  */
-export function buildContentDocs(ebookChapters: Record<string, string> = {}): SearchDoc[] {
+export function buildContentDocs(ebookChapters: ReadonlyMap<string, string> = new Map()): SearchDoc[] {
   return contentDocs(ebookChapters);
 }
 

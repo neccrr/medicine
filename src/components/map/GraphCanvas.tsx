@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import type { KnowledgeGraph } from "../../lib/knowledgeGraph/types";
+import type { GraphNode, KnowledgeGraph } from "../../lib/knowledgeGraph/types";
 
 // The knowledge map, drawn on a canvas: concepts as dots (sized by how often they come up,
 // colored by subject or mastery), links as hairlines. Drag to pan, wheel or pinch to zoom, tap
@@ -90,11 +90,11 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     ctx.globalAlpha = 1;
 
     // Dots, with a surface ring so they stay apart where they overlap.
-    const radius = (i: number) => Math.max(2.2, graph.nodes[i].r * Math.min(1.6, Math.sqrt(k)));
+    const radius = (n: GraphNode) => Math.max(2.2, n.r * Math.min(1.6, Math.sqrt(k)));
     graph.nodes.forEach((n, i) => {
-      if (!visible[i]) return;
+      if (!visible.at(i)) return;
       const st = styleOf(i);
-      const r = radius(i);
+      const r = radius(n);
       ctx.globalAlpha = lit(i) ? 1 : 0.14;
       ctx.beginPath();
       ctx.arc(sx(n.x), sy(n.y), r, 0, Math.PI * 2);
@@ -113,11 +113,11 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
         ctx.setLineDash([]);
       }
     });
-    if (selected !== null && visible[selected]) {
-      const n = graph.nodes[selected];
+    const chosen = selected !== null && visible.at(selected) ? graph.nodes.at(selected) : undefined;
+    if (chosen) {
       ctx.globalAlpha = 1;
       ctx.beginPath();
-      ctx.arc(sx(n.x), sy(n.y), radius(selected) + 6, 0, Math.PI * 2);
+      ctx.arc(sx(chosen.x), sy(chosen.y), radius(chosen) + 6, 0, Math.PI * 2);
       ctx.lineWidth = 2.5;
       ctx.strokeStyle = accent;
       ctx.stroke();
@@ -132,11 +132,11 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     const order = [...(selected !== null ? [selected] : []), ...highlight, ...rank.current.slice(0, shown)];
     const done = new Set<number>();
     for (const i of order) {
-      if (done.has(i) || !visible[i] || !lit(i)) continue;
+      const n = graph.nodes.at(i);
+      if (!n || done.has(i) || !visible.at(i) || !lit(i)) continue;
       done.add(i);
-      const n = graph.nodes[i];
       const x = sx(n.x);
-      const y = sy(n.y) + radius(i) + 4;
+      const y = sy(n.y) + radius(n) + 4;
       if (x < -60 || x > w + 60 || y < -20 || y > h + 20) continue;
       const tw = ctx.measureText(n.label).width;
       const force = i === selected || highlight.has(i);
@@ -159,14 +159,13 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
 
   const bounds = useCallback(
     (only?: number[]) => {
-      const idx = only ?? graph.nodes.map((_, i) => i).filter((i) => visible[i]);
-      if (idx.length === 0) return { x: 0, y: 0, k: 1 };
+      const nodes = only ? only.flatMap((i) => graph.nodes.slice(i, i + 1)) : graph.nodes.filter((_, i) => visible.at(i));
+      if (nodes.length === 0) return { x: 0, y: 0, k: 1 };
       let x0 = Infinity;
       let x1 = -Infinity;
       let y0 = Infinity;
       let y1 = -Infinity;
-      for (const i of idx) {
-        const n = graph.nodes[i];
+      for (const n of nodes) {
         x0 = Math.min(x0, n.x);
         x1 = Math.max(x1, n.x);
         y0 = Math.min(y0, n.y);
@@ -202,8 +201,10 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     () => ({
       focusNode: (i: number) => {
         const near = [i, ...graph.edges.filter((e) => e.s === i || e.t === i).map((e) => (e.s === i ? e.t : e.s))];
+        const n = graph.nodes.at(i);
+        if (!n) return;
         const b = bounds(near);
-        animateTo({ x: graph.nodes[i].x, y: graph.nodes[i].y, k: Math.max(1.2, Math.min(2.4, b.k)) });
+        animateTo({ x: n.x, y: n.y, k: Math.max(1.2, Math.min(2.4, b.k)) });
       },
       fit: () => { animateTo(bounds()); },
       zoom: (f: number) => { animateTo({ ...view.current, k: Math.min(6, Math.max(0.12, view.current.k * f)) }); },
@@ -212,12 +213,16 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
   );
 
   useEffect(() => {
-    const deg = new Array(graph.nodes.length).fill(0);
+    // Label priority: mentions plus link weight, biggest first.
+    const degree = new Map<number, number>();
     for (const e of graph.edges) {
-      deg[e.s] += e.w;
-      deg[e.t] += e.w;
+      degree.set(e.s, (degree.get(e.s) ?? 0) + e.w);
+      degree.set(e.t, (degree.get(e.t) ?? 0) + e.w);
     }
-    rank.current = graph.nodes.map((_, i) => i).sort((a, b) => graph.nodes[b].mentions + deg[b] - (graph.nodes[a].mentions + deg[a]));
+    rank.current = graph.nodes
+      .map((n, i) => ({ i, score: n.mentions + (degree.get(i) ?? 0) }))
+      .sort((a, b) => b.score - a.score)
+      .map((r) => r.i);
   }, [graph]);
 
   // Size the canvas to its box (and the screen's pixel density); fit the map the first time.
@@ -277,7 +282,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     let best: number | null = null;
     let bestD = Infinity;
     graph.nodes.forEach((n, i) => {
-      if (!visible[i]) return;
+      if (!visible.at(i)) return;
       const dx = (n.x - vx) * k + w / 2 - px;
       const dy = (n.y - vy) * k + h / 2 - py;
       const d = Math.hypot(dx, dy);

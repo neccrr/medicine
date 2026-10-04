@@ -1,3 +1,4 @@
+import { setOwn } from "./records";
 import { storageKey } from "./storageSchema";
 import { isSyncableKey } from "./syncMerge";
 
@@ -29,7 +30,7 @@ export function writeDirty(map: DirtyMap, storage: Storage = window.localStorage
 export function markDirty(key: string, now: number = Date.now()): void {
   if (!isSyncableKey(key)) return;
   const map = readDirty();
-  map[key] = now;
+  setOwn(map, key, now);
   writeDirty(map);
   if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(DIRTY_EVENT));
 }

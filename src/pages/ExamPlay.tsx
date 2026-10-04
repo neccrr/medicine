@@ -41,7 +41,7 @@ function scoreMessage(score: number, total: number): string {
 export function ExamPlay() {
   const { blockId = "", packageId } = useParams();
   const block = blockById(blockId);
-  const packages = examPackagesByBlock[blockId] ?? [];
+  const packages = examPackagesByBlock.get(blockId) ?? [];
   // A block with one package plays it directly (transparent to the user); with several, the
   // caller must pick one via /exam/:blockId/:packageId — this component itself is used both
   // as the picker (no packageId) and the player (packageId set).
@@ -445,7 +445,7 @@ export function ExamPlay() {
                         role="radio"
                         aria-checked={selected === oi}
                       >
-                        <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
+                        <span className="quiz-option-letter">{OPTION_LETTERS.charAt(oi)}</span>
                         <span className="quiz-option-text">{opt}</span>
                       </button>
                     );
@@ -549,7 +549,7 @@ export function ExamPlay() {
                           else if (oi === chosen) cls += " incorrect";
                           return (
                             <div key={oi} className={cls}>
-                              <span className="quiz-option-letter">{OPTION_LETTERS[oi]}</span>
+                              <span className="quiz-option-letter">{OPTION_LETTERS.charAt(oi)}</span>
                               <span className="quiz-option-text">{opt}</span>
                             </div>
                           );

@@ -19,9 +19,9 @@ export function EbookSubjects() {
           <h2 className="block-section-heading">{block.label}</h2>
           <div className="card-grid">
             {subjects.map((subject) => {
-              const meta = ebookMeta[keyOf(subject)];
+              const meta = ebookMeta.get(keyOf(subject));
               if (!meta) return null;
-              const pdfs = ebookPdfs[keyOf(subject)] ?? [];
+              const pdfs = ebookPdfs.get(keyOf(subject)) ?? [];
               const position = readJSON<ReadingPosition | null>(
                 STORAGE_KEYS.ebookPosition(keyOf(subject)),
                 null,

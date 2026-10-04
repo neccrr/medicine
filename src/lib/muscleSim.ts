@@ -88,8 +88,7 @@ export function activeForceAt(stimuli: readonly Stimulus[], t: number, lengthMm:
   let activation = 0;
   let recruit = 0;
   // Walk back from the latest stimulus; older twitches have ended and contribute nothing.
-  for (let i = stimuli.length - 1; i >= 0; i--) {
-    const s = stimuli[i];
+  for (const s of [...stimuli].reverse()) {
     const since = t - s.t;
     if (since < 0) continue;
     if (since > TWITCH_END_MS) break;
@@ -176,12 +175,12 @@ export function fatigueRun(bouts: readonly [number, number][], perSecond: number
   const plateau = tetanicForce(perSecond, recruit);
   const points: [number, number][] = [];
   const peaks: number[] = bouts.map(() => 0);
-  const rests = bouts.slice(1).map((b, i) => b[0] - bouts[i][1]);
+  const rests = bouts.slice(1).map((b, i) => b[0] - (bouts.at(i)?.[1] ?? b[0]));
   let state: FatigueState = { phi: 1, force: 0 };
   for (let t = 0; t <= endSec + 1e-9; t += stepSec) {
     const bout = bouts.findIndex(([a, b]) => t >= a && t < b);
     state = fatigueTick(state, stepSec, bout !== -1, plateau);
-    if (bout !== -1) peaks[bout] = Math.max(peaks[bout], state.force);
+    if (bout !== -1) peaks.splice(bout, 1, Math.max(peaks.at(bout) ?? 0, state.force));
     points.push([t, state.force]);
   }
   return { points, rests, peaks };

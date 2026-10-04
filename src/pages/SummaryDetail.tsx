@@ -11,7 +11,7 @@ import { subjectHueStyle } from "../lib/subjectStyle";
 export function SummaryDetail() {
   const { blockId = "", subjectId = "" } = useParams();
   const key = subjectKey(blockId, subjectId);
-  const markdown = summaries[key];
+  const markdown = summaries.get(key);
   useHashScroll(markdown);
   const [readingPrefs, setReadingPrefs] = useReadingPrefs();
 

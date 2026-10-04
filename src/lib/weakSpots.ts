@@ -42,7 +42,7 @@ const struggling = (s: { lapses?: number; interval?: number } | undefined) => !!
 
 export function weakTopics(subject: string, states: CardStateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(subject), {})): WeakTopic[] {
   const byTag = new Map<string, WeakTopic>();
-  for (const card of flashcardDecks[subject] ?? []) {
+  for (const card of flashcardDecks.get(subject) ?? []) {
     for (const tag of card.tags) {
       const t = byTag.get(tag) ?? { subject, tag, weak: 0, total: 0, lapses: 0, to: `/flashcards/${subject}?tag=${encodeURIComponent(tag)}` };
       t.total += 1;
@@ -58,7 +58,7 @@ export function weakTopics(subject: string, states: CardStateMap = readJSON<Card
 }
 
 export function missedQuestions(subject: string, attempts: QuizAttempt[] = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(subject), [])): MissedQuestion[] {
-  const bank = new Map((quizBanks[subject] ?? []).map((q) => [q.id, q.question]));
+  const bank = new Map((quizBanks.get(subject) ?? []).map((q) => [q.id, q.question]));
   const counts = new Map<string, number>();
   for (const a of attempts) for (const id of a.missedIds) if (bank.has(id)) counts.set(id, (counts.get(id) ?? 0) + 1);
   return [...counts.entries()]

@@ -16,7 +16,7 @@ function memoryStorage(initial: Record<string, string>): Storage {
     get length() {
       return data.size;
     },
-    key: (i: number) => Array.from(data.keys())[i] ?? null,
+    key: (i: number) => Array.from(data.keys()).at(i) ?? null,
     getItem: (k: string) => data.get(k) ?? null,
     setItem: (k: string, v: string) => void data.set(k, v),
     removeItem: (k: string) => void data.delete(k),
@@ -39,6 +39,11 @@ describe("migratedKey", () => {
     expect(migratedKey("medicine:theme", subjects)).toBeNull();
     expect(migratedKey("medicine:examhistory:1.1", subjects)).toBeNull();
     expect(migratedKey("medicine:flashcards:mystery", subjects)).toBeNull();
+  });
+
+  it("ignores keys whose type is an Object.prototype name", () => {
+    expect(migratedKey("medicine:constructor:physiology", subjects)).toBeNull();
+    expect(migratedKey("medicine:tostring:physiology", subjects)).toBeNull();
   });
 });
 

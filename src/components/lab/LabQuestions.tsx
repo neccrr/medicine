@@ -5,9 +5,10 @@ const LETTERS = "ABCDEFGH";
 
 /** The activity's check questions, answered one by one with instant feedback. */
 export function LabQuestions({ questions }: { questions: LabQuestion[] }) {
-  const [answers, setAnswers] = useState<Partial<Record<number, number>>>({});
-  const answered = Object.keys(answers).length;
-  const correct = questions.filter((q, i) => answers[i] === q.answer).length;
+  /** The option chosen for each question answered so far, by question index. */
+  const [answers, setAnswers] = useState<ReadonlyMap<number, number>>(new Map());
+  const answered = answers.size;
+  const correct = questions.filter((q, i) => answers.get(i) === q.answer).length;
 
   return (
     <section className="lab-card lab-questions" aria-labelledby="lab-questions-title">
@@ -17,7 +18,7 @@ export function LabQuestions({ questions }: { questions: LabQuestion[] }) {
           <span className="lab-questions-score">
             {correct}/{questions.length} correct
             {answered === questions.length && (
-              <button type="button" className="btn-link" onClick={() => { setAnswers({}); }}>
+              <button type="button" className="btn-link" onClick={() => { setAnswers(new Map()); }}>
                 Try again
               </button>
             )}
@@ -26,7 +27,7 @@ export function LabQuestions({ questions }: { questions: LabQuestion[] }) {
       </div>
       <ol className="lab-question-list">
         {questions.map((q, qi) => {
-          const chosen = answers[qi];
+          const chosen = answers.get(qi);
           const revealed = chosen !== undefined;
           return (
             <li key={qi} className="lab-question">
@@ -46,9 +47,9 @@ export function LabQuestions({ questions }: { questions: LabQuestion[] }) {
                       role="radio"
                       aria-checked={chosen === oi}
                       disabled={revealed}
-                      onClick={() => { setAnswers((prev) => ({ ...prev, [qi]: oi })); }}
+                      onClick={() => { setAnswers((prev) => new Map(prev).set(qi, oi)); }}
                     >
-                      <span className="quiz-option-letter">{LETTERS[oi]}</span>
+                      <span className="quiz-option-letter">{LETTERS.charAt(oi)}</span>
                       <span className="quiz-option-text">{opt}</span>
                     </button>
                   );

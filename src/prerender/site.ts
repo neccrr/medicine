@@ -86,17 +86,17 @@ async function content(path: string): Promise<string> {
     case "map":
       return mapContent();
     case "flashcards":
-      return subjectList("flashcards", flashcardSubjects, (s) => `(${flashcardDecks[keyOf(s)]?.length ?? 0} cards)`);
+      return subjectList("flashcards", flashcardSubjects, (s) => `(${flashcardDecks.get(keyOf(s))?.length ?? 0} cards)`);
     case "quizzes":
-      return subjectList("quizzes", quizSubjects, (s) => `(${quizBanks[keyOf(s)]?.length ?? 0} questions)`);
+      return subjectList("quizzes", quizSubjects, (s) => `(${quizBanks.get(keyOf(s))?.length ?? 0} questions)`);
     case "modules":
-      return subjectList("modules", moduleSubjects, (s) => `(${modulesByBlockSubject[keyOf(s)]?.length ?? 0} modules)`);
+      return subjectList("modules", moduleSubjects, (s) => `(${modulesByBlockSubject.get(keyOf(s))?.length ?? 0} modules)`);
     case "summaries":
       return subjectList("summaries", summarySubjects, () => "");
     case "ebooks":
       return `<ul>${ebookSubjects
         .map((s) => {
-          const book = ebookMeta[keyOf(s)];
+          const book = ebookMeta.get(keyOf(s));
           return book ? `<li><a href="/ebooks/${keyOf(s)}">${esc(book.title)}</a>: ${esc(book.description)}</li>` : "";
         })
         .join("")}</ul>`;
@@ -134,7 +134,7 @@ async function content(path: string): Promise<string> {
     case "subjects/*":
       return `<ul>${subjectSections(key)
         .map((s) => `<li><a href="${s.path}">${esc(s.name)}</a></li>`)
-        .join("")}</ul>${(ebookMeta[key]?.chapters ?? []).length ? `<h2>Chapters</h2><ol>${(ebookMeta[key]?.chapters ?? []).map((c) => `<li><a href="/ebooks/${key}/${c.id}">${esc(c.title)}</a></li>`).join("")}</ol>` : ""}`;
+        .join("")}</ul>${(ebookMeta.get(key)?.chapters ?? []).length ? `<h2>Chapters</h2><ol>${(ebookMeta.get(key)?.chapters ?? []).map((c) => `<li><a href="/ebooks/${key}/${c.id}">${esc(c.title)}</a></li>`).join("")}</ol>` : ""}`;
     case "occlusion":
       return `<ul>${occlusionKeys.map((k) => `<li><a href="/occlusion/${k}">${esc(flashcardSubjects.find((s) => keyOf(s) === k)?.label ?? k)}</a></li>`).join("")}</ul>`;
     case "occlusion/*": {
@@ -142,16 +142,16 @@ async function content(path: string): Promise<string> {
       return `<h2>Figures</h2><ul>${notes.map((n) => `<li>${esc(n.title)} (${n.masks.length} labels)</li>`).join("")}</ul>`;
     }
     case "flashcards/*":
-      return `<h2>Cards in this deck</h2><ul>${(flashcardDecks[key] ?? []).map((c) => `<li>${esc(c.front)}</li>`).join("")}</ul>`;
+      return `<h2>Cards in this deck</h2><ul>${(flashcardDecks.get(key) ?? []).map((c) => `<li>${esc(c.front)}</li>`).join("")}</ul>`;
     case "quizzes/*":
-      return `<h2>Questions</h2><ol>${(quizBanks[key] ?? []).map((q) => `<li>${esc(q.question)}</li>`).join("")}</ol>`;
+      return `<h2>Questions</h2><ol>${(quizBanks.get(key) ?? []).map((q) => `<li>${esc(q.question)}</li>`).join("")}</ol>`;
     case "modules/*":
-      return `<ul>${(modulesByBlockSubject[key] ?? []).map((m) => `<li>${esc(m.name)}</li>`).join("")}</ul>`;
+      return `<ul>${(modulesByBlockSubject.get(key) ?? []).map((m) => `<li>${esc(m.name)}</li>`).join("")}</ul>`;
     case "summaries/*":
-      return `<article>${renderMarkdown(summaries[key] ?? "")}</article>`;
+      return `<article>${renderMarkdown(summaries.get(key) ?? "")}</article>`;
     case "exam/*": {
       // Past papers belong to the institution: list the exams, never their questions.
-      const packages = examPackagesByBlock[blockId] ?? [];
+      const packages = examPackagesByBlock.get(blockId) ?? [];
       if (packages.length === 0) {
         return `<p>A timed exam drawn from the block's ${quizQuestionsInBlock(blockId).length} quiz questions.</p>`;
       }
@@ -161,7 +161,7 @@ async function content(path: string): Promise<string> {
         .join("")}</ul>`;
     }
     case "ebooks/*": {
-      const book = ebookMeta[key];
+      const book = ebookMeta.get(key);
       if (!book) return "";
       const toc = `<h2>Chapters</h2><ol>${book.chapters
         .map((c) => `<li><a href="/ebooks/${key}/${c.id}">${esc(c.title)}</a></li>`)

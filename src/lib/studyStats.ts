@@ -1,4 +1,5 @@
 import { dayTotals, localDateKey, type StudyKind, type StudyLog } from "./activity";
+import { own } from "./records";
 
 // Figures from the study log for the Progress page: how much was studied per day, this week
 // against last, and the time of day the student studies most.
@@ -55,8 +56,9 @@ export function bestStudyTime(log: StudyLog, minimum = 40): string | null {
   const byHour = Array.from({ length: 24 }, (_, h) => Number(log.hours[String(h)]) || 0);
   const total = byHour.reduce((a, b) => a + b, 0);
   if (total < minimum) return null;
-  let best = 0;
-  for (let h = 1; h < 24; h++) if (byHour[h] + byHour[(h + 1) % 24] > byHour[best] + byHour[(best + 1) % 24]) best = h;
+  // Each hour with the one after it; the first busiest pair wins.
+  const pairs = byHour.map((n, h) => n + (byHour.at((h + 1) % 24) ?? 0));
+  const best = pairs.indexOf(Math.max(...pairs));
   const label = (h: number) => {
     const hour = h % 12 === 0 ? 12 : h % 12;
     return { hour, half: h < 12 ? "am" : "pm" };
@@ -68,7 +70,7 @@ export function bestStudyTime(log: StudyLog, minimum = 40): string | null {
 
 /** One day's work by subject, for tapping a day on the heatmap. */
 export function dayDetail(log: StudyLog, date: string): { subject: string; counts: Partial<Record<StudyKind, number>> }[] {
-  return Object.entries(log.days[date] ?? {})
+  return Object.entries(own(log.days, date) ?? {})
     .map(([subject, counts = {}]) => ({ subject, counts }))
     .sort((a, b) => a.subject.localeCompare(b.subject));
 }

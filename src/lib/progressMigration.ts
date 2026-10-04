@@ -2,6 +2,7 @@ import type { Subject } from "../types/content";
 import { studyBlocks } from "./blocks";
 import { ebookSubjects, flashcardSubjects, keyOf, quizSubjects, summarySubjects } from "./content";
 import { storageKey, type KeyTypeName } from "./storageSchema";
+import { own } from "./records";
 
 /**
  * Per-subject progress used to be stored under the bare subject id ("medicine:flashcards:physiology").
@@ -41,7 +42,7 @@ export function migratedKey(
   const match = key.match(/^medicine:([a-z]+):([^/]+)$/);
   if (!match) return null;
   const [, type, subjectId] = match;
-  const subjects = subjectsByType[type];
+  const subjects = own(subjectsByType, type);
   if (!subjects) return null;
   const candidates = subjects
     .filter((s) => s.id === subjectId)

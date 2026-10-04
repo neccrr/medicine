@@ -17,7 +17,7 @@ class MemStorage implements Storage {
     return this.m.size;
   }
   key(i: number) {
-    return [...this.m.keys()][i] ?? null;
+    return [...this.m.keys()].at(i) ?? null;
   }
   getItem(k: string) {
     return this.m.get(k) ?? null;

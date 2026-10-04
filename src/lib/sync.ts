@@ -1,3 +1,4 @@
+import { deleteOwn, own } from "./records";
 import { KEY_PREFIX, keptOnClear, storageKey } from "./storageSchema";
 import { isSyncableKey, mergeEntry, type SyncEntry } from "./syncMerge";
 import { readDirty, writeDirty } from "./syncDirty";
@@ -89,7 +90,7 @@ async function runSync(userId: string, { keepalive }: { keepalive?: boolean }, d
   const changes: SyncEntry[] = [];
   for (const key of keys) {
     const v = readValue(storage, key);
-    if (v.ok) changes.push({ key, value: v.value, updatedAt: dirty[key] ?? 0 });
+    if (v.ok) changes.push({ key, value: v.value, updatedAt: own(dirty, key) ?? 0 });
   }
 
   const since = firstForUser ? 0 : state.since;
@@ -139,7 +140,8 @@ async function runSync(userId: string, { keepalive }: { keepalive?: boolean }, d
   }
 
   for (const key of keys) {
-    if (latestDirty[key] !== undefined && latestDirty[key] <= requestStart) delete latestDirty[key];
+    const changedAt = own(latestDirty, key);
+    if (changedAt !== undefined && changedAt <= requestStart) deleteOwn(latestDirty, key);
   }
   writeDirty(latestDirty, storage);
   storage.setItem(SYNC_STATE_KEY, JSON.stringify({ userId, since: serverTime, lastSyncedAt: deps.now() } satisfies SyncState));

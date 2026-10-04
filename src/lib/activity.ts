@@ -1,3 +1,4 @@
+import { own, setOwn } from "./records";
 import { readJSON, writeJSON, STORAGE_KEYS } from "./storage";
 
 function toDateKey(date: Date): string {
@@ -42,9 +43,10 @@ export function getLongestStreak(days: string[] = getActivityDays()): number {
   let longest = 1;
   let current = 1;
 
-  for (let i = 1; i < sorted.length; i++) {
-    const prev = new Date(sorted[i - 1]);
-    const curr = new Date(sorted[i]);
+  for (const [i, day] of sorted.entries()) {
+    if (i === 0) continue;
+    const prev = new Date(sorted.at(i - 1) ?? day);
+    const curr = new Date(day);
     const diffDays = Math.round(
       (curr.getTime() - prev.getTime()) / 86_400_000,
     );
@@ -83,22 +85,28 @@ export function logStudy(subject: string, kind: StudyKind, n = 1, at: Date = new
   if (!(n > 0)) return;
   const log = getStudyLog();
   const day = localDateKey(at);
-  const today = (log.days[day] ??= {});
-  const counts = (today[subject] ??= {});
-  counts[kind] = (counts[kind] ?? 0) + n;
+  const today = own(log.days, day) ?? {};
+  const counts = own(today, subject) ?? {};
+  setOwn(counts, kind, (own(counts, kind) ?? 0) + n);
+  setOwn(today, subject, counts);
+  setOwn(log.days, day, today);
   const hour = String(at.getHours());
-  log.hours[hour] = (log.hours[hour] ?? 0) + n;
-  const keep = Object.keys(log.days).sort().slice(-LOG_DAYS);
-  if (keep.length < Object.keys(log.days).length) log.days = Object.fromEntries(keep.map((d) => [d, log.days[d]]));
+  setOwn(log.hours, hour, (own(log.hours, hour) ?? 0) + n);
+  const days = Object.entries(log.days).sort(([a], [b]) => a.localeCompare(b));
+  if (days.length > LOG_DAYS) log.days = Object.fromEntries(days.slice(-LOG_DAYS));
   writeJSON(STORAGE_KEYS.studyLog, log);
 }
 
 /** One day's totals by kind, across subjects (optionally only those matching `subject`). */
 export function dayTotals(log: StudyLog, day: string, subject?: (key: string) => boolean): Record<StudyKind, number> {
   const out: Record<StudyKind, number> = { cards: 0, labels: 0, questions: 0, chapters: 0, exams: 0 };
-  for (const [key, counts] of Object.entries(log.days[day] ?? {})) {
+  for (const [key, counts = {}] of Object.entries(own(log.days, day) ?? {})) {
     if (subject && !subject(key)) continue;
-    for (const kind of Object.keys(out) as StudyKind[]) out[kind] += Number(counts?.[kind]) || 0;
+    out.cards += Number(counts.cards) || 0;
+    out.labels += Number(counts.labels) || 0;
+    out.questions += Number(counts.questions) || 0;
+    out.chapters += Number(counts.chapters) || 0;
+    out.exams += Number(counts.exams) || 0;
   }
   return out;
 }

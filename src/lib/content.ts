@@ -17,9 +17,10 @@ const quizModules = import.meta.glob<QuizQuestion[]>(
 // when an exam opens; every other page needs only each package's name and size (meta.json).
 const examBankLoaders = import.meta.glob<QuizQuestion[]>("../../content/exams/block/*/*/bank.json", { import: "default" });
 // A package without its meta.json gets a name from its folder.
-const examPackageMetaModules: Partial<Record<string, { name?: string; questions?: number }>> = import.meta.glob<{ name: string; questions: number }>(
-  "../../content/exams/block/*/*/meta.json",
-  { eager: true, import: "default" },
+const examPackageMetaModules = new Map<string, { name?: string; questions?: number }>(
+  Object.entries(
+    import.meta.glob<{ name: string; questions: number }>("../../content/exams/block/*/*/meta.json", { eager: true, import: "default" }),
+  ),
 );
 const summaryModules = import.meta.glob<string>(
   "../../content/summaries/block/*/*.md",
@@ -140,22 +141,31 @@ function subjectsFromKeys(keys: Iterable<string>, label: (key: string, id: strin
     });
 }
 
-function keyedBy<T>(modules: Record<string, T>): Record<string, T> {
-  return Object.fromEntries(Object.entries(modules).map(([path, value]) => [keyFromPath(path), value]));
+// The content maps are Maps rather than plain objects because their keys come from URLs: a plain
+// object would answer "constructor" or "__proto__" with something inherited from Object.prototype.
+function keyedBy<T>(modules: Record<string, T>): Map<string, T> {
+  return new Map(Object.entries(modules).map(([path, value]) => [keyFromPath(path), value]));
 }
 
-function groupedBy<T>(modules: Record<string, string>, make: (path: string, url: string) => T, sortKey: (item: T) => string): Record<string, T[]> {
-  const out: Record<string, T[]> = {};
-  for (const [path, url] of Object.entries(modules)) (out[keyFromPath(path)] ??= []).push(make(path, url));
-  for (const list of Object.values(out)) list.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
+/** Appends to the list under `key`, starting it when there's none yet. */
+function pushTo<T>(map: Map<string, T[]>, key: string, item: T): void {
+  const list = map.get(key);
+  if (list) list.push(item);
+  else map.set(key, [item]);
+}
+
+function groupedBy<T>(modules: Record<string, string>, make: (path: string, url: string) => T, sortKey: (item: T) => string): Map<string, T[]> {
+  const out = new Map<string, T[]>();
+  for (const [path, url] of Object.entries(modules)) pushTo(out, keyFromPath(path), make(path, url));
+  for (const list of out.values()) list.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   return out;
 }
 
 /** Flashcard decks, keyed by "{blockId}/{subjectId}". */
-export const flashcardDecks: Partial<Record<string, Flashcard[]>> = keyedBy(flashcardModules);
+export const flashcardDecks: ReadonlyMap<string, Flashcard[]> = keyedBy(flashcardModules);
 
 /** Quiz banks, keyed by "{blockId}/{subjectId}". */
-export const quizBanks: Partial<Record<string, QuizQuestion[]>> = keyedBy(quizModules);
+export const quizBanks: ReadonlyMap<string, QuizQuestion[]> = keyedBy(quizModules);
 
 export interface ExamPackage {
   id: string;
@@ -167,27 +177,26 @@ export interface ExamPackage {
 }
 
 /** Dedicated exam question packages, keyed by block id — a block may offer more than one. */
-export const examPackagesByBlock: Partial<Record<string, ExamPackage[]>> = {};
+const examPackages = new Map<string, ExamPackage[]>();
 for (const [path, load] of Object.entries(examBankLoaders)) {
   const { blockId, packageId } = examPackagePath(path);
-  const meta = examPackageMetaModules[path.replace(/bank\.json$/, "meta.json")];
-  (examPackagesByBlock[blockId] ??= []).push({
+  const meta = examPackageMetaModules.get(path.replace(/bank\.json$/, "meta.json"));
+  pushTo(examPackages, blockId, {
     id: packageId,
     name: meta?.name ?? labelize(packageId),
     questionCount: meta?.questions ?? 0,
     load,
   });
 }
-for (const list of Object.values(examPackagesByBlock)) {
-  list?.sort((a, b) => a.name.localeCompare(b.name));
-}
+for (const list of examPackages.values()) list.sort((a, b) => a.name.localeCompare(b.name));
+export const examPackagesByBlock: ReadonlyMap<string, ExamPackage[]> = examPackages;
 
 /** Summaries, keyed by "{blockId}/{subjectId}" (from content/summaries/block/{blockId}/{subject}.md). */
-export const summaries: Partial<Record<string, string>> = keyedBy(summaryModules);
+export const summaries: ReadonlyMap<string, string> = keyedBy(summaryModules);
 
 export const tips: string[] = Object.values(tipsModule)[0] ?? [];
 
-export const flashcardSubjects: Subject[] = subjectsFromKeys(Object.keys(flashcardDecks));
+export const flashcardSubjects: Subject[] = subjectsFromKeys(flashcardDecks.keys());
 
 export interface QuizGame {
   name: string;
@@ -195,20 +204,20 @@ export interface QuizGame {
 }
 
 /** Interactive HTML quizzes, keyed by "{blockId}/{subjectId}". */
-export const quizGames: Partial<Record<string, QuizGame[]>> = groupedBy(
+export const quizGames: ReadonlyMap<string, QuizGame[]> = groupedBy(
   quizGameModules,
   (path, url) => ({ name: htmlName(path), url }),
   (g) => g.name,
 );
 
-export const quizSubjects: Subject[] = subjectsFromKeys([...Object.keys(quizBanks), ...Object.keys(quizGames)]);
+export const quizSubjects: Subject[] = subjectsFromKeys([...quizBanks.keys(), ...quizGames.keys()]);
 
 /** Every quiz-bank question from the subjects whose quiz folder is in this block (pooled exam fallback). */
 export function quizQuestionsInBlock(blockId: string): QuizQuestion[] {
-  return quizSubjects.filter((s) => s.blockId === blockId).flatMap((s) => quizBanks[keyOf(s)] ?? []);
+  return quizSubjects.filter((s) => s.blockId === blockId).flatMap((s) => quizBanks.get(keyOf(s)) ?? []);
 }
 
-export const summarySubjects: Subject[] = subjectsFromKeys(Object.keys(summaries));
+export const summarySubjects: Subject[] = subjectsFromKeys(summaries.keys());
 
 const ebookChapterLoaders = new Map<string, () => Promise<string>>(
   Object.entries(ebookChapterModules).map(([path, load]) => [ebookChapterKey(path), load]),
@@ -239,9 +248,9 @@ export function loadOcclusionNotes(key: string): Promise<OcclusionNote[] | undef
 }
 
 /** Every chapter's Markdown, keyed like {@link ebookChapterKeys}. */
-export async function loadEbookChapters(): Promise<Record<string, string>> {
+export async function loadEbookChapters(): Promise<Map<string, string>> {
   const entries = await Promise.all([...ebookChapterLoaders.entries()].map(async ([key, load]) => [key, await load()] as const));
-  return Object.fromEntries(entries);
+  return new Map(entries);
 }
 
 export interface EbookPdf {
@@ -250,7 +259,7 @@ export interface EbookPdf {
 }
 
 /** Ebook reference PDFs, keyed by "{blockId}/{subjectId}". */
-export const ebookPdfs: Partial<Record<string, EbookPdf[]>> = groupedBy(
+export const ebookPdfs: ReadonlyMap<string, EbookPdf[]> = groupedBy(
   ebookPdfModules,
   (path, url) => ({ name: pdfName(path), url }),
   (p) => p.name,
@@ -259,16 +268,13 @@ export const ebookPdfs: Partial<Record<string, EbookPdf[]>> = groupedBy(
 // A subject folder that only contains PDFs (no meta.json/chapters) still gets a book entry,
 // synthesized from the folder name — dropping a PDF in is enough on its own.
 /** Ebook metadata, keyed by "{blockId}/{subjectId}". */
-export const ebookMeta: Partial<Record<string, EbookMeta>> = keyedBy(ebookMetaModules);
-for (const key of Object.keys(ebookPdfs)) {
-  ebookMeta[key] ??= {
-    title: labelize(key.split("/")[1]),
-    description: "PDF reference",
-    chapters: [],
-  };
+const books = keyedBy(ebookMetaModules);
+for (const key of ebookPdfs.keys()) {
+  if (!books.has(key)) books.set(key, { title: labelize(key.split("/")[1]), description: "PDF reference", chapters: [] });
 }
+export const ebookMeta: ReadonlyMap<string, EbookMeta> = books;
 
-export const ebookSubjects: Subject[] = subjectsFromKeys(Object.keys(ebookMeta), (key, id) => ebookMeta[key]?.title ?? labelize(id));
+export const ebookSubjects: Subject[] = subjectsFromKeys(ebookMeta.keys(), (key, id) => ebookMeta.get(key)?.title ?? labelize(id));
 
 export interface ModulePdf {
   name: string;
@@ -277,11 +283,11 @@ export interface ModulePdf {
 }
 
 /** Lecture-slide PDFs, keyed by "{blockId}/{subjectId}". */
-export const modulesByBlockSubject: Partial<Record<string, ModulePdf[]>> = groupedBy(
+export const modulesByBlockSubject: ReadonlyMap<string, ModulePdf[]> = groupedBy(
   moduleModules,
   (path, url) => ({ name: moduleName(path), url, section: moduleSection(path) }),
   (m) => m.name,
 );
 
 /** One entry per block a subject has module PDFs in. */
-export const moduleSubjects: Subject[] = subjectsFromKeys(Object.keys(modulesByBlockSubject));
+export const moduleSubjects: Subject[] = subjectsFromKeys(modulesByBlockSubject.keys());

@@ -169,12 +169,9 @@ export function ScoreTrend({ points, target, projection, caption }: { points: Tr
     const box = wrap.current?.getBoundingClientRect();
     if (!box) return;
     const sx = e.clientX - box.left;
-    let best = 0;
-    points.forEach((p, i) => {
-      if (Math.abs(x(p.date) - sx) < Math.abs(x(points[best].date) - sx)) best = i;
-    });
-    const p = points[best];
-    setActive(best);
+    // The point nearest the pointer (the first, on a tie).
+    const p = points.reduce((nearest, q) => (Math.abs(x(q.date) - sx) < Math.abs(x(nearest.date) - sx) ? q : nearest));
+    setActive(points.indexOf(p));
     setTip({ x: x(p.date), y: y(p.value), value: `${Math.round(p.value)}%`, label: p.label });
   };
 

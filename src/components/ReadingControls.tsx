@@ -12,7 +12,7 @@ export function ReadingControls({ prefs, onChange }: ReadingControlsProps) {
 
   const stepScale = (delta: number) => {
     const next = Math.min(READING_FONT_SCALES.length - 1, Math.max(0, safeIdx + delta));
-    onChange({ ...prefs, fontScale: READING_FONT_SCALES[next] });
+    onChange({ ...prefs, fontScale: READING_FONT_SCALES.at(next) ?? prefs.fontScale });
   };
 
   return (

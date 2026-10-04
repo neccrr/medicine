@@ -29,8 +29,8 @@ export function readExamPlan(blockId: string): ExamPlanSettings {
 }
 
 export function writeExamPlan(blockId: string, patch: ExamPlanSettings): ExamPlanSettings {
-  const next = { ...readExamPlan(blockId), ...patch };
-  for (const k of Object.keys(next) as (keyof ExamPlanSettings)[]) if (next[k] === undefined || next[k] === "") delete next[k];
+  // Cleared settings (undefined or "") are left out rather than stored.
+  const next = Object.fromEntries(Object.entries({ ...readExamPlan(blockId), ...patch }).filter(([, v]: [string, unknown]) => v !== undefined && v !== "")) as ExamPlanSettings;
   writeJSON(STORAGE_KEYS.examPlan(blockId), next);
   return next;
 }

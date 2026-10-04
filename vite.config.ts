@@ -50,7 +50,7 @@ function devApi(): Plugin {
 // /privacy and /terms are the legal pages in public/legal/ (vercel.json rewrites them the same
 // way in production), for `vite` and `vite preview`.
 function legalPages(): Plugin {
-  const pages: Record<string, string> = { '/privacy': '/legal/privacy.html', '/terms': '/legal/terms.html' }
+  const pages = new Map([['/privacy', '/legal/privacy.html'], ['/terms', '/legal/terms.html']])
   const rewrite = (req: IncomingMessage, res: ServerResponse, next: () => void) => {
     const path = req.url?.split('?')[0].replace(/\/$/, '')
     // The old addresses, /privacy.html and /terms.html, redirect as they do in production.
@@ -60,7 +60,8 @@ function legalPages(): Plugin {
       res.setHeader('Location', `/${old[1]}`)
       return res.end()
     }
-    if (path && pages[path]) req.url = pages[path]
+    const page = path && pages.get(path)
+    if (page) req.url = page
     next()
   }
   return {

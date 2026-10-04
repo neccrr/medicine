@@ -56,7 +56,7 @@ function buildContinueItems(): ContinueItem[] {
 
   const resumes = ebookSubjects
     .map((s) => {
-      const meta = ebookMeta[keyOf(s)];
+      const meta = ebookMeta.get(keyOf(s));
       const position = readJSON<ReadingPosition | null>(STORAGE_KEYS.ebookPosition(keyOf(s)), null);
       return position && meta ? { s, meta, position } : null;
     })
@@ -77,7 +77,7 @@ function buildContinueItems(): ContinueItem[] {
 
   flashcardSubjects
     .map((s) => {
-      const deck = flashcardDecks[keyOf(s)] ?? [];
+      const deck = flashcardDecks.get(keyOf(s)) ?? [];
       const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
       const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
       return { s, due };
@@ -152,7 +152,7 @@ export function Home() {
   const hasActivity = activityDays.length > 0;
 
   const totalDue = flashcardSubjects.reduce((sum, s) => {
-    const deck = flashcardDecks[keyOf(s)] ?? [];
+    const deck = flashcardDecks.get(keyOf(s)) ?? [];
     const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
     return sum + deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
   }, 0);
@@ -260,7 +260,7 @@ export function Home() {
           </div>
 
           {orderByCurrentBlock(groupByBlock(subjects), currentBlock).map(({ block, subjects: blockSubjects, upcoming }) => {
-            const packages = examPackagesByBlock[block.id] ?? [];
+            const packages = examPackagesByBlock.get(block.id) ?? [];
             const examPool =
               packages.length > 0
                 ? Math.max(...packages.map((p) => p.questionCount))

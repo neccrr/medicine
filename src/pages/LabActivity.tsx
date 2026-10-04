@@ -21,6 +21,7 @@ import {
 import { findLabActivity, type LabActivity, type LabExercise, type LabMode } from "../lib/labActivities";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { NotFound } from "./NotFound";
+import { entry } from "../lib/records";
 
 type Row = Record<string, number | null>;
 
@@ -419,13 +420,14 @@ const DataPanel = memo(function DataPanel({
 
 function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabActivity }) {
   const mode = activity.mode;
-  const cfg = MODES[mode];
+  const cfg = entry(MODES, mode);
+  const defaults = entry(DEFAULTS, mode);
   const storageId = STORAGE_KEYS.labData(`${exercise.id}/${activity.slug}`);
 
-  const [voltage, setVoltage] = useState(DEFAULTS[mode].voltage);
-  const [length, setLength] = useState(DEFAULTS[mode].length);
-  const [rate, setRate] = useState(DEFAULTS[mode].rate);
-  const [weight, setWeight] = useState(DEFAULTS[mode].weight);
+  const [voltage, setVoltage] = useState(defaults.voltage);
+  const [length, setLength] = useState(defaults.length);
+  const [rate, setRate] = useState(defaults.rate);
+  const [weight, setWeight] = useState(defaults.weight);
   const [tracings, setTracings] = useState<Tracing[]>([]);
   const [result, setResult] = useState<Row | null>(null);
   const [rows, setRows] = useState<Row[]>(() => readJSON<Row[]>(storageId, []));
@@ -476,7 +478,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
           const bout = st.bouts.findIndex(([a, b]) => t >= a && t < b);
           st.fatigue = fatigueTick(st.fatigue, step, bout !== -1, st.plateau);
           y = st.fatigue.force;
-          if (bout !== -1) st.boutPeaks[bout] = Math.max(st.boutPeaks[bout] ?? 0, y);
+          if (bout !== -1) st.boutPeaks.splice(bout, 1, Math.max(st.boutPeaks.at(bout) ?? 0, y));
         } else if (mode === "load") {
           y = st.iso ? (valueAt(st.iso.points, t) ?? 0) : 0;
         } else {
@@ -525,8 +527,8 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
           voltage: st.voltage,
           rate: st.rate,
           rest: n >= 2 ? st.bouts[n - 1][0] - st.bouts[n - 2][1] : null,
-          peak1: st.boutPeaks[0] ?? 0,
-          peak2: n >= 2 ? (st.boutPeaks[n - 1] ?? 0) : null,
+          peak1: st.boutPeaks.at(0) ?? 0,
+          peak2: n >= 2 ? (st.boutPeaks.at(n - 1) ?? 0) : null,
         };
         break;
       }

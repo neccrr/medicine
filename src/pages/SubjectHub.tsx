@@ -23,19 +23,20 @@ interface NextAction {
 /** What to do next in this subject, most pressing first: due cards, missed questions, the book. */
 function nextActions(key: string, blockId: string, subjectId: string): NextAction[] {
   const actions: NextAction[] = [];
-  const deck = flashcardDecks[key];
+  const deck = flashcardDecks.get(key);
   if (deck) {
     const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
     const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
     if (due > 0) actions.push({ to: `/flashcards/${blockId}/${subjectId}`, title: `Review ${due} flashcard${due === 1 ? "" : "s"}`, detail: "Due today" });
   }
-  if (quizBanks[key]) {
+  const bank = quizBanks.get(key);
+  if (bank) {
     const due = readJSON<string[]>(STORAGE_KEYS.quizDue(key), []).length;
     const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
     if (due > 0) actions.push({ to: `/quizzes/${blockId}/${subjectId}`, title: `Retry ${due} missed question${due === 1 ? "" : "s"}`, detail: "From past quizzes" });
-    else if (history.length === 0) actions.push({ to: `/quizzes/${blockId}/${subjectId}`, title: "Take the quiz", detail: `${quizBanks[key].length} questions` });
+    else if (history.length === 0) actions.push({ to: `/quizzes/${blockId}/${subjectId}`, title: "Take the quiz", detail: `${bank.length} questions` });
   }
-  const book = ebookMeta[key];
+  const book = ebookMeta.get(key);
   if (book && book.chapters.length > 0) {
     const position = readJSON<ReadingPosition | null>(STORAGE_KEYS.ebookPosition(key), null);
     const chapter = book.chapters.find((c) => c.id === position?.chapterId);
@@ -63,7 +64,7 @@ export function SubjectHub() {
   }
 
   const cover = subjectCover(key);
-  const book = ebookMeta[key];
+  const book = ebookMeta.get(key);
   const done = readJSON<string[]>(STORAGE_KEYS.ebookCompleted(key), []);
   const labs = labExercises.filter((e) => labSubjectKey(e) === key);
   const actions = nextActions(key, blockId, subjectId);

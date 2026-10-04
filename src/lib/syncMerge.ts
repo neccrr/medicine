@@ -1,8 +1,10 @@
 // Rules for combining two copies of one progress entry (a `medicine:*` localStorage key), used
 // by the sync server when a device uploads a change and by the browser when a download races a
-// local edit. Which rule a key gets comes from the key registry in storageSchema.ts. Both files
-// are import-free apart from each other, so the server can load them without the app's module
-// graph.
+// local edit. Which rule a key gets comes from the key registry in storageSchema.ts. These files
+// are import-free apart from each other (and records.ts), so the server can load them without the
+// app's module graph. The values come from other devices, so ids and keys inside them are only
+// ever read and written as own properties: an id of "__proto__" stays an ordinary key.
+import { own, setOwn } from "./records.js";
 import { mergeRuleFor } from "./storageSchema.js";
 
 export interface SyncEntry {
@@ -27,15 +29,15 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 function mergeCardStates(a: Record<string, unknown>, b: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...a };
   for (const [id, incoming] of Object.entries(b)) {
-    const current = out[id] as CardLike | undefined;
+    const current = own(out, id) as CardLike | undefined;
     const next = incoming as CardLike;
     if (!current) {
-      out[id] = incoming;
+      setOwn(out, id, incoming);
       continue;
     }
     const cr = typeof current.reps === "number" ? current.reps : -1;
     const nr = typeof next.reps === "number" ? next.reps : -1;
-    if (nr > cr || (nr === cr && String(next.dueDate ?? "") > String(current.dueDate ?? ""))) out[id] = incoming;
+    if (nr > cr || (nr === cr && String(next.dueDate ?? "") > String(current.dueDate ?? ""))) setOwn(out, id, incoming);
   }
   return out;
 }
@@ -58,7 +60,7 @@ function mergeCounts(a: unknown, b: unknown): unknown {
   if (typeof a === "number" && typeof b === "number") return Math.max(a, b);
   if (isRecord(a) && isRecord(b)) {
     const out: Record<string, unknown> = { ...a };
-    for (const [k, v] of Object.entries(b)) out[k] = k in out ? mergeCounts(out[k], v) : v;
+    for (const [k, v] of Object.entries(b)) setOwn(out, k, Object.hasOwn(out, k) ? mergeCounts(own(out, k), v) : v);
     return out;
   }
   return b ?? a;

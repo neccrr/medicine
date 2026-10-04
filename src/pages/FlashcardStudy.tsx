@@ -28,7 +28,7 @@ export function FlashcardStudy() {
   const { blockId = "", subjectId = "" } = useParams();
   const key = subjectKey(blockId, subjectId);
   const subjectLabel = flashcardSubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
-  const deck = flashcardDecks[key] ?? EMPTY_DECK;
+  const deck = flashcardDecks.get(key) ?? EMPTY_DECK;
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [session, setSession] = useState({ reviewed: 0, lapses: 0 });

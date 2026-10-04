@@ -24,7 +24,7 @@ export function ModuleViewer() {
   const { blockId = "", subjectId = "" } = useParams();
   const block = blockById(blockId);
   const subject = moduleSubjects.find((s) => s.id === subjectId && s.blockId === blockId);
-  const pdfs = modulesByBlockSubject[`${blockId}/${subjectId}`] ?? [];
+  const pdfs = modulesByBlockSubject.get(`${blockId}/${subjectId}`) ?? [];
   const groups = groupModules(pdfs);
   const ordered = groups ? groups.flatMap((g) => g.sections.flatMap((s) => s.pdfs)) : pdfs;
   const [selectedUrl, setSelectedUrl] = useState<string>();

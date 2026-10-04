@@ -1,4 +1,5 @@
 import type { Collection, Db, UpdateFilter } from "mongodb";
+import { deleteOwn, own, setOwn } from "../src/lib/records.js";
 import { parseKey, type KeyTypeName } from "../src/lib/storageSchema.js";
 
 // The leaderboard ranks students who opted in, by points worked out on the server from their
@@ -115,9 +116,12 @@ export function partFor(key: string, value: unknown, now = Date.now()): ScorePar
     const sorted = [...new Set(days)].sort();
     let runLength = 0;
     const last = sorted.at(-1);
-    for (let i = sorted.length - 1; last && i >= 0; i--) {
-      if (sorted[i] !== utcDay(Date.parse(last) - runLength * DAY_MS)) break;
-      runLength += 1;
+    // Count back from the last day while each earlier day is the one before.
+    if (last) {
+      for (const day of [...sorted].reverse()) {
+        if (day !== utcDay(Date.parse(last) - runLength * DAY_MS)) break;
+        runLength += 1;
+      }
     }
     return { studyDays: sorted.length, runEnd: last ?? null, runLength };
   }
@@ -197,8 +201,9 @@ export function scoreUpdate(prev: LeaderboardDoc, entries: { key: string; value:
   for (const e of entries) {
     if (!affectsLeaderboard(e.key)) continue;
     const field = partField(e.key);
-    parts[field] = partFor(e.key, e.value, now);
-    delta += partPoints(parts[field]) - partPoints(prev.parts?.[field]);
+    const part = partFor(e.key, e.value, now);
+    setOwn(parts, field, part);
+    delta += partPoints(part) - partPoints(prev.parts && own(prev.parts, field));
   }
   const oldest = utcDay(now - (DAILY_KEEP_DAYS - 1) * DAY_MS);
   return {
@@ -353,8 +358,8 @@ export class MemoryLeaderboardStore implements LeaderboardStore {
     if (!d) return;
     d.parts = { ...d.parts, ...structuredClone(u.parts) };
     const daily = (d.daily ??= {});
-    if (u.gained > 0) daily[u.day] = (daily[u.day] ?? 0) + u.gained;
-    for (const day of u.dropDays) delete daily[day];
+    if (u.gained > 0) setOwn(daily, u.day, (own(daily, u.day) ?? 0) + u.gained);
+    for (const day of u.dropDays) deleteOwn(daily, day);
     d.updatedAt = u.now;
   }
 

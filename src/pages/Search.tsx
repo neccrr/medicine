@@ -7,19 +7,19 @@ import { EmptyState } from "../components/EmptyState";
 import { HighlightText } from "../components/HighlightText";
 import { subjectHue } from "../lib/subjectStyle";
 
-const TYPE_LABELS: Record<string, string> = {
-  flashcard: "Flashcards",
-  quiz: "Quizzes",
-  summary: "Summaries",
-  ebook: "Ebooks",
-};
+const TYPE_LABELS = new Map([
+  ["flashcard", "Flashcards"],
+  ["quiz", "Quizzes"],
+  ["summary", "Summaries"],
+  ["ebook", "Ebooks"],
+]);
 
-const TYPE_CLASS: Record<string, string> = {
-  flashcard: "tag-type-flashcard",
-  quiz: "tag-type-quiz",
-  summary: "tag-type-summary",
-  ebook: "tag-type-ebook",
-};
+const TYPE_CLASS = new Map([
+  ["flashcard", "tag-type-flashcard"],
+  ["quiz", "tag-type-quiz"],
+  ["summary", "tag-type-summary"],
+  ["ebook", "tag-type-ebook"],
+]);
 
 function tagHueStyle(id: string): CSSProperties {
   return { "--tag-hue": String(subjectHue(id)) } as CSSProperties;
@@ -46,7 +46,8 @@ export function Search() {
   const [activeTypes, setActiveTypes] = useState<string[]>([]);
   const [activeSubjects, setActiveSubjects] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const resultRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  /** Each result's link, by its position in the list. */
+  const resultRefs = useRef(new Map<number, HTMLAnchorElement>());
 
   // Everything but the ebook chapters is indexed straight away; the chapters join once loaded.
   const [docs, setDocs] = useState<SearchDoc[]>(() => buildContentDocs());
@@ -119,14 +120,14 @@ export function Search() {
       e.preventDefault();
       const next = Math.min(clampedIndex + 1, results.length - 1);
       setActiveIndex(next);
-      resultRefs.current[next]?.scrollIntoView({ block: "nearest" });
+      resultRefs.current.get(next)?.scrollIntoView({ block: "nearest" });
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       const next = Math.max(clampedIndex - 1, 0);
       setActiveIndex(next);
-      resultRefs.current[next]?.scrollIntoView({ block: "nearest" });
+      resultRefs.current.get(next)?.scrollIntoView({ block: "nearest" });
     } else if (e.key === "Enter") {
-      const link = resultRefs.current[clampedIndex];
+      const link = resultRefs.current.get(clampedIndex);
       link?.click();
     }
   };
@@ -159,13 +160,13 @@ export function Search() {
                 type="button"
                 className={
                   activeTypes.includes(type)
-                    ? `tag tag-toggle active ${TYPE_CLASS[type] ?? ""}`
-                    : `tag tag-toggle ${TYPE_CLASS[type] ?? ""}`
+                    ? `tag tag-toggle active ${TYPE_CLASS.get(type) ?? ""}`
+                    : `tag tag-toggle ${TYPE_CLASS.get(type) ?? ""}`
                 }
                 onClick={() => { toggleType(type); }}
                 aria-pressed={activeTypes.includes(type)}
               >
-                {TYPE_LABELS[type] ?? type}
+                {TYPE_LABELS.get(type) ?? type}
               </button>
             ))}
           </div>
@@ -226,14 +227,15 @@ export function Search() {
               id={`search-result-${i}`}
               to={r.doc.to}
               ref={(el) => {
-                resultRefs.current[i] = el;
+                if (el) resultRefs.current.set(i, el);
+                else resultRefs.current.delete(i);
               }}
               className={i === clampedIndex ? "active" : undefined}
               role="option"
               aria-selected={i === clampedIndex}
               onMouseEnter={() => { setActiveIndex(i); }}
             >
-              <span className="search-result-type">{TYPE_LABELS[r.doc.type] ?? r.doc.type}</span>
+              <span className="search-result-type">{TYPE_LABELS.get(r.doc.type) ?? r.doc.type}</span>
               <p className="search-result-title">
                 <HighlightText text={r.doc.title} ranges={r.titleRanges} />
               </p>

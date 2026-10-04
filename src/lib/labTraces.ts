@@ -25,15 +25,18 @@ export function freeSlot(tracings: readonly Tracing[]): number {
 
 /** Value of a tracing at `x`, by linear interpolation; null outside it. */
 export function valueAt(points: [number, number][], x: number): number | null {
-  if (points.length === 0 || x < points[0][0] || x > points[points.length - 1][0]) return null;
+  const first = points.at(0);
+  const last = points.at(-1);
+  if (!first || !last || x < first[0] || x > last[0]) return null;
+  // The last point at or before x, and the one after it (binary search).
   let lo = 0;
   let hi = points.length - 1;
   while (hi - lo > 1) {
     const mid = (lo + hi) >> 1;
-    if (points[mid][0] <= x) lo = mid;
+    if ((points.at(mid)?.[0] ?? x) <= x) lo = mid;
     else hi = mid;
   }
-  const [x0, y0] = points[lo];
-  const [x1, y1] = points[hi];
+  const [x0, y0] = points.at(lo) ?? first;
+  const [x1, y1] = points.at(hi) ?? last;
   return x1 === x0 ? y0 : y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
 }

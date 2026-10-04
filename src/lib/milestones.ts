@@ -34,8 +34,7 @@ export function gatherMilestoneInput(): MilestoneInput {
   let reviews = 0;
   let mastered = 0;
   let decksMastered = 0;
-  for (const [key, deck] of Object.entries(flashcardDecks)) {
-    if (!deck) continue;
+  for (const [key, deck] of flashcardDecks) {
     const states = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
     let deckMastered = 0;
     for (const card of deck) {
@@ -49,7 +48,7 @@ export function gatherMilestoneInput(): MilestoneInput {
   }
   let quizzes = 0;
   let perfectQuiz = false;
-  for (const key of Object.keys(quizBanks)) {
+  for (const key of [...quizBanks.keys()]) {
     const attempts = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
     quizzes += attempts.length;
     if (attempts.some((a) => a.total >= 10 && a.score === a.total)) perfectQuiz = true;
@@ -57,7 +56,7 @@ export function gatherMilestoneInput(): MilestoneInput {
   let mocks = 0;
   let bestMock = 0;
   for (const block of studyBlocks) {
-    for (const id of [block.id, ...(examPackagesByBlock[block.id] ?? []).map((p) => `${block.id}/${p.id}`)]) {
+    for (const id of [block.id, ...(examPackagesByBlock.get(block.id) ?? []).map((p) => `${block.id}/${p.id}`)]) {
       for (const a of readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(id), [])) {
         mocks += 1;
         if (a.total > 0) bestMock = Math.max(bestMock, (a.score / a.total) * 100);
@@ -65,8 +64,8 @@ export function gatherMilestoneInput(): MilestoneInput {
     }
   }
   let booksFinished = 0;
-  for (const [key, meta] of Object.entries(ebookMeta)) {
-    if (!meta?.chapters.length) continue;
+  for (const [key, meta] of ebookMeta) {
+    if (meta.chapters.length === 0) continue;
     const done = new Set(readJSON<string[]>(STORAGE_KEYS.ebookCompleted(key), []));
     if (meta.chapters.every((c) => done.has(c.id))) booksFinished += 1;
   }

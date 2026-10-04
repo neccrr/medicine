@@ -4,6 +4,7 @@ import { headingSlugger } from "../markdownHtml";
 import { occlusionCards } from "../occlusion";
 import type { Flashcard, OcclusionNote, QuizQuestion } from "../../types/content";
 import type { GraphEdge, GraphNode, KnowledgeGraph, SectionRef } from "./types";
+import { own, setOwn } from "../records";
 
 // Builds the knowledge map from the course material. Concepts are the terms the ebooks and
 // summaries put in bold; a concept is kept when it comes up again and again across sections,
@@ -142,16 +143,16 @@ export function splitSections(markdown: string): Section[] {
 const BOLD_RE = /\*\*([^*\n]{2,80})\*\*/g;
 
 export interface GraphInput {
-  chapters: Record<string, string>;
-  summaries: Partial<Record<string, string>>;
-  occlusion: Record<string, OcclusionNote[]>;
+  chapters: ReadonlyMap<string, string>;
+  summaries: ReadonlyMap<string, string>;
+  occlusion: ReadonlyMap<string, OcclusionNote[]>;
   /** Flashcard decks and quiz banks, by subject key. */
-  decks?: Partial<Record<string, Flashcard[]>>;
-  banks?: Partial<Record<string, QuizQuestion[]>>;
+  decks?: ReadonlyMap<string, Flashcard[]>;
+  banks?: ReadonlyMap<string, QuizQuestion[]>;
   /** A concept needs this many mentions to be kept (default MIN_MENTIONS). */
   minMentions?: number;
   /** AI-labelled relations, by "termA|termB" (keys sorted). */
-  relations?: Record<string, string>;
+  relations?: ReadonlyMap<string, string>;
 }
 
 export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
@@ -164,7 +165,7 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
     forms.set(t.label, (forms.get(t.label) ?? 0) + 1);
     surfaces.set(t.key, forms);
   };
-  for (const md of [...Object.values(input.chapters), ...Object.values(input.summaries)]) if (md) for (const m of md.matchAll(BOLD_RE)) addSurface(m[1]);
+  for (const md of [...input.chapters.values(), ...input.summaries.values()]) for (const m of md.matchAll(BOLD_RE)) addSurface(m[1]);
   const maxWords = 5;
 
   // 2. The units concepts are looked for in.
@@ -181,16 +182,16 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
       });
     }
   };
-  for (const [chapterKey, md] of Object.entries(input.chapters)) {
+  for (const [chapterKey, md] of input.chapters) {
     const [blockId, subjectId] = chapterKey.split("/");
     sectionUnits(md, `${blockId}/${subjectId}`, chapterKey);
   }
-  for (const [key, md] of Object.entries(input.summaries)) if (md) sectionUnits(md, key, `summary:${key}`);
-  for (const [key, deck = []] of Object.entries(input.decks ?? {})) for (const card of deck) units.push({ subject: key, text: `${card.front}\n${card.back}`, pairWeight: 2, card: card.id });
-  for (const [key, bank = []] of Object.entries(input.banks ?? {})) {
+  for (const [key, md] of input.summaries) sectionUnits(md, key, `summary:${key}`);
+  for (const [key, deck] of input.decks ?? []) for (const card of deck) units.push({ subject: key, text: `${card.front}\n${card.back}`, pairWeight: 2, card: card.id });
+  for (const [key, bank] of input.banks ?? []) {
     for (const q of bank) units.push({ subject: key, text: `${q.question}\n${q.options[q.answer] ?? ""}\n${q.explanation}`, pairWeight: 2, question: q.id });
   }
-  for (const [key, notes] of Object.entries(input.occlusion)) {
+  for (const [key, notes] of input.occlusion) {
     for (const card of occlusionCards(notes)) units.push({ subject: key, text: card.mask.label, pairWeight: 0, label: card.id });
   }
 
@@ -224,15 +225,18 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
   const acc = new Map<string, Acc>();
   const pairs = new Map<string, number>();
   const push = (rec: Record<string, string[]>, subject: string, id: string) => {
-    const list = (rec[subject] ??= []);
+    const list = own(rec, subject) ?? [];
     if (list.length < MAX_REFS && !list.includes(id)) list.push(id);
+    setOwn(rec, subject, list);
   };
   const link = (terms: string[], weight: number) => {
     const sorted = [...terms].sort();
-    for (let i = 0; i < sorted.length; i++) for (let j = i + 1; j < sorted.length; j++) {
-      const k = `${sorted[i]}|${sorted[j]}`;
-      pairs.set(k, (pairs.get(k) ?? 0) + weight);
-    }
+    sorted.forEach((a, i) => {
+      for (const b of sorted.slice(i + 1)) {
+        const k = `${a}|${b}`;
+        pairs.set(k, (pairs.get(k) ?? 0) + weight);
+      }
+    });
   };
   for (const u of units) {
     const terms = find(u.text);
@@ -294,7 +298,10 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
   const edges: GraphEdge[] = candidates
     .filter((e) => keep.has(e.key))
     .sort((x, y) => x.key.localeCompare(y.key))
-    .map(({ key, s, t, w }) => (input.relations?.[key] ? { s, t, w, rel: input.relations[key] } : { s, t, w }));
+    .map(({ key, s, t, w }) => {
+      const rel = input.relations?.get(key);
+      return rel ? { s, t, w, rel } : { s, t, w };
+    });
 
   layout(nodes, edges);
   return { version: 1, nodes, edges };
@@ -332,13 +339,14 @@ function layout(nodes: GraphNode[], edges: GraphEdge[]) {
 }
 
 const relationFiles = import.meta.glob<Record<string, string>>("/content/graph/relations.json", { eager: true, import: "default" });
+const relations = new Map(Object.entries(Object.values(relationFiles).at(0) ?? {}));
 
 /** The graph from everything in content/ (and AI relation labels, if they've been generated). */
 export async function buildFromContent(): Promise<KnowledgeGraph> {
   const chapters = await loadEbookChapters();
-  const occlusion: Record<string, OcclusionNote[]> = {};
-  for (const key of occlusionKeys) occlusion[key] = (await loadOcclusionNotes(key)) ?? [];
+  const occlusion = new Map<string, OcclusionNote[]>();
+  for (const key of occlusionKeys) occlusion.set(key, (await loadOcclusionNotes(key)) ?? []);
   // Chapters only of books listed in a meta.json (drafts without one stay out).
-  const listed = Object.fromEntries(Object.entries(chapters).filter(([k]) => ebookMeta[k.split("/").slice(0, 2).join("/")]));
-  return buildKnowledgeGraph({ chapters: listed, summaries, occlusion, decks: flashcardDecks, banks: quizBanks, relations: Object.values(relationFiles)[0] });
+  const listed = new Map([...chapters].filter(([k]) => ebookMeta.has(k.split("/").slice(0, 2).join("/"))));
+  return buildKnowledgeGraph({ chapters: listed, summaries, occlusion, decks: flashcardDecks, banks: quizBanks, relations });
 }

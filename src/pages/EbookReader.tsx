@@ -31,8 +31,8 @@ function ExternalIcon() {
 export function EbookReader() {
   const { blockId = "", subjectId = "", chapterId } = useParams();
   const key = subjectKey(blockId, subjectId);
-  const meta = ebookMeta[key];
-  const pdfs = ebookPdfs[key] ?? [];
+  const meta = ebookMeta.get(key);
+  const pdfs = ebookPdfs.get(key) ?? [];
   const hasChapters = (meta?.chapters.length ?? 0) > 0;
 
   const position = readJSON<ReadingPosition | null>(

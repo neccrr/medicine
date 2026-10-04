@@ -1,3 +1,5 @@
+import { own } from "./records";
+
 // A picture for each subject's cards, from its own course material: public/covers/{blockId}-{subjectId}.webp,
 // 800×400. A subject without one keeps a plain card. The focus is the part of the picture kept when a
 // wide card crops it (a CSS object-position).
@@ -12,7 +14,7 @@ const COVERS: Readonly<Record<string, string>> = {
 
 /** The cover image and its focus for a subject key ("{blockId}/{subjectId}"), if it has one. */
 export function subjectCover(key: string): { src: string; focus: string } | undefined {
-  const focus = COVERS[key];
+  const focus = own(COVERS, key);
   return focus ? { src: `/covers/${key.replace("/", "-")}.webp`, focus } : undefined;
 }
 

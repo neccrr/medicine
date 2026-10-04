@@ -19,8 +19,8 @@ export function QuizSubjects() {
           <h2 className="block-section-heading">{block.label}</h2>
           <div className="card-grid">
             {subjects.map((subject) => {
-              const bank = quizBanks[keyOf(subject)];
-              const games = quizGames[keyOf(subject)];
+              const bank = quizBanks.get(keyOf(subject));
+              const games = quizGames.get(keyOf(subject));
               const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(keyOf(subject)), []);
               const dueCount = readJSON<string[]>(STORAGE_KEYS.quizDue(keyOf(subject)), []).length;
               const last = history.at(-1);

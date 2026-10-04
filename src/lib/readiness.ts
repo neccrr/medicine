@@ -4,6 +4,7 @@ import { blockSubjectKeys } from "./examPlan";
 import { isDue } from "./sm2";
 import { readJSON, STORAGE_KEYS } from "./storage";
 import type { CardStateMap, ExamAttempt, QuizAttempt } from "../types/content";
+import { entry, own } from "./records";
 
 // How ready a student is for a block exam: one number per subject from everything they've done
 // (cards, image-occlusion labels, quizzes, reading), and one for the block that also counts
@@ -79,7 +80,7 @@ export function deckStats(ids: readonly string[], states: CardStateMap, now: Dat
   let due = 0;
   let strength = 0;
   for (const id of ids) {
-    const s = states[id];
+    const s = own(states, id);
     if (s) {
       seen += 1;
       strength += Math.min(1, s.interval / MASTERED_DAYS);
@@ -109,8 +110,9 @@ export function scoreSubject(parts: Pick<SubjectReadiness, "cards" | "labels" | 
   let weight = 0;
   let sum = 0;
   for (const [k, v] of Object.entries(scores) as [keyof typeof WEIGHTS, number][]) {
-    weight += WEIGHTS[k];
-    sum += WEIGHTS[k] * v;
+    const w = entry(WEIGHTS, k);
+    weight += w;
+    sum += w * v;
   }
   return { ...scores, readiness: weight > 0 ? sum / weight : 0 };
 }
@@ -131,17 +133,17 @@ export function subjectReadiness(key: string, occlusion: OcclusionIds = {}, now:
   const [blockId] = key.split("/");
   const label = allSubjects().find((s) => s.key === key)?.label ?? key;
   const out: Pick<SubjectReadiness, "cards" | "labels" | "quiz" | "reading"> = {};
-  const deck = flashcardDecks[key];
+  const deck = flashcardDecks.get(key);
   if (deck?.length) out.cards = deckStats(deck.map((c) => c.id), readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {}), now);
-  const labels = occlusion[key];
+  const labels = own(occlusion, key);
   if (labels?.length) out.labels = deckStats(labels, readJSON<CardStateMap>(STORAGE_KEYS.occlusionState(key), {}), now);
-  const bank = quizBanks[key];
+  const bank = quizBanks.get(key);
   if (bank?.length) {
     const ids = new Set(bank.map((q) => q.id));
     const retry = readJSON<string[]>(STORAGE_KEYS.quizDue(key), []).filter((id) => ids.has(id)).length;
     out.quiz = quizStats(bank.length, readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []), retry);
   }
-  const book = ebookMeta[key];
+  const book = ebookMeta.get(key);
   if (book?.chapters.length) {
     const ids = new Set(book.chapters.map((c) => c.id));
     out.reading = { chapters: book.chapters.length, done: readJSON<string[]>(STORAGE_KEYS.ebookCompleted(key), []).filter((id) => ids.has(id)).length };
@@ -152,11 +154,11 @@ export function subjectReadiness(key: string, occlusion: OcclusionIds = {}, now:
 
 /** Every timed exam taken for a block, oldest first. */
 export function blockMocks(blockId: string): MockAttempt[] {
-  const papers: (string | null)[] = [null, ...(examPackagesByBlock[blockId] ?? []).map((p) => p.id)];
+  const papers: (string | null)[] = [null, ...(examPackagesByBlock.get(blockId) ?? []).map((p) => p.id)];
   const out: MockAttempt[] = [];
   for (const paper of papers) {
     const id = paper ? `${blockId}/${paper}` : blockId;
-    const name = paper ? ((examPackagesByBlock[blockId] ?? []).find((p) => p.id === paper)?.name ?? paper) : null;
+    const name = paper ? ((examPackagesByBlock.get(blockId) ?? []).find((p) => p.id === paper)?.name ?? paper) : null;
     for (const a of readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(id), [])) {
       if (a.total > 0) out.push({ ...a, paper: name, percent: (a.score / a.total) * 100 });
     }

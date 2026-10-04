@@ -26,7 +26,7 @@ export function Modules() {
           <h2 className="block-section-heading">{block.label}</h2>
           <div className="card-grid">
             {subjects.map((subject) => {
-              const pdfs = modulesByBlockSubject[`${block.id}/${subject.id}`] ?? [];
+              const pdfs = modulesByBlockSubject.get(`${block.id}/${subject.id}`) ?? [];
               return (
                 <Link key={subject.id} to={`/modules/${block.id}/${subject.id}`} className="nav-card">
                   <SubjectCover subjectKey={`${block.id}/${subject.id}`} />

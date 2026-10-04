@@ -90,7 +90,8 @@ export function CommandPalette() {
       setActiveIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      if (results[activeIndex]) go(results[activeIndex].doc);
+      const active = results.at(activeIndex);
+      if (active) go(active.doc);
     }
   };
 

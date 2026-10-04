@@ -72,7 +72,7 @@ export function buildSubjectOverviews(): SubjectOverview[] {
       let activityScore = 0;
       let mastery: number | null = null;
 
-      const deck = flashcardDecks[key];
+      const deck = flashcardDecks.get(key);
       if (deck) {
         const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
         const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
@@ -87,8 +87,8 @@ export function buildSubjectOverviews(): SubjectOverview[] {
         });
       }
 
-      const bank = quizBanks[key];
-      const games = quizGames[key];
+      const bank = quizBanks.get(key);
+      const games = quizGames.get(key);
       if (bank || games) {
         const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
         const last = history.at(-1);
@@ -108,7 +108,7 @@ export function buildSubjectOverviews(): SubjectOverview[] {
         });
       }
 
-      const meta = ebookMeta[key];
+      const meta = ebookMeta.get(key);
       if (meta) {
         const completedCount = readJSON<string[]>(STORAGE_KEYS.ebookCompleted(key), []).length;
         facets.push({
@@ -124,7 +124,7 @@ export function buildSubjectOverviews(): SubjectOverview[] {
         });
       }
 
-      if (summaries[key]) {
+      if (summaries.get(key)) {
         facets.push({
           label: "Summary",
           detail: "Written summary",
@@ -153,7 +153,7 @@ export function buildSubjectOverviews(): SubjectOverview[] {
         });
       }
 
-      const modulePdfs = modulesByBlockSubject[key];
+      const modulePdfs = modulesByBlockSubject.get(key);
       if (modulePdfs) {
         facets.push({
           label: "Modules",

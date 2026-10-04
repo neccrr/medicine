@@ -31,9 +31,14 @@ function masteryColor(m: number, accent: string, surface: string): string {
   const s = hexToRgb(surface);
   if (!a || !s) return accent;
   const t = 0.3 + 0.7 * m;
-  const c = a.map((v, i) => Math.round(s[i] + (v - s[i]) * t));
+  const c = a.map((v, i) => {
+    const from = s.at(i) ?? v;
+    return Math.round(from + (v - from) * t);
+  });
   return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
 }
+
+const percent = (m: number | null) => (m === null ? "—" : `${Math.round(m * 100)}%`);
 
 const cssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -111,10 +116,12 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
     const i = id ? graph.nodes.findIndex((n) => n.id === id) : -1;
     return i >= 0 ? i : null;
   }, [params, graph]);
+  const selectedNode = selected === null ? undefined : graph.nodes.at(selected);
   const select = (i: number | null) => {
     const next = new URLSearchParams(params);
-    if (i === null) next.delete("c");
-    else next.set("c", graph.nodes[i].id);
+    const id = i === null ? undefined : graph.nodes.at(i)?.id;
+    if (id) next.set("c", id);
+    else next.delete("c");
     setParams(next, { replace: i !== null && selected !== null });
   };
 
@@ -147,7 +154,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
       graph.nodes.map((n, i) => {
         if (blockFilter && !n.subjects.some((s) => blockOf(s) === blockFilter)) return false;
         if (nameFilter && !n.subjects.some((s) => subjectName(s) === nameFilter)) return false;
-        if (bridgesOnly && !shared[i] && i !== selected) return false;
+        if (bridgesOnly && !shared.at(i) && i !== selected) return false;
         return true;
       }),
     [graph, blockFilter, nameFilter, bridgesOnly, shared, selected],
@@ -161,13 +168,12 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
     const surface = cssVar("--surface-solid");
     const unstudied = cssVar("--map-unstudied") || "#999";
     return (i: number): NodeStyle => {
-      const n = graph.nodes[i];
       if (mode === "mastery") {
-        const m = mastery[i];
+        const m = mastery.at(i) ?? null;
         return { fill: m === null ? unstudied : masteryColor(m, accent, surface), shared: false, weak: m !== null && m < 0.5 };
       }
-      const slot = names.indexOf(subjectName(n.subjects[0] ?? ""));
-      return { fill: colors[Math.max(0, slot) % SLOTS], shared: shared[i] };
+      const slot = names.indexOf(subjectName(graph.nodes.at(i)?.subjects[0] ?? ""));
+      return { fill: colors.at(Math.max(0, slot) % SLOTS) ?? unstudied, shared: shared.at(i) ?? false };
     };
     // themeKey: re-read the colors when the theme changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -203,7 +209,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
     () =>
       graph.nodes
         .map((n, i) => ({ n, i }))
-        .filter(({ i }) => shared[i] && visible[i])
+        .filter(({ i }) => shared.at(i) && visible.at(i))
         .sort((a, b) => b.n.subjects.length - a.n.subjects.length || b.n.mentions - a.n.mentions)
         .slice(0, 10),
     [graph, shared, visible],
@@ -337,7 +343,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
         )}
 
         <aside className="map-panel" aria-live="polite">
-          {selected === null ? (
+          {selected === null || !selectedNode ? (
             <div className="map-panel-intro">
               <h2>Concepts that connect subjects</h2>
               <p>These come up in more than one subject or block. Tap one, or any dot on the map, to see what it links to and where to study it.</p>
@@ -354,8 +360,8 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
             </div>
           ) : (
             <ConceptPanel
-              node={graph.nodes[selected]}
-              mastery={mastery[selected]}
+              node={selectedNode}
+              mastery={mastery.at(selected) ?? null}
               links={(neighbours.get(selected) ?? []).slice(0, 14)}
               graph={graph}
               subjectLabel={subjectLabel}
@@ -402,7 +408,7 @@ function ConceptPanel({
   const sectionTitle = (c: string) => {
     if (c.startsWith("summary:")) return `${subjectLabel(c.slice(8))} summary`;
     const [b, s, ch] = c.split("/");
-    return ebookMeta[`${b}/${s}`]?.chapters.find((x) => x.id === ch)?.title ?? ch;
+    return ebookMeta.get(`${b}/${s}`)?.chapters.find((x) => x.id === ch)?.title ?? ch;
   };
   const withBlock = (key: string) => `${subjectLabel(key)} ${key.split("/")[0]}`;
   const sections = node.sections.filter((s, i) => node.sections.findIndex((t) => t.c === s.c && t.a === s.a) === i);
@@ -486,7 +492,7 @@ function ConceptPanel({
                 <Link to={`/flashcards/${key}?cards=${ids.join(",")}`}>
                   {ids.length} flashcard{ids.length === 1 ? "" : "s"}
                   <small>
-                    {withBlock(key)} · e.g. “{flashcardDecks[key]?.find((c) => c.id === ids[0])?.front.slice(0, 70) ?? ""}”
+                    {withBlock(key)} · e.g. “{flashcardDecks.get(key)?.find((c) => c.id === ids[0])?.front.slice(0, 70) ?? ""}”
                   </small>
                 </Link>
               </li>
@@ -496,7 +502,7 @@ function ConceptPanel({
                 <Link to={`/quizzes/${key}?drill=${ids.join(",")}`}>
                   {ids.length} quiz question{ids.length === 1 ? "" : "s"}
                   <small>
-                    {withBlock(key)} · e.g. “{quizBanks[key]?.find((q) => q.id === ids[0])?.question.slice(0, 70) ?? ""}”
+                    {withBlock(key)} · e.g. “{quizBanks.get(key)?.find((q) => q.id === ids[0])?.question.slice(0, 70) ?? ""}”
                   </small>
                 </Link>
               </li>
@@ -537,7 +543,7 @@ function ConceptList({
 }) {
   const rows = graph.nodes
     .map((n, i) => ({ n, i }))
-    .filter(({ i }) => visible[i])
+    .filter(({ i }) => visible.at(i))
     .sort((a, b) => (neighbours.get(b.i)?.length ?? 0) - (neighbours.get(a.i)?.length ?? 0));
   return (
     <div className="map-list">
@@ -557,11 +563,11 @@ function ConceptList({
                 <button type="button" onClick={() => { onOpen(i); }}>
                   {n.label}
                 </button>
-                {shared[i] && <small className="map-shared-tag">shared</small>}
+                {shared.at(i) && <small className="map-shared-tag">shared</small>}
               </td>
               <td>{[...new Set(n.subjects.map((s) => `${subjectLabel(s)} ${s.split("/")[0]}`))].join(", ")}</td>
               <td>{neighbours.get(i)?.length ?? 0}</td>
-              <td>{mastery[i] === null ? "—" : `${Math.round(mastery[i]! * 100)}%`}</td>
+              <td>{percent(mastery.at(i) ?? null)}</td>
             </tr>
           ))}
         </tbody>

@@ -27,6 +27,24 @@ describe("mergeEntry", () => {
     expect(merged.updatedAt).toBe(200);
   });
 
+  it("treats ids like __proto__ from another device as ordinary keys", () => {
+    const key = "medicine:flashcards:1.2/anatomy";
+    const merged = mergeEntry(
+      { key, value: { a: card(1, "2026-10-01") }, updatedAt: 100 },
+      { key, value: JSON.parse(`{"__proto__": ${JSON.stringify(card(2, "2026-10-02"))}}`) as unknown, updatedAt: 200 },
+    );
+    const value = merged.value as object;
+    expect(Object.getPrototypeOf(value)).toBe(Object.prototype);
+    expect(Object.keys(value).sort()).toEqual(["__proto__", "a"]);
+
+    const counts = mergeEntry(
+      { key: "medicine:studylog", value: { days: {} }, updatedAt: 100 },
+      { key: "medicine:studylog", value: JSON.parse('{"days": {"__proto__": {"polluted": 1}}}') as unknown, updatedAt: 200 },
+    );
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    expect(Object.getPrototypeOf((counts.value as { days: object }).days)).toBe(Object.prototype);
+  });
+
   it("unions quiz attempts without duplicates, oldest first", () => {
     const key = "medicine:quiz:1.1/histology";
     const x = { score: 7, total: 10, date: "2026-09-01T00:00:00Z", missedIds: [] };

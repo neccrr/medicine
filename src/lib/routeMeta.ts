@@ -68,16 +68,21 @@ export function allSubjects(): { key: string; blockId: string; id: string; label
 /** The sections that have material for a subject, as links: the subject page's static content. */
 export function subjectSections(key: string): { name: string; path: string }[] {
   const out: { name: string; path: string }[] = [];
-  if (flashcardDecks[key]) out.push({ name: `Flashcards (${flashcardDecks[key].length})`, path: `/flashcards/${key}` });
+  const deck = flashcardDecks.get(key);
+  const bank = quizBanks.get(key);
+  const book = ebookMeta.get(key);
+  const modules = modulesByBlockSubject.get(key);
+  if (deck) out.push({ name: `Flashcards (${deck.length})`, path: `/flashcards/${key}` });
   if (occlusionKeys.includes(key)) out.push({ name: "Image occlusion", path: `/occlusion/${key}` });
-  if (quizBanks[key]) out.push({ name: `Quiz (${quizBanks[key].length} questions)`, path: `/quizzes/${key}` });
-  if (ebookMeta[key]) out.push({ name: `Ebook: ${ebookMeta[key].title}`, path: `/ebooks/${key}` });
-  if (summaries[key] !== undefined) out.push({ name: "Summary", path: `/summaries/${key}` });
-  if (modulesByBlockSubject[key]) out.push({ name: `Modules (${modulesByBlockSubject[key].length} PDFs)`, path: `/modules/${key}` });
+  if (bank) out.push({ name: `Quiz (${bank.length} questions)`, path: `/quizzes/${key}` });
+  if (book) out.push({ name: `Ebook: ${book.title}`, path: `/ebooks/${key}` });
+  if (summaries.has(key)) out.push({ name: "Summary", path: `/summaries/${key}` });
+  if (modules) out.push({ name: `Modules (${modules.length} PDFs)`, path: `/modules/${key}` });
   return out;
 }
 
-const SECTIONS: Partial<Record<string, { name: string; meta: PageMeta }>> = {
+// A Map, not an object: the section comes from the URL, and /constructor isn't a section.
+const SECTIONS = new Map<string, { name: string; meta: PageMeta }>(Object.entries({
   subjects: {
     name: "Subjects",
     meta: {
@@ -139,7 +144,7 @@ const SECTIONS: Partial<Record<string, { name: string; meta: PageMeta }>> = {
     meta: {
       title: titled("Medical Study Ebooks"),
       description: describe(
-        `Free chaptered study ebooks: ${ebookSubjects.map((s) => ebookMeta[keyOf(s)]?.title ?? s.label).join(", ")}.`,
+        `Free chaptered study ebooks: ${ebookSubjects.map((s) => ebookMeta.get(keyOf(s))?.title ?? s.label).join(", ")}.`,
       ),
       indexable: true,
     },
@@ -178,11 +183,11 @@ const SECTIONS: Partial<Record<string, { name: string; meta: PageMeta }>> = {
   },
   plan: { name: "Exam plan", meta: { title: titled("Exam Plan"), description: HOME_DESCRIPTION, indexable: false } },
   alfond: { name: "Alfond", meta: { title: titled("Alfond, Your Study Assistant"), description: HOME_DESCRIPTION, indexable: false } },
-};
+}));
 
 /** Whether a block has an exam: its own past-paper packages, or else its quiz questions. */
 export function blockHasExam(blockId: string): boolean {
-  return (examPackagesByBlock[blockId]?.length ?? 0) > 0 || quizQuestionsInBlock(blockId).length > 0;
+  return (examPackagesByBlock.get(blockId)?.length ?? 0) > 0 || quizQuestionsInBlock(blockId).length > 0;
 }
 
 const NOT_FOUND: PageMeta = { title: titled("Page not found"), description: HOME_DESCRIPTION, indexable: false };
@@ -192,13 +197,13 @@ export function pageMeta(pathname: string): PageMeta {
   const parts = pathname.split("/").filter(Boolean).map(decodeURIComponent);
   if (parts.length === 0) return { title: HOME_TITLE, description: HOME_DESCRIPTION, indexable: true };
   const [section, blockId, subjectId, chapterId] = parts;
-  const sectionInfo = SECTIONS[section];
+  const sectionInfo = SECTIONS.get(section);
   if (!sectionInfo) return NOT_FOUND;
   if (parts.length === 1) return sectionInfo.meta;
   if (section === "plan") return parts.length === 2 ? { ...sectionInfo.meta, title: titled(`Exam Plan: ${blockShort(blockId)}`) } : NOT_FOUND;
 
   if (section === "exam") {
-    const packages = examPackagesByBlock[blockId] ?? [];
+    const packages = examPackagesByBlock.get(blockId) ?? [];
     if (!blockHasExam(blockId) || parts.length > 3) return NOT_FOUND;
     if (parts.length === 2) {
       return {
@@ -255,7 +260,7 @@ export function pageMeta(pathname: string): PageMeta {
   if (section === "flashcards" && parts.length === 3) {
     const subject = findSubject(flashcardSubjects, blockId, subjectId);
     if (!subject) return NOT_FOUND;
-    const n = flashcardDecks[key]?.length ?? 0;
+    const n = flashcardDecks.get(key)?.length ?? 0;
     return {
       title: titled(`${subject.label} Flashcards (${blockShort(blockId)})`),
       description: describe(`${n} free spaced-repetition flashcards for ${subject.label}, ${where}. Review what's due each day; works offline.`),
@@ -265,7 +270,7 @@ export function pageMeta(pathname: string): PageMeta {
   if (section === "quizzes" && parts.length === 3) {
     const subject = findSubject(quizSubjects, blockId, subjectId);
     if (!subject) return NOT_FOUND;
-    const n = quizBanks[key]?.length ?? 0;
+    const n = quizBanks.get(key)?.length ?? 0;
     return {
       title: titled(`${subject.label} Quiz (${blockShort(blockId)})`),
       description: describe(`${n} multiple-choice questions with explanations for ${subject.label}, ${where}. Free, works offline.`),
@@ -275,7 +280,7 @@ export function pageMeta(pathname: string): PageMeta {
   if (section === "modules" && parts.length === 3) {
     const subject = findSubject(moduleSubjects, blockId, subjectId);
     if (!subject) return NOT_FOUND;
-    const n = modulesByBlockSubject[key]?.length ?? 0;
+    const n = modulesByBlockSubject.get(key)?.length ?? 0;
     return {
       title: titled(`${subject.label} Modules (${blockShort(blockId)})`),
       description: describe(`${n} lecture and practicum modules for ${subject.label}, ${where}.`),
@@ -284,7 +289,7 @@ export function pageMeta(pathname: string): PageMeta {
   }
   if (section === "summaries" && parts.length === 3) {
     const subject = findSubject(summarySubjects, blockId, subjectId);
-    const markdown = summaries[key];
+    const markdown = summaries.get(key);
     if (!subject || markdown === undefined) return NOT_FOUND;
     return {
       title: titled(`${subject.label} Summary (${blockShort(blockId)})`),
@@ -293,14 +298,14 @@ export function pageMeta(pathname: string): PageMeta {
     };
   }
   if (section === "ebooks") {
-    const book = ebookMeta[key];
+    const book = ebookMeta.get(key);
     if (!book || parts.length > 4) return NOT_FOUND;
     if (parts.length === 3) {
       return { title: titled(book.title), description: describe(book.description), indexable: true };
     }
     const index = book.chapters.findIndex((c) => c.id === chapterId);
-    if (index === -1) return NOT_FOUND;
-    const chapter = book.chapters[index];
+    const chapter = book.chapters.at(index);
+    if (index === -1 || !chapter) return NOT_FOUND;
     return {
       title: titled(`${chapter.title} · ${book.title}`),
       description: describe(`Chapter ${index + 1} of ${book.title}: ${chapter.title}. ${book.description}`),
@@ -315,22 +320,22 @@ export function breadcrumbs(pathname: string): Crumb[] {
   const parts = pathname.split("/").filter(Boolean).map(decodeURIComponent);
   const crumbs: Crumb[] = [{ name: "Home", path: "/" }];
   const [section, blockId, subjectId, chapterId] = parts;
-  const sectionInfo = section ? SECTIONS[section] : undefined;
+  const sectionInfo = section ? SECTIONS.get(section) : undefined;
   if (!sectionInfo) return crumbs;
   crumbs.push({ name: sectionInfo.name, path: `/${section}` });
   if (section === "exam" && blockId) {
     crumbs.push({ name: `${blockShort(blockId)} exam`, path: `/exam/${blockId}` });
   }
   if (section !== "exam" && blockId && subjectId) {
-    const bookTitle = section === "ebooks" ? ebookMeta[subjectKey(blockId, subjectId)]?.title : undefined;
+    const bookTitle = section === "ebooks" ? ebookMeta.get(subjectKey(blockId, subjectId))?.title : undefined;
     crumbs.push({ name: bookTitle ?? pageMeta(`/${section}/${blockId}/${subjectId}`).title.replace(` · ${SITE_NAME}`, ""), path: `/${section}/${blockId}/${subjectId}` });
     if (chapterId) {
-      const chapter = ebookMeta[subjectKey(blockId, subjectId)]?.chapters.find((c) => c.id === chapterId);
+      const chapter = ebookMeta.get(subjectKey(blockId, subjectId))?.chapters.find((c) => c.id === chapterId);
       if (chapter) crumbs.push({ name: chapter.title, path: `/${section}/${blockId}/${subjectId}/${chapterId}` });
     }
   }
   if (section === "exam" && blockId && subjectId) {
-    const pkg = examPackagesByBlock[blockId]?.find((p) => p.id === subjectId);
+    const pkg = examPackagesByBlock.get(blockId)?.find((p) => p.id === subjectId);
     if (pkg) crumbs.push({ name: pkg.name, path: `/exam/${blockId}/${subjectId}` });
   }
   return crumbs;
@@ -346,14 +351,14 @@ export function indexablePaths(): string[] {
   for (const s of quizSubjects) paths.push(`/quizzes/${keyOf(s)}`);
   for (const block of studyBlocks) {
     if (!blockHasExam(block.id)) continue;
-    const packages = examPackagesByBlock[block.id] ?? [];
+    const packages = examPackagesByBlock.get(block.id) ?? [];
     paths.push(`/exam/${block.id}`);
     if (packages.length > 1) for (const p of packages) paths.push(`/exam/${block.id}/${p.id}`);
   }
   for (const s of moduleSubjects) paths.push(`/modules/${keyOf(s)}`);
   for (const s of ebookSubjects) {
     paths.push(`/ebooks/${keyOf(s)}`);
-    for (const c of ebookMeta[keyOf(s)]?.chapters ?? []) paths.push(`/ebooks/${keyOf(s)}/${c.id}`);
+    for (const c of ebookMeta.get(keyOf(s))?.chapters ?? []) paths.push(`/ebooks/${keyOf(s)}/${c.id}`);
   }
   for (const s of summarySubjects) paths.push(`/summaries/${keyOf(s)}`);
   return paths.filter((p) => pageMeta(p).indexable);

@@ -22,6 +22,7 @@ import { EmptyState } from "../components/EmptyState";
 import { PulseLine } from "../components/PulseLine";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import type { CardState, CardStateMap, OcclusionNote } from "../types/content";
+import { entry, own } from "../lib/records";
 
 type Mode = "review" | "browse";
 
@@ -161,7 +162,7 @@ function summarize(cards: readonly OcclusionCard[], stateMap: CardStateMap): Fig
   for (const c of cards) {
     let s = byNote.get(c.noteIndex);
     if (!s) byNote.set(c.noteIndex, (s = { note: c.note, index: c.noteIndex, total: 0, due: 0, mastered: 0, fresh: 0 }));
-    const status = labelStatus(stateMap[c.id], now);
+    const status = labelStatus(own(stateMap, c.id), now);
     s.total += 1;
     if (status === "new") s.fresh += 1;
     if (status === "new" || status === "due") s.due += 1;
@@ -193,7 +194,7 @@ function FigureGallery({ figures, currentIndex, onOpen, onClose }: { figures: Fi
               <img src={f.note.image} alt="" loading="lazy" decoding="async" width={f.note.width} height={f.note.height} />
               <span className="io-gallery-title">{f.note.title}</span>
               <span className="io-gallery-meta">
-                {REGION_LABELS[f.note.region] ?? f.note.region} · {f.total} labels{f.due > 0 ? ` · ${f.due} due` : ""}
+                {own(REGION_LABELS, f.note.region) ?? f.note.region} · {f.total} labels{f.due > 0 ? ` · ${f.due} due` : ""}
               </span>
               <span className="io-meter" aria-label={`${f.mastered} of ${f.total} mastered`}>
                 <span style={{ width: `${(f.mastered / f.total) * 100}%` }} />
@@ -283,7 +284,7 @@ export function OcclusionStudy() {
     // In review a graded label leaves the queue, so the next one is found without it.
     const rest = mode === "review" ? queue.filter((c) => c.id !== card.id) : queue;
     const next = stepLabel(rest, card, 1);
-    setLastGrade({ cardId: card.id, prev: stateMap[card.id], quality });
+    setLastGrade({ cardId: card.id, prev: own(stateMap, card.id), quality });
     grade(card.id, quality);
     setSession((s) => ({ reviewed: s.reviewed + 1, lapses: s.lapses + (quality < 3 ? 1 : 0) }));
     go(next);
@@ -379,7 +380,7 @@ export function OcclusionStudy() {
   const figureIndex = card ? figures.findIndex((f) => f.index === card.noteIndex) : -1;
   const figure = itemAt(figures, figureIndex);
   const now = new Date();
-  const intervalFor = (quality: number) => (card ? formatInterval(reviewCard(stateMap[card.id] ?? INITIAL_CARD_STATE, quality).interval) : "");
+  const intervalFor = (quality: number) => (card ? formatInterval(reviewCard(own(stateMap, card.id) ?? INITIAL_CARD_STATE, quality).interval) : "");
 
   return (
     <section className="page subject-tinted io-page" style={subjectHueStyle(subjectId) as CSSProperties}>
@@ -411,7 +412,7 @@ export function OcclusionStudy() {
         <div className="tag-filter-row">
           {allRegions.map((r) => (
             <button key={r} type="button" className={regions.includes(r) ? "tag tag-toggle active" : "tag tag-toggle"} onClick={() => { toggleRegion(r); }} aria-pressed={regions.includes(r)}>
-              {REGION_LABELS[r] ?? r}
+              {own(REGION_LABELS, r) ?? r}
             </button>
           ))}
           {regions.length > 0 && (
@@ -531,14 +532,14 @@ export function OcclusionStudy() {
             <h2 className="io-figure-title">{card.note.title}</h2>
             {figure && (
               <p className="io-fig-stats">
-                {REGION_LABELS[card.note.region] ?? card.note.region} · {figure.total} labels · {figure.due} due · {figure.mastered} mastered
+                {own(REGION_LABELS, card.note.region) ?? card.note.region} · {figure.total} labels · {figure.due} due · {figure.mastered} mastered
               </p>
             )}
 
             <div className="io-chips" role="group" aria-label="Labels on this figure">
               {card.note.masks.map((m, i) => {
                 const id = `${card.note.id}:${m.id}`;
-                const status = labelStatus(stateMap[id], now);
+                const status = labelStatus(own(stateMap, id), now);
                 const current = m.id === card.mask.id;
                 return (
                   <button
@@ -546,7 +547,7 @@ export function OcclusionStudy() {
                     type="button"
                     className={`io-chip is-${status}${current ? " is-current" : ""}`}
                     aria-current={current || undefined}
-                    aria-label={`Label ${i + 1}, ${STATUS_TEXT[status]}`}
+                    aria-label={`Label ${i + 1}, ${entry(STATUS_TEXT, status)}`}
                     onClick={() => { pickMask(m.id); }}
                   >
                     {i + 1}

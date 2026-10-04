@@ -4,6 +4,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { askAlfondAbout } from "../../lib/alfond";
 import { fetchClassReadiness, reportReadiness, type ClassReadiness } from "../../lib/classReadiness";
 import { countdownText, PHASE_INFO, parseDay, phaseTimeline, type Phase } from "../../lib/examPlan";
+import { entry } from "../../lib/records";
 import type { Milestone } from "../../lib/milestones";
 import type { BlockReadiness, SubjectReadiness } from "../../lib/readiness";
 import type { PlanItem, TodayPlan } from "../../lib/todayPlan";
@@ -78,7 +79,7 @@ export function ReadinessSummary({
           )}
         </p>
         <p className="readiness-summary-phase">
-          <span className={`phase-chip phase-${phase}`}>{PHASE_INFO[phase].name}</span> {PHASE_INFO[phase].focus}
+          <span className={`phase-chip phase-${phase}`}>{entry(PHASE_INFO, phase).name}</span> {entry(PHASE_INFO, phase).focus}
         </p>
         {children && <div className="readiness-summary-actions">{children}</div>}
       </div>

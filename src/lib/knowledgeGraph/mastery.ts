@@ -1,5 +1,6 @@
 import { readJSON, STORAGE_KEYS } from "../storage";
 import { MASTERED_DAYS } from "../readiness";
+import { own, setOwn } from "../records";
 import type { CardStateMap, QuizAttempt } from "../../types/content";
 import type { GraphNode } from "./types";
 
@@ -16,13 +17,19 @@ export interface StudyState {
 export function readStudyState(subjects: string[]): StudyState {
   const state: StudyState = { cards: {}, labels: {}, quiz: {} };
   for (const key of subjects) {
-    state.cards[key] = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
-    state.labels[key] = readJSON<CardStateMap>(STORAGE_KEYS.occlusionState(key), {});
+    setOwn(state.cards, key, readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {}));
+    setOwn(state.labels, key, readJSON<CardStateMap>(STORAGE_KEYS.occlusionState(key), {}));
     const attempts = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
-    state.quiz[key] = { missed: new Set(attempts.slice(-3).flatMap((a) => a.missedIds)), taken: attempts.length > 0 };
+    setOwn(state.quiz, key, { missed: new Set(attempts.slice(-3).flatMap((a) => a.missedIds)), taken: attempts.length > 0 });
   }
   return state;
 }
+
+/** One card's state in a subject's saved states. */
+const lookup = (states: StudyState["cards"], subject: string, id: string) => {
+  const subjectStates = own(states, subject);
+  return subjectStates && own(subjectStates, id);
+};
 
 const strength = (s: { interval?: number } | undefined) => Math.min(1, (s?.interval ?? 0) / MASTERED_DAYS);
 
@@ -31,7 +38,7 @@ export function nodeMastery(node: GraphNode, state: StudyState): number | null {
   let n = 0;
   for (const [subject, ids] of Object.entries(node.cards)) {
     for (const id of ids) {
-      const s = state.cards[subject]?.[id];
+      const s = lookup(state.cards, subject, id);
       if (s) {
         sum += strength(s);
         n += 1;
@@ -40,7 +47,7 @@ export function nodeMastery(node: GraphNode, state: StudyState): number | null {
   }
   for (const [subject, ids] of Object.entries(node.labels)) {
     for (const id of ids) {
-      const s = state.labels[subject]?.[id];
+      const s = lookup(state.labels, subject, id);
       if (s) {
         sum += strength(s);
         n += 1;
@@ -49,7 +56,7 @@ export function nodeMastery(node: GraphNode, state: StudyState): number | null {
   }
   // A question counts once its subject's quiz has been taken: right unless recently missed.
   for (const [subject, ids] of Object.entries(node.questions)) {
-    const q = state.quiz[subject];
+    const q = own(state.quiz, subject);
     if (!q?.taken) continue;
     for (const id of ids) {
       sum += q.missed.has(id) ? 0 : 1;

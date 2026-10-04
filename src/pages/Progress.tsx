@@ -24,6 +24,7 @@ import { useCountUp } from "../hooks/useCountUp";
 import type { QuizAttempt } from "../types/content";
 import { readJSON } from "../lib/storage";
 import { shouldNudgeBackup } from "../lib/backupReminder";
+import { entry } from "../lib/records";
 
 const KIND_NAMES: Record<StudyKind, [string, string]> = {
   cards: ["card", "cards"],
@@ -95,7 +96,7 @@ export function Progress() {
       spots: weakSpots(allKeys),
       milestones: list,
       next: nextMilestone(list),
-      quizzes: Object.keys(quizBanks)
+      quizzes: [...quizBanks.keys()]
         .map((key) => ({ key, attempts: readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []) }))
         .filter((q) => q.attempts.length > 0),
     };
@@ -279,7 +280,7 @@ export function Progress() {
                     <span>
                       {(Object.entries(counts) as [StudyKind, number][])
                         .filter(([, n]) => n > 0)
-                        .map(([k, n]) => `${n} ${KIND_NAMES[k][n === 1 ? 0 : 1]}`)
+                        .map(([k, n]) => `${n} ${entry(KIND_NAMES, k)[n === 1 ? 0 : 1]}`)
                         .join(", ")}
                     </span>
                   </li>
