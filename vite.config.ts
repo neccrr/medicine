@@ -70,6 +70,29 @@ function legalPages(): Plugin {
   }
 }
 
+// /knowledge-graph.json is written by the prerender step; `vite` builds it on request instead.
+function knowledgeGraphDev(): Plugin {
+  return {
+    name: 'medicine-knowledge-graph',
+    apply: 'serve',
+    configureServer(server) {
+      let cached: string | null = null
+      server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
+        if (req.url?.split('?')[0] !== '/knowledge-graph.json') return next()
+        try {
+          cached ??= JSON.stringify(await (await server.ssrLoadModule('/src/lib/knowledgeGraph/build.ts')).buildFromContent())
+          res.setHeader('content-type', 'application/json')
+          res.end(cached)
+        } catch (err) {
+          console.error(err)
+          res.statusCode = 500
+          res.end('Knowledge map build failed')
+        }
+      })
+    },
+  }
+}
+
 // The production site (src/lib/site.ts), used for the canonical link and the Open Graph/Twitter
 // tags in index.html (link-preview crawlers only follow absolute URLs). Set SITE_URL to override
 // it, e.g. for a fork deployed elsewhere. GOOGLE_SITE_VERIFICATION adds Search Console's
@@ -94,6 +117,7 @@ export default defineConfig({
     react(),
     devApi(),
     legalPages(),
+    knowledgeGraphDev(),
     siteUrl(),
     VitePWA({
       // "prompt": a new version waits until the student taps the update nudge (UpdateNudge /
@@ -139,6 +163,12 @@ export default defineConfig({
         // The privacy policy and terms are plain pages outside the app (served from legal/).
         navigateFallbackDenylist: [/\/assets\//, /^\/api\//, /\.(xml|txt)$/, /^\/(privacy|terms)(\.html)?\/?$/],
         runtimeCaching: [
+          {
+            // The knowledge map's data: fetched when the map is opened, then kept for offline.
+            urlPattern: ({ url }) => url.pathname === '/knowledge-graph.json',
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'knowledge-graph', cacheableResponse: { statuses: [200] } },
+          },
           {
             urlPattern: ({ url }) => url.pathname.endsWith('.pdf'),
             handler: 'CacheFirst',

@@ -432,3 +432,17 @@ export function AlfondIcon() {
     </svg>
   );
 }
+
+/** The knowledge map: linked dots. */
+export function MapIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path d="M6.5 7.5l5 3.5M12.5 12l4.5-5M12 12.5l-4.5 5M13 13l4 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      <circle cx="5.5" cy="6.5" r="2" stroke="currentColor" strokeWidth="1.6" fill="none" />
+      <circle cx="12" cy="11.8" r="2.4" fill="currentColor" />
+      <circle cx="18" cy="6" r="1.8" stroke="currentColor" strokeWidth="1.6" fill="none" />
+      <circle cx="6.5" cy="18.5" r="1.8" stroke="currentColor" strokeWidth="1.6" fill="none" />
+      <circle cx="17.8" cy="18.3" r="2" stroke="currentColor" strokeWidth="1.6" fill="none" />
+    </svg>
+  );
+}

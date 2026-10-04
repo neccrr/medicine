@@ -1,6 +1,7 @@
 import { useEffect, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { marked } from "marked";
+import { renderMarkdown } from "../lib/markdownHtml";
+import { useHashScroll } from "../hooks/useHashScroll";
 import { subjectKey, summaries } from "../lib/content";
 import { writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { useReadingPrefs } from "../hooks/useReadingPrefs";
@@ -11,6 +12,7 @@ export function SummaryDetail() {
   const { blockId = "", subjectId = "" } = useParams();
   const key = subjectKey(blockId, subjectId);
   const markdown = summaries[key];
+  useHashScroll(markdown);
   const [readingPrefs, setReadingPrefs] = useReadingPrefs();
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export function SummaryDetail() {
           fontSize: `${readingPrefs.fontScale}rem`,
           fontFamily: readingPrefs.accessibleFont ? "var(--font-reading-accessible)" : undefined,
         }}
-        dangerouslySetInnerHTML={{ __html: marked.parse(markdown, { async: false }) }}
+        dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
       />
     </section>
   );

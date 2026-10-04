@@ -154,6 +154,13 @@ account environment variables it runs as a plain static site.
 - A **⌘K / Ctrl+K** command palette to jump to any page or subject
 - A collapsible sidebar that shrinks to an icon rail on desktop (remembered between visits), giving pages such as the ebook reader a wider column
 
+**Knowledge map** (`/map`)
+- One graph of every concept across all blocks and subjects (about 700), from the terms the ebooks and summaries put in bold, linked where they come up together in a paragraph, flashcard or quiz question; a concept taught in two subjects or blocks is one dot that joins them
+- Built at deploy time into `/knowledge-graph.json` (layout included, so it opens instantly); past-paper exam questions are never read
+- Tap a concept: what it links to, the exact ebook and summary sections about it, its flashcards (opened as just those cards), quiz questions (as a drill) and labelled figures, and "Ask Alfond" how it connects
+- Color by subject or by your own mastery (weak concepts ringed), search, block and subject filters, "only links between subjects", focus on one concept's links, and a list view
+- Optional AI relationship labels ("innervates", "part of"…): `AI_BASE_URL=… AI_API_KEY=… AI_MODEL=… npm run graph:relations`, then commit `content/graph/relations.json`
+
 **Exam plan** (`/plan`)
 - One exam date per block: the block's official date (`examDate` in `src/lib/blocks.ts`) unless the student sets their own
 - A readiness score per subject and block, from card and image-occlusion mastery, quiz accuracy and coverage, chapters read and timed mock scores
@@ -293,6 +300,7 @@ cached the first time it's opened.
 | `/lab` → `/lab/:exerciseId/:activity` | Virtual Lab activities → simulator bench, data table, plot and check questions |
 | `/search` | Fuzzy search with type and subject filters |
 | `/progress` | Readiness, subject meters, trends, heatmap, weak spots, milestones, export/import |
+| `/map` | Knowledge map of every concept across all blocks |
 | `/plan`, `/plan/:block` | Exam plan: today's plan, phases, readiness, mock trend, weak spots, class average |
 | `/leaderboard` | Weekly, all-time and streak rankings, filtered to your cohort; join or leave, and pick a display name (signed-in only) |
 | `/account` | Sign in or create an account; profile, sync status, current block, sign out, data download, account deletion |

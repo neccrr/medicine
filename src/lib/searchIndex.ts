@@ -54,6 +54,7 @@ const staticPages: SearchDoc[] = [
     })),
   ),
   { type: "page", id: "search", title: "Search", detail: "Search everything", to: "/search" },
+  { type: "page", id: "map", title: "Knowledge map", detail: "How every concept connects across blocks and subjects", to: "/map" },
   { type: "page", id: "plan", title: "Exam plan", detail: "Today's plan, readiness and countdown", to: "/plan" },
   { type: "page", id: "alfond", title: "Alfond", detail: "Ask the study assistant anything", to: "/alfond" },
   { type: "page", id: "leaderboard", title: "Leaderboard", detail: "Weekly, all-time and streak rankings", to: "/leaderboard" },

@@ -1,7 +1,8 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { CheckIcon } from "../components/icons";
-import { marked } from "marked";
+import { renderMarkdown } from "../lib/markdownHtml";
+import { useHashScroll } from "../hooks/useHashScroll";
 import { ebookChapterKeys, ebookMeta, ebookPdfs, loadEbookChapter, subjectKey } from "../lib/content";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { logStudy, recordActivity } from "../lib/activity";
@@ -87,6 +88,7 @@ export function EbookReader() {
     };
   }, [chapterKey]);
   const current = loaded?.key === chapterKey ? loaded : null;
+  useHashScroll(current?.markdown);
 
   if (!meta) {
     return (
@@ -201,7 +203,7 @@ export function EbookReader() {
                   fontSize: `${readingPrefs.fontScale}rem`,
                   fontFamily: readingPrefs.accessibleFont ? "var(--font-reading-accessible)" : undefined,
                 }}
-                dangerouslySetInnerHTML={{ __html: marked.parse(markdown, { async: false }) }}
+                dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
               />
               <button
                 type="button"

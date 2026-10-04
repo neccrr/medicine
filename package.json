@@ -16,7 +16,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "dev:api": "MEDICINE_API=memory vite"
+    "dev:api": "MEDICINE_API=memory vite",
+    "graph:relations": "node scripts/graph-relations.mjs"
   },
   "dependencies": {
     "better-auth": "^1.7.6",
@@ -28,11 +29,13 @@
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@types/d3-force": "^3.0.10",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/ui": "^5.0.1",
+    "d3-force": "^3.0.0",
     "oxlint": "^1.81.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",

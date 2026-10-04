@@ -53,12 +53,22 @@ export function FlashcardStudy() {
     () => Array.from(new Set(deck.flatMap((c) => c.tags))).sort(),
     [deck],
   );
+  // The knowledge map opens a deck on just the cards about one concept: ?cards=id,id
+  const cardsParam = searchParams.get("cards");
+  const [showAllCards, setShowAllCards] = useState(false);
+  const pickedCards = useMemo(() => {
+    if (!cardsParam || showAllCards) return null;
+    const ids = new Set(cardsParam.split(","));
+    const picked = deck.filter((c) => ids.has(c.id));
+    return picked.length ? picked : null;
+  }, [cardsParam, showAllCards, deck]);
   const filteredDeck = useMemo(
     () =>
-      selectedTags.length === 0
+      pickedCards ??
+      (selectedTags.length === 0
         ? deck
-        : deck.filter((c) => c.tags.some((t) => selectedTags.includes(t))),
-    [deck, selectedTags],
+        : deck.filter((c) => c.tags.some((t) => selectedTags.includes(t)))),
+    [deck, selectedTags, pickedCards],
   );
 
   const { dueCards, grade, stats, hardestCards } = useSpacedRepetition(key, filteredDeck);
@@ -145,7 +155,17 @@ export function FlashcardStudy() {
       <h1>{subjectLabel}</h1>
       <p className="subtitle">
         {stats.due} due · {stats.mastered}/{stats.total} mastered
-        {selectedTags.length > 0 && ` · filtered to ${filteredDeck.length} card${filteredDeck.length === 1 ? "" : "s"}`}
+        {pickedCards
+          ? ` · ${pickedCards.length} card${pickedCards.length === 1 ? "" : "s"} from the knowledge map`
+          : selectedTags.length > 0 && ` · filtered to ${filteredDeck.length} card${filteredDeck.length === 1 ? "" : "s"}`}
+        {pickedCards && (
+          <>
+            {" "}
+            <button type="button" className="link-btn" onClick={() => setShowAllCards(true)}>
+              Show the whole deck
+            </button>
+          </>
+        )}
       </p>
 
       {allTags.length > 0 && (

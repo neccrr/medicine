@@ -4,7 +4,9 @@
 // its content inside #root. Search engines read that directly; for people, the splash covers it
 // and React replaces it as soon as the app starts, exactly as on any other route.
 
-import { marked } from "marked";
+import { renderMarkdown } from "../lib/markdownHtml";
+import { buildFromContent } from "../lib/knowledgeGraph/build";
+import type { KnowledgeGraph } from "../lib/knowledgeGraph/types";
 import { groupByBlock, studyBlocks } from "../lib/blocks";
 import {
   ebookMeta,
@@ -57,12 +59,31 @@ function subjectList(section: string, subjects: Subject[], detail: (s: Subject) 
     .join("");
 }
 
+/** Built once per render: the knowledge map's data, also written out as /knowledge-graph.json. */
+let mapGraph: KnowledgeGraph | null = null;
+
+/** The map's concepts as a plain list, for search engines and readers without JavaScript. */
+function mapContent(): string {
+  if (!mapGraph) return "";
+  const top = [...mapGraph.nodes].sort((a, b) => b.mentions - a.mentions).slice(0, 150);
+  const where = (c: string, a: string) => (c.startsWith("summary:") ? `/summaries/${c.slice(8)}#${a}` : `/ebooks/${c}#${a}`);
+  return `<ul>${top
+    .map((n) => {
+      const s = n.sections[0];
+      const name = esc(n.label);
+      return `<li>${s ? `<a href="${where(s.c, s.a)}">${name}</a>` : name}</li>`;
+    })
+    .join("")}</ul>`;
+}
+
 async function content(path: string): Promise<string> {
   const parts = path.split("/").filter(Boolean);
   const [section, blockId, subjectId, chapterId] = parts;
   const key = blockId && subjectId ? subjectKey(blockId, subjectId) : "";
 
   switch (parts.length === 1 ? section : `${section}/*`) {
+    case "map":
+      return mapContent();
     case "flashcards":
       return subjectList("flashcards", flashcardSubjects, (s) => `(${flashcardDecks[keyOf(s)]?.length ?? 0} cards)`);
     case "quizzes":
@@ -126,7 +147,7 @@ async function content(path: string): Promise<string> {
     case "modules/*":
       return `<ul>${(modulesByBlockSubject[key] ?? []).map((m) => `<li>${esc(m.name)}</li>`).join("")}</ul>`;
     case "summaries/*":
-      return `<article>${marked.parse(summaries[key] ?? "", { async: false })}</article>`;
+      return `<article>${renderMarkdown(summaries[key] ?? "")}</article>`;
     case "exam/*": {
       // Past papers belong to the institution: list the exams, never their questions.
       const packages = examPackagesByBlock[blockId] ?? [];
@@ -154,7 +175,7 @@ async function content(path: string): Promise<string> {
       ]
         .filter(Boolean)
         .join(" · ");
-      return `<article>${marked.parse(markdown, { async: false })}</article><p>${pager}</p>${toc}`;
+      return `<article>${renderMarkdown(markdown)}</article><p>${pager}</p>${toc}`;
     }
     default:
       return `<p>Open <a href="/">${SITE_NAME}</a> to use this page.</p>`;
@@ -227,6 +248,8 @@ export interface RenderedSite {
 export async function renderSite(template: string, origin: string): Promise<RenderedSite> {
   const files = new Map<string, string>();
   const indexed = indexablePaths();
+  mapGraph = await buildFromContent();
+  files.set("knowledge-graph.json", JSON.stringify(mapGraph));
   for (const path of [...indexed, ...PRIVATE_PATHS]) {
     // The root index.html stays the app shell (the service worker caches it); every other
     // route gets its own page.

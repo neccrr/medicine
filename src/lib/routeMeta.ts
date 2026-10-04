@@ -166,6 +166,16 @@ const SECTIONS: Record<string, { name: string; meta: PageMeta }> = {
   progress: { name: "Progress", meta: { title: titled("Your Progress"), description: HOME_DESCRIPTION, indexable: false } },
   leaderboard: { name: "Leaderboard", meta: { title: titled("Leaderboard"), description: HOME_DESCRIPTION, indexable: false } },
   account: { name: "Account", meta: { title: titled("Account"), description: HOME_DESCRIPTION, indexable: false } },
+  map: {
+    name: "Knowledge map",
+    meta: {
+      title: titled("Knowledge Map: How Every Topic Connects"),
+      description: describe(
+        "An interactive map of every concept in the course, across all blocks and subjects, linked where they're taught together, with each concept's chapters, flashcards and quiz questions.",
+      ),
+      indexable: true,
+    },
+  },
   plan: { name: "Exam plan", meta: { title: titled("Exam Plan"), description: HOME_DESCRIPTION, indexable: false } },
   alfond: { name: "Alfond", meta: { title: titled("Alfond, Your Study Assistant"), description: HOME_DESCRIPTION, indexable: false } },
 };
@@ -328,7 +338,7 @@ export function breadcrumbs(pathname: string): Crumb[] {
 
 /** Every page that should be in search results, in a stable order. */
 export function indexablePaths(): string[] {
-  const paths = ["/", "/subjects", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab"];
+  const paths = ["/", "/subjects", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab", "/map"];
   for (const e of labExercises) for (const a of e.activities) paths.push(`/lab/${e.id}/${a.slug}`);
   for (const s of flashcardSubjects) paths.push(`/flashcards/${keyOf(s)}`);
   for (const key of occlusionKeys) paths.push(`/occlusion/${key}`);

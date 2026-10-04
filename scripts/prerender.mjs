@@ -23,7 +23,9 @@ try {
     await mkdir(dirname(out), { recursive: true });
     await writeFile(out, contents);
   }
-  console.log(`prerender: ${files.size - 3} pages (${indexed.length} in the sitemap), 404.html, sitemap.xml, robots.txt`);
+  const pages = [...files.keys()].filter((p) => p.endsWith("/index.html")).length;
+  const graph = JSON.parse(files.get("knowledge-graph.json") ?? "{\"nodes\":[],\"edges\":[]}");
+  console.log(`prerender: ${pages} pages (${indexed.length} in the sitemap), 404.html, sitemap.xml, robots.txt; knowledge map: ${graph.nodes.length} concepts, ${graph.edges.length} links`);
 } finally {
   await server.close();
 }
