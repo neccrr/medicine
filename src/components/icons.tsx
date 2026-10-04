@@ -416,3 +416,19 @@ export function CheckIcon() {
     </svg>
   );
 }
+
+/** Alfond, the study assistant: a speech bubble with a spark. */
+export function AlfondIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path
+        d="M12 4.5c4.4 0 8 2.9 8 6.6s-3.6 6.6-8 6.6c-.9 0-1.8-.1-2.6-.3L5.5 19.5l.9-3.4C4.9 14.9 4 13.1 4 11.1c0-3.7 3.6-6.6 8-6.6Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <path d="M12 8.2l.75 1.95 1.95.75-1.95.75L12 13.6l-.75-1.95-1.95-.75 1.95-.75L12 8.2Z" fill="currentColor" />
+    </svg>
+  );
+}

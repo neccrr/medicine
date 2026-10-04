@@ -1,4 +1,5 @@
 import { ebookMeta, loadEbookChapter, summaries } from "./content";
+import { streamAi, type AiResult } from "./aiStream";
 import { markdownToPlainText, splitMarkdownSections, truncate } from "./textExtract";
 
 // Behind the "Explain" panel: the passages of the student's own notes that match a question
@@ -93,51 +94,9 @@ export interface ExplainInput {
   notes: NotePassage[];
 }
 
-export type ExplainResult = { ok: true; remaining: number | null } | { ok: false; status: number; message: string; partial?: string };
-
-const CUT_OFF = "\u0000";
+export type ExplainResult = AiResult;
 
 /** Asks the server's AI to explain, calling onText with the answer as it streams in. */
-export async function askAi(input: ExplainInput, onText: (text: string) => void, signal?: AbortSignal): Promise<ExplainResult> {
-  let res: Response;
-  try {
-    res = await fetch("/api/ai/explain", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ ...input, notes: input.notes.map(({ title, text }) => ({ title, text })) }),
-      signal,
-    });
-  } catch {
-    return { ok: false, status: 0, message: "Couldn't reach the server. Check your connection." };
-  }
-  if (!res.ok || !res.body) {
-    const data = (await res.json().catch(() => null)) as { error?: string } | null;
-    return { ok: false, status: res.status, message: data?.error ?? "The AI couldn't answer right now." };
-  }
-  const remaining = res.headers.get("x-ai-remaining");
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
-  let text = "";
-  let cutOff = false;
-  try {
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      text += decoder.decode(value, { stream: true });
-      // The server ends an answer that broke off partway with a NUL character.
-      if (text.includes(CUT_OFF)) {
-        text = text.slice(0, text.indexOf(CUT_OFF));
-        cutOff = true;
-        break;
-      }
-      onText(text);
-    }
-  } catch {
-    if (signal?.aborted) return { ok: false, status: 0, message: "" };
-    cutOff = true;
-  }
-  if (cutOff) return { ok: false, status: 0, message: "The AI stopped partway through. Try again.", partial: text || undefined };
-  if (!text.trim()) return { ok: false, status: 502, message: "The AI sent an empty answer. Try again." };
-  return { ok: true, remaining: remaining === null ? null : Number(remaining) };
+export function askAi(input: ExplainInput, onText: (text: string) => void, signal?: AbortSignal): Promise<ExplainResult> {
+  return streamAi("/api/ai/explain", { ...input, notes: input.notes.map(({ title, text }) => ({ title, text })) }, onText, signal);
 }

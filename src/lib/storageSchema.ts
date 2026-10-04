@@ -44,6 +44,8 @@ export const KEY_TYPES = {
   labdata: { id: "name", sync: "latest", about: "Virtual Lab data table per activity, e.g. skeletal-muscle/voltage" },
   theme: { id: null, sync: false, keepOnClear: true, about: "Light or dark theme" },
   sidebarcollapsed: { id: null, sync: false, about: "Sidebar collapsed on desktop" },
+  alfond: { id: null, sync: "latest", about: "Alfond settings: whether its floating button shows on every page" },
+  alfondchat: { id: null, sync: false, about: "Alfond's recent conversation (device-only)" },
   lastexport: { id: null, sync: false, about: "When progress was last exported (backup nudge)" },
   sync: { id: "name", sync: false, about: "Sync bookkeeping: medicine:sync:state and medicine:sync:dirty" },
 } as const satisfies Record<string, KeyType>;

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAccount } from "../hooks/useAccount";
 import { askAi, findNotes, type NotePassage } from "../lib/explain";
+import { AiText } from "./AiText";
 
 interface Props {
   /** "{blockId}/{subjectId}" */
@@ -19,28 +20,6 @@ type AiState =
   | { phase: "streaming"; text: string }
   | { phase: "done"; text: string; remaining: number | null }
   | { phase: "error"; message: string; text?: string };
-
-/** Markdown-ish model text as safe React text: paragraphs, "- " lists, no raw HTML. */
-function AiText({ text }: { text: string }) {
-  const blocks = text.replace(/\*\*|__/g, "").trim().split(/\n{2,}/);
-  return (
-    <>
-      {blocks.map((block, i) => {
-        const lines = block.split("\n");
-        if (lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l))) {
-          return (
-            <ul key={i}>
-              {lines.map((l, j) => (
-                <li key={j}>{l.replace(/^\s*([-*•]|\d+\.)\s+/, "")}</li>
-              ))}
-            </ul>
-          );
-        }
-        return <p key={i}>{block}</p>;
-      })}
-    </>
-  );
-}
 
 /**
  * "Explain this" under a quiz answer or flashcard: the matching passages of the student's own

@@ -14,7 +14,7 @@ import {
   type LeaderboardStore,
 } from "./leaderboard.js";
 import type { ProgressStore, StoredEntry } from "./progressStore.js";
-import { parseExplainRequest, streamExplanation, utcDay, type AiConfig, type AiUsageStore } from "./ai.js";
+import { parseChatRequest, parseExplainRequest, streamChat, streamExplanation, utcDay, type AiConfig, type AiUsageStore } from "./ai.js";
 
 const MAX_BODY_BYTES = 2_000_000;
 const MAX_CHANGES = 1000;
@@ -23,6 +23,8 @@ const MAX_CHANGES = 1000;
 const OVERLAP_MS = 5000;
 const BOARD_SIZE = 100;
 const MAX_AI_BODY_BYTES = 20_000;
+// A chat carries its recent turns and the page on screen.
+const MAX_AI_CHAT_BYTES = 64_000;
 
 export interface AppDeps {
   auth: Auth;
@@ -185,24 +187,28 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDe
     });
   }
 
-  async function explain(request: Request, user: SessionUser): Promise<Response> {
-    if (!ai) return error(503, "AI explanations aren't switched on for this site.");
+  /** "Explain this" and Alfond's chat: checked, counted against the daily allowance, streamed. */
+  async function askAi(request: Request, user: SessionUser, kind: "explain" | "chat"): Promise<Response> {
+    if (!ai) return error(503, "AI isn't switched on for this site.");
     const text = await request.text();
-    if (text.length > MAX_AI_BODY_BYTES) return error(413, "That question is too long to explain.");
+    if (text.length > (kind === "chat" ? MAX_AI_CHAT_BYTES : MAX_AI_BODY_BYTES)) {
+      return error(413, kind === "chat" ? "That message is too long." : "That question is too long to explain.");
+    }
     let body: unknown;
     try {
       body = JSON.parse(text);
     } catch {
       return error(400, "Invalid JSON.");
     }
-    const parsed = parseExplainRequest(body);
-    if (!parsed) return error(400, "A question and its answer are needed.");
+    const explainRequest = kind === "explain" ? parseExplainRequest(body) : null;
+    const chatRequest = kind === "chat" ? parseChatRequest(body) : null;
+    if (!explainRequest && !chatRequest) return error(400, kind === "chat" ? "A message is needed." : "A question and its answer are needed.");
     const limit = ai.config.dailyLimit;
     const day = utcDay(Date.now());
     const { ok, used } = await ai.usage.take(user.id, day, limit);
-    if (!ok) return error(429, `You've used today's ${limit} AI explanations. They reset at 07:00 WIB (midnight UTC).`);
-    const response = await streamExplanation(ai.config, parsed, ai.fetch);
-    // A failed explanation doesn't use up one of the student's daily allowance.
+    if (!ok) return error(429, `You've used today's ${limit} AI answers. They reset at 07:00 WIB (midnight UTC).`);
+    const response = explainRequest ? await streamExplanation(ai.config, explainRequest, ai.fetch) : await streamChat(ai.config, chatRequest!, ai.fetch);
+    // A failed answer doesn't use up one of the student's daily allowance.
     if (!response.ok) {
       await ai.usage.refund(user.id, day);
       return response;
@@ -235,11 +241,11 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDe
       if (pathname === "/api/config" && request.method === "GET") {
         return json({ accounts: true, google: googleEnabled, ai: Boolean(ai) });
       }
-      if (pathname === "/api/ai/explain") {
+      if (pathname === "/api/ai/explain" || pathname === "/api/ai/chat") {
         if (request.method !== "POST") return error(405, "Method not allowed.");
         const user = await sessionUser(request);
         if (!user) return error(401, "Sign in to ask the AI.");
-        return await explain(request, user);
+        return await askAi(request, user, pathname === "/api/ai/chat" ? "chat" : "explain");
       }
       if (["/api/sync", "/api/account/export", "/api/leaderboard", "/api/leaderboard/me"].includes(pathname)) {
         const user = await sessionUser(request);

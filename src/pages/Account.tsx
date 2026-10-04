@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { AlfondOverlaySetting } from "../components/alfond/AlfondSetting";
 import { useAccount } from "../hooks/useAccount";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { studyBlocks } from "../lib/blocks";
@@ -65,6 +66,16 @@ function CurrentBlockPicker() {
       </select>
       <small>Home shows this block first.</small>
     </label>
+  );
+}
+
+/** The settings any student has, signed in or not. */
+function DeviceSettings() {
+  return (
+    <>
+      <CurrentBlockPicker />
+      <AlfondOverlaySetting />
+    </>
   );
 }
 
@@ -375,7 +386,7 @@ function SignedInView({ notice }: { notice: ReturnType<typeof useReturnNotice> }
             {profileMessage && <span className="account-note">{profileMessage}</span>}
           </div>
         </form>
-        <CurrentBlockPicker />
+        <DeviceSettings />
         <SignInMethods onMethods={setMethods} />
       </div>
 
@@ -505,7 +516,7 @@ export function Account() {
               Accounts aren't set up on this site, so your progress stays in this browser. Back it up
               from <Link to="/progress">Progress</Link> to move it to another device.
             </p>
-            <CurrentBlockPicker />
+            <DeviceSettings />
           </div>
         </>
       )}
@@ -537,7 +548,7 @@ export function Account() {
                   <strong>Still works offline.</strong> Changes sync when you're back online.
                 </li>
               </ul>
-              <CurrentBlockPicker />
+              <DeviceSettings />
             </div>
           </div>
         </>

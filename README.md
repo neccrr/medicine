@@ -109,6 +109,13 @@ account environment variables it runs as a plain static site.
 - Shows the passages of the subject's own ebook and summary that match the question: free, instant, works offline
 - Signed-in students can ask an AI to explain the answer (and why their pick was wrong), streamed in, grounded in those passages, with a daily allowance per student
 
+**Alfond** (study assistant)
+- A chat that can be asked anything, from its own page or from a floating button on every page
+- From the button, each question carries the text of the page on screen, so "what does this mean?" is about what you're reading (switch it off per question)
+- One conversation across pages, kept on the device; stop, retry, new chat
+- The floating button can be turned off on Alfond's page or in Account
+- Signed-in students only, on the same daily AI allowance as "Explain this"
+
 **Quizzes**
 - One question at a time with instant feedback and an explanation for every answer
 - A numbered navigator, previous/next, and full keyboard control
@@ -457,9 +464,9 @@ accounts (see `.env.example`):
    (`https://medicine.necr.help`).
 3. Redeploy. `/api/config` answering `{"accounts":true,...}` means it worked.
 
-### AI explanations (optional, free tier)
+### AI: explanations and Alfond (optional, free tier)
 
-"Ask AI to explain" calls any OpenAI-compatible gateway from the server; the
+"Ask AI to explain" and Alfond's chat call any OpenAI-compatible gateway from the server; the
 site is set up for [NaraRouter](https://bynara.id/) and its free daily
 allowance. In Vercel → Environment Variables (never in the repo):
 
@@ -469,11 +476,13 @@ allowance. In Vercel → Environment Variables (never in the repo):
 - `AI_MODEL`: a model id from its model list (a free one). List backups after it,
   comma-separated (`fast-model,backup-model`); a model that fails or doesn't start
   answering within a minute hands over to the next
-- `AI_DAILY_LIMIT` (optional): explanations per student per day, default 30
+- `AI_DAILY_LIMIT` (optional): AI answers per student per day (explanations and
+  Alfond's replies together), default 30
 
-Redeploy; `/api/config` then answers `"ai":true` and the button appears for
-signed-in students. Without these variables the button stays hidden and
-"Explain this" shows only the matching passages from the notes.
+Redeploy; `/api/config` then answers `"ai":true`: the AI button and Alfond appear.
+Without these variables the AI button and Alfond's floating button stay hidden,
+Alfond's page says it isn't switched on, and "Explain this" shows only the
+matching passages from the notes.
 
 ### Search engines
 

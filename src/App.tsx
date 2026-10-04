@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { MobileTabBar, Sidebar } from "./components/Sidebar";
 import { ScrollManager } from "./components/ScrollManager";
+import { AlfondOverlay } from "./components/alfond/AlfondOverlay";
 import { CommandPalette } from "./components/CommandPalette";
 import { PulseLine } from "./components/PulseLine";
 import { UpdateNudge } from "./components/UpdateNudge";
@@ -59,6 +60,7 @@ const LabActivityPage = lazy(() =>
   import("./pages/LabActivity").then((m) => ({ default: m.LabActivityPage })),
 );
 const Account = lazy(() => import("./pages/Account").then((m) => ({ default: m.Account })));
+const AlfondPage = lazy(() => import("./pages/Alfond").then((m) => ({ default: m.AlfondPage })));
 
 /** Image occlusion briefly lived under the flashcards. */
 function OldOcclusionRedirect() {
@@ -113,6 +115,7 @@ function AppRoutes() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/alfond" element={<AlfondPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
@@ -148,6 +151,7 @@ export default function App() {
               </footer>
             </div>
             <MobileTabBar />
+            <AlfondOverlay />
           </div>
         </BrowserRouter>
       </AccountProvider>

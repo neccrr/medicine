@@ -166,6 +166,7 @@ const SECTIONS: Record<string, { name: string; meta: PageMeta }> = {
   progress: { name: "Progress", meta: { title: titled("Your Progress"), description: HOME_DESCRIPTION, indexable: false } },
   leaderboard: { name: "Leaderboard", meta: { title: titled("Leaderboard"), description: HOME_DESCRIPTION, indexable: false } },
   account: { name: "Account", meta: { title: titled("Account"), description: HOME_DESCRIPTION, indexable: false } },
+  alfond: { name: "Alfond", meta: { title: titled("Alfond, Your Study Assistant"), description: HOME_DESCRIPTION, indexable: false } },
 };
 
 /** Whether a block has an exam: its own past-paper packages, or else its quiz questions. */
@@ -347,4 +348,4 @@ export function indexablePaths(): string[] {
 }
 
 /** App pages that are rendered for everyone but kept out of search. */
-export const PRIVATE_PATHS = ["/search", "/progress", "/leaderboard", "/account"];
+export const PRIVATE_PATHS = ["/search", "/progress", "/leaderboard", "/account", "/alfond"];

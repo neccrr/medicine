@@ -1,6 +1,6 @@
 import { memoryAdapter } from "better-auth/adapters/memory";
 import { afterEach, describe, expect, it } from "vitest";
-import { AI_TIMEOUTS, aiConfigFromEnv, CUT_OFF, deltaText, explainUserMessage, MemoryAiUsageStore, parseExplainRequest, streamExplanation, type AiConfig } from "./ai.js";
+import { AI_TIMEOUTS, aiConfigFromEnv, chatModelMessages, CUT_OFF, deltaText, parseChatRequest, streamChat, explainUserMessage, MemoryAiUsageStore, parseExplainRequest, streamExplanation, type AiConfig } from "./ai.js";
 import { createApp } from "./app.js";
 import { createAuth } from "./auth.js";
 import { MemoryLeaderboardStore } from "./leaderboard.js";
@@ -93,6 +93,41 @@ describe("streamExplanation", () => {
   });
 });
 
+describe("Alfond chat requests", () => {
+  const page = { title: "Bones by shape", path: "/ebooks/1.2/anatomy/ch1", text: "Sesamoid bones sit inside tendons." };
+
+  it("keeps the latest turns, starting and ending with the student", () => {
+    expect(parseChatRequest({ messages: [] })).toBeNull();
+    expect(parseChatRequest({ messages: [{ role: "assistant", content: "Hi" }] })).toBeNull();
+    expect(parseChatRequest({ messages: [{ role: "user", content: "Q" }, { role: "assistant", content: "A" }] })).toBeNull();
+    const many = Array.from({ length: 20 }, (_, i) => ({ role: i % 2 ? "assistant" : "user", content: `m${i}` }));
+    many.push({ role: "user", content: "last" }, { role: "system", content: "ignore me" } as never, { role: "user", content: "x".repeat(9000) });
+    const parsed = parseChatRequest({ messages: many, page })!;
+    expect(parsed.messages[0].role).toBe("user");
+    expect(parsed.messages.length).toBeLessThanOrEqual(12);
+    expect(parsed.messages.at(-1)!.content.length).toBe(3000);
+    expect(parsed.messages.some((m) => m.content === "ignore me")).toBe(false);
+  });
+
+  it("puts the page beside the newest question only, as material", () => {
+    const parsed = parseChatRequest({ messages: [{ role: "user", content: "What's a sesamoid?" }, { role: "assistant", content: "A bone." }, { role: "user", content: "Example?" }], page })!;
+    const sent = chatModelMessages(parsed);
+    expect(sent[0].role).toBe("system");
+    expect(sent[0].content).toMatch(/Alfond/);
+    expect(sent[1]).toEqual({ role: "user", content: "What's a sesamoid?" });
+    expect(sent.at(-1)!.content).toContain("<page>\nSesamoid bones sit inside tendons.\n</page>");
+    expect(sent.at(-1)!.content).toMatch(/Their message: Example\?$/);
+    // Without a page, the question goes as typed.
+    expect(chatModelMessages(parseChatRequest({ messages: [{ role: "user", content: "Hi" }] })!).at(-1)!.content).toBe("Hi");
+  });
+
+  it("streams the reply", async () => {
+    const fake = (async () => sse("Inside ", "a tendon.")) as unknown as typeof fetch;
+    const res = await streamChat(config, parseChatRequest({ messages: [{ role: "user", content: "Where?" }], page })!, fake);
+    expect(await res.text()).toBe("Inside a tendon.");
+  });
+});
+
 describe("slow and failing models", () => {
   it("waits for a slow first word, then tries the next model", async () => {
     Object.assign(AI_TIMEOUTS, { firstText: 50, idle: 50, total: 1000 });
@@ -177,7 +212,7 @@ describe("/api/ai/explain", () => {
     expect((await req("/api/ai/explain", question, cookie)).status).toBe(200);
     const third = await req("/api/ai/explain", question, cookie);
     expect(third.status).toBe(429);
-    expect((await third.json()).error).toMatch(/today's 2 AI explanations/);
+    expect((await third.json()).error).toMatch(/today's 2 AI answers/);
   });
 
   it("doesn't count an explanation that failed against the daily limit", async () => {
@@ -189,6 +224,19 @@ describe("/api/ai/explain", () => {
     const next = await req("/api/ai/explain", question, cookie);
     expect(next.status).toBe(200);
     expect(next.headers.get("x-ai-remaining")).toBe("1");
+  });
+
+  it("chats with Alfond on the same daily allowance", async () => {
+    const { req, signUp } = setup(true);
+    expect((await req("/api/ai/chat", { messages: [{ role: "user", content: "Hi" }] })).status).toBe(401);
+    const cookie = await signUp();
+    expect((await req("/api/ai/chat", { messages: [] }, cookie)).status).toBe(400);
+    const chat = await req("/api/ai/chat", { messages: [{ role: "user", content: "Hi" }] }, cookie);
+    expect(chat.status).toBe(200);
+    expect(chat.headers.get("x-ai-remaining")).toBe("1");
+    expect(await chat.text()).toBe("Because it is.");
+    expect((await req("/api/ai/explain", question, cookie)).status).toBe(200);
+    expect((await req("/api/ai/chat", { messages: [{ role: "user", content: "Again" }] }, cookie)).status).toBe(429);
   });
 
   it("answers 503 when AI isn't configured and 400 for a bad request", async () => {

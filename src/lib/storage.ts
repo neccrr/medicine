@@ -51,6 +51,9 @@ export const STORAGE_KEYS = {
   examDate: (key: string) => storageKey("examdate", key),
   readingPrefs: storageKey("readingprefs"),
   sidebarCollapsed: storageKey("sidebarcollapsed"),
+  /** Alfond's settings, e.g. { overlay: false } to hide its floating button. */
+  alfondPrefs: storageKey("alfond"),
+  alfondChat: storageKey("alfondchat"),
   /** The block the student is in (synced); Home shows it first. */
   currentBlock: storageKey("currentblock"),
   lastExport: storageKey("lastexport"),

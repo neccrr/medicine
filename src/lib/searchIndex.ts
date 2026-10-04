@@ -54,6 +54,7 @@ const staticPages: SearchDoc[] = [
     })),
   ),
   { type: "page", id: "search", title: "Search", detail: "Search everything", to: "/search" },
+  { type: "page", id: "alfond", title: "Alfond", detail: "Ask the study assistant anything", to: "/alfond" },
   { type: "page", id: "leaderboard", title: "Leaderboard", detail: "Weekly, all-time and streak rankings", to: "/leaderboard" },
   { type: "page", id: "progress", title: "Progress", detail: "Streaks, export & import", to: "/progress" },
 ];

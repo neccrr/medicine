@@ -8,6 +8,7 @@ import { OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
 import {
+  AlfondIcon,
   BookIcon,
   CardsIcon,
   FlaskIcon,
@@ -44,6 +45,7 @@ const groups: NavGroup[] = [
     items: [
       { to: "/", label: "Home", end: true, icon: <HomeIcon /> },
       { to: "/subjects", label: "Subjects", icon: <GridIcon /> },
+      { to: "/alfond", label: "Alfond", icon: <AlfondIcon /> },
     ],
   },
   {
@@ -80,7 +82,7 @@ const tabs: { id: string; label: string; icon: ReactNode; to?: string; items?: N
   { id: "study", label: "Study", icon: <CardsIcon />, items: [...groups[1].items, ...groups[3].items] },
   { id: "read", label: "Read", icon: <BookIcon />, items: groups[2].items },
   { id: "search", label: "Search", icon: <SearchIcon />, to: "/search" },
-  { id: "me", label: "Me", icon: <UserIcon />, items: groups[4].items },
+  { id: "me", label: "Me", icon: <UserIcon />, items: [groups[0].items[2], ...groups[4].items] },
 ];
 
 const inSection = (pathname: string, to: string) => (to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`));
