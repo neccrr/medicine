@@ -54,6 +54,17 @@ export function ExplainPanel(props: Props) {
   const [ai, setAi] = useState<AiState>({ phase: "idle" });
   const [online, setOnline] = useState(() => (typeof navigator === "undefined" ? true : navigator.onLine));
   const abort = useRef<AbortController | null>(null);
+  // Free models can take most of a minute before the first word; say so instead of looking stuck.
+  const [slow, setSlow] = useState(false);
+  const waiting = ai.phase === "streaming" && !ai.text;
+  useEffect(() => {
+    if (!waiting) return;
+    const t = setTimeout(() => setSlow(true), 8000);
+    return () => {
+      clearTimeout(t);
+      setSlow(false);
+    };
+  }, [waiting]);
 
   // A new question starts closed again.
   const [shownFor, setShownFor] = useState(question);
@@ -110,7 +121,7 @@ export function ExplainPanel(props: Props) {
     if (controller.signal.aborted) return;
     setAi((prev) => {
       const text = prev.phase === "streaming" ? prev.text : "";
-      return result.ok ? { phase: "done", text, remaining: result.remaining } : { phase: "error", message: result.message, text: text || undefined };
+      return result.ok ? { phase: "done", text, remaining: result.remaining } : { phase: "error", message: result.message, text: result.partial ?? (text || undefined) };
     });
   };
 
@@ -164,7 +175,7 @@ export function ExplainPanel(props: Props) {
           ) : (
             <>
               <div className="explain-ai-text" aria-live="polite">
-                {ai.phase === "streaming" && !ai.text ? <p className="explain-muted">Thinking…</p> : <AiText text={ai.phase === "error" ? (ai.text ?? "") : ai.text} />}
+                {waiting ? <p className="explain-muted">{slow ? "Still thinking… the free AI can take up to a minute." : "Thinking…"}</p> : <AiText text={ai.phase === "error" ? (ai.text ?? "") : ai.text} />}
               </div>
               {ai.phase === "error" && (
                 <p className="explain-error">

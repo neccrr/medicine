@@ -466,7 +466,9 @@ allowance. In Vercel → Environment Variables (never in the repo):
 - `AI_BASE_URL`: the gateway's OpenAI-compatible address from its API docs,
   up to and including `/v1` (`/chat/completions` is added)
 - `AI_API_KEY`: your NaraRouter API key
-- `AI_MODEL`: a model id from its model list (a free one)
+- `AI_MODEL`: a model id from its model list (a free one). List backups after it,
+  comma-separated (`fast-model,backup-model`); a model that fails or doesn't start
+  answering within a minute hands over to the next
 - `AI_DAILY_LIMIT` (optional): explanations per student per day, default 30
 
 Redeploy; `/api/config` then answers `"ai":true` and the button appears for

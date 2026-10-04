@@ -9,7 +9,8 @@ export interface AiConfig {
   /** The gateway's OpenAI-compatible root, e.g. "https://…/v1"; "/chat/completions" is appended. */
   baseUrl: string;
   apiKey: string;
-  model: string;
+  /** Model ids in order of preference: when one fails before answering, the next is tried. */
+  models: string[];
   /** Explanations per student per UTC day. */
   dailyLimit: number;
 }
@@ -18,10 +19,11 @@ export interface AiConfig {
 export function aiConfigFromEnv(env: Record<string, string | undefined>): AiConfig | null {
   const baseUrl = env.AI_BASE_URL?.trim().replace(/\/+$/, "");
   const apiKey = env.AI_API_KEY?.trim();
-  const model = env.AI_MODEL?.trim();
-  if (!baseUrl || !apiKey || !model) return null;
+  // AI_MODEL may list fallbacks: "fast-model,backup-model".
+  const models = (env.AI_MODEL ?? "").split(",").map((m) => m.trim()).filter(Boolean);
+  if (!baseUrl || !apiKey || models.length === 0) return null;
   const limit = Number.parseInt(env.AI_DAILY_LIMIT ?? "", 10);
-  return { baseUrl, apiKey, model, dailyLimit: Number.isFinite(limit) && limit > 0 ? limit : 30 };
+  return { baseUrl, apiKey, models, dailyLimit: Number.isFinite(limit) && limit > 0 ? limit : 30 };
 }
 
 export interface ExplainRequest {
@@ -93,51 +95,163 @@ export function explainUserMessage(r: ExplainRequest): string {
   return lines.join("\n");
 }
 
+// Free models can be slow, and a gateway that screens the answer may only send it once it's
+// all written, so the first words get a generous wait. After that the answer has to keep
+// coming, and the whole thing has to fit well inside the function's time limit.
+export const AI_TIMEOUTS = { firstText: 60_000, idle: 30_000, total: 150_000 };
+
+/** Ends a stream whose answer was cut off partway, so the browser can say so. */
+export const CUT_OFF = "\u0000";
+
+const NO_STORE = { "cache-control": "no-store" };
+
+function errorResponse(status: number, message: string): Response {
+  return new Response(JSON.stringify({ error: message }), { status, headers: { "content-type": "application/json", ...NO_STORE } });
+}
+
+/** Turns chunks of an OpenAI-style event stream into the answer's text. */
+function sseText() {
+  const decoder = new TextDecoder();
+  let buffer = "";
+  return {
+    push(chunk: Uint8Array) {
+      buffer += decoder.decode(chunk, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      return lines.map(deltaText).join("");
+    },
+    flush() {
+      const text = deltaText(buffer + decoder.decode());
+      buffer = "";
+      return text;
+    },
+  };
+}
+
+type Attempt = { ok: true; response: Response } | { ok: false; status: number; reason: string };
+
 /**
- * Calls the gateway with streaming on and turns its server-sent events into a plain text
- * stream of the answer, so the browser can show it as it arrives.
+ * One model: waits for the first words of the answer before replying, so a failure up to then
+ * is still a proper error (and the next model can be tried), then streams the rest as plain text.
  */
-export async function streamExplanation(config: AiConfig, request: ExplainRequest, fetchImpl: typeof fetch = fetch): Promise<Response> {
-  const upstream = await fetchImpl(`${config.baseUrl}/chat/completions`, {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${config.apiKey}` },
-    body: JSON.stringify({
-      model: config.model,
-      stream: true,
-      temperature: 0.3,
-      max_tokens: 700,
-      messages: [
-        { role: "system", content: EXPLAIN_SYSTEM },
-        { role: "user", content: explainUserMessage(request) },
-      ],
-    }),
-    signal: AbortSignal.timeout(45_000),
-  });
+async function attempt(config: AiConfig, model: string, request: ExplainRequest, fetchImpl: typeof fetch, deadline: number): Promise<Attempt> {
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const arm = (ms: number) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => controller.abort(), Math.max(0, Math.min(ms, deadline - Date.now())));
+  };
+  const failed = (status: number, reason: string): Attempt => {
+    clearTimeout(timer);
+    controller.abort();
+    return { ok: false, status, reason };
+  };
+
+  arm(AI_TIMEOUTS.firstText);
+  let upstream: Response;
+  try {
+    upstream = await fetchImpl(`${config.baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${config.apiKey}` },
+      body: JSON.stringify({
+        model,
+        stream: true,
+        temperature: 0.3,
+        max_tokens: 700,
+        messages: [
+          { role: "system", content: EXPLAIN_SYSTEM },
+          { role: "user", content: explainUserMessage(request) },
+        ],
+      }),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    return failed(controller.signal.aborted ? 504 : 502, controller.signal.aborted ? "no reply in time" : String(err));
+  }
   if (!upstream.ok || !upstream.body) {
     const detail = await upstream.text().catch(() => "");
-    console.error(`AI gateway answered ${upstream.status}: ${detail.slice(0, 300)}`);
-    const status = upstream.status === 429 ? 429 : 502;
-    const message = status === 429 ? "The free AI allowance is used up for now. Try again later." : "The AI service didn't answer. Try again in a moment.";
-    return new Response(JSON.stringify({ error: message }), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
+    return failed(upstream.status === 429 ? 429 : 502, `answered ${upstream.status}: ${detail.slice(0, 300)}`);
   }
-  const decoder = new TextDecoder();
+
+  const reader = upstream.body.getReader();
+  const parser = sseText();
+  let first = "";
+  try {
+    while (!first) {
+      const { done, value } = await reader.read();
+      if (done) {
+        first = parser.flush();
+        break;
+      }
+      first = parser.push(value);
+    }
+  } catch {
+    return failed(controller.signal.aborted ? 504 : 502, controller.signal.aborted ? "no text in time" : "stream broke before any text");
+  }
+  if (!first.trim()) return failed(502, "empty answer");
+
   const encoder = new TextEncoder();
-  let buffer = "";
-  const body = upstream.body.pipeThrough(
-    new TransformStream<Uint8Array, Uint8Array>({
-      transform(chunk, controller) {
-        buffer += decoder.decode(chunk, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-        for (const text of lines.map(deltaText)) if (text) controller.enqueue(encoder.encode(text));
-      },
-      flush(controller) {
-        const text = deltaText(buffer);
-        if (text) controller.enqueue(encoder.encode(text));
-      },
-    }),
-  );
-  return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store", "x-content-type-options": "nosniff" } });
+  let finished = false;
+  const body = new ReadableStream<Uint8Array>({
+    start(c) {
+      c.enqueue(encoder.encode(first));
+    },
+    // Reads until there is text to pass on, so the browser's read is never left waiting.
+    async pull(c) {
+      try {
+        for (;;) {
+          arm(AI_TIMEOUTS.idle);
+          const { done, value } = await reader.read();
+          if (done) {
+            const rest = parser.flush();
+            if (rest) c.enqueue(encoder.encode(rest));
+            finished = true;
+            clearTimeout(timer);
+            c.close();
+            return;
+          }
+          const text = parser.push(value);
+          if (text) {
+            c.enqueue(encoder.encode(text));
+            return;
+          }
+        }
+      } catch {
+        console.error(`AI model ${model}: answer cut off (${controller.signal.aborted ? "timed out" : "stream broke"})`);
+        finished = true;
+        clearTimeout(timer);
+        c.enqueue(encoder.encode(CUT_OFF));
+        c.close();
+      }
+    },
+    cancel() {
+      clearTimeout(timer);
+      if (!finished) controller.abort();
+    },
+  });
+  return { ok: true, response: new Response(body, { headers: { "content-type": "text/plain; charset=utf-8", "x-content-type-options": "nosniff", ...NO_STORE } }) };
+}
+
+/**
+ * Asks the gateway for an explanation, trying each configured model in turn until one starts
+ * answering, and streams the answer back as plain text. If it is cut off partway, the stream
+ * ends with CUT_OFF.
+ */
+export async function streamExplanation(config: AiConfig, request: ExplainRequest, fetchImpl: typeof fetch = fetch): Promise<Response> {
+  const deadline = Date.now() + AI_TIMEOUTS.total;
+  let last: Extract<Attempt, { ok: false }> | undefined;
+  for (const model of config.models) {
+    // A fallback only starts if it has a fair chance of finishing.
+    if (last && deadline - Date.now() < AI_TIMEOUTS.idle) break;
+    const result = await attempt(config, model, request, fetchImpl, deadline);
+    if (result.ok) return result.response;
+    console.error(`AI model ${model}: ${result.reason}`);
+    last = result;
+  }
+  const status = last?.status ?? 502;
+  if (status === 429) return errorResponse(429, "The free AI allowance is used up for now. Try again later.");
+  if (status === 504) return errorResponse(504, "The AI took too long to answer. Try again in a moment.");
+  return errorResponse(502, "The AI service didn't answer. Try again in a moment.");
 }
 
 /** The text in one server-sent-events line of an OpenAI-style stream ("data: {...}"). */
@@ -159,6 +273,8 @@ export function deltaText(line: string): string {
 export interface AiUsageStore {
   /** Records one use and says whether it was within the limit. */
   take(userId: string, day: string, limit: number): Promise<{ ok: boolean; used: number }>;
+  /** Gives back a use whose explanation never came. */
+  refund(userId: string, day: string): Promise<void>;
 }
 
 export const utcDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
@@ -171,6 +287,11 @@ export class MemoryAiUsageStore implements AiUsageStore {
     if (used > limit) return { ok: false, used: limit };
     this.counts.set(key, used);
     return { ok: true, used };
+  }
+  async refund(userId: string, day: string) {
+    const key = `${userId}:${day}`;
+    const used = this.counts.get(key) ?? 0;
+    if (used > 0) this.counts.set(key, used - 1);
   }
 }
 
@@ -197,5 +318,8 @@ export class MongoAiUsageStore implements AiUsageStore {
     );
     const used = doc?.count ?? 1;
     return used > limit ? { ok: false, used: limit } : { ok: true, used };
+  }
+  async refund(userId: string, day: string) {
+    await this.col.updateOne({ _id: `${userId}:${day}`, count: { $gt: 0 } }, { $inc: { count: -1 } });
   }
 }

@@ -198,9 +198,15 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDe
     const parsed = parseExplainRequest(body);
     if (!parsed) return error(400, "A question and its answer are needed.");
     const limit = ai.config.dailyLimit;
-    const { ok, used } = await ai.usage.take(user.id, utcDay(Date.now()), limit);
+    const day = utcDay(Date.now());
+    const { ok, used } = await ai.usage.take(user.id, day, limit);
     if (!ok) return error(429, `You've used today's ${limit} AI explanations. They reset at 07:00 WIB (midnight UTC).`);
     const response = await streamExplanation(ai.config, parsed, ai.fetch);
+    // A failed explanation doesn't use up one of the student's daily allowance.
+    if (!response.ok) {
+      await ai.usage.refund(user.id, day);
+      return response;
+    }
     response.headers.set("x-ai-remaining", String(Math.max(0, limit - used)));
     return response;
   }

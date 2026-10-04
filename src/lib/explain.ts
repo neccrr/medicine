@@ -93,7 +93,9 @@ export interface ExplainInput {
   notes: NotePassage[];
 }
 
-export type ExplainResult = { ok: true; remaining: number | null } | { ok: false; status: number; message: string };
+export type ExplainResult = { ok: true; remaining: number | null } | { ok: false; status: number; message: string; partial?: string };
+
+const CUT_OFF = "\u0000";
 
 /** Asks the server's AI to explain, calling onText with the answer as it streams in. */
 export async function askAi(input: ExplainInput, onText: (text: string) => void, signal?: AbortSignal): Promise<ExplainResult> {
@@ -117,16 +119,25 @@ export async function askAi(input: ExplainInput, onText: (text: string) => void,
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let text = "";
+  let cutOff = false;
   try {
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
       text += decoder.decode(value, { stream: true });
+      // The server ends an answer that broke off partway with a NUL character.
+      if (text.includes(CUT_OFF)) {
+        text = text.slice(0, text.indexOf(CUT_OFF));
+        cutOff = true;
+        break;
+      }
       onText(text);
     }
   } catch {
-    if (!text) return { ok: false, status: 0, message: "The answer was cut off. Try again." };
+    if (signal?.aborted) return { ok: false, status: 0, message: "" };
+    cutOff = true;
   }
+  if (cutOff) return { ok: false, status: 0, message: "The AI stopped partway through. Try again.", partial: text || undefined };
   if (!text.trim()) return { ok: false, status: 502, message: "The AI sent an empty answer. Try again." };
   return { ok: true, remaining: remaining === null ? null : Number(remaining) };
 }

@@ -1,14 +1,32 @@
 import { memoryAdapter } from "better-auth/adapters/memory";
-import { describe, expect, it } from "vitest";
-import { aiConfigFromEnv, deltaText, explainUserMessage, MemoryAiUsageStore, parseExplainRequest, streamExplanation, type AiConfig } from "./ai.js";
+import { afterEach, describe, expect, it } from "vitest";
+import { AI_TIMEOUTS, aiConfigFromEnv, CUT_OFF, deltaText, explainUserMessage, MemoryAiUsageStore, parseExplainRequest, streamExplanation, type AiConfig } from "./ai.js";
 import { createApp } from "./app.js";
 import { createAuth } from "./auth.js";
 import { MemoryLeaderboardStore } from "./leaderboard.js";
 import { MemoryProgressStore } from "./progressStore.js";
 
 const ORIGIN = "http://localhost:5173";
-const config: AiConfig = { baseUrl: "https://gateway.test/v1", apiKey: "key", model: "test-model", dailyLimit: 2 };
+const config: AiConfig = { baseUrl: "https://gateway.test/v1", apiKey: "key", models: ["test-model"], dailyLimit: 2 };
 const question = { subject: "Anatomy", question: "Which bone is a sesamoid bone?", options: ["Patella", "Femur"], answer: "Patella", chosen: "Femur", notes: [{ title: "Bones by shape", text: "Sesamoid bones sit inside tendons; the patella is the largest." }] };
+
+const event = (text: string) => new TextEncoder().encode(`data: ${JSON.stringify({ choices: [{ delta: { content: text } }] })}\n\n`);
+
+/** A gateway stream that sends `parts`, then stalls (until aborted) or breaks. */
+function stalling(parts: string[], end: "stall" | "break", signal?: AbortSignal | null): Response {
+  return new Response(
+    new ReadableStream({
+      start(c) {
+        for (const p of parts) c.enqueue(event(p));
+        if (end === "break") setTimeout(() => c.error(new Error("connection reset")), 5);
+        else signal?.addEventListener("abort", () => c.error(signal.reason));
+      },
+    }),
+  );
+}
+
+const savedTimeouts = { ...AI_TIMEOUTS };
+afterEach(() => Object.assign(AI_TIMEOUTS, savedTimeouts));
 
 /** An OpenAI-style event stream, cut at awkward places like a real network would. */
 function sse(...parts: string[]): Response {
@@ -28,7 +46,8 @@ function sse(...parts: string[]): Response {
 describe("AI settings and requests", () => {
   it("needs the address, key and model, and defaults the daily limit", () => {
     expect(aiConfigFromEnv({ AI_BASE_URL: "https://x/v1/", AI_API_KEY: "k" })).toBeNull();
-    expect(aiConfigFromEnv({ AI_BASE_URL: "https://x/v1/", AI_API_KEY: "k", AI_MODEL: "m" })).toEqual({ baseUrl: "https://x/v1", apiKey: "k", model: "m", dailyLimit: 30 });
+    expect(aiConfigFromEnv({ AI_BASE_URL: "https://x/v1/", AI_API_KEY: "k", AI_MODEL: "m" })).toEqual({ baseUrl: "https://x/v1", apiKey: "k", models: ["m"], dailyLimit: 30 });
+    expect(aiConfigFromEnv({ AI_BASE_URL: "https://x", AI_API_KEY: "k", AI_MODEL: " fast , backup ," })?.models).toEqual(["fast", "backup"]);
     expect(aiConfigFromEnv({ AI_BASE_URL: "https://x", AI_API_KEY: "k", AI_MODEL: "m", AI_DAILY_LIMIT: "5" })?.dailyLimit).toBe(5);
   });
 
@@ -74,8 +93,47 @@ describe("streamExplanation", () => {
   });
 });
 
+describe("slow and failing models", () => {
+  it("waits for a slow first word, then tries the next model", async () => {
+    Object.assign(AI_TIMEOUTS, { firstText: 50, idle: 50, total: 1000 });
+    const asked: string[] = [];
+    const fake = (async (_url: string, init: RequestInit) => {
+      const model = JSON.parse(String(init.body)).model;
+      asked.push(model);
+      return model === "slow" ? stalling([], "stall", init.signal) : sse("Backup ", "answer.");
+    }) as unknown as typeof fetch;
+    const res = await streamExplanation({ ...config, models: ["slow", "backup"] }, parseExplainRequest(question)!, fake);
+    expect(asked).toEqual(["slow", "backup"]);
+    expect(res.status).toBe(200);
+    expect(await res.text()).toBe("Backup answer.");
+  });
+
+  it("says the AI took too long when no model answers in time", async () => {
+    Object.assign(AI_TIMEOUTS, { firstText: 30, idle: 30, total: 1000 });
+    const fake = (async (_url: string, init: RequestInit) => stalling([], "stall", init.signal)) as unknown as typeof fetch;
+    const res = await streamExplanation(config, parseExplainRequest(question)!, fake);
+    expect(res.status).toBe(504);
+    expect((await res.json()).error).toMatch(/too long/);
+  });
+
+  it("marks an answer that stalls or breaks partway as cut off", async () => {
+    Object.assign(AI_TIMEOUTS, { firstText: 50, idle: 30, total: 1000 });
+    for (const end of ["stall", "break"] as const) {
+      const fake = (async (_url: string, init: RequestInit) => stalling(["The patella ", "is sesamoid"], end, init.signal)) as unknown as typeof fetch;
+      const res = await streamExplanation(config, parseExplainRequest(question)!, fake);
+      expect(res.status).toBe(200);
+      expect(await res.text(), end).toBe(`The patella is sesamoid${CUT_OFF}`);
+    }
+  });
+
+  it("treats an empty answer as a failure", async () => {
+    const fake = (async () => sse()) as unknown as typeof fetch;
+    expect((await streamExplanation(config, parseExplainRequest(question)!, fake)).status).toBe(502);
+  });
+});
+
 describe("/api/ai/explain", () => {
-  function setup(withAi: boolean) {
+  function setup(withAi: boolean, fake: typeof fetch = (async () => sse("Because ", "it is.")) as unknown as typeof fetch) {
     const auth = createAuth({
       database: memoryAdapter({ user: [], session: [], account: [], verification: [], rateLimit: [] }),
       secret: "test-secret-test-secret-test-secret-1234",
@@ -84,7 +142,6 @@ describe("/api/ai/explain", () => {
       onDeleteUser: async () => {},
       rateLimit: false,
     });
-    const fake = (async () => sse("Because ", "it is.")) as unknown as typeof fetch;
     const app = createApp({
       auth,
       store: new MemoryProgressStore(),
@@ -121,6 +178,17 @@ describe("/api/ai/explain", () => {
     const third = await req("/api/ai/explain", question, cookie);
     expect(third.status).toBe(429);
     expect((await third.json()).error).toMatch(/today's 2 AI explanations/);
+  });
+
+  it("doesn't count an explanation that failed against the daily limit", async () => {
+    let calls = 0;
+    const fake = (async () => (++calls === 1 ? new Response("down", { status: 500 }) : sse("Fine."))) as unknown as typeof fetch;
+    const { req, signUp } = setup(true, fake);
+    const cookie = await signUp();
+    expect((await req("/api/ai/explain", question, cookie)).status).toBe(502);
+    const next = await req("/api/ai/explain", question, cookie);
+    expect(next.status).toBe(200);
+    expect(next.headers.get("x-ai-remaining")).toBe("1");
   });
 
   it("answers 503 when AI isn't configured and 400 for a bad request", async () => {
