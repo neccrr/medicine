@@ -3,8 +3,8 @@
 
 :root {
   --bg: #0a0f0d;
-  --surface: rgba(19, 27, 23, 0.6);
-  --surface-2: rgba(25, 35, 30, 0.72);
+  --surface: rgb(19 27 23 / 0.6);
+  --surface-2: rgb(25 35 30 / 0.72);
   --surface-solid: #101613;
   --surface-2-solid: #161f1b;
   --border: #223029;
@@ -13,14 +13,14 @@
   --text-muted: #9cb3ab;
   --accent: #2dd4a7;
   --accent-dim: #1f9d7c;
-  --accent-soft: rgba(45, 212, 167, 0.14);
+  --accent-soft: rgb(45 212 167 / 0.14);
   --accent-ink: #04140f;
   --accent-2: #a78bfa;
   --accent-3: #f2b134;
-  --grid-line: rgba(45, 212, 167, 0.07);
+  --grid-line: rgb(45 212 167 / 0.07);
   --green: #2dd4a7;
   --red: #ff6b5e;
-  --red-soft: rgba(255, 107, 94, 0.14);
+  --red-soft: rgb(255 107 94 / 0.14);
   --amber: #f2b134;
   --type-flashcard: #38bdf8;
   --type-quiz: #a78bfa;
@@ -36,13 +36,13 @@
      over the drifting blob background so color bleeds through every panel. */
   --glass-blur: blur(28px) saturate(180%);
   --glass-blur-soft: blur(16px) saturate(150%);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-border-strong: rgba(255, 255, 255, 0.18);
-  --glass-highlight: rgba(255, 255, 255, 0.07);
-  --glass-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.6);
+  --glass-border: rgb(255 255 255 / 0.1);
+  --glass-border-strong: rgb(255 255 255 / 0.18);
+  --glass-highlight: rgb(255 255 255 / 0.07);
+  --glass-shadow: 0 24px 48px -28px rgb(0 0 0 / 0.6);
   /* Fill for small moving glass lenses (sidebar hover) and the specular highlight they catch. */
-  --glass-lens: rgba(255, 255, 255, 0.05);
-  --glass-specular: rgba(255, 255, 255, 0.16);
+  --glass-lens: rgb(255 255 255 / 0.05);
+  --glass-specular: rgb(255 255 255 / 0.16);
   /* Motion: a long, soft deceleration for layout changes (like iOS sheets), and a spring with
      a slight overshoot for things that "land" (lenses, pressed buttons). */
   --ease-glass: cubic-bezier(0.32, 0.72, 0, 1);
@@ -58,8 +58,8 @@
 
 :root[data-theme="light"] {
   --bg: #f5f2e8;
-  --surface: rgba(255, 253, 248, 0.62);
-  --surface-2: rgba(239, 233, 215, 0.75);
+  --surface: rgb(255 253 248 / 0.62);
+  --surface-2: rgb(239 233 215 / 0.75);
   --surface-solid: #fffdf8;
   --surface-2-solid: #efe9d7;
   --border: #ddd4bc;
@@ -68,14 +68,14 @@
   --text-muted: #525c54;
   --accent: #0f8f70;
   --accent-dim: #0c6e56;
-  --accent-soft: rgba(15, 143, 112, 0.1);
+  --accent-soft: rgb(15 143 112 / 0.1);
   --accent-ink: #f5fffb;
   --accent-2: #7c5cdb;
   --accent-3: #b3791b;
-  --grid-line: rgba(15, 143, 112, 0.08);
+  --grid-line: rgb(15 143 112 / 0.08);
   --green: #0f8f70;
   --red: #c8433a;
-  --red-soft: rgba(200, 67, 58, 0.1);
+  --red-soft: rgb(200 67 58 / 0.1);
   --amber: #b3791b;
   --type-flashcard: #0d84b8;
   --type-quiz: #6d4cc4;
@@ -83,12 +83,12 @@
   --type-module: #4338ca;
   --type-ebook: #96650f;
   --type-summary: #b8397a;
-  --glass-border: rgba(255, 255, 255, 0.65);
-  --glass-border-strong: rgba(255, 255, 255, 0.9);
-  --glass-highlight: rgba(255, 255, 255, 0.55);
-  --glass-shadow: 0 24px 48px -30px rgba(50, 43, 20, 0.28);
-  --glass-lens: rgba(255, 255, 255, 0.45);
-  --glass-specular: rgba(255, 255, 255, 0.75);
+  --glass-border: rgb(255 255 255 / 0.65);
+  --glass-border-strong: rgb(255 255 255 / 0.9);
+  --glass-highlight: rgb(255 255 255 / 0.55);
+  --glass-shadow: 0 24px 48px -30px rgb(50 43 20 / 0.28);
+  --glass-lens: rgb(255 255 255 / 0.45);
+  --glass-specular: rgb(255 255 255 / 0.75);
   color-scheme: light;
 }
 
@@ -102,13 +102,13 @@
 .subject-tinted {
   --accent: hsl(var(--subject-hue) 72% 58%);
   --accent-dim: hsl(var(--subject-hue) 72% 46%);
-  --accent-soft: hsl(var(--subject-hue) 72% 58% / 18%);
+  --accent-soft: hsl(var(--subject-hue) 72% 58% / 0.18);
 }
 
 :root[data-theme="light"] .subject-tinted {
   --accent: hsl(var(--subject-hue) 62% 40%);
   --accent-dim: hsl(var(--subject-hue) 62% 30%);
-  --accent-soft: hsl(var(--subject-hue) 62% 40% / 14%);
+  --accent-soft: hsl(var(--subject-hue) 62% 40% / 0.14);
 }
 
 * {

@@ -108,7 +108,7 @@
   align-items: center;
   justify-content: center;
   color: var(--accent-ink);
-  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 14px -6px rgb(0 0 0 / 0.45);
 }
 
 .subject-badge svg {
@@ -152,7 +152,7 @@
 .icon-btn:hover {
   background: var(--surface-2);
   border-color: var(--glass-border-strong);
-  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 6px 16px -10px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 6px 16px -10px rgb(0 0 0 / 0.45);
   scale: 1.06;
 }
 

@@ -61,7 +61,7 @@
   gap: 1rem;
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.5), 0 12px 32px -18px var(--accent-soft);
+  box-shadow: 0 20px 40px -24px rgb(0 0 0 / 0.5), 0 12px 32px -18px var(--accent-soft);
 }
 
 .flashcard-back {
@@ -175,18 +175,18 @@
 }
 
 .tag-colored {
-  border-color: hsl(var(--tag-hue) 60% 50% / 45%);
-  background: hsl(var(--tag-hue) 60% 50% / 14%);
+  border-color: hsl(var(--tag-hue) 60% 50% / 0.45);
+  background: hsl(var(--tag-hue) 60% 50% / 0.14);
   color: hsl(var(--tag-hue) 75% 72%);
 }
 
 :root[data-theme="light"] .tag-colored {
   color: hsl(var(--tag-hue) 65% 32%);
-  background: hsl(var(--tag-hue) 60% 50% / 10%);
+  background: hsl(var(--tag-hue) 60% 50% / 0.1);
 }
 
 .tag-colored.tag-toggle:hover {
-  border-color: hsl(var(--tag-hue) 60% 50% / 80%);
+  border-color: hsl(var(--tag-hue) 60% 50% / 0.8);
   color: hsl(var(--tag-hue) 75% 78%);
 }
 

@@ -1,8 +1,8 @@
 /* Shared by legal/privacy.html and legal/terms.html: plain pages that load without the app. */
 :root {
   --bg: #0a0f0d;
-  --surface: rgba(255, 255, 255, 0.04);
-  --border: rgba(255, 255, 255, 0.1);
+  --surface: rgb(255 255 255 / 0.04);
+  --border: rgb(255 255 255 / 0.1);
   --text: #eef4f1;
   --muted: #a9b8b1;
   --accent: #2dd4a7;
@@ -11,8 +11,8 @@
 
 :root[data-theme="light"] {
   --bg: #f5f2e8;
-  --surface: rgba(255, 255, 255, 0.6);
-  --border: rgba(22, 33, 27, 0.12);
+  --surface: rgb(255 255 255 / 0.6);
+  --border: rgb(22 33 27 / 0.12);
   --text: #16211b;
   --muted: #55645c;
   --accent: #0f8f70;

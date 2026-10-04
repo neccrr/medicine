@@ -171,7 +171,7 @@
 
 .io-mask-peek {
   fill: transparent;
-  stroke: rgba(181, 154, 99, 0.7);
+  stroke: rgb(181 154 99 / 0.7);
 }
 
 .io-mask-revealed {
@@ -406,7 +406,7 @@
   inset: 0;
   /* Above the phone tab bar. */
   z-index: 95;
-  background: rgba(10, 16, 14, 0.55);
+  background: rgb(10 16 14 / 0.55);
   display: grid;
   place-items: center;
   padding: 1rem;

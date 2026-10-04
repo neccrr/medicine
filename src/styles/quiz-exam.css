@@ -9,7 +9,7 @@
   gap: 0.4rem;
   background: linear-gradient(135deg, var(--accent), var(--accent-dim));
   color: var(--accent-ink);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgb(255 255 255 / 0.22);
   border-radius: var(--radius-pill);
   padding: 0.65rem 1.3rem;
   font-family: var(--font-body);
@@ -19,7 +19,7 @@
   letter-spacing: 0.01em;
   overflow: hidden;
   text-decoration: none;
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.35) inset, 0 8px 20px -12px var(--accent-soft);
+  box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.35) inset, 0 8px 20px -12px var(--accent-soft);
   transition: transform 0.2s ease, scale 0.35s var(--ease-spring), box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -46,13 +46,13 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.35) 48%, transparent 66%);
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.35) 48%, transparent 66%);
   transform: translateX(-120%);
   transition: transform 0.5s ease;
 }
 
 .btn:hover {
-  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.35) inset, 0 10px 24px -8px var(--accent-soft);
+  box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.35) inset, 0 10px 24px -8px var(--accent-soft);
 }
 
 .btn:hover::before {
@@ -115,7 +115,7 @@
   padding: 1.5rem;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 20px 50px -30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 20px 50px -30px rgb(0 0 0 / 0.5);
 }
 
 .quiz-progress {

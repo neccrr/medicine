@@ -2,7 +2,7 @@
 
 .lab-page {
   --lab-screen: #0b1612;
-  --lab-screen-grid: rgba(120, 220, 180, 0.13);
+  --lab-screen-grid: rgb(120 220 180 / 0.13);
   --lab-screen-text: #9cc7b6;
   --lab-measure: #f5d565;
   --lab-metal: #9aa5a1;
@@ -229,14 +229,14 @@
 }
 
 .lab-rig-muscle {
-  stroke: rgba(120, 20, 20, 0.45);
+  stroke: rgb(120 20 20 / 0.45);
   stroke-width: 1;
   transition: fill 0.08s linear;
 }
 
 .lab-rig-fibres {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.28);
+  stroke: rgb(255 255 255 / 0.28);
   stroke-width: 1;
 }
 

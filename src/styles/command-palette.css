@@ -3,7 +3,7 @@
 .command-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 8, 7, 0.45);
+  background: rgb(4 8 7 / 0.45);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: flex-start;
@@ -27,7 +27,7 @@
   border-radius: var(--radius-xl);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 24px 70px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 24px 70px -12px rgb(0 0 0 / 0.5);
   overflow: hidden;
   animation: palette-in 0.16s cubic-bezier(0.2, 0.7, 0.3, 1);
 }

@@ -214,7 +214,7 @@
 .nav-card:hover {
   border-color: var(--glass-border-strong);
   transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 18px 36px -18px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 1px 0 0 var(--glass-highlight) inset, 0 18px 36px -18px rgb(0 0 0 / 0.45);
 }
 
 .nav-card:hover::before {
@@ -390,7 +390,7 @@
 .subject-card:hover {
   transform: translateY(-2px);
   border-color: var(--border-strong);
-  box-shadow: 0 16px 32px -20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 32px -20px rgb(0 0 0 / 0.5);
 }
 
 .subject-card > * {
