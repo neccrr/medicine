@@ -213,7 +213,7 @@ async function pageBody(path: string, meta: PageMeta): Promise<string> {
   const main = await content(path);
   // Chapters and summaries start with their own heading; one <h1> per page.
   const heading = /^<article>\s*<h1/.test(main) ? "" : `<h1>${esc(meta.title.replace(` · ${SITE_NAME}`, ""))}</h1>`;
-  const footer = `<footer><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></footer>`;
+  const footer = `<footer><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer>`;
   return `<div class="prerender">${nav}${crumbs}${heading}<p>${esc(meta.description)}</p>${main}${footer}</div>`;
 }
 
@@ -243,7 +243,7 @@ export async function renderSite(template: string, origin: string): Promise<Rend
     renderPage(template, "/404", notFound, `<div class="prerender"><h1>Page not found</h1><p><a href="/">Go to ${SITE_NAME}</a></p></div>`, origin),
   );
 
-  const urls = [...indexed, "/privacy.html", "/terms.html"];
+  const urls = [...indexed, "/privacy", "/terms"];
   files.set(
     "sitemap.xml",
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls

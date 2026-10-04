@@ -1,4 +1,4 @@
-/* Shared by privacy.html and terms.html: plain pages that load without the app. */
+/* Shared by legal/privacy.html and legal/terms.html: plain pages that load without the app. */
 :root {
   --bg: #0a0f0d;
   --surface: rgba(255, 255, 255, 0.04);

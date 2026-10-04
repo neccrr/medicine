@@ -222,8 +222,8 @@ function SignInPanel({ notice }: { notice?: string }) {
         </button>
       </form>
       <p className="account-legal">
-        By continuing you agree to the <a href="/terms.html">Terms of Service</a> and{" "}
-        <a href="/privacy.html">Privacy Policy</a>.
+        By continuing you agree to the <a href="/terms">Terms of Service</a> and{" "}
+        <a href="/privacy">Privacy Policy</a>.
       </p>
 
     </div>

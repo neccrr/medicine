@@ -47,6 +47,29 @@ function devApi(): Plugin {
   }
 }
 
+// /privacy and /terms are the legal pages in public/legal/ (vercel.json rewrites them the same
+// way in production), for `vite` and `vite preview`.
+function legalPages(): Plugin {
+  const pages: Record<string, string> = { '/privacy': '/legal/privacy.html', '/terms': '/legal/terms.html' }
+  const rewrite = (req: IncomingMessage, res: ServerResponse, next: () => void) => {
+    const path = req.url?.split('?')[0].replace(/\/$/, '')
+    // The old addresses, /privacy.html and /terms.html, redirect as they do in production.
+    const old = path?.match(/^\/(privacy|terms)\.html$/)
+    if (old) {
+      res.statusCode = 301
+      res.setHeader('Location', `/${old[1]}`)
+      return res.end()
+    }
+    if (path && pages[path]) req.url = pages[path]
+    next()
+  }
+  return {
+    name: 'medicine-legal-pages',
+    configureServer: (server) => void server.middlewares.use(rewrite),
+    configurePreviewServer: (server) => void server.middlewares.use(rewrite),
+  }
+}
+
 // The production site (src/lib/site.ts), used for the canonical link and the Open Graph/Twitter
 // tags in index.html (link-preview crawlers only follow absolute URLs). Set SITE_URL to override
 // it, e.g. for a fork deployed elsewhere. GOOGLE_SITE_VERIFICATION adds Search Console's
@@ -70,6 +93,7 @@ export default defineConfig({
   plugins: [
     react(),
     devApi(),
+    legalPages(),
     siteUrl(),
     VitePWA({
       // "prompt": a new version waits until the student taps the update nudge (UpdateNudge /
@@ -112,7 +136,8 @@ export default defineConfig({
         // since a route param can itself contain a dot, e.g. /exam/1.1.
         // /api/ must reach the network too: the Google sign-in callback is a full navigation.
         // So must the sitemap and robots.txt: opened in a browser, they'd otherwise show the app.
-        navigateFallbackDenylist: [/\/assets\//, /^\/api\//, /\.(xml|txt)$/],
+        // The privacy policy and terms are plain pages outside the app (served from legal/).
+        navigateFallbackDenylist: [/\/assets\//, /^\/api\//, /\.(xml|txt)$/, /^\/(privacy|terms)(\.html)?\/?$/],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.endsWith('.pdf'),

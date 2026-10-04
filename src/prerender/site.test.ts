@@ -45,7 +45,7 @@ describe("renderSite", () => {
   });
 
   it("only links to pages that exist", () => {
-    const known = new Set(["/", "/privacy.html", "/terms.html", ...indexablePaths(), ...PRIVATE_PATHS]);
+    const known = new Set(["/", "/privacy", "/terms", ...indexablePaths(), ...PRIVATE_PATHS]);
     for (const [file, html] of site.files) {
       if (!file.endsWith(".html")) continue;
       const body = html.slice(html.indexOf('<div id="root">'));
