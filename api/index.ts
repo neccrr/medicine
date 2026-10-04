@@ -9,6 +9,7 @@ import { getMongo } from "../server/mongo.js";
 import { MongoLeaderboardStore } from "../server/leaderboard.js";
 import { MongoProgressStore } from "../server/progressStore.js";
 import { ensureIndexes } from "../server/schema.js";
+import { aiConfigFromEnv, MongoAiUsageStore } from "../server/ai.js";
 
 let app: Promise<App> | null = null;
 
@@ -37,7 +38,9 @@ function build(): Promise<App> {
       },
       rateLimit: "database",
     });
-    return createApp({ auth, store, leaderboard, googleEnabled: Boolean(google) });
+    const aiConfig = aiConfigFromEnv(env);
+    const ai = aiConfig ? { config: aiConfig, usage: new MongoAiUsageStore(db) } : undefined;
+    return createApp({ auth, store, leaderboard, googleEnabled: Boolean(google), ai });
   });
 }
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ExplainPanel } from "../components/ExplainPanel";
 import { flashcardDecks, flashcardSubjects, keyOf, subjectKey } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -88,7 +89,7 @@ export function FlashcardStudy() {
   useEffect(() => {
     if (sessionDone) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLElement && ["INPUT", "TEXTAREA"].includes(e.target.tagName)) {
+      if (e.target instanceof HTMLElement && (["INPUT", "TEXTAREA"].includes(e.target.tagName) || e.target.closest(".explain-panel"))) {
         return;
       }
       if (!flipped && (e.code === "Space" || e.key === "Enter")) {
@@ -325,6 +326,10 @@ export function FlashcardStudy() {
                 </button>
               ))}
             </div>
+          )}
+
+          {flipped && (
+            <ExplainPanel subjectKey={key} subjectLabel={subjectLabel} question={card.front} answer={card.back} />
           )}
 
           {flipped && (

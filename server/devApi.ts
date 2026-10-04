@@ -8,6 +8,7 @@ import { getMongo } from "./mongo.js";
 import { MemoryLeaderboardStore, MongoLeaderboardStore, type LeaderboardStore } from "./leaderboard.js";
 import { MemoryProgressStore, MongoProgressStore, type ProgressStore } from "./progressStore.js";
 import { ensureIndexes } from "./schema.js";
+import { aiConfigFromEnv, MemoryAiUsageStore, MongoAiUsageStore, type AiUsageStore } from "./ai.js";
 
 let app: Promise<App> | null = null;
 
@@ -17,12 +18,14 @@ export function getDevApp(): Promise<App> {
     let store: ProgressStore;
     let leaderboard: LeaderboardStore;
     let database;
+    let usage: AiUsageStore = new MemoryAiUsageStore();
     if (env.MONGODB_URI) {
       const { client, db } = await getMongo(env.MONGODB_URI, env.MONGODB_DB || "medicine-dev");
       await ensureIndexes(db);
       store = new MongoProgressStore(db);
       leaderboard = new MongoLeaderboardStore(db);
       database = mongodbAdapter(db, { client });
+      usage = new MongoAiUsageStore(db);
     } else {
       store = new MemoryProgressStore();
       leaderboard = new MemoryLeaderboardStore();
@@ -44,7 +47,8 @@ export function getDevApp(): Promise<App> {
       },
       rateLimit: false,
     });
-    return createApp({ auth, store, leaderboard, googleEnabled: Boolean(google) });
+    const aiConfig = aiConfigFromEnv(env);
+    return createApp({ auth, store, leaderboard, googleEnabled: Boolean(google), ai: aiConfig ? { config: aiConfig, usage } : undefined });
   })();
   return app;
 }

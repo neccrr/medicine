@@ -14,6 +14,7 @@ import {
   type LeaderboardStore,
 } from "./leaderboard.js";
 import type { ProgressStore, StoredEntry } from "./progressStore.js";
+import { parseExplainRequest, streamExplanation, utcDay, type AiConfig, type AiUsageStore } from "./ai.js";
 
 const MAX_BODY_BYTES = 2_000_000;
 const MAX_CHANGES = 1000;
@@ -21,12 +22,15 @@ const MAX_CHANGES = 1000;
 // than our "since"; re-sending the last few seconds costs little (merging is idempotent).
 const OVERLAP_MS = 5000;
 const BOARD_SIZE = 100;
+const MAX_AI_BODY_BYTES = 20_000;
 
 export interface AppDeps {
   auth: Auth;
   store: ProgressStore;
   leaderboard: LeaderboardStore;
   googleEnabled: boolean;
+  /** "Explain this" through an AI gateway; absent when the AI settings aren't configured. */
+  ai?: { config: AiConfig; usage: AiUsageStore; fetch?: typeof fetch };
 }
 
 interface SessionUser {
@@ -59,7 +63,7 @@ function isChange(c: unknown, now: number): c is SyncEntry {
 }
 
 /** The whole API as one fetch-style handler: auth, config, sync and account export. */
-export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) {
+export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDeps) {
   async function sessionUser(request: Request): Promise<SessionUser | null> {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session) return null;
@@ -181,6 +185,26 @@ export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) 
     });
   }
 
+  async function explain(request: Request, user: SessionUser): Promise<Response> {
+    if (!ai) return error(503, "AI explanations aren't switched on for this site.");
+    const text = await request.text();
+    if (text.length > MAX_AI_BODY_BYTES) return error(413, "That question is too long to explain.");
+    let body: unknown;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      return error(400, "Invalid JSON.");
+    }
+    const parsed = parseExplainRequest(body);
+    if (!parsed) return error(400, "A question and its answer are needed.");
+    const limit = ai.config.dailyLimit;
+    const { ok, used } = await ai.usage.take(user.id, utcDay(Date.now()), limit);
+    if (!ok) return error(429, `You've used today's ${limit} AI explanations. They reset at 07:00 WIB (midnight UTC).`);
+    const response = await streamExplanation(ai.config, parsed, ai.fetch);
+    response.headers.set("x-ai-remaining", String(Math.max(0, limit - used)));
+    return response;
+  }
+
   async function exportAccount(request: Request, uid: string): Promise<Response> {
     const session = await auth.api.getSession({ headers: request.headers });
     const user = session?.user as Record<string, unknown> | undefined;
@@ -203,7 +227,13 @@ export function createApp({ auth, store, leaderboard, googleEnabled }: AppDeps) 
     try {
       if (pathname.startsWith("/api/auth/")) return await auth.handler(request);
       if (pathname === "/api/config" && request.method === "GET") {
-        return json({ accounts: true, google: googleEnabled });
+        return json({ accounts: true, google: googleEnabled, ai: Boolean(ai) });
+      }
+      if (pathname === "/api/ai/explain") {
+        if (request.method !== "POST") return error(405, "Method not allowed.");
+        const user = await sessionUser(request);
+        if (!user) return error(401, "Sign in to ask the AI.");
+        return await explain(request, user);
       }
       if (["/api/sync", "/api/account/export", "/api/leaderboard", "/api/leaderboard/me"].includes(pathname)) {
         const user = await sessionUser(request);

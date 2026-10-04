@@ -105,6 +105,10 @@ account environment variables it runs as a plain static site.
 - Review (what's due) or Browse all (every figure in order): previous/next label and figure, tap any box or numbered chip to ask that label, swipe on phones
 - Gallery of every figure with its progress, colour-coded label chips (new, due, learning, mastered), undo the last grade, show every label to study a figure whole, zoom, hide all or one, filter by region; picks up where you left off
 
+**Explain this** (quizzes and flashcards)
+- Shows the passages of the subject's own ebook and summary that match the question: free, instant, works offline
+- Signed-in students can ask an AI to explain the answer (and why their pick was wrong), streamed in, grounded in those passages, with a daily allowance per student
+
 **Quizzes**
 - One question at a time with instant feedback and an explanation for every answer
 - A numbered navigator, previous/next, and full keyboard control
@@ -451,6 +455,22 @@ accounts (see `.env.example`):
    `BETTER_AUTH_SECRET` (`openssl rand -base64 32`) and `BETTER_AUTH_URL`
    (`https://medicine.necr.help`).
 3. Redeploy. `/api/config` answering `{"accounts":true,...}` means it worked.
+
+### AI explanations (optional, free tier)
+
+"Ask AI to explain" calls any OpenAI-compatible gateway from the server; the
+site is set up for [NaraRouter](https://bynara.id/) and its free daily
+allowance. In Vercel → Environment Variables (never in the repo):
+
+- `AI_BASE_URL`: the gateway's OpenAI-compatible address from its API docs,
+  up to and including `/v1` (`/chat/completions` is added)
+- `AI_API_KEY`: your NaraRouter API key
+- `AI_MODEL`: a model id from its model list (a free one)
+- `AI_DAILY_LIMIT` (optional): explanations per student per day, default 30
+
+Redeploy; `/api/config` then answers `"ai":true` and the button appears for
+signed-in students. Without these variables the button stays hidden and
+"Explain this" shows only the matching passages from the notes.
 
 ### Search engines
 

@@ -26,6 +26,8 @@ export const INDEXES: Record<string, IndexDescription[]> = {
     // Sync asks for "this user's keys changed since rev".
     { key: { userId: 1, rev: 1 }, name: "user_rev" },
   ],
+  // One document per user per day: AI explanations used (see ai.ts); deleted after two days.
+  aiUsage: [{ key: { expiresAt: 1 }, expireAfterSeconds: 0, name: "expiry" }],
   // One document per user: membership and per-key score parts (see leaderboard.ts).
   leaderboard: [
     { key: { userId: 1 }, unique: true, name: "user" },

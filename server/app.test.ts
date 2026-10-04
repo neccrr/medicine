@@ -52,7 +52,7 @@ const card = (reps: number) => ({ interval: 1, easeFactor: 2.5, dueDate: "2026-1
 
 describe("API", () => {
   it("reports that accounts are available", async () => {
-    expect(await (await req("/api/config")).json()).toEqual({ accounts: true, google: false });
+    expect(await (await req("/api/config")).json()).toEqual({ accounts: true, google: false, ai: false });
   });
 
   it("refuses to sync without a session", async () => {
@@ -213,7 +213,7 @@ describe("Google sign-in", () => {
 
   it("is reported by /api/config when configured", async () => {
     const res = await googleApp()(new Request(ORIGIN + "/api/config"));
-    expect(await res.json()).toEqual({ accounts: true, google: true });
+    expect(await res.json()).toEqual({ accounts: true, google: true, ai: false });
   });
 
   it("sends the student to Google with this site's callback and the account chooser", async () => {

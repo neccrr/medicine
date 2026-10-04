@@ -1,0 +1,189 @@
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAccount } from "../hooks/useAccount";
+import { askAi, findNotes, type NotePassage } from "../lib/explain";
+
+interface Props {
+  /** "{blockId}/{subjectId}" */
+  subjectKey: string;
+  subjectLabel: string;
+  question: string;
+  options?: string[];
+  answer: string;
+  chosen?: string;
+  explanation?: string;
+}
+
+type AiState =
+  | { phase: "idle" }
+  | { phase: "streaming"; text: string }
+  | { phase: "done"; text: string; remaining: number | null }
+  | { phase: "error"; message: string; text?: string };
+
+/** Markdown-ish model text as safe React text: paragraphs, "- " lists, no raw HTML. */
+function AiText({ text }: { text: string }) {
+  const blocks = text.replace(/\*\*|__/g, "").trim().split(/\n{2,}/);
+  return (
+    <>
+      {blocks.map((block, i) => {
+        const lines = block.split("\n");
+        if (lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l))) {
+          return (
+            <ul key={i}>
+              {lines.map((l, j) => (
+                <li key={j}>{l.replace(/^\s*([-*•]|\d+\.)\s+/, "")}</li>
+              ))}
+            </ul>
+          );
+        }
+        return <p key={i}>{block}</p>;
+      })}
+    </>
+  );
+}
+
+/**
+ * "Explain this" under a quiz answer or flashcard: the matching passages of the student's own
+ * notes first (free, offline), then an AI explanation on request for signed-in students.
+ */
+export function ExplainPanel(props: Props) {
+  const { subjectKey, question, answer } = props;
+  const { status, config } = useAccount();
+  const [open, setOpen] = useState(false);
+  const [notes, setNotes] = useState<NotePassage[] | null>(null);
+  const [ai, setAi] = useState<AiState>({ phase: "idle" });
+  const [online, setOnline] = useState(() => (typeof navigator === "undefined" ? true : navigator.onLine));
+  const abort = useRef<AbortController | null>(null);
+
+  // A new question starts closed again.
+  const [shownFor, setShownFor] = useState(question);
+  if (shownFor !== question) {
+    setShownFor(question);
+    setOpen(false);
+    setNotes(null);
+    setAi({ phase: "idle" });
+  }
+
+  useEffect(() => () => abort.current?.abort(), [question]);
+
+  useEffect(() => {
+    const update = () => setOnline(navigator.onLine);
+    window.addEventListener("online", update);
+    window.addEventListener("offline", update);
+    return () => {
+      window.removeEventListener("online", update);
+      window.removeEventListener("offline", update);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open || notes) return;
+    let live = true;
+    findNotes(subjectKey, `${question} ${answer}`).then(
+      (found) => live && setNotes(found),
+      () => live && setNotes([]),
+    );
+    return () => {
+      live = false;
+    };
+  }, [open, notes, subjectKey, question, answer]);
+
+  const ask = async () => {
+    abort.current?.abort();
+    const controller = new AbortController();
+    abort.current = controller;
+    setAi({ phase: "streaming", text: "" });
+    const found = notes ?? (await findNotes(subjectKey, `${question} ${answer}`).catch(() => []));
+    const result = await askAi(
+      {
+        subject: props.subjectLabel,
+        question,
+        options: props.options ?? [],
+        answer,
+        chosen: props.chosen,
+        explanation: props.explanation,
+        notes: found,
+      },
+      (text) => setAi({ phase: "streaming", text }),
+      controller.signal,
+    );
+    if (controller.signal.aborted) return;
+    setAi((prev) => {
+      const text = prev.phase === "streaming" ? prev.text : "";
+      return result.ok ? { phase: "done", text, remaining: result.remaining } : { phase: "error", message: result.message, text: text || undefined };
+    });
+  };
+
+  if (!open) {
+    return (
+      <div className="explain-panel">
+        <button type="button" className="explain-toggle" onClick={() => setOpen(true)}>
+          Explain this
+        </button>
+      </div>
+    );
+  }
+
+  const aiOn = config?.ai === true;
+  return (
+    <div className="explain-panel is-open">
+      <div className="explain-head">
+        <h3>From your notes</h3>
+        <button type="button" className="explain-close" onClick={() => setOpen(false)} aria-label="Close the explanation">
+          ×
+        </button>
+      </div>
+      {notes === null ? (
+        <p className="explain-muted">Looking through your notes…</p>
+      ) : notes.length === 0 ? (
+        <p className="explain-muted">Nothing in this subject's ebook or summary matches this question closely.</p>
+      ) : (
+        <ul className="explain-notes">
+          {notes.map((n) => (
+            <li key={n.title}>
+              <Link to={n.to}>{n.title}</Link>
+              <p>{n.text.length > 320 ? `${n.text.slice(0, 320).trimEnd()}…` : n.text}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {aiOn && (
+        <div className="explain-ai">
+          <h3>AI explanation</h3>
+          {!online ? (
+            <p className="explain-muted">The AI needs an internet connection; your notes above work offline.</p>
+          ) : status !== "signed-in" ? (
+            <p className="explain-muted">
+              <Link to="/account">Sign in</Link> to ask the AI to explain this (free, a few a day).
+            </p>
+          ) : ai.phase === "idle" ? (
+            <button type="button" className="btn btn-secondary explain-ask" onClick={ask}>
+              Ask AI to explain
+            </button>
+          ) : (
+            <>
+              <div className="explain-ai-text" aria-live="polite">
+                {ai.phase === "streaming" && !ai.text ? <p className="explain-muted">Thinking…</p> : <AiText text={ai.phase === "error" ? (ai.text ?? "") : ai.text} />}
+              </div>
+              {ai.phase === "error" && (
+                <p className="explain-error">
+                  {ai.message}{" "}
+                  <button type="button" className="explain-retry" onClick={ask}>
+                    Try again
+                  </button>
+                </p>
+              )}
+              {ai.phase === "done" && (
+                <p className="explain-foot">
+                  AI can be wrong: check it against your notes.
+                  {ai.remaining !== null && ` ${ai.remaining} left today.`}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

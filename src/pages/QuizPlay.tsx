@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
+import { ExplainPanel } from "../components/ExplainPanel";
 import { keyOf, quizBanks, quizGames, quizSubjects, subjectKey } from "../lib/content";
 import { useQuizProgress } from "../hooks/useQuizProgress";
 import { ScoreSparkline } from "../components/ScoreSparkline";
@@ -177,6 +178,8 @@ export function QuizPlay() {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Keys inside the Explain panel are for its own buttons and links.
+      if (e.target instanceof Element && e.target.closest(".explain-panel")) return;
       if (zoomSrc) {
         if (e.key === "Escape") {
           e.preventDefault();
@@ -515,6 +518,15 @@ export function QuizPlay() {
                 {selected === currentQuestion.answer ? "Correct" : "Not quite"}
               </p>
               <p className="quiz-feedback-explanation">{currentQuestion.explanation}</p>
+              <ExplainPanel
+                subjectKey={key}
+                subjectLabel={subjectLabel}
+                question={currentQuestion.question}
+                options={currentQuestion.options}
+                answer={currentQuestion.options[currentQuestion.answer]}
+                chosen={selected !== null && selected !== undefined ? currentQuestion.options[selected] : undefined}
+                explanation={currentQuestion.explanation}
+              />
             </div>
           )}
 
