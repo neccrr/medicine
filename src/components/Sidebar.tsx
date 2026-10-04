@@ -151,6 +151,12 @@ function openCommandPalette() {
   window.dispatchEvent(new CustomEvent(OPEN_COMMAND_PALETTE_EVENT));
 }
 
+/** Marks which ends of the scrolling link list have more links past them, for the edge fades. */
+function markScrollEdges(nav: HTMLElement) {
+  nav.toggleAttribute("data-more-above", nav.scrollTop > 1);
+  nav.toggleAttribute("data-more-below", nav.scrollTop + nav.clientHeight < nav.scrollHeight - 1);
+}
+
 const collapseShortcut = isMac ? "⌘\\" : "Ctrl+\\";
 
 export function Sidebar() {
@@ -160,6 +166,17 @@ export function Sidebar() {
   const navRef = useRef<HTMLElement>(null);
   const hoveredLink = useRef<HTMLElement | null>(null);
   const { pathname } = useLocation();
+  // On the collapsed rail, the hovered or focused link's name, shown beside it right away
+  // (a title attribute takes a second to appear and can't be styled).
+  const [tip, setTip] = useState<{ label: string; x: number; y: number; path: string } | null>(null);
+  const showTip = useCallback(
+    (link: HTMLElement | null) => {
+      if (!collapsed || !link || !window.matchMedia("(min-width: 961px)").matches) return setTip(null);
+      const r = link.getBoundingClientRect();
+      setTip({ label: link.dataset.label ?? "", x: r.right + 14, y: r.top + r.height / 2, path: pathname });
+    },
+    [collapsed, pathname],
+  );
 
   // Two glass "lenses" sit behind the links: one marks the current page, the other follows the
   // pointer. Both are positioned from the link boxes through CSS custom properties on the nav,
@@ -184,8 +201,15 @@ export function Sidebar() {
     const sync = () => {
       placeLens("active", nav.querySelector(".sidebar-link.active"));
       if (hoveredLink.current) placeLens("hover", hoveredLink.current);
+      markScrollEdges(nav);
     };
     sync();
+    // On a short window the links scroll: keep the current page's in view.
+    const active = nav.querySelector<HTMLElement>(".sidebar-link.active");
+    if (active) {
+      const top = active.offsetTop - nav.scrollTop;
+      if (top < 0 || top + active.offsetHeight > nav.clientHeight) nav.scrollTop = active.offsetTop - nav.clientHeight / 2;
+    }
     // Only animate once the lenses have a real starting position.
     const frame = requestAnimationFrame(() => nav.setAttribute("data-ready", ""));
     // Keeps the lenses glued to the links while the sidebar collapses or expands.
@@ -225,6 +249,7 @@ export function Sidebar() {
       }
       hoveredLink.current = link;
       placeLens("hover", link);
+      showTip(link);
     }
     const rect = link.getBoundingClientRect();
     nav.style.setProperty("--lens-px", `${e.clientX - rect.left}px`);
@@ -234,7 +259,11 @@ export function Sidebar() {
   const onNavPointerLeave = () => {
     hoveredLink.current = null;
     placeLens("hover", null);
+    setTip(null);
   };
+
+  // The name goes away when the rail expands (the labels are back) or the page changes.
+  const shownTip = tip && collapsed && tip.path === pathname ? tip : null;
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -333,6 +362,13 @@ export function Sidebar() {
           ref={navRef}
           onPointerMove={onNavPointerMove}
           onPointerLeave={onNavPointerLeave}
+          onFocus={(e) => showTip((e.target as HTMLElement).closest<HTMLElement>(".sidebar-link"))}
+          onBlur={() => setTip(null)}
+          onScroll={(e) => {
+            hoveredLink.current = null;
+            setTip(null);
+            markScrollEdges(e.currentTarget);
+          }}
         >
           <span className="sidebar-lens sidebar-lens-active" aria-hidden="true" />
           <span className="sidebar-lens sidebar-lens-hover" aria-hidden="true" />
@@ -350,7 +386,7 @@ export function Sidebar() {
                   end={link.end}
                   className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}
                   onClick={() => setDrawerOpen(false)}
-                  title={collapsed ? link.label : undefined}
+                  data-label={link.label}
                 >
                   <span className="sidebar-link-icon">{link.icon}</span>
                   <span className="sidebar-link-label">{link.label}</span>
@@ -380,6 +416,12 @@ export function Sidebar() {
           </div>
         </div>
       </aside>
+
+      {shownTip && (
+        <span className="sidebar-tip" style={{ left: shownTip.x, top: shownTip.y }} aria-hidden="true">
+          {shownTip.label}
+        </span>
+      )}
     </>
   );
 }

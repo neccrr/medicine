@@ -37,8 +37,9 @@
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: 0 1px 0 0 var(--glass-highlight) inset, var(--glass-shadow);
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* Only the links scroll (on short windows), so the brand and the footer's search and theme
+     buttons are always in reach. */
+  overflow: hidden;
   z-index: 60;
   transition: width var(--dur-morph) var(--ease-glass), padding var(--dur-morph) var(--ease-glass);
 }
@@ -54,8 +55,9 @@
   color: var(--text);
   padding: 0 0.25rem 0 0.5rem;
   margin-bottom: 2rem;
+  flex-shrink: 0;
   justify-content: space-between;
-  transition: padding var(--dur-morph) var(--ease-glass);
+  transition: padding var(--dur-morph) var(--ease-glass), gap var(--dur-morph) var(--ease-glass), margin var(--dur-morph) var(--ease-glass);
 }
 
 .sidebar-brand-name {
@@ -85,6 +87,28 @@
   flex-direction: column;
   gap: 0.15rem;
   flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  /* Room for the lenses' glow, which the scroll box would otherwise clip. */
+  margin: -0.25rem -0.25rem 0;
+  padding: 0.25rem 0.25rem 0.5rem;
+}
+
+/* When the links scroll, the ends with more links past them fade out instead of cutting off. */
+.sidebar-nav[data-more-above] {
+  mask-image: linear-gradient(transparent, #000 1.5rem);
+}
+
+.sidebar-nav[data-more-below] {
+  mask-image: linear-gradient(#000 calc(100% - 1.5rem), transparent);
+}
+
+.sidebar-nav[data-more-above][data-more-below] {
+  mask-image: linear-gradient(transparent, #000 1.5rem, #000 calc(100% - 1.5rem), transparent);
 }
 
 /* Glass lenses behind the links (positioned by Sidebar.tsx): one marks the current page, the
@@ -145,6 +169,7 @@
 .sidebar-link {
   position: relative;
   z-index: 1;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -185,7 +210,9 @@
   white-space: nowrap;
   overflow: hidden;
   max-height: 1.2rem;
-  transition: opacity 0.15s ease, max-height var(--dur-morph) var(--ease-glass), margin var(--dur-morph) var(--ease-glass);
+  flex-shrink: 0;
+  border-top: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.2s ease, max-height var(--dur-morph) var(--ease-glass), margin var(--dur-morph) var(--ease-glass);
 }
 
 .sidebar-link-icon {
@@ -194,6 +221,7 @@
 }
 
 .sidebar-footer {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -261,21 +289,36 @@
    paddings, gaps, opacity), so the rail morphs rather than jumps. Labels only fade, so links
    keep their accessible names; the title attribute shows them on hover. */
 @media (min-width: 961px) {
+  /* 72px wide with 12px padding and a 1px border leaves a 46px column; everything below is
+     centred in it. */
   .sidebar.collapsed {
     width: 72px;
-    padding: 1.5rem 0.75rem;
+    padding: 1.25rem 0.75rem 1rem;
   }
 
+  /* The toggle (38px) sits in the middle of the column: the faded name takes no room and no gap. */
   .sidebar.collapsed .sidebar-brand {
-    padding: 0 5px 0 0;
+    padding: 0 4px;
+    gap: 0;
+    margin-bottom: 1.25rem;
   }
 
-  /* On the icon rail a group heading shrinks to a thin rule between groups. */
+  /* On the icon rail a group heading shrinks to a thin rule between groups (the text is
+     hidden, the top border stays). */
   .sidebar.collapsed .sidebar-group-label {
-    opacity: 0;
+    color: transparent;
     max-height: 0;
-    margin: 0.55rem 0.6rem;
-    border-top: 1px solid var(--border);
+    margin: 0.45rem 0.7rem;
+    padding: 0;
+    border-top-color: var(--border);
+  }
+
+  .sidebar.collapsed .sidebar-nav {
+    scrollbar-width: none;
+  }
+
+  .sidebar.collapsed .sidebar-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .sidebar.collapsed .sidebar-brand-name,
@@ -285,9 +328,9 @@
     transition: opacity 0.15s ease, max-width var(--dur-morph) var(--ease-glass);
   }
 
-  /* Centres the 18px icon in the 48px rail without switching justify-content. */
+  /* Centres the 18px icon in the 46px column without switching justify-content. */
   .sidebar.collapsed .sidebar-link {
-    padding: 0.6rem 15px;
+    padding: 0.6rem 14px;
     gap: 0;
   }
 
@@ -306,6 +349,37 @@
   .sidebar.collapsed .sidebar-badges {
     flex-direction: column;
     justify-content: center;
+  }
+
+  .sidebar.collapsed .sidebar-footer {
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /* A badge-less footer leaves no empty slot above the buttons. */
+  .sidebar.collapsed .sidebar-badges:empty {
+    display: none;
+  }
+
+  /* Short windows: tighter rows, so the whole rail usually fits without scrolling. */
+  @media (max-height: 820px) {
+    .sidebar.collapsed .sidebar-link {
+      padding-block: 0.5rem;
+    }
+
+    .sidebar.collapsed .sidebar-group-label {
+      margin-block: 0.3rem;
+    }
+  }
+
+  @media (max-height: 740px) {
+    .sidebar.collapsed .sidebar-link {
+      padding-block: 0.4rem;
+    }
+
+    .sidebar.collapsed .sidebar-brand {
+      margin-bottom: 0.9rem;
+    }
   }
 
   .sidebar.collapsed .command-trigger kbd {
@@ -696,5 +770,37 @@
 
   .ebook-toc-link {
     min-height: 2.5rem;
+  }
+}
+
+/* The collapsed rail's link names, shown beside the icon on hover or keyboard focus (positioned
+   by Sidebar.tsx; outside the sidebar, whose glass would otherwise clip it). */
+.sidebar-tip {
+  position: fixed;
+  z-index: 200;
+  transform: translateY(-50%);
+  padding: 0.35rem 0.65rem;
+  border-radius: 10px;
+  background: var(--surface-solid);
+  border: 1px solid var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: sidebar-tip-in 0.12s ease;
+}
+
+@keyframes sidebar-tip-in {
+  from {
+    opacity: 0;
+    translate: -4px 0;
+  }
+}
+
+@media (max-width: 960px), (prefers-reduced-motion: reduce) {
+  .sidebar-tip {
+    animation: none;
   }
 }
