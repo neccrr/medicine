@@ -219,7 +219,8 @@ export const ebookChapterKeys: string[] = [...ebookChapterLoaders.keys()].sort()
 /** One chapter's Markdown, or undefined when there's no such chapter. */
 export function loadEbookChapter(key: string): Promise<string | undefined> {
   const load = ebookChapterLoaders.get(key);
-  return load ? load() : Promise.resolve(undefined);
+  if (typeof load !== "function") return Promise.resolve(undefined);
+  return load();
 }
 
 const occlusionLoaders = new Map<string, () => Promise<OcclusionNote[]>>(
@@ -232,7 +233,8 @@ export const occlusionKeys: string[] = [...occlusionLoaders.keys()].sort();
 /** A subject's image-occlusion figures, or undefined when it has none. */
 export function loadOcclusionNotes(key: string): Promise<OcclusionNote[] | undefined> {
   const load = occlusionLoaders.get(key);
-  return load ? load() : Promise.resolve(undefined);
+  if (typeof load !== "function") return Promise.resolve(undefined);
+  return load();
 }
 
 /** Every chapter's Markdown, keyed like {@link ebookChapterKeys}. */
