@@ -38,7 +38,7 @@ export function ExplainPanel(props: Props) {
   const waiting = ai.phase === "streaming" && !ai.text;
   useEffect(() => {
     if (!waiting) return;
-    const t = setTimeout(() => setSlow(true), 8000);
+    const t = setTimeout(() => { setSlow(true); }, 8000);
     return () => {
       clearTimeout(t);
       setSlow(false);
@@ -57,7 +57,7 @@ export function ExplainPanel(props: Props) {
   useEffect(() => () => abort.current?.abort(), [question]);
 
   useEffect(() => {
-    const update = () => setOnline(navigator.onLine);
+    const update = () => { setOnline(navigator.onLine); };
     window.addEventListener("online", update);
     window.addEventListener("offline", update);
     return () => {
@@ -70,8 +70,12 @@ export function ExplainPanel(props: Props) {
     if (!open || notes) return;
     let live = true;
     findNotes(subjectKey, `${question} ${answer}`).then(
-      (found) => live && setNotes(found),
-      () => live && setNotes([]),
+      (found) => {
+        if (live) setNotes(found);
+      },
+      () => {
+        if (live) setNotes([]);
+      },
     );
     return () => {
       live = false;
@@ -94,7 +98,7 @@ export function ExplainPanel(props: Props) {
         explanation: props.explanation,
         notes: found,
       },
-      (text) => setAi({ phase: "streaming", text }),
+      (text) => { setAi({ phase: "streaming", text }); },
       controller.signal,
     );
     if (controller.signal.aborted) return;
@@ -107,7 +111,7 @@ export function ExplainPanel(props: Props) {
   if (!open) {
     return (
       <div className="explain-panel">
-        <button type="button" className="explain-toggle" onClick={() => setOpen(true)}>
+        <button type="button" className="explain-toggle" onClick={() => { setOpen(true); }}>
           Explain this
         </button>
       </div>
@@ -119,7 +123,7 @@ export function ExplainPanel(props: Props) {
     <div className="explain-panel is-open">
       <div className="explain-head">
         <h3>From your notes</h3>
-        <button type="button" className="explain-close" onClick={() => setOpen(false)} aria-label="Close the explanation">
+        <button type="button" className="explain-close" onClick={() => { setOpen(false); }} aria-label="Close the explanation">
           ×
         </button>
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { itemAt } from "../lib/arrays";
 import { Link, useParams } from "react-router-dom";
 import { flashcardSubjects, keyOf, loadOcclusionNotes, subjectKey } from "../lib/content";
 import { useSpacedRepetition } from "../hooks/useSpacedRepetition";
@@ -38,7 +39,7 @@ const DEFAULT_PREFS: Prefs = { mode: "review", regions: [], hideAll: true };
 const EMPTY: OcclusionCard[] = [];
 const STATUS_TEXT: Record<LabelStatus, string> = { new: "new", due: "due", learning: "learning", mastered: "mastered" };
 
-const narrowScreen = () => typeof window !== "undefined" && window.matchMedia?.("(max-width: 720px)").matches;
+const narrowScreen = () => typeof window !== "undefined" && window.matchMedia("(max-width: 720px)").matches;
 
 interface FigureProps {
   card: OcclusionCard;
@@ -130,7 +131,7 @@ function OcclusionFigure({ card, revealed, revealAll, hideAll, zoom, onToggle, o
               style={{ strokeWidth: target && shown ? pad * 1.5 : pad }}
               onClick={(e) => {
                 e.stopPropagation();
-                clicked(target ? onToggle : () => onPick(m.id))();
+                clicked(target ? onToggle : () => { onPick(m.id); })();
               }}
             />
           );
@@ -179,7 +180,7 @@ function FigureGallery({ figures, currentIndex, onOpen, onClose }: { figures: Fi
   }, []);
   return (
     <div className="io-gallery" role="dialog" aria-modal="true" aria-label="All figures" onClick={onClose}>
-      <div className="io-gallery-panel" onClick={(e) => e.stopPropagation()}>
+      <div className="io-gallery-panel" onClick={(e) => { e.stopPropagation(); }}>
         <div className="io-gallery-head">
           <h2>All figures ({figures.length})</h2>
           <button ref={closeRef} type="button" className="io-toggle" onClick={onClose}>
@@ -188,7 +189,7 @@ function FigureGallery({ figures, currentIndex, onOpen, onClose }: { figures: Fi
         </div>
         <div className="io-gallery-grid">
           {figures.map((f) => (
-            <button key={f.note.id} type="button" className={`io-gallery-item${f.index === currentIndex ? " is-current" : ""}`} onClick={() => onOpen(f.index)}>
+            <button key={f.note.id} type="button" className={`io-gallery-item${f.index === currentIndex ? " is-current" : ""}`} onClick={() => { onOpen(f.index); }}>
               <img src={f.note.image} alt="" loading="lazy" decoding="async" width={f.note.width} height={f.note.height} />
               <span className="io-gallery-title">{f.note.title}</span>
               <span className="io-gallery-meta">
@@ -213,7 +214,9 @@ export function OcclusionStudy() {
   const [notes, setNotes] = useState<OcclusionNote[] | null | undefined>(null);
   useEffect(() => {
     let live = true;
-    loadOcclusionNotes(key).then((n) => live && setNotes(n));
+    void loadOcclusionNotes(key).then((n) => {
+      if (live) setNotes(n);
+    });
     return () => {
       live = false;
     };
@@ -223,7 +226,7 @@ export function OcclusionStudy() {
   const prefs: Prefs = { ...DEFAULT_PREFS, ...storedPrefs };
   const { mode, regions, hideAll } = prefs;
   const zoom = prefs.zoom ?? narrowScreen();
-  const updatePrefs = (patch: Partial<Prefs>) => setPrefs((p) => ({ ...DEFAULT_PREFS, ...p, ...patch }));
+  const updatePrefs = (patch: Partial<Prefs>) => { setPrefs((p) => ({ ...DEFAULT_PREFS, ...p, ...patch })); };
 
   const deck = useMemo(() => (notes ? occlusionCards(notes) : EMPTY), [notes]);
   const filtered = useMemo(() => (regions.length === 0 ? deck : deck.filter((c) => regions.includes(c.note.region))), [deck, regions]);
@@ -245,7 +248,7 @@ export function OcclusionStudy() {
   const card =
     (currentId ? byId.get(currentId) : undefined) ??
     (mode === "browse" && prefs.cardId ? byId.get(prefs.cardId) : undefined) ??
-    queue[0];
+    queue.at(0);
 
   const go = (target: OcclusionCard | undefined) => {
     setCurrentId(target?.id);
@@ -300,9 +303,15 @@ export function OcclusionStudy() {
     go(queue.find((c) => c.noteIndex === noteIndex) ?? filtered.find((c) => c.noteIndex === noteIndex));
   };
 
-  const pickMask = (maskId: string) => card && go(byId.get(`${card.note.id}:${maskId}`));
-  const step = (dir: 1 | -1) => card && go(stepLabel(queue, card, dir));
-  const stepFig = (dir: 1 | -1) => card && go(stepFigure(queue.length > 0 ? queue : filtered, card, dir));
+  const pickMask = (maskId: string) => {
+    if (card) go(byId.get(`${card.note.id}:${maskId}`));
+  };
+  const step = (dir: 1 | -1) => {
+    if (card) go(stepLabel(queue, card, dir));
+  };
+  const stepFig = (dir: 1 | -1) => {
+    if (card) go(stepFigure(queue.length > 0 ? queue : filtered, card, dir));
+  };
 
   // One listener for the page's lifetime, always calling the latest handler.
   const onKey = useRef<(e: KeyboardEvent) => void>(() => {});
@@ -321,7 +330,7 @@ export function OcclusionStudy() {
         if (e.key === "Escape") setGalleryOpen(false);
         return;
       }
-      if (e.key === "g") return setGalleryOpen(true);
+      if (e.key === "g") { setGalleryOpen(true); return; }
       if (!card) return;
       // Space always reveals, even with a chip or arrow button focused; Enter is left to buttons.
       const onButton = e.target instanceof HTMLButtonElement;
@@ -337,7 +346,7 @@ export function OcclusionStudy() {
         else step(dir);
         return;
       }
-      if (e.key === "]" || e.key === "[") return stepFig(e.key === "]" ? 1 : -1);
+      if (e.key === "]" || e.key === "[") { stepFig(e.key === "]" ? 1 : -1); return; }
       if (revealed) {
         const g = GRADES.find((x) => x.key === e.key);
         if (g) {
@@ -353,9 +362,9 @@ export function OcclusionStudy() {
     };
   });
   useEffect(() => {
-    const listener = (e: KeyboardEvent) => onKey.current(e);
+    const listener = (e: KeyboardEvent) => { onKey.current(e); };
     window.addEventListener("keydown", listener);
-    return () => window.removeEventListener("keydown", listener);
+    return () => { window.removeEventListener("keydown", listener); };
   }, []);
 
   if (notes === undefined) {
@@ -368,7 +377,7 @@ export function OcclusionStudy() {
   }
 
   const figureIndex = card ? figures.findIndex((f) => f.index === card.noteIndex) : -1;
-  const figure = figures[figureIndex];
+  const figure = itemAt(figures, figureIndex);
   const now = new Date();
   const intervalFor = (quality: number) => (card ? formatInterval(reviewCard(stateMap[card.id] ?? INITIAL_CARD_STATE, quality).interval) : "");
 
@@ -386,14 +395,14 @@ export function OcclusionStudy() {
 
       <div className="io-bar">
         <div className="io-modes" role="tablist" aria-label="Study mode">
-          <button type="button" role="tab" aria-selected={mode === "review"} className={mode === "review" ? "is-on" : ""} onClick={() => setMode("review")}>
+          <button type="button" role="tab" aria-selected={mode === "review"} className={mode === "review" ? "is-on" : ""} onClick={() => { setMode("review"); }}>
             Review <span className="io-count">{stats.due}</span>
           </button>
-          <button type="button" role="tab" aria-selected={mode === "browse"} className={mode === "browse" ? "is-on" : ""} onClick={() => setMode("browse")}>
+          <button type="button" role="tab" aria-selected={mode === "browse"} className={mode === "browse" ? "is-on" : ""} onClick={() => { setMode("browse"); }}>
             Browse all <span className="io-count">{stats.total}</span>
           </button>
         </div>
-        <button type="button" className="io-toggle" onClick={() => setGalleryOpen(true)} disabled={figures.length === 0}>
+        <button type="button" className="io-toggle" onClick={() => { setGalleryOpen(true); }} disabled={figures.length === 0}>
           All figures <span className="key-hint">G</span>
         </button>
       </div>
@@ -401,12 +410,12 @@ export function OcclusionStudy() {
       {allRegions.length > 1 && (
         <div className="tag-filter-row">
           {allRegions.map((r) => (
-            <button key={r} type="button" className={regions.includes(r) ? "tag tag-toggle active" : "tag tag-toggle"} onClick={() => toggleRegion(r)} aria-pressed={regions.includes(r)}>
+            <button key={r} type="button" className={regions.includes(r) ? "tag tag-toggle active" : "tag tag-toggle"} onClick={() => { toggleRegion(r); }} aria-pressed={regions.includes(r)}>
               {REGION_LABELS[r] ?? r}
             </button>
           ))}
           {regions.length > 0 && (
-            <button type="button" className="tag-filter-clear" onClick={() => updatePrefs({ regions: [] })}>
+            <button type="button" className="tag-filter-clear" onClick={() => { updatePrefs({ regions: [] }); }}>
               Clear
             </button>
           )}
@@ -443,7 +452,7 @@ export function OcclusionStudy() {
             <EmptyState title="Nothing due right now">Every label here is scheduled for later. Browse the figures in the meantime.</EmptyState>
           )}
           <div className="io-done-actions">
-            <button type="button" className="btn" onClick={() => setMode("browse")}>
+            <button type="button" className="btn" onClick={() => { setMode("browse"); }}>
               Browse all figures
             </button>
             {lastGrade && (
@@ -462,7 +471,7 @@ export function OcclusionStudy() {
               revealAll={revealAll}
               hideAll={hideAll}
               zoom={zoom}
-              onToggle={() => setRevealed((r) => !r)}
+              onToggle={() => { setRevealed((r) => !r); }}
               onPick={pickMask}
               onSwipe={step}
             />
@@ -474,7 +483,7 @@ export function OcclusionStudy() {
             {revealed ? (
               <div className="grade-row">
                 {GRADES.map((g) => (
-                  <button key={g.quality} type="button" className="btn btn-grade" onClick={() => handleGrade(g.quality)} title={`${g.hint} (press ${g.key})`}>
+                  <button key={g.quality} type="button" className="btn btn-grade" onClick={() => { handleGrade(g.quality); }} title={`${g.hint} (press ${g.key})`}>
                     {g.label}
                     <span className="io-interval">{intervalFor(g.quality)}</span>
                     <span className="key-hint">{g.key}</span>
@@ -483,14 +492,14 @@ export function OcclusionStudy() {
               </div>
             ) : (
               <div className="grade-row">
-                <button type="button" className="btn" onClick={() => setRevealed(true)}>
+                <button type="button" className="btn" onClick={() => { setRevealed(true); }}>
                   Reveal <span className="key-hint">Space</span>
                 </button>
               </div>
             )}
 
             <div className="io-nav">
-              <button type="button" className="io-nav-btn" onClick={() => step(-1)} aria-label="Previous label">
+              <button type="button" className="io-nav-btn" onClick={() => { step(-1); }} aria-label="Previous label">
                 ← Prev
               </button>
               <span className="io-nav-pos">
@@ -501,7 +510,7 @@ export function OcclusionStudy() {
                   Undo
                 </button>
               )}
-              <button type="button" className="io-nav-btn" onClick={() => step(1)} aria-label={revealed ? "Next label" : "Skip to the next label"}>
+              <button type="button" className="io-nav-btn" onClick={() => { step(1); }} aria-label={revealed ? "Next label" : "Skip to the next label"}>
                 {revealed ? "Next" : "Skip"} →
               </button>
             </div>
@@ -509,13 +518,13 @@ export function OcclusionStudy() {
 
           <aside className="io-side">
             <div className="io-fig-nav">
-              <button type="button" className="io-nav-btn" onClick={() => stepFig(-1)} aria-label="Previous figure" title="Previous figure (Shift+← or [)">
+              <button type="button" className="io-nav-btn" onClick={() => { stepFig(-1); }} aria-label="Previous figure" title="Previous figure (Shift+← or [)">
                 ‹
               </button>
               <span>
                 Figure {figureIndex + 1} of {figures.length}
               </span>
-              <button type="button" className="io-nav-btn" onClick={() => stepFig(1)} aria-label="Next figure" title="Next figure (Shift+→ or ])">
+              <button type="button" className="io-nav-btn" onClick={() => { stepFig(1); }} aria-label="Next figure" title="Next figure (Shift+→ or ])">
                 ›
               </button>
             </div>
@@ -538,7 +547,7 @@ export function OcclusionStudy() {
                     className={`io-chip is-${status}${current ? " is-current" : ""}`}
                     aria-current={current || undefined}
                     aria-label={`Label ${i + 1}, ${STATUS_TEXT[status]}`}
-                    onClick={() => pickMask(m.id)}
+                    onClick={() => { pickMask(m.id); }}
                   >
                     {i + 1}
                   </button>
@@ -550,13 +559,13 @@ export function OcclusionStudy() {
             </p>
 
             <div className="io-toggles">
-              <button type="button" className={`io-toggle${hideAll ? " is-on" : ""}`} onClick={() => updatePrefs({ hideAll: !hideAll })} aria-pressed={hideAll}>
+              <button type="button" className={`io-toggle${hideAll ? " is-on" : ""}`} onClick={() => { updatePrefs({ hideAll: !hideAll }); }} aria-pressed={hideAll}>
                 Hide all <span className="key-hint">H</span>
               </button>
-              <button type="button" className={`io-toggle${zoom ? " is-on" : ""}`} onClick={() => updatePrefs({ zoom: !zoom })} aria-pressed={zoom}>
+              <button type="button" className={`io-toggle${zoom ? " is-on" : ""}`} onClick={() => { updatePrefs({ zoom: !zoom }); }} aria-pressed={zoom}>
                 Zoom <span className="key-hint">Z</span>
               </button>
-              <button type="button" className={`io-toggle${revealAll ? " is-on" : ""}`} onClick={() => setRevealAll((v) => !v)} aria-pressed={revealAll}>
+              <button type="button" className={`io-toggle${revealAll ? " is-on" : ""}`} onClick={() => { setRevealAll((v) => !v); }} aria-pressed={revealAll}>
                 Show labels <span className="key-hint">A</span>
               </button>
             </div>
@@ -581,7 +590,7 @@ export function OcclusionStudy() {
         </div>
       )}
 
-      {galleryOpen && <FigureGallery figures={figures} currentIndex={card?.noteIndex ?? -1} onOpen={openFigure} onClose={() => setGalleryOpen(false)} />}
+      {galleryOpen && <FigureGallery figures={figures} currentIndex={card?.noteIndex ?? -1} onOpen={openFigure} onClose={() => { setGalleryOpen(false); }} />}
     </section>
   );
 }

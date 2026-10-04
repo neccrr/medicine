@@ -9,7 +9,7 @@ export function AlfondOverlaySetting() {
   const on = prefs.overlay !== false;
   return (
     <label className="alfond-switch">
-      <input type="checkbox" role="switch" checked={on} onChange={(e) => setPrefs({ overlay: e.target.checked })} />
+      <input type="checkbox" role="switch" checked={on} onChange={(e) => { setPrefs({ overlay: e.target.checked }); }} />
       <span className="alfond-switch-track" aria-hidden="true" />
       <span className="alfond-switch-text">
         <strong>Alfond button on every page</strong>

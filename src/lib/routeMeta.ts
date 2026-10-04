@@ -77,7 +77,7 @@ export function subjectSections(key: string): { name: string; path: string }[] {
   return out;
 }
 
-const SECTIONS: Record<string, { name: string; meta: PageMeta }> = {
+const SECTIONS: Partial<Record<string, { name: string; meta: PageMeta }>> = {
   subjects: {
     name: "Subjects",
     meta: {

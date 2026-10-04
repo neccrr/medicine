@@ -16,7 +16,8 @@ const quizModules = import.meta.glob<QuizQuestion[]>(
 // Falls back to pooling that block's regular quiz banks when none exist. The questions load
 // when an exam opens; every other page needs only each package's name and size (meta.json).
 const examBankLoaders = import.meta.glob<QuizQuestion[]>("../../content/exams/block/*/*/bank.json", { import: "default" });
-const examPackageMetaModules = import.meta.glob<{ name: string; questions: number }>(
+// A package without its meta.json gets a name from its folder.
+const examPackageMetaModules: Partial<Record<string, { name?: string; questions?: number }>> = import.meta.glob<{ name: string; questions: number }>(
   "../../content/exams/block/*/*/meta.json",
   { eager: true, import: "default" },
 );
@@ -151,10 +152,10 @@ function groupedBy<T>(modules: Record<string, string>, make: (path: string, url:
 }
 
 /** Flashcard decks, keyed by "{blockId}/{subjectId}". */
-export const flashcardDecks: Record<string, Flashcard[]> = keyedBy(flashcardModules);
+export const flashcardDecks: Partial<Record<string, Flashcard[]>> = keyedBy(flashcardModules);
 
 /** Quiz banks, keyed by "{blockId}/{subjectId}". */
-export const quizBanks: Record<string, QuizQuestion[]> = keyedBy(quizModules);
+export const quizBanks: Partial<Record<string, QuizQuestion[]>> = keyedBy(quizModules);
 
 export interface ExamPackage {
   id: string;
@@ -166,7 +167,7 @@ export interface ExamPackage {
 }
 
 /** Dedicated exam question packages, keyed by block id — a block may offer more than one. */
-export const examPackagesByBlock: Record<string, ExamPackage[]> = {};
+export const examPackagesByBlock: Partial<Record<string, ExamPackage[]>> = {};
 for (const [path, load] of Object.entries(examBankLoaders)) {
   const { blockId, packageId } = examPackagePath(path);
   const meta = examPackageMetaModules[path.replace(/bank\.json$/, "meta.json")];
@@ -178,11 +179,11 @@ for (const [path, load] of Object.entries(examBankLoaders)) {
   });
 }
 for (const list of Object.values(examPackagesByBlock)) {
-  list.sort((a, b) => a.name.localeCompare(b.name));
+  list?.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /** Summaries, keyed by "{blockId}/{subjectId}" (from content/summaries/block/{blockId}/{subject}.md). */
-export const summaries: Record<string, string> = keyedBy(summaryModules);
+export const summaries: Partial<Record<string, string>> = keyedBy(summaryModules);
 
 export const tips: string[] = Object.values(tipsModule)[0] ?? [];
 
@@ -194,7 +195,7 @@ export interface QuizGame {
 }
 
 /** Interactive HTML quizzes, keyed by "{blockId}/{subjectId}". */
-export const quizGames: Record<string, QuizGame[]> = groupedBy(
+export const quizGames: Partial<Record<string, QuizGame[]>> = groupedBy(
   quizGameModules,
   (path, url) => ({ name: htmlName(path), url }),
   (g) => g.name,
@@ -249,7 +250,7 @@ export interface EbookPdf {
 }
 
 /** Ebook reference PDFs, keyed by "{blockId}/{subjectId}". */
-export const ebookPdfs: Record<string, EbookPdf[]> = groupedBy(
+export const ebookPdfs: Partial<Record<string, EbookPdf[]>> = groupedBy(
   ebookPdfModules,
   (path, url) => ({ name: pdfName(path), url }),
   (p) => p.name,
@@ -258,7 +259,7 @@ export const ebookPdfs: Record<string, EbookPdf[]> = groupedBy(
 // A subject folder that only contains PDFs (no meta.json/chapters) still gets a book entry,
 // synthesized from the folder name — dropping a PDF in is enough on its own.
 /** Ebook metadata, keyed by "{blockId}/{subjectId}". */
-export const ebookMeta: Record<string, EbookMeta> = keyedBy(ebookMetaModules);
+export const ebookMeta: Partial<Record<string, EbookMeta>> = keyedBy(ebookMetaModules);
 for (const key of Object.keys(ebookPdfs)) {
   ebookMeta[key] ??= {
     title: labelize(key.split("/")[1]),
@@ -267,7 +268,7 @@ for (const key of Object.keys(ebookPdfs)) {
   };
 }
 
-export const ebookSubjects: Subject[] = subjectsFromKeys(Object.keys(ebookMeta), (key) => ebookMeta[key].title);
+export const ebookSubjects: Subject[] = subjectsFromKeys(Object.keys(ebookMeta), (key, id) => ebookMeta[key]?.title ?? labelize(id));
 
 export interface ModulePdf {
   name: string;
@@ -276,7 +277,7 @@ export interface ModulePdf {
 }
 
 /** Lecture-slide PDFs, keyed by "{blockId}/{subjectId}". */
-export const modulesByBlockSubject: Record<string, ModulePdf[]> = groupedBy(
+export const modulesByBlockSubject: Partial<Record<string, ModulePdf[]>> = groupedBy(
   moduleModules,
   (path, url) => ({ name: moduleName(path), url, section: moduleSection(path) }),
   (m) => m.name,

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { itemAt } from "../lib/arrays";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ExplainPanel } from "../components/ExplainPanel";
 import { keyOf, quizBanks, quizGames, quizSubjects, subjectKey } from "../lib/content";
@@ -11,14 +12,14 @@ import { subjectHueStyle } from "../lib/subjectStyle";
 import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { buildSessionBank } from "../lib/quizShuffle";
 import { buildSections, type QuizSection } from "../lib/quizSections";
-import type { QuizAttempt, QuizQuestion } from "../types/content";
+import type { Answers, QuizAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
 const EMPTY_BANK: QuizQuestion[] = [];
 
 interface InProgressSave {
   bank: QuizQuestion[];
-  answers: Record<string, number>;
+  answers: Answers;
   currentIndex: number;
   total: number;
 }
@@ -74,7 +75,7 @@ export function QuizPlay() {
   const [sessionBank, setSessionBank] = useState<QuizQuestion[] | null>(linkedSession?.bank ?? null);
   const [sessionKind, setSessionKind] = useState<SessionKind>(linkedSession?.kind ?? { type: "full" });
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answers, setAnswers] = useState<Answers>({});
   const [finished, setFinished] = useState(false);
   const [result, setResult] = useState<QuizAttempt | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -109,7 +110,7 @@ export function QuizPlay() {
     return { savedProgress: saved, canResume: ok };
   }, [key, fullBank]);
 
-  const persistProgress = (nextAnswers: Record<string, number>, nextIndex: number) => {
+  const persistProgress = (nextAnswers: Answers, nextIndex: number) => {
     if (sessionKind.type !== "full" || !sessionBank) return;
     writeJSON(STORAGE_KEYS.quizInProgress(key), {
       bank: sessionBank,
@@ -119,7 +120,7 @@ export function QuizPlay() {
     });
   };
 
-  const clearInProgress = () => writeJSON(STORAGE_KEYS.quizInProgress(key), null);
+  const clearInProgress = () => { writeJSON(STORAGE_KEYS.quizInProgress(key), null); };
 
   const startBank = (nextSource: QuizQuestion[], kind: SessionKind) => {
     setSessionBank(buildSessionBank(nextSource));
@@ -148,7 +149,7 @@ export function QuizPlay() {
     setStarted(true);
   };
 
-  const currentQuestion = bank[currentIndex];
+  const currentQuestion = bank.at(currentIndex);
   const selected = currentQuestion ? answers[currentQuestion.id] : undefined;
   const revealed = selected !== undefined;
   const isLast = currentIndex === bank.length - 1;
@@ -156,7 +157,7 @@ export function QuizPlay() {
 
   let streak = 0;
   for (let i = currentIndex - (revealed ? 0 : 1); i >= 0; i--) {
-    const q = bank[i];
+    const q = itemAt(bank, i);
     if (!q || answers[q.id] !== q.answer) break;
     streak++;
   }
@@ -174,7 +175,7 @@ export function QuizPlay() {
     persistProgress(answers, index);
   };
 
-  const goPrev = () => goToQuestion(currentIndex - 1);
+  const goPrev = () => { goToQuestion(currentIndex - 1); };
 
   const finishQuiz = () => {
     const attempt = recordAttempt(bank, answers);
@@ -231,7 +232,7 @@ export function QuizPlay() {
     };
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => { window.removeEventListener("keydown", onKeyDown); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started, finished, currentQuestion, revealed, answers, currentIndex, isLast, zoomSrc]);
 
@@ -329,11 +330,11 @@ export function QuizPlay() {
 
           <div className="quiz-start-actions">
             {canResume && savedProgress && (
-              <button className="btn btn-secondary" onClick={() => beginQuiz(true)}>
+              <button className="btn btn-secondary" onClick={() => { beginQuiz(true); }}>
                 Resume ({savedProgress.currentIndex + 1}/{savedProgress.total})
               </button>
             )}
-            <button className="btn quiz-start-btn" onClick={() => beginQuiz(false)}>
+            <button className="btn quiz-start-btn" onClick={() => { beginQuiz(false); }}>
               {canResume ? "Start over" : "Start quiz"}
             </button>
           </div>
@@ -399,13 +400,15 @@ export function QuizPlay() {
             <strong>{dueQuestions.length}</strong> question{dueQuestions.length === 1 ? "" : "s"} due
             for review from past attempts.
           </p>
-          <button className="btn btn-secondary" onClick={() => startBank(dueQuestions, { type: "due" })}>
+          <button className="btn btn-secondary" onClick={() => { startBank(dueQuestions, { type: "due" }); }}>
             Review due questions
           </button>
         </div>
       )}
 
-      {!finished ? (
+      {!finished && !currentQuestion ? (
+        <p className="subtitle">There are no questions in this session.</p>
+      ) : !finished && currentQuestion ? (
         <div className="quiz-card">
           <div className="quiz-progress">
             <div className="quiz-progress-track">
@@ -436,7 +439,7 @@ export function QuizPlay() {
                   key={q.id}
                   type="button"
                   className={cls}
-                  onClick={() => goToQuestion(qi)}
+                  onClick={() => { goToQuestion(qi); }}
                   aria-current={qi === currentIndex ? "true" : undefined}
                   aria-label={`Go to question ${qi + 1}`}
                   title={`Question ${qi + 1}`}
@@ -482,7 +485,7 @@ export function QuizPlay() {
               role="dialog"
               aria-modal="true"
               aria-label="Enlarged figure. Tap outside the image or press Escape to close."
-              onClick={() => setZoomSrc(null)}
+              onClick={() => { setZoomSrc(null); }}
             >
               <img
                 className={zoomFull ? "quiz-zoom-full" : undefined}
@@ -493,7 +496,7 @@ export function QuizPlay() {
                   setZoomFull((v) => !v);
                 }}
               />
-              <button type="button" className="quiz-zoom-close" onClick={() => setZoomSrc(null)} aria-label="Close">
+              <button type="button" className="quiz-zoom-close" onClick={() => { setZoomSrc(null); }} aria-label="Close">
                 ×
               </button>
             </div>
@@ -505,15 +508,13 @@ export function QuizPlay() {
               if (revealed) {
                 if (oi === currentQuestion.answer) cls += " correct";
                 else if (oi === selected) cls += " incorrect";
-              } else if (selected === oi) {
-                cls += " selected";
               }
 
               return (
                 <button
                   key={oi}
                   className={cls}
-                  onClick={() => selectAnswer(oi)}
+                  onClick={() => { selectAnswer(oi); }}
                   disabled={revealed}
                   role="radio"
                   aria-checked={selected === oi}
@@ -546,7 +547,7 @@ export function QuizPlay() {
               question={currentQuestion.question}
               options={currentQuestion.options}
               answer={currentQuestion.options[currentQuestion.answer]}
-              chosen={selected !== null && selected !== undefined ? currentQuestion.options[selected] : undefined}
+              chosen={currentQuestion.options[selected]}
               explanation={currentQuestion.explanation}
             />
           )}
@@ -572,7 +573,7 @@ export function QuizPlay() {
               <button
                 type="button"
                 className="btn btn-secondary quiz-skip-btn"
-                onClick={() => goToQuestion(currentIndex + 1)}
+                onClick={() => { goToQuestion(currentIndex + 1); }}
               >
                 Skip →
               </button>
@@ -595,16 +596,16 @@ export function QuizPlay() {
               {sessionKind.type === "section" && (
                 <button
                   className="btn"
-                  onClick={() => startBank(sessionKind.section.questions, sessionKind)}
+                  onClick={() => { startBank(sessionKind.section.questions, sessionKind); }}
                 >
                   Retry {sessionKind.section.shortLabel}
                 </button>
               )}
-              <button className="btn btn-secondary" onClick={() => startBank(fullBank, { type: "full" })}>
+              <button className="btn btn-secondary" onClick={() => { startBank(fullBank, { type: "full" }); }}>
                 Retry full quiz
               </button>
               {missedQuestions.length > 0 && (
-                <button className="btn" onClick={() => startBank(missedQuestions, { type: "missed" })}>
+                <button className="btn" onClick={() => { startBank(missedQuestions, { type: "missed" }); }}>
                   Review missed only ({missedQuestions.length})
                 </button>
               )}
@@ -612,7 +613,7 @@ export function QuizPlay() {
 
             <button
               className="btn btn-secondary quiz-review-toggle"
-              onClick={() => setReviewOpen((v) => !v)}
+              onClick={() => { setReviewOpen((v) => !v); }}
               aria-expanded={reviewOpen}
             >
               {reviewOpen ? "Hide full review ▲" : "Show full review ▼"}

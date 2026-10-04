@@ -140,7 +140,7 @@ export function Search() {
         type="search"
         placeholder="Search flashcards, quizzes, summaries, ebooks..."
         value={query}
-        onChange={(e) => onQueryChange(e.target.value)}
+        onChange={(e) => { onQueryChange(e.target.value); }}
         onKeyDown={onInputKeyDown}
         autoFocus
         aria-label="Search all content"
@@ -162,7 +162,7 @@ export function Search() {
                     ? `tag tag-toggle active ${TYPE_CLASS[type] ?? ""}`
                     : `tag tag-toggle ${TYPE_CLASS[type] ?? ""}`
                 }
-                onClick={() => toggleType(type)}
+                onClick={() => { toggleType(type); }}
                 aria-pressed={activeTypes.includes(type)}
               >
                 {TYPE_LABELS[type] ?? type}
@@ -176,7 +176,7 @@ export function Search() {
                 type="button"
                 className={activeSubjects.includes(s.id) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
                 style={tagHueStyle(s.id)}
-                onClick={() => toggleSubject(s.id)}
+                onClick={() => { toggleSubject(s.id); }}
                 aria-pressed={activeSubjects.includes(s.id)}
               >
                 {s.label}
@@ -231,7 +231,7 @@ export function Search() {
               className={i === clampedIndex ? "active" : undefined}
               role="option"
               aria-selected={i === clampedIndex}
-              onMouseEnter={() => setActiveIndex(i)}
+              onMouseEnter={() => { setActiveIndex(i); }}
             >
               <span className="search-result-type">{TYPE_LABELS[r.doc.type] ?? r.doc.type}</span>
               <p className="search-result-title">

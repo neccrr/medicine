@@ -205,8 +205,8 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
         const b = bounds(near);
         animateTo({ x: graph.nodes[i].x, y: graph.nodes[i].y, k: Math.max(1.2, Math.min(2.4, b.k)) });
       },
-      fit: () => animateTo(bounds()),
-      zoom: (f: number) => animateTo({ ...view.current, k: Math.min(6, Math.max(0.12, view.current.k * f)) }),
+      fit: () => { animateTo(bounds()); },
+      zoom: (f: number) => { animateTo({ ...view.current, k: Math.min(6, Math.max(0.12, view.current.k * f)) }); },
     }),
     [graph, bounds, animateTo],
   );
@@ -240,7 +240,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); };
   }, [bounds, draw]);
 
   useEffect(schedule, [schedule, paintKey]);
@@ -263,7 +263,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
       schedule();
     };
     c.addEventListener("wheel", onWheel, { passive: false });
-    return () => c.removeEventListener("wheel", onWheel);
+    return () => { c.removeEventListener("wheel", onWheel); };
   }, [schedule]);
 
   // Pointer: drag to pan, pinch to zoom, tap to select, hover for a name.
@@ -346,7 +346,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
           pointers.current.delete(e.pointerId);
           pinch.current = null;
         }}
-        onPointerLeave={() => setHover(null)}
+        onPointerLeave={() => { setHover(null); }}
       />
       {hover && hover.i !== selected && (
         <div className="map-hover" style={{ left: hover.x, top: hover.y }}>

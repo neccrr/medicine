@@ -20,7 +20,7 @@ export function ReadingControls({ prefs, onChange }: ReadingControlsProps) {
       <button
         type="button"
         className="reading-control-btn"
-        onClick={() => stepScale(-1)}
+        onClick={() => { stepScale(-1); }}
         disabled={safeIdx === 0}
         aria-label="Decrease text size"
         title="Decrease text size"
@@ -31,7 +31,7 @@ export function ReadingControls({ prefs, onChange }: ReadingControlsProps) {
       <button
         type="button"
         className="reading-control-btn"
-        onClick={() => stepScale(1)}
+        onClick={() => { stepScale(1); }}
         disabled={safeIdx === READING_FONT_SCALES.length - 1}
         aria-label="Increase text size"
         title="Increase text size"
@@ -41,7 +41,7 @@ export function ReadingControls({ prefs, onChange }: ReadingControlsProps) {
       <button
         type="button"
         className={prefs.accessibleFont ? "reading-control-btn active" : "reading-control-btn"}
-        onClick={() => onChange({ ...prefs, accessibleFont: !prefs.accessibleFont })}
+        onClick={() => { onChange({ ...prefs, accessibleFont: !prefs.accessibleFont }); }}
         aria-pressed={prefs.accessibleFont}
         title="Toggle accessible font (Atkinson Hyperlegible)"
       >
@@ -50,7 +50,7 @@ export function ReadingControls({ prefs, onChange }: ReadingControlsProps) {
       <button
         type="button"
         className="reading-control-btn"
-        onClick={() => window.print()}
+        onClick={() => { window.print(); }}
         aria-label="Print or save as PDF"
         title="Print or save as PDF"
       >

@@ -11,7 +11,7 @@ import { SubjectBadge } from "../components/SubjectBadge";
 import { FlagIcon, TimerIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
-import type { ExamAttempt, QuizQuestion } from "../types/content";
+import type { Answers, ExamAttempt, QuizQuestion } from "../types/content";
 
 const OPTION_LETTERS = "ABCDEFGH";
 const EMPTY_BANK: QuizQuestion[] = [];
@@ -57,7 +57,9 @@ export function ExamPlay() {
   useEffect(() => {
     if (!chosenPackage || loadedPackage?.id === chosenPackage.id) return;
     let live = true;
-    chosenPackage.load().then((questions) => live && setLoadedPackage({ id: chosenPackage.id, questions }));
+    chosenPackage.load().then((questions) => {
+      if (live) setLoadedPackage({ id: chosenPackage.id, questions });
+    });
     return () => {
       live = false;
     };
@@ -84,13 +86,13 @@ export function ExamPlay() {
   const [timeLimitSec, setTimeLimitSec] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [answers, setAnswers] = useState<Answers>({});
   const [flagged, setFlagged] = useState<Set<string>>(new Set());
   const [finished, setFinished] = useState(false);
   const [result, setResult] = useState<ExamAttempt | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
 
-  const currentQuestion = examBank[currentIndex];
+  const currentQuestion = examBank.at(currentIndex);
   const answeredCount = examBank.filter((q) => answers[q.id] !== undefined).length;
   const isLast = currentIndex === examBank.length - 1;
 
@@ -133,13 +135,13 @@ export function ExamPlay() {
       setSecondsLeft((s) => {
         if (s <= 1) {
           window.clearInterval(id);
-          window.setTimeout(() => finishExamRef.current(), 0);
+          window.setTimeout(() => { finishExamRef.current(); }, 0);
           return 0;
         }
         return s - 1;
       });
     }, 1000);
-    return () => window.clearInterval(id);
+    return () => { window.clearInterval(id); };
   }, [started, finished]);
 
   const selectAnswer = (optionIndex: number) => {
@@ -153,8 +155,8 @@ export function ExamPlay() {
     setCurrentIndex(index);
   };
 
-  const goPrev = () => goToQuestion(currentIndex - 1);
-  const goNext = () => goToQuestion(currentIndex + 1);
+  const goPrev = () => { goToQuestion(currentIndex - 1); };
+  const goNext = () => { goToQuestion(currentIndex + 1); };
 
   const toggleFlag = () => {
     if (!currentQuestion) return;
@@ -202,7 +204,7 @@ export function ExamPlay() {
     };
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => { window.removeEventListener("keydown", onKeyDown); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started, finished, currentQuestion, currentIndex]);
 
@@ -241,7 +243,7 @@ export function ExamPlay() {
           {packages.map((pkg) => {
             const pkgFormat = buildExamFormat(pkg.questionCount);
             const pkgHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(`${blockId}/${pkg.id}`), []);
-            const pkgLast = pkgHistory[pkgHistory.length - 1];
+            const pkgLast = pkgHistory.at(-1);
             return (
               <Link key={pkg.id} to={`/exam/${blockId}/${pkg.id}`} className="nav-card exam-package-card">
                 <h2>{pkg.name}</h2>
@@ -313,7 +315,7 @@ export function ExamPlay() {
             <button
               type="button"
               className={mode === "real" ? "exam-mode-btn active" : "exam-mode-btn"}
-              onClick={() => setMode("real")}
+              onClick={() => { setMode("real"); }}
               role="radio"
               aria-checked={mode === "real"}
             >
@@ -323,7 +325,7 @@ export function ExamPlay() {
             <button
               type="button"
               className={mode === "feedback" ? "exam-mode-btn active" : "exam-mode-btn"}
-              onClick={() => setMode("feedback")}
+              onClick={() => { setMode("feedback"); }}
               role="radio"
               aria-checked={mode === "feedback"}
             >
@@ -365,7 +367,9 @@ export function ExamPlay() {
         )}
       </div>
 
-      {!finished ? (
+      {!finished && !currentQuestion ? (
+        <p className="subtitle">There are no questions in this session.</p>
+      ) : !finished && currentQuestion ? (
         <div className="quiz-card">
           <div className="quiz-progress">
             <div className="quiz-progress-track">
@@ -390,7 +394,7 @@ export function ExamPlay() {
                   key={q.id}
                   type="button"
                   className={cls}
-                  onClick={() => goToQuestion(qi)}
+                  onClick={() => { goToQuestion(qi); }}
                   aria-current={qi === currentIndex ? "true" : undefined}
                   aria-label={`Go to question ${qi + 1}${flagged.has(q.id) ? " (flagged)" : ""}`}
                   title={`Question ${qi + 1}`}
@@ -436,7 +440,7 @@ export function ExamPlay() {
                       <button
                         key={oi}
                         className={cls}
-                        onClick={() => selectAnswer(oi)}
+                        onClick={() => { selectAnswer(oi); }}
                         disabled={revealed}
                         role="radio"
                         aria-checked={selected === oi}
@@ -507,7 +511,7 @@ export function ExamPlay() {
               {missedQuestions.length > 0 && (
                 <button
                   className="btn"
-                  onClick={() => startCustomBank(buildSessionBank(missedQuestions), missedQuestions.length * 60)}
+                  onClick={() => { startCustomBank(buildSessionBank(missedQuestions), missedQuestions.length * 60); }}
                 >
                   Retake missed only ({missedQuestions.length})
                 </button>
@@ -519,7 +523,7 @@ export function ExamPlay() {
 
             <button
               className="btn btn-secondary quiz-review-toggle"
-              onClick={() => setReviewOpen((v) => !v)}
+              onClick={() => { setReviewOpen((v) => !v); }}
               aria-expanded={reviewOpen}
             >
               {reviewOpen ? "Hide full review ▲" : "Show full review ▼"}

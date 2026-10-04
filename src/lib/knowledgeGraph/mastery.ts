@@ -7,10 +7,10 @@ import type { GraphNode } from "./types";
 // labelled figures that mention it: 0–1, or null when they haven't studied any of them yet.
 
 export interface StudyState {
-  cards: Record<string, CardStateMap>;
-  labels: Record<string, CardStateMap>;
+  cards: Partial<Record<string, CardStateMap>>;
+  labels: Partial<Record<string, CardStateMap>>;
   /** Per subject: questions missed in the latest attempts, and whether the quiz was ever taken. */
-  quiz: Record<string, { missed: Set<string>; taken: boolean }>;
+  quiz: Partial<Record<string, { missed: Set<string>; taken: boolean }>>;
 }
 
 export function readStudyState(subjects: string[]): StudyState {
@@ -19,7 +19,7 @@ export function readStudyState(subjects: string[]): StudyState {
     state.cards[key] = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
     state.labels[key] = readJSON<CardStateMap>(STORAGE_KEYS.occlusionState(key), {});
     const attempts = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
-    state.quiz[key] = { missed: new Set(attempts.slice(-3).flatMap((a) => a.missedIds ?? [])), taken: attempts.length > 0 };
+    state.quiz[key] = { missed: new Set(attempts.slice(-3).flatMap((a) => a.missedIds)), taken: attempts.length > 0 };
   }
   return state;
 }

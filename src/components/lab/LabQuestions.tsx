@@ -5,7 +5,7 @@ const LETTERS = "ABCDEFGH";
 
 /** The activity's check questions, answered one by one with instant feedback. */
 export function LabQuestions({ questions }: { questions: LabQuestion[] }) {
-  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [answers, setAnswers] = useState<Partial<Record<number, number>>>({});
   const answered = Object.keys(answers).length;
   const correct = questions.filter((q, i) => answers[i] === q.answer).length;
 
@@ -17,7 +17,7 @@ export function LabQuestions({ questions }: { questions: LabQuestion[] }) {
           <span className="lab-questions-score">
             {correct}/{questions.length} correct
             {answered === questions.length && (
-              <button type="button" className="btn-link" onClick={() => setAnswers({})}>
+              <button type="button" className="btn-link" onClick={() => { setAnswers({}); }}>
                 Try again
               </button>
             )}
@@ -46,7 +46,7 @@ export function LabQuestions({ questions }: { questions: LabQuestion[] }) {
                       role="radio"
                       aria-checked={chosen === oi}
                       disabled={revealed}
-                      onClick={() => setAnswers((prev) => ({ ...prev, [qi]: oi }))}
+                      onClick={() => { setAnswers((prev) => ({ ...prev, [qi]: oi })); }}
                     >
                       <span className="quiz-option-letter">{LETTERS[oi]}</span>
                       <span className="quiz-option-text">{opt}</span>

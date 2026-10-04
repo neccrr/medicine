@@ -22,9 +22,9 @@ export function AlfondOverlay() {
 
   // "Ask Alfond" buttons elsewhere open the window.
   useEffect(() => {
-    const show = () => setOpen(true);
+    const show = () => { setOpen(true); };
     window.addEventListener(OPEN_ALFOND_EVENT, show);
-    return () => window.removeEventListener(OPEN_ALFOND_EVENT, show);
+    return () => { window.removeEventListener(OPEN_ALFOND_EVENT, show); };
   }, []);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function AlfondOverlay() {
       button.current?.focus();
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => { window.removeEventListener("keydown", onKeyDown); };
   }, [open, enabled]);
 
   if (!enabled) return null;
@@ -43,14 +43,14 @@ export function AlfondOverlay() {
     <>
       {open && (
         <Suspense fallback={null}>
-          <AlfondPanel onClose={() => setOpen(false)} />
+          <AlfondPanel onClose={() => { setOpen(false); }} />
         </Suspense>
       )}
       <button
         ref={button}
         type="button"
         className={`alfond-fab${open ? " open" : ""}${busy && !open ? " busy" : ""}`}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { setOpen((o) => !o); }}
         aria-expanded={open}
         aria-controls={open ? "alfond-panel" : undefined}
         aria-label={open ? "Close Alfond" : "Ask Alfond about this page"}

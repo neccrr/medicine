@@ -24,8 +24,8 @@ export const DEFAULT_TIME = "19:00";
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export function readExamPlan(blockId: string): ExamPlanSettings {
-  const raw = readJSON<ExamPlanSettings>(STORAGE_KEYS.examPlan(blockId), {});
-  return typeof raw === "object" && raw !== null ? raw : {};
+  const raw = readJSON<unknown>(STORAGE_KEYS.examPlan(blockId), {});
+  return typeof raw === "object" && raw !== null ? (raw as ExamPlanSettings) : {};
 }
 
 export function writeExamPlan(blockId: string, patch: ExamPlanSettings): ExamPlanSettings {

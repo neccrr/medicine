@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { itemAt } from "../lib/arrays";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ExplainPanel } from "../components/ExplainPanel";
 import { flashcardDecks, flashcardSubjects, keyOf, subjectKey } from "../lib/content";
@@ -91,10 +92,11 @@ export function FlashcardStudy() {
   };
 
   const queue = dueCards.length > 0 ? dueCards : filteredDeck;
-  const card = queue[index % queue.length];
+  const card = itemAt(queue, index % queue.length);
   const sessionDone = dueCards.length === 0 && !extraReview;
 
   const handleGrade = (quality: number) => {
+    if (!card) return;
     grade(card.id, quality);
     setSession((s) => ({
       reviewed: s.reviewed + 1,
@@ -124,7 +126,7 @@ export function FlashcardStudy() {
       }
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => { window.removeEventListener("keydown", onKeyDown); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flipped, sessionDone, card?.id]);
 
@@ -161,7 +163,7 @@ export function FlashcardStudy() {
         {pickedCards && (
           <>
             {" "}
-            <button type="button" className="link-btn" onClick={() => setShowAllCards(true)}>
+            <button type="button" className="link-btn" onClick={() => { setShowAllCards(true); }}>
               Show the whole deck
             </button>
           </>
@@ -174,7 +176,7 @@ export function FlashcardStudy() {
             <button
               type="button"
               className={`topic-filter-toggle${filterOpen ? " is-open" : ""}`}
-              onClick={() => setFilterOpen((o) => !o)}
+              onClick={() => { setFilterOpen((o) => !o); }}
               aria-expanded={filterOpen}
               aria-controls="topic-filter-panel"
             >
@@ -183,7 +185,7 @@ export function FlashcardStudy() {
               <span aria-hidden="true">{filterOpen ? "▴" : "▾"}</span>
             </button>
             {selectedTags.map((tag) => (
-              <button key={tag} type="button" className="tag tag-toggle tag-colored active" style={tagHueStyle(tag)} onClick={() => toggleTag(tag)} aria-label={`Remove ${tag} filter`}>
+              <button key={tag} type="button" className="tag tag-toggle tag-colored active" style={tagHueStyle(tag)} onClick={() => { toggleTag(tag); }} aria-label={`Remove ${tag} filter`}>
                 {tag} ×
               </button>
             ))}
@@ -200,7 +202,7 @@ export function FlashcardStudy() {
                 className="topic-filter-search"
                 placeholder={`Find a topic (${allTags.length})`}
                 value={tagQuery}
-                onChange={(e) => setTagQuery(e.target.value)}
+                onChange={(e) => { setTagQuery(e.target.value); }}
                 aria-label="Find a topic"
               />
               <div className="tag-filter-row">
@@ -212,7 +214,7 @@ export function FlashcardStudy() {
                       type="button"
                       className={selectedTags.includes(tag) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
                       style={tagHueStyle(tag)}
-                      onClick={() => toggleTag(tag)}
+                      onClick={() => { toggleTag(tag); }}
                       aria-pressed={selectedTags.includes(tag)}
                     >
                       {tag} <span className="topic-filter-n">{tagCounts.get(tag)}</span>
@@ -230,7 +232,7 @@ export function FlashcardStudy() {
             Clear filters
           </button>
         </EmptyState>
-      ) : sessionDone ? (
+      ) : sessionDone || !card ? (
         <div className="flashcard-empty">
           {session.reviewed > 0 ? (
             <div className="session-summary">
@@ -294,7 +296,7 @@ export function FlashcardStudy() {
         <div className="flashcard-session">
           <div
             className={flipped ? "flashcard flipped" : "flashcard"}
-            onClick={() => setFlipped((f) => !f)}
+            onClick={() => { setFlipped((f) => !f); }}
             role="button"
             tabIndex={0}
             aria-pressed={flipped}
@@ -347,7 +349,7 @@ export function FlashcardStudy() {
                   type="button"
                   className={selectedTags.includes(tag) ? "tag tag-toggle tag-colored active" : "tag tag-toggle tag-colored"}
                   style={tagHueStyle(tag)}
-                  onClick={() => toggleTag(tag)}
+                  onClick={() => { toggleTag(tag); }}
                   aria-pressed={selectedTags.includes(tag)}
                 >
                   {tag}
@@ -366,7 +368,7 @@ export function FlashcardStudy() {
                 <button
                   key={g.quality}
                   className="btn btn-grade"
-                  onClick={() => handleGrade(g.quality)}
+                  onClick={() => { handleGrade(g.quality); }}
                   title={`${g.hint} (press ${g.key})`}
                 >
                   {g.label}

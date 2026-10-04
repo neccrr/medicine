@@ -61,7 +61,7 @@ export function CommandPalette() {
         setOpen(false);
       }
     };
-    const onOpenEvent = () => openPalette();
+    const onOpenEvent = () => { openPalette(); };
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener(OPEN_COMMAND_PALETTE_EVENT, onOpenEvent);
     return () => {
@@ -97,10 +97,10 @@ export function CommandPalette() {
   if (!open) return null;
 
   return (
-    <div className="command-overlay" onClick={() => setOpen(false)}>
+    <div className="command-overlay" onClick={() => { setOpen(false); }}>
       <div
         className="command-palette"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => { e.stopPropagation(); }}
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
@@ -110,7 +110,7 @@ export function CommandPalette() {
           className="command-input"
           placeholder="Jump to a page or subject..."
           value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
+          onChange={(e) => { onQueryChange(e.target.value); }}
           onKeyDown={onInputKeyDown}
           aria-label="Command palette search"
         />
@@ -119,8 +119,8 @@ export function CommandPalette() {
             <li key={`${doc.type}-${doc.id}`}>
               <button
                 className={i === activeIndex ? "command-item active" : "command-item"}
-                onClick={() => go(doc)}
-                onMouseEnter={() => setActiveIndex(i)}
+                onClick={() => { go(doc); }}
+                onMouseEnter={() => { setActiveIndex(i); }}
               >
                 <span className="command-item-type">{doc.type}</span>
                 <span className="command-item-title">

@@ -56,7 +56,7 @@ function CurrentBlockPicker() {
   return (
     <label className="account-field">
       <span>Current block</span>
-      <select className="form-select" value={currentBlock} onChange={(e) => setCurrentBlock(e.target.value)}>
+      <select className="form-select" value={currentBlock} onChange={(e) => { setCurrentBlock(e.target.value); }}>
         <option value="">Show all blocks equally</option>
         {studyBlocks.map((b) => (
           <option key={b.id} value={b.id}>
@@ -194,12 +194,12 @@ function SignInPanel({ notice }: { notice?: string }) {
         {mode === "sign-up" && (
           <label className="account-field">
             <span>Name</span>
-            <input className="form-input" required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input className="form-input" required autoComplete="name" value={name} onChange={(e) => { setName(e.target.value); }} />
           </label>
         )}
         <label className="account-field">
           <span>Email</span>
-          <input className="form-input" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className="form-input" type="email" required autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); }} />
         </label>
         <label className="account-field">
           <span>Password</span>
@@ -210,7 +210,7 @@ function SignInPanel({ notice }: { notice?: string }) {
             minLength={8}
             autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); }}
           />
           {mode === "sign-up" && <small>At least 8 characters.</small>}
         </label>
@@ -219,7 +219,7 @@ function SignInPanel({ notice }: { notice?: string }) {
             <span>
               Cohort <em>(optional)</em>
             </span>
-            <input className="form-input" inputMode="numeric" placeholder="e.g. 2025" maxLength={20} value={cohort} onChange={(e) => setCohort(e.target.value)} />
+            <input className="form-input" inputMode="numeric" placeholder="e.g. 2025" maxLength={20} value={cohort} onChange={(e) => { setCohort(e.target.value); }} />
             <small>Your entry year, used later to compare scores within your class.</small>
           </label>
         )}
@@ -255,7 +255,9 @@ function SignInMethods({ onMethods }: { onMethods: (methods: string[]) => void }
         setMethods(m);
         onMethods(m);
       },
-      () => !cancelled && setMethods([]),
+      () => {
+        if (!cancelled) setMethods([]);
+      },
     );
     return () => {
       cancelled = true;
@@ -316,8 +318,8 @@ function SignedInView({ notice }: { notice: ReturnType<typeof useReturnNotice> }
 
   // Keep "synced 2 minutes ago" fresh.
   useEffect(() => {
-    const t = window.setInterval(() => tick((n) => n + 1), 30_000);
-    return () => window.clearInterval(t);
+    const t = window.setInterval(() => { tick((n) => n + 1); }, 30_000);
+    return () => { window.clearInterval(t); };
   }, []);
 
   if (!user) return null;
@@ -373,11 +375,11 @@ function SignedInView({ notice }: { notice: ReturnType<typeof useReturnNotice> }
         <form className="account-form" onSubmit={saveProfile}>
           <label className="account-field">
             <span>Name</span>
-            <input className="form-input" required value={name} onChange={(e) => setName(e.target.value)} />
+            <input className="form-input" required value={name} onChange={(e) => { setName(e.target.value); }} />
           </label>
           <label className="account-field">
             <span>Cohort</span>
-            <input className="form-input" placeholder="e.g. 2025" maxLength={20} value={cohort} onChange={(e) => setCohort(e.target.value)} />
+            <input className="form-input" placeholder="e.g. 2025" maxLength={20} value={cohort} onChange={(e) => { setCohort(e.target.value); }} />
           </label>
           <div className="account-row">
             <button type="submit" className="btn btn-small" disabled={savingProfile}>
@@ -417,12 +419,12 @@ function SignedInView({ notice }: { notice: ReturnType<typeof useReturnNotice> }
               <button type="button" className="btn btn-small account-danger" onClick={() => void signOut({ clearDevice: true })}>
                 Yes, sign out and clear
               </button>
-              <button type="button" className="btn btn-secondary btn-small" onClick={() => setConfirmClear(false)}>
+              <button type="button" className="btn btn-secondary btn-small" onClick={() => { setConfirmClear(false); }}>
                 Cancel
               </button>
             </>
           ) : (
-            <button type="button" className="btn btn-secondary btn-small" onClick={() => setConfirmClear(true)}>
+            <button type="button" className="btn btn-secondary btn-small" onClick={() => { setConfirmClear(true); }}>
               Sign out and clear this device
             </button>
           )}
@@ -461,7 +463,7 @@ function SignedInView({ notice }: { notice: ReturnType<typeof useReturnNotice> }
                   autoComplete="current-password"
                   required
                   value={deletePassword}
-                  onChange={(e) => setDeletePassword(e.target.value)}
+                  onChange={(e) => { setDeletePassword(e.target.value); }}
                 />
               </label>
             ) : (
@@ -475,7 +477,7 @@ function SignedInView({ notice }: { notice: ReturnType<typeof useReturnNotice> }
             )}
             <label className="account-field">
               <span>Type DELETE to confirm</span>
-              <input className="form-input" value={deleteConfirm} onChange={(e) => setDeleteConfirm(e.target.value)} />
+              <input className="form-input" value={deleteConfirm} onChange={(e) => { setDeleteConfirm(e.target.value); }} />
             </label>
             {deleteMessage && (
               <p className="account-error" role="alert">

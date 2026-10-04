@@ -70,7 +70,8 @@ export function storageKey(type: KeyTypeName, id?: string): string {
 /** Splits a key into its type and id; null when it isn't a well-formed app key. */
 export function parseKey(key: string): { type: string; id: string | null } | null {
   const m = KEY_RE.exec(key);
-  return m ? { type: m[1], id: m[2] ?? null } : null;
+  // The id group is optional in the pattern, so it can be missing.
+  return m ? { type: m[1], id: (m[2] as string | undefined) ?? null } : null;
 }
 
 function keyType(type: string): KeyType | undefined {

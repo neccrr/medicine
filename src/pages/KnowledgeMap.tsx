@@ -41,7 +41,7 @@ const cssVar = (name: string) => getComputedStyle(document.documentElement).getP
 function useThemeKey(): string {
   const [key, setKey] = useState(0);
   useEffect(() => {
-    const bump = () => setKey((k) => k + 1);
+    const bump = () => { setKey((k) => k + 1); };
     const mo = new MutationObserver(bump);
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -61,8 +61,12 @@ export function KnowledgeMap() {
     let live = true;
     fetch(GRAPH_URL)
       .then((r) => (r.ok ? (r.json() as Promise<KnowledgeGraph>) : Promise.reject(new Error(String(r.status)))))
-      .then((g) => live && setGraph(g))
-      .catch(() => live && setFailed(true));
+      .then((g) => {
+        if (live) setGraph(g);
+      })
+      .catch(() => {
+        if (live) setFailed(true);
+      });
     return () => {
       live = false;
     };
@@ -115,9 +119,9 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
   };
 
   useEffect(() => {
-    const bump = () => setVersion((v) => v + 1);
+    const bump = () => { setVersion((v) => v + 1); };
     window.addEventListener(STORAGE_UPDATED_EVENT, bump);
-    return () => window.removeEventListener(STORAGE_UPDATED_EVENT, bump);
+    return () => { window.removeEventListener(STORAGE_UPDATED_EVENT, bump); };
   }, []);
   const mastery = useMemo(() => {
     const state = readStudyState(allKeys);
@@ -191,7 +195,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
     if (centred.current || selected === null) return;
     centred.current = true;
     const t = setTimeout(() => canvas.current?.focusNode(selected), 60);
-    return () => clearTimeout(t);
+    return () => { clearTimeout(t); };
   }, [selected]);
 
   const visibleCount = visible.filter(Boolean).length;
@@ -215,7 +219,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
             placeholder="Find a concept…"
             aria-label="Find a concept on the map"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => { setQuery(e.target.value); }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && results[0]) openNode(results[0].i);
             }}
@@ -224,7 +228,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
             <ul className="map-search-results" role="listbox" aria-label="Matching concepts">
               {results.map((r) => (
                 <li key={r.i}>
-                  <button type="button" role="option" aria-selected={false} onClick={() => openNode(r.i)}>
+                  <button type="button" role="option" aria-selected={false} onClick={() => { openNode(r.i); }}>
                     <span>{r.n.label}</span>
                     <small>{[...new Set(r.n.subjects.map((s) => subjectLabel(s)))].join(", ")}</small>
                   </button>
@@ -234,34 +238,34 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
           )}
         </div>
         <div className="map-chips" role="group" aria-label="Block">
-          <button type="button" className={blockFilter === null ? "map-chip active" : "map-chip"} aria-pressed={blockFilter === null} onClick={() => setBlockFilter(null)}>
+          <button type="button" className={blockFilter === null ? "map-chip active" : "map-chip"} aria-pressed={blockFilter === null} onClick={() => { setBlockFilter(null); }}>
             All blocks
           </button>
           {blocks.map((b) => (
-            <button key={b} type="button" className={blockFilter === b ? "map-chip active" : "map-chip"} aria-pressed={blockFilter === b} onClick={() => setBlockFilter(blockFilter === b ? null : b)}>
+            <button key={b} type="button" className={blockFilter === b ? "map-chip active" : "map-chip"} aria-pressed={blockFilter === b} onClick={() => { setBlockFilter(blockFilter === b ? null : b); }}>
               Block {b}
             </button>
           ))}
         </div>
         <div className="map-chips" role="group" aria-label="Subject">
           {names.map((name, i) => (
-            <button key={name} type="button" className={nameFilter === name ? "map-chip active" : "map-chip"} aria-pressed={nameFilter === name} onClick={() => setNameFilter(nameFilter === name ? null : name)}>
+            <button key={name} type="button" className={nameFilter === name ? "map-chip active" : "map-chip"} aria-pressed={nameFilter === name} onClick={() => { setNameFilter(nameFilter === name ? null : name); }}>
               <span className="map-swatch" style={{ background: `var(--map-${(i % SLOTS) + 1})` }} aria-hidden="true" />
               {subjects.find((s) => s.id === name)?.label ?? name}
             </button>
           ))}
         </div>
         <div className="map-chips" role="group" aria-label="Display">
-          <button type="button" className={mode === "subject" ? "map-chip active" : "map-chip"} aria-pressed={mode === "subject"} onClick={() => setMode("subject")}>
+          <button type="button" className={mode === "subject" ? "map-chip active" : "map-chip"} aria-pressed={mode === "subject"} onClick={() => { setMode("subject"); }}>
             Color by subject
           </button>
-          <button type="button" className={mode === "mastery" ? "map-chip active" : "map-chip"} aria-pressed={mode === "mastery"} onClick={() => setMode("mastery")}>
+          <button type="button" className={mode === "mastery" ? "map-chip active" : "map-chip"} aria-pressed={mode === "mastery"} onClick={() => { setMode("mastery"); }}>
             Color by my mastery
           </button>
-          <button type="button" className={bridgesOnly ? "map-chip active" : "map-chip"} aria-pressed={bridgesOnly} onClick={() => setBridgesOnly((b) => !b)}>
+          <button type="button" className={bridgesOnly ? "map-chip active" : "map-chip"} aria-pressed={bridgesOnly} onClick={() => { setBridgesOnly((b) => !b); }}>
             Only links between subjects
           </button>
-          <button type="button" className={view === "list" ? "map-chip active" : "map-chip"} aria-pressed={view === "list"} onClick={() => setView(view === "map" ? "list" : "map")}>
+          <button type="button" className={view === "list" ? "map-chip active" : "map-chip"} aria-pressed={view === "list"} onClick={() => { setView(view === "map" ? "list" : "map"); }}>
             {view === "map" ? "List view" : "Map view"}
           </button>
         </div>
@@ -313,7 +317,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
               selected={selected}
               highlight={highlight}
               focus={focus}
-              onSelect={(i) => select(i)}
+              onSelect={(i) => { select(i); }}
               paintKey={`${themeKey}|${mode}|${version}`}
             />
             <div className="map-zoom">
@@ -329,7 +333,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
             </div>
           </div>
         ) : (
-          <ConceptList graph={graph} visible={visible} mastery={mastery} neighbours={neighbours} shared={shared} subjectLabel={subjectLabel} onOpen={(i) => select(i)} selected={selected} />
+          <ConceptList graph={graph} visible={visible} mastery={mastery} neighbours={neighbours} shared={shared} subjectLabel={subjectLabel} onOpen={(i) => { select(i); }} selected={selected} />
         )}
 
         <aside className="map-panel" aria-live="polite">
@@ -340,7 +344,7 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
               <ul className="map-bridge-list">
                 {bridges.map(({ n, i }) => (
                   <li key={i}>
-                    <button type="button" onClick={() => openNode(i)}>
+                    <button type="button" onClick={() => { openNode(i); }}>
                       {n.label}
                       <small>{[...new Set(n.subjects.map((s) => subjectLabel(s)))].join(" · ")}</small>
                     </button>
@@ -356,11 +360,11 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
               graph={graph}
               subjectLabel={subjectLabel}
               focus={focus}
-              onFocus={() => setFocus((f) => !f)}
+              onFocus={() => { setFocus((f) => !f); }}
               onOpen={openNode}
-              onClose={() => select(null)}
+              onClose={() => { select(null); }}
               aiOn={config?.ai === true}
-              onAsk={(q) => askAlfondAbout(q, () => navigate("/alfond"))}
+              onAsk={(q) => { askAlfondAbout(q, () => navigate("/alfond")); }}
             />
           )}
         </aside>
@@ -433,7 +437,7 @@ function ConceptPanel({
           <button
             type="button"
             className="btn btn-secondary ask-alfond"
-            onClick={() => onAsk(`Explain "${node.label}" and how it connects to ${neighbourNames.join(", ")} across my subjects. Keep it short and exam-focused.`)}
+            onClick={() => { onAsk(`Explain "${node.label}" and how it connects to ${neighbourNames.join(", ")} across my subjects. Keep it short and exam-focused.`); }}
           >
             <AlfondIcon />
             Ask Alfond
@@ -447,7 +451,7 @@ function ConceptPanel({
           <ul className="map-links">
             {links.map((l) => (
               <li key={l.i}>
-                <button type="button" onClick={() => onOpen(l.i)}>
+                <button type="button" onClick={() => { onOpen(l.i); }}>
                   {l.rel ? <small className="map-rel">{l.rel}</small> : null}
                   {graph.nodes[l.i].label}
                 </button>
@@ -550,7 +554,7 @@ function ConceptList({
           {rows.map(({ n, i }) => (
             <tr key={i} className={i === selected ? "selected" : undefined}>
               <td>
-                <button type="button" onClick={() => onOpen(i)}>
+                <button type="button" onClick={() => { onOpen(i); }}>
                   {n.label}
                 </button>
                 {shared[i] && <small className="map-shared-tag">shared</small>}

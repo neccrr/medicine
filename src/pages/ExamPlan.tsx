@@ -83,8 +83,7 @@ function BlockPlan({ blockId }: { blockId: string }) {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() =>
-              downloadCalendar(
+            onClick={() => { downloadCalendar(
                 buildCalendar({
                   blockLabel: label,
                   examDate: p.exam.date!,
@@ -93,7 +92,7 @@ function BlockPlan({ blockId }: { blockId: string }) {
                   url: `${window.location.origin}/plan/${blockId}`,
                 }),
                 `exam-plan-block-${blockId}.ics`,
-              )
+              ); }
             }
           >
             <CalendarIcon />
@@ -120,7 +119,7 @@ function BlockPlan({ blockId }: { blockId: string }) {
                 type="date"
                 className="form-input"
                 value={p.exam.date ?? ""}
-                onChange={(e) => p.update({ date: e.target.value || undefined })}
+                onChange={(e) => { p.update({ date: e.target.value || undefined }); }}
               />
               <small>
                 {p.exam.source === "official" ? (
@@ -130,7 +129,7 @@ function BlockPlan({ blockId }: { blockId: string }) {
                 ) : p.exam.source === "mine" && official ? (
                   <>
                     Your own date.{" "}
-                    <button type="button" className="link-btn" onClick={() => p.update({ date: undefined })}>
+                    <button type="button" className="link-btn" onClick={() => { p.update({ date: undefined }); }}>
                       Use the official date
                     </button>
                   </>
@@ -143,7 +142,7 @@ function BlockPlan({ blockId }: { blockId: string }) {
             </label>
             <label className="account-field">
               <span>Study time a day</span>
-              <select className="form-select" value={p.minutes} onChange={(e) => p.update({ minutes: Number(e.target.value) })}>
+              <select className="form-select" value={p.minutes} onChange={(e) => { p.update({ minutes: Number(e.target.value) }); }}>
                 {MINUTE_CHOICES.map((m) => (
                   <option key={m} value={m}>
                     {m < 60 ? `${m} minutes` : `${m / 60} hour${m === 60 ? "" : "s"}`}
@@ -153,7 +152,7 @@ function BlockPlan({ blockId }: { blockId: string }) {
             </label>
             <label className="account-field">
               <span>Target score</span>
-              <select className="form-select" value={target} onChange={(e) => p.update({ target: Number(e.target.value) })}>
+              <select className="form-select" value={target} onChange={(e) => { p.update({ target: Number(e.target.value) }); }}>
                 {[50, 60, 65, 70, 75, 80, 85, 90].map((t) => (
                   <option key={t} value={t}>
                     {t}%
@@ -163,7 +162,7 @@ function BlockPlan({ blockId }: { blockId: string }) {
             </label>
             <label className="account-field">
               <span>Usual study time</span>
-              <input type="time" className="form-input" value={p.settings.time ?? DEFAULT_TIME} onChange={(e) => p.update({ time: e.target.value || undefined })} />
+              <input type="time" className="form-input" value={p.settings.time ?? DEFAULT_TIME} onChange={(e) => { p.update({ time: e.target.value || undefined }); }} />
               <small>For the calendar file.</small>
             </label>
           </div>

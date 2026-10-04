@@ -20,7 +20,7 @@ function build(): Promise<App> {
   if (!uri || !secret) throw new Error("MONGODB_URI and BETTER_AUTH_SECRET must be set.");
   return getMongo(uri, env.MONGODB_DB || "medicine").then(async ({ client, db }) => {
     // Once per cold start, off the request path: the indexes normally exist already.
-    ensureIndexes(db).catch((err) => console.error("Creating indexes failed", err));
+    ensureIndexes(db).catch((err) => { console.error("Creating indexes failed", err); });
     const store = new MongoProgressStore(db);
     const leaderboard = new MongoLeaderboardStore(db);
     const google =

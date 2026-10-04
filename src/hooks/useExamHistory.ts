@@ -1,4 +1,4 @@
-import type { ExamAttempt, QuizQuestion } from "../types/content";
+import type { Answers, ExamAttempt, QuizQuestion } from "../types/content";
 import { STORAGE_KEYS } from "../lib/storage";
 import { logStudy, recordActivity } from "../lib/activity";
 import { scoreQuiz } from "../lib/quizScoring";
@@ -10,11 +10,11 @@ export function useExamHistory(subjectId: string) {
     [],
   );
 
-  const lastAttempt: ExamAttempt | undefined = history[history.length - 1];
+  const lastAttempt: ExamAttempt | undefined = history.at(-1);
 
   const recordAttempt = (
     questions: QuizQuestion[],
-    answers: Record<string, number>,
+    answers: Answers,
     timeTakenSec: number,
     timeLimitSec: number,
   ) => {

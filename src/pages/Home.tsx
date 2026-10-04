@@ -58,7 +58,7 @@ function buildContinueItems(): ContinueItem[] {
     .map((s) => {
       const meta = ebookMeta[keyOf(s)];
       const position = readJSON<ReadingPosition | null>(STORAGE_KEYS.ebookPosition(keyOf(s)), null);
-      return position ? { s, meta, position } : null;
+      return position && meta ? { s, meta, position } : null;
     })
     .filter((x): x is NonNullable<typeof x> => x !== null)
     .sort((a, b) => b.position.updatedAt.localeCompare(a.position.updatedAt));
@@ -77,7 +77,7 @@ function buildContinueItems(): ContinueItem[] {
 
   flashcardSubjects
     .map((s) => {
-      const deck = flashcardDecks[keyOf(s)];
+      const deck = flashcardDecks[keyOf(s)] ?? [];
       const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
       const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
       return { s, due };
@@ -118,7 +118,7 @@ function buildContinueItems(): ContinueItem[] {
   quizSubjects
     .map((s) => {
       const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(keyOf(s)), []);
-      const last = history[history.length - 1];
+      const last = history.at(-1);
       return last ? { s, last } : null;
     })
     .filter((x): x is NonNullable<typeof x> => x !== null && !dueQuizSubjectIds.has(keyOf(x.s)))
@@ -152,7 +152,7 @@ export function Home() {
   const hasActivity = activityDays.length > 0;
 
   const totalDue = flashcardSubjects.reduce((sum, s) => {
-    const deck = flashcardDecks[keyOf(s)];
+    const deck = flashcardDecks[keyOf(s)] ?? [];
     const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
     return sum + deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
   }, 0);
@@ -270,7 +270,7 @@ export function Home() {
             // (Matches ExamPlay's own key convention: a lone package keeps the plain block key.)
             const examHistory =
               packages.length > 1 ? [] : readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
-            const lastExam = examHistory[examHistory.length - 1];
+            const lastExam = examHistory.at(-1);
             return (
           <div key={block.id} className="dashboard-section block-section">
             <div className="block-section-head">

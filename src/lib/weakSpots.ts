@@ -60,7 +60,7 @@ export function weakTopics(subject: string, states: CardStateMap = readJSON<Card
 export function missedQuestions(subject: string, attempts: QuizAttempt[] = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(subject), [])): MissedQuestion[] {
   const bank = new Map((quizBanks[subject] ?? []).map((q) => [q.id, q.question]));
   const counts = new Map<string, number>();
-  for (const a of attempts) for (const id of a.missedIds ?? []) if (bank.has(id)) counts.set(id, (counts.get(id) ?? 0) + 1);
+  for (const a of attempts) for (const id of a.missedIds) if (bank.has(id)) counts.set(id, (counts.get(id) ?? 0) + 1);
   return [...counts.entries()]
     .map(([id, misses]) => ({ subject, id, question: bank.get(id)!, misses }))
     .sort((a, b) => b.misses - a.misses);
@@ -69,7 +69,7 @@ export function missedQuestions(subject: string, attempts: QuizAttempt[] = readJ
 export function weakLabels(subject: string, states: CardStateMap = readJSON<CardStateMap>(STORAGE_KEYS.occlusionState(subject), {})): WeakLabel[] {
   return Object.entries(states)
     .filter(([, s]) => struggling(s))
-    .map(([id, s]) => ({ subject, id, lapses: s.lapses }))
+    .map(([id, s]) => ({ subject, id, lapses: s?.lapses ?? 0 }))
     .sort((a, b) => b.lapses - a.lapses);
 }
 

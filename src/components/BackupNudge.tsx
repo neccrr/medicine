@@ -35,7 +35,7 @@ export function BackupNudge({ showLink = true }: BackupNudgeProps) {
         <button
           type="button"
           className="backup-nudge-dismiss"
-          onClick={() => setDismissed(true)}
+          onClick={() => { setDismissed(true); }}
           aria-label="Dismiss backup reminder"
         >
           ×

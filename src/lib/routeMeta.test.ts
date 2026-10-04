@@ -20,7 +20,7 @@ describe("pageMeta", () => {
     for (const s of flashcardSubjects) expect(paths).toContain(`/flashcards/${keyOf(s)}`);
     for (const key of occlusionKeys) expect(paths).toContain(`/occlusion/${key}`);
     for (const s of allSubjects()) expect(paths).toContain(`/subjects/${s.key}`);
-    const [key, book] = Object.entries(ebookMeta)[0];
+    const [key, book] = Object.entries(ebookMeta)[0] as [string, NonNullable<(typeof ebookMeta)[string]>];
     expect(paths).toContain(`/ebooks/${key}/${book.chapters[0].id}`);
   });
 
@@ -37,7 +37,7 @@ describe("pageMeta", () => {
 
 describe("breadcrumbs", () => {
   it("runs from Home through the section to the chapter", () => {
-    const [key, book] = Object.entries(ebookMeta)[0];
+    const [key, book] = Object.entries(ebookMeta)[0] as [string, NonNullable<(typeof ebookMeta)[string]>];
     const trail = breadcrumbs(`/ebooks/${key}/${book.chapters[0].id}`);
     expect(trail.map((c) => c.name)).toEqual(["Home", "Ebooks", book.title, book.chapters[0].title]);
     expect(trail.at(-1)!.path).toBe(`/ebooks/${key}/${book.chapters[0].id}`);

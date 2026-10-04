@@ -34,14 +34,14 @@ export function AlfondChat({ variant, onNavigate, autoFocus }: Props) {
 
   const readsPage = variant === "overlay" && usePage;
   const pageTitle = pageMeta(pathname).title.replace(new RegExp(`\\s*·\\s*${SITE_NAME}$`), "");
-  const last = messages[messages.length - 1];
+  const last = messages.at(-1);
   const waiting = busy && last?.role === "assistant" && !last.content;
 
   // Free models can take most of a minute to start; say so instead of looking stuck.
   const [slow, setSlow] = useState(false);
   useEffect(() => {
     if (!waiting) return;
-    const t = setTimeout(() => setSlow(true), SLOW_MS);
+    const t = setTimeout(() => { setSlow(true); }, SLOW_MS);
     return () => {
       clearTimeout(t);
       setSlow(false);
@@ -120,7 +120,7 @@ export function AlfondChat({ variant, onNavigate, autoFocus }: Props) {
             {canSend && (
               <div className="alfond-prompts">
                 {prompts.map((p) => (
-                  <button key={p} type="button" onClick={() => send(p)}>
+                  <button key={p} type="button" onClick={() => { send(p); }}>
                     {p}
                   </button>
                 ))}
@@ -180,12 +180,12 @@ export function AlfondChat({ variant, onNavigate, autoFocus }: Props) {
                   <span className="alfond-context-chip" title="Alfond reads this page with your question">
                     Reading: <strong>{pageTitle}</strong>
                   </span>
-                  <button type="button" className="alfond-context-x" onClick={() => setUsePage(false)} aria-label="Don't send this page with my question">
+                  <button type="button" className="alfond-context-x" onClick={() => { setUsePage(false); }} aria-label="Don't send this page with my question">
                     ×
                   </button>
                 </>
               ) : (
-                <button type="button" className="alfond-context-add" onClick={() => setUsePage(true)}>
+                <button type="button" className="alfond-context-add" onClick={() => { setUsePage(true); }}>
                   + Include this page
                 </button>
               )}

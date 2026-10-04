@@ -47,7 +47,7 @@ export function ExamBlocks() {
           }
 
           const history = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
-          const last = history[history.length - 1];
+          const last = history.at(-1);
 
           return (
             <Link key={block.id} to={`/exam/${block.id}`} className="nav-card">

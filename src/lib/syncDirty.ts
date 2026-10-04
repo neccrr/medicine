@@ -6,7 +6,7 @@ import { isSyncableKey } from "./syncMerge";
 export const DIRTY_KEY = storageKey("sync", "dirty");
 export const DIRTY_EVENT = "medicine:sync-dirty";
 
-export type DirtyMap = Record<string, number>;
+export type DirtyMap = Partial<Record<string, number>>;
 
 export function readDirty(storage: Storage = window.localStorage): DirtyMap {
   try {

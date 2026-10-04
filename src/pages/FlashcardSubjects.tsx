@@ -20,7 +20,7 @@ export function FlashcardSubjects() {
           <h2 className="block-section-heading">{block.label}</h2>
           <div className="card-grid">
             {subjects.map((subject) => {
-              const deck = flashcardDecks[keyOf(subject)];
+              const deck = flashcardDecks[keyOf(subject)] ?? [];
               const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(subject)), {});
               const due = deck.filter((card) => isDue(stateMap[card.id] ?? INITIAL_CARD_STATE)).length;
 

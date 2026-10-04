@@ -5,6 +5,7 @@
 // and React replaces it as soon as the app starts, exactly as on any other route.
 
 import { renderMarkdown } from "../lib/markdownHtml";
+import { itemAt } from "../lib/arrays";
 import { buildFromContent } from "../lib/knowledgeGraph/build";
 import type { KnowledgeGraph } from "../lib/knowledgeGraph/types";
 import { groupByBlock, studyBlocks } from "../lib/blocks";
@@ -69,7 +70,7 @@ function mapContent(): string {
   const where = (c: string, a: string) => (c.startsWith("summary:") ? `/summaries/${c.slice(8)}#${a}` : `/ebooks/${c}#${a}`);
   return `<ul>${top
     .map((n) => {
-      const s = n.sections[0];
+      const s = n.sections.at(0);
       const name = esc(n.label);
       return `<li>${s ? `<a href="${where(s.c, s.a)}">${name}</a>` : name}</li>`;
     })
@@ -96,7 +97,7 @@ async function content(path: string): Promise<string> {
       return `<ul>${ebookSubjects
         .map((s) => {
           const book = ebookMeta[keyOf(s)];
-          return `<li><a href="/ebooks/${keyOf(s)}">${esc(book.title)}</a>: ${esc(book.description)}</li>`;
+          return book ? `<li><a href="/ebooks/${keyOf(s)}">${esc(book.title)}</a>: ${esc(book.description)}</li>` : "";
         })
         .join("")}</ul>`;
     case "lab":
@@ -133,7 +134,7 @@ async function content(path: string): Promise<string> {
     case "subjects/*":
       return `<ul>${subjectSections(key)
         .map((s) => `<li><a href="${s.path}">${esc(s.name)}</a></li>`)
-        .join("")}</ul>${(ebookMeta[key]?.chapters ?? []).length ? `<h2>Chapters</h2><ol>${ebookMeta[key].chapters.map((c) => `<li><a href="/ebooks/${key}/${c.id}">${esc(c.title)}</a></li>`).join("")}</ol>` : ""}`;
+        .join("")}</ul>${(ebookMeta[key]?.chapters ?? []).length ? `<h2>Chapters</h2><ol>${(ebookMeta[key]?.chapters ?? []).map((c) => `<li><a href="/ebooks/${key}/${c.id}">${esc(c.title)}</a></li>`).join("")}</ol>` : ""}`;
     case "occlusion":
       return `<ul>${occlusionKeys.map((k) => `<li><a href="/occlusion/${k}">${esc(flashcardSubjects.find((s) => keyOf(s) === k)?.label ?? k)}</a></li>`).join("")}</ul>`;
     case "occlusion/*": {
@@ -161,14 +162,15 @@ async function content(path: string): Promise<string> {
     }
     case "ebooks/*": {
       const book = ebookMeta[key];
+      if (!book) return "";
       const toc = `<h2>Chapters</h2><ol>${book.chapters
         .map((c) => `<li><a href="/ebooks/${key}/${c.id}">${esc(c.title)}</a></li>`)
         .join("")}</ol>`;
       if (!chapterId) return toc;
       const i = book.chapters.findIndex((c) => c.id === chapterId);
       const markdown = (await loadEbookChapter(`${key}/${chapterId}`)) ?? "";
-      const prev = book.chapters[i - 1];
-      const next = book.chapters[i + 1];
+      const prev = itemAt(book.chapters, i - 1);
+      const next = itemAt(book.chapters, i + 1);
       const pager = [
         prev && `<a href="/ebooks/${key}/${prev.id}" rel="prev">← ${esc(prev.title)}</a>`,
         next && `<a href="/ebooks/${key}/${next.id}" rel="next">${esc(next.title)} →</a>`,

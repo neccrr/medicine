@@ -35,13 +35,14 @@ export function gatherMilestoneInput(): MilestoneInput {
   let mastered = 0;
   let decksMastered = 0;
   for (const [key, deck] of Object.entries(flashcardDecks)) {
+    if (!deck) continue;
     const states = readJSON<CardStateMap>(STORAGE_KEYS.cardState(key), {});
     let deckMastered = 0;
     for (const card of deck) {
       const s = states[card.id];
       if (!s) continue;
-      reviews += (s.reps ?? 0) + (s.lapses ?? 0);
-      if ((s.interval ?? 0) >= MASTERED_DAYS) deckMastered += 1;
+      reviews += s.reps + s.lapses;
+      if (s.interval >= MASTERED_DAYS) deckMastered += 1;
     }
     mastered += deckMastered;
     if (deck.length > 0 && deckMastered === deck.length) decksMastered += 1;
@@ -65,7 +66,7 @@ export function gatherMilestoneInput(): MilestoneInput {
   }
   let booksFinished = 0;
   for (const [key, meta] of Object.entries(ebookMeta)) {
-    if (!meta.chapters.length) continue;
+    if (!meta?.chapters.length) continue;
     const done = new Set(readJSON<string[]>(STORAGE_KEYS.ebookCompleted(key), []));
     if (meta.chapters.every((c) => done.has(c.id))) booksFinished += 1;
   }

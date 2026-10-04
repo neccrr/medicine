@@ -48,10 +48,10 @@ export interface LeaderboardDoc {
   joined: boolean;
   displayName: string;
   cohort: string | null;
-  /** Score part per scoring key, stored under partField(key). */
-  parts: Record<string, ScorePart>;
-  /** Points gained per UTC day over the last two weeks, for the weekly board. */
-  daily: Record<string, number>;
+  /** Score part per scoring key, stored under partField(key). Missing on records from before parts existed. */
+  parts?: Record<string, ScorePart>;
+  /** Points gained per UTC day over the last two weeks, for the weekly board. Missing on old records. */
+  daily?: Record<string, number>;
   /** Exam readiness (0–100) per block, under readinessField(blockId), for the class average. */
   readiness?: Record<string, number>;
   updatedAt: number;
@@ -325,12 +325,12 @@ export class MongoLeaderboardStore implements LeaderboardStore {
 
   async classReadiness(blockId: string, cohort: string | null) {
     const field = `readiness.${readinessField(blockId)}`;
-    const [row] = await this.col
+    const row = (await this.col
       .aggregate<{ average: number; count: number }>([
         { $match: { [field]: { $type: "number" }, ...(cohort ? { cohort } : {}) } },
         { $group: { _id: null, average: { $avg: `$${field}` }, count: { $sum: 1 } } },
       ])
-      .toArray();
+      .toArray()).at(0);
     return { average: row?.average ?? null, count: row?.count ?? 0 };
   }
 }
@@ -352,8 +352,9 @@ export class MemoryLeaderboardStore implements LeaderboardStore {
     const d = this.docs.get(userId);
     if (!d) return;
     d.parts = { ...d.parts, ...structuredClone(u.parts) };
-    if (u.gained > 0) d.daily[u.day] = (d.daily[u.day] ?? 0) + u.gained;
-    for (const day of u.dropDays) delete d.daily[day];
+    const daily = (d.daily ??= {});
+    if (u.gained > 0) daily[u.day] = (daily[u.day] ?? 0) + u.gained;
+    for (const day of u.dropDays) delete daily[day];
     d.updatedAt = u.now;
   }
 

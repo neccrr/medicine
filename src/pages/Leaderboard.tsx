@@ -84,7 +84,7 @@ function JoinCard({ board, onChange }: { board: Board; onChange: () => void }) {
         <span>
           Showing as <strong>{board.me.displayName}</strong>
         </span>
-        <button type="button" className="btn btn-secondary btn-small" onClick={() => setEditing(true)}>
+        <button type="button" className="btn btn-secondary btn-small" onClick={() => { setEditing(true); }}>
           Change name
         </button>
         <button type="button" className="btn btn-secondary btn-small" disabled={busy} onClick={() => void save({ joined: false })}>
@@ -109,7 +109,7 @@ function JoinCard({ board, onChange }: { board: Board; onChange: () => void }) {
         <input
           className="form-input"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => { setName(e.target.value); }}
           minLength={2}
           maxLength={32}
           required
@@ -123,7 +123,7 @@ function JoinCard({ board, onChange }: { board: Board; onChange: () => void }) {
           {board.me.joined ? "Save" : "Join"}
         </button>
         {board.me.joined && (
-          <button type="button" className="btn btn-secondary" onClick={() => setEditing(false)}>
+          <button type="button" className="btn btn-secondary" onClick={() => { setEditing(false); }}>
             Cancel
           </button>
         )}
@@ -147,7 +147,7 @@ function SignedInBoard() {
   useEffect(() => {
     if (syncedOnce.current) return;
     syncedOnce.current = true;
-    void syncNow().finally(() => setSynced(true));
+    void syncNow().finally(() => { setSynced(true); });
   }, [syncNow]);
 
   useEffect(() => {
@@ -159,14 +159,16 @@ function SignedInBoard() {
         setBoard(b);
         setError("");
       },
-      (err: Error) => !cancelled && setError(err.message),
+      (err: Error) => {
+        if (!cancelled) setError(err.message);
+      },
     );
     return () => {
       cancelled = true;
     };
   }, [period, scope, synced, reload]);
 
-  const refresh = useCallback(() => setReload((n) => n + 1), []);
+  const refresh = useCallback(() => { setReload((n) => n + 1); }, []);
 
   if (error && !board) return <p className="account-error">{error}</p>;
   if (!board) return <p className="subtitle">Loading the leaderboard…</p>;
@@ -211,7 +213,7 @@ function SignedInBoard() {
               role="tab"
               aria-selected={period === p.id}
               className={period === p.id ? "account-tab active" : "account-tab"}
-              onClick={() => setPeriod(p.id)}
+              onClick={() => { setPeriod(p.id); }}
             >
               {p.label}
             </button>
@@ -224,7 +226,7 @@ function SignedInBoard() {
               role="tab"
               aria-selected={scope === "everyone"}
               className={scope === "everyone" ? "account-tab active" : "account-tab"}
-              onClick={() => setScope("everyone")}
+              onClick={() => { setScope("everyone"); }}
             >
               Everyone
             </button>
@@ -233,7 +235,7 @@ function SignedInBoard() {
               role="tab"
               aria-selected={scope === "cohort"}
               className={scope === "cohort" ? "account-tab active" : "account-tab"}
-              onClick={() => setScope("cohort")}
+              onClick={() => { setScope("cohort"); }}
             >
               Cohort {board.cohort}
             </button>

@@ -61,7 +61,7 @@ export function getLongestStreak(days: string[] = getActivityDays()): number {
 export type StudyKind = "cards" | "labels" | "questions" | "chapters" | "exams";
 
 /** Counts for one day: by subject key ("1.2/anatomy"), or "block:1.2" for a block's exams. */
-export type DayLog = Record<string, Partial<Record<StudyKind, number>>>;
+export type DayLog = Partial<Record<string, Partial<Record<StudyKind, number>>>>;
 
 export interface StudyLog {
   /** By local date ("YYYY-MM-DD" in the student's own time zone). */
@@ -98,7 +98,7 @@ export function dayTotals(log: StudyLog, day: string, subject?: (key: string) =>
   const out: Record<StudyKind, number> = { cards: 0, labels: 0, questions: 0, chapters: 0, exams: 0 };
   for (const [key, counts] of Object.entries(log.days[day] ?? {})) {
     if (subject && !subject(key)) continue;
-    for (const kind of Object.keys(out) as StudyKind[]) out[kind] += Number(counts[kind]) || 0;
+    for (const kind of Object.keys(out) as StudyKind[]) out[kind] += Number(counts?.[kind]) || 0;
   }
   return out;
 }

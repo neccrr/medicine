@@ -159,7 +159,7 @@ export function SubjectProgressRow({ s }: { s: SubjectReadiness }) {
 /** Mock exams for a block, as a meter row under its subjects. */
 export function MockSummary({ br }: { br: BlockReadiness }) {
   const best = br.mocks.reduce((m, a) => Math.max(m, a.percent), 0);
-  const latest = br.mocks[br.mocks.length - 1];
+  const latest = br.mocks.at(-1);
   return (
     <div className="mock-summary">
       <Meter
@@ -362,7 +362,9 @@ export function ClassCompare({ blockId, readiness }: { blockId: string; readines
   useEffect(() => {
     if (status !== "signed-in") return;
     let live = true;
-    void reportReadiness(blockId, readiness).then(() => fetchClassReadiness(blockId)).then((d) => live && setData(d));
+    void reportReadiness(blockId, readiness).then(() => fetchClassReadiness(blockId)).then((d) => {
+        if (live) setData(d);
+      });
     return () => {
       live = false;
     };
@@ -411,7 +413,7 @@ export function AskAlfondButton({ question, children }: { question: string; chil
   const navigate = useNavigate();
   if (config?.ai !== true) return null;
   return (
-    <button type="button" className="btn btn-secondary ask-alfond" onClick={() => askAlfondAbout(question, () => navigate("/alfond"))}>
+    <button type="button" className="btn btn-secondary ask-alfond" onClick={() => { askAlfondAbout(question, () => navigate("/alfond")); }}>
       <AlfondIcon />
       {children}
     </button>

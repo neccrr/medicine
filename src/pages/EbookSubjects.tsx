@@ -20,6 +20,7 @@ export function EbookSubjects() {
           <div className="card-grid">
             {subjects.map((subject) => {
               const meta = ebookMeta[keyOf(subject)];
+              if (!meta) return null;
               const pdfs = ebookPdfs[keyOf(subject)] ?? [];
               const position = readJSON<ReadingPosition | null>(
                 STORAGE_KEYS.ebookPosition(keyOf(subject)),

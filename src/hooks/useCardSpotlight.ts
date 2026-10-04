@@ -13,7 +13,7 @@ export function useCardSpotlight() {
       frame = 0;
       const e = last;
       if (!e) return;
-      const el = (e.target as HTMLElement | null)?.closest?.(SPOTLIGHT_SELECTOR) as HTMLElement | null;
+      const el = e.target instanceof Element ? e.target.closest<HTMLElement>(SPOTLIGHT_SELECTOR) : null;
       if (!el) return;
       const rect = el.getBoundingClientRect();
       el.style.setProperty("--spot-x", `${((e.clientX - rect.left) / rect.width) * 100}%`);

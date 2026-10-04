@@ -23,61 +23,15 @@ account environment variables it runs as a plain static site.
 
 ## Screenshots
 
-<table>
-<tr>
-<td width="50%">
-
-![Home dashboard, dark theme](docs/screenshots/home-dark.png)
-**Home**: streak, due cards, what to continue, per-block subject cards
-
-</td>
-<td width="50%">
-
-![Home dashboard, light theme](docs/screenshots/home-light.png)
-**Light theme**: follows the OS by default, toggle anytime
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-![Flashcard review](docs/screenshots/flashcard-dark.png)
-**Flashcards**: SM-2 review, tag filters, keyboard grading
-
-</td>
-<td width="50%">
-
-![Quiz](docs/screenshots/quiz-light.png)
-**Quiz**: one question at a time, instant feedback with explanations
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-![Timed block exam](docs/screenshots/exam-dark.png)
-**Exam**: timed block exam, question navigator, flag for review
-
-</td>
-<td width="50%">
-
-![Modules viewer](docs/screenshots/modules-light.png)
-**Modules**: lecture and practicum PDFs, grouped by section
-
-</td>
-</tr>
-</table>
-
-<details>
-<summary>Ebook chapter &amp; Progress page</summary>
-
-![Ebook chapter](docs/screenshots/ebook-dark.png)
-**Ebook**: chapters with original diagrams, reading controls, further reading
-
-![Progress page](docs/screenshots/progress-light.png)
-**Progress**: readiness, subject meters, trends, activity heatmap, weak spots, milestones, backup
-
-</details>
+| ![Home dashboard, dark theme](docs/screenshots/home-dark.png) | ![Home dashboard, light theme](docs/screenshots/home-light.png) |
+| --- | --- |
+| **Home**: streak, due cards, what to continue, per-block subject cards | **Light theme**: follows the OS by default, toggle anytime |
+| ![Flashcard review](docs/screenshots/flashcard-dark.png) | ![Quiz](docs/screenshots/quiz-light.png) |
+| **Flashcards**: SM-2 review, tag filters, keyboard grading | **Quiz**: one question at a time, instant feedback with explanations |
+| ![Timed block exam](docs/screenshots/exam-dark.png) | ![Modules viewer](docs/screenshots/modules-light.png) |
+| **Exam**: timed block exam, question navigator, flag for review | **Modules**: lecture and practicum PDFs, grouped by section |
+| ![Ebook chapter](docs/screenshots/ebook-dark.png) | ![Progress page](docs/screenshots/progress-light.png) |
+| **Ebook**: chapters with original diagrams, reading controls, further reading | **Progress**: readiness, subject meters, trends, activity heatmap, weak spots, milestones, backup |
 
 ## What's inside
 

@@ -103,17 +103,19 @@ export function MobileTabBar() {
   }
   useEffect(() => {
     if (!open) return;
-    const onKeyDown = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(null);
+    };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => { window.removeEventListener("keydown", onKeyDown); };
   }, [open]);
 
   const sheet = tabs.find((t) => t.id === open);
   return (
     <>
       {sheet?.items && (
-        <div className="tabsheet-backdrop" onClick={() => setOpen(null)}>
-          <div className="tabsheet" role="dialog" aria-modal="true" aria-label={sheet.label} onClick={(e) => e.stopPropagation()}>
+        <div className="tabsheet-backdrop" onClick={() => { setOpen(null); }}>
+          <div className="tabsheet" role="dialog" aria-modal="true" aria-label={sheet.label} onClick={(e) => { e.stopPropagation(); }}>
             <span className="tabsheet-handle" aria-hidden="true" />
             <h2 className="tabsheet-title">{sheet.label}</h2>
             <div className="tabsheet-grid">
@@ -140,7 +142,7 @@ export function MobileTabBar() {
               <span>{tab.label}</span>
             </NavLink>
           ) : (
-            <button key={tab.id} type="button" className={cls} aria-expanded={open === tab.id} aria-haspopup="dialog" onClick={() => setOpen((o) => (o === tab.id ? null : tab.id))}>
+            <button key={tab.id} type="button" className={cls} aria-expanded={open === tab.id} aria-haspopup="dialog" onClick={() => { setOpen((o) => (o === tab.id ? null : tab.id)); }}>
               {tab.icon}
               <span>{tab.label}</span>
             </button>
@@ -151,7 +153,7 @@ export function MobileTabBar() {
   );
 }
 
-const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform ?? navigator.userAgent);
+const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
 function openCommandPalette() {
   window.dispatchEvent(new CustomEvent(OPEN_COMMAND_PALETTE_EVENT));
@@ -177,7 +179,7 @@ export function Sidebar() {
   const [tip, setTip] = useState<{ label: string; x: number; y: number; path: string } | null>(null);
   const showTip = useCallback(
     (link: HTMLElement | null) => {
-      if (!collapsed || !link || !window.matchMedia("(min-width: 961px)").matches) return setTip(null);
+      if (!collapsed || !link || !window.matchMedia("(min-width: 961px)").matches) { setTip(null); return; }
       const r = link.getBoundingClientRect();
       setTip({ label: link.dataset.label ?? "", x: r.right + 14, y: r.top + r.height / 2, path: pathname });
     },
@@ -217,7 +219,7 @@ export function Sidebar() {
       if (top < 0 || top + active.offsetHeight > nav.clientHeight) nav.scrollTop = active.offsetTop - nav.clientHeight / 2;
     }
     // Only animate once the lenses have a real starting position.
-    const frame = requestAnimationFrame(() => nav.setAttribute("data-ready", ""));
+    const frame = requestAnimationFrame(() => { nav.setAttribute("data-ready", ""); });
     // Keeps the lenses glued to the links while the sidebar collapses or expands.
     const observer = new ResizeObserver(sync);
     observer.observe(nav);
@@ -238,8 +240,8 @@ export function Sidebar() {
     const nav = navRef.current;
     if (!nav) return;
     nav.setAttribute("data-morphing", "");
-    const timer = window.setTimeout(() => nav.removeAttribute("data-morphing"), 700);
-    return () => window.clearTimeout(timer);
+    const timer = window.setTimeout(() => { nav.removeAttribute("data-morphing"); }, 700);
+    return () => { window.clearTimeout(timer); };
   }, [collapsed]);
 
   const onNavPointerMove = (e: PointerEvent<HTMLElement>) => {
@@ -251,7 +253,7 @@ export function Sidebar() {
       // wherever it was last.
       if (!hoveredLink.current) {
         nav.setAttribute("data-lens-jump", "");
-        requestAnimationFrame(() => requestAnimationFrame(() => nav.removeAttribute("data-lens-jump")));
+        requestAnimationFrame(() => requestAnimationFrame(() => { nav.removeAttribute("data-lens-jump"); }));
       }
       hoveredLink.current = link;
       placeLens("hover", link);
@@ -279,7 +281,7 @@ export function Sidebar() {
       }
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => { window.removeEventListener("keydown", onKeyDown); };
   }, [setCollapsed]);
 
   useEffect(() => {
@@ -288,7 +290,7 @@ export function Sidebar() {
       if (e.key === "Escape") setDrawerOpen(false);
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => { window.removeEventListener("keydown", onKeyDown); };
   }, [drawerOpen]);
 
   return (
@@ -298,7 +300,7 @@ export function Sidebar() {
           <button
             type="button"
             className="icon-btn sidebar-toggle"
-            onClick={() => setDrawerOpen((o) => !o)}
+            onClick={() => { setDrawerOpen((o) => !o); }}
             aria-label={drawerOpen ? "Close menu" : "Open menu"}
             aria-expanded={drawerOpen}
             aria-controls="app-sidebar"
@@ -326,7 +328,7 @@ export function Sidebar() {
       </header>
 
       {drawerOpen && (
-        <div className="sidebar-backdrop" onClick={() => setDrawerOpen(false)} aria-hidden="true" />
+        <div className="sidebar-backdrop" onClick={() => { setDrawerOpen(false); }} aria-hidden="true" />
       )}
 
       <aside
@@ -341,7 +343,7 @@ export function Sidebar() {
           <button
             type="button"
             className="icon-btn sidebar-collapse-btn"
-            onClick={() => setCollapsed((c) => !c)}
+            onClick={() => { setCollapsed((c) => !c); }}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             aria-expanded={!collapsed}
             aria-controls="app-sidebar"
@@ -368,8 +370,8 @@ export function Sidebar() {
           ref={navRef}
           onPointerMove={onNavPointerMove}
           onPointerLeave={onNavPointerLeave}
-          onFocus={(e) => showTip((e.target as HTMLElement).closest<HTMLElement>(".sidebar-link"))}
-          onBlur={() => setTip(null)}
+          onFocus={(e) => { showTip((e.target as HTMLElement).closest<HTMLElement>(".sidebar-link")); }}
+          onBlur={() => { setTip(null); }}
           onScroll={(e) => {
             hoveredLink.current = null;
             setTip(null);
@@ -391,7 +393,7 @@ export function Sidebar() {
                   to={link.to}
                   end={link.end}
                   className={({ isActive }) => (isActive ? "sidebar-link active" : "sidebar-link")}
-                  onClick={() => setDrawerOpen(false)}
+                  onClick={() => { setDrawerOpen(false); }}
                   data-label={link.label}
                 >
                   <span className="sidebar-link-icon">{link.icon}</span>

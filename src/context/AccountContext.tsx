@@ -74,16 +74,18 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   // that have signed in before. Guests never download it until they open the Account page.
   useEffect(() => {
     let cancelled = false;
+    // A function, so the check after the await below reads the flag as it is then.
+    const isCancelled = () => cancelled;
     getAccountConfig().then(async (cfg) => {
-      if (cancelled) return;
+      if (isCancelled()) return;
       setConfig(cfg);
-      if (!cfg.accounts) return setStatus("unavailable");
-      if (!readSyncState()) return setStatus("guest");
+      if (!cfg.accounts) { setStatus("unavailable"); return; }
+      if (!readSyncState()) { setStatus("guest"); return; }
       try {
         await checkSession();
       } catch {
         // Offline at startup: stay a guest for now; local progress is still here.
-        if (!cancelled) setStatus("guest");
+        if (!isCancelled()) setStatus("guest");
       }
     });
     return () => {
@@ -131,14 +133,14 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         const client = await loadAuthClient();
         const { data, error } = await client.signIn.email({ email, password });
         if (error) return { ok: false, message: errorMessage(error, "Couldn't sign in.") };
-        applySession(data?.user as AccountUser | undefined);
+        applySession(data.user as AccountUser | undefined);
         return { ok: true };
       },
       signUp: async ({ name, email, password, cohort }) => {
         const client = await loadAuthClient();
         const { data, error } = await client.signUp.email({ name, email, password, cohort: cohort || undefined });
         if (error) return { ok: false, message: errorMessage(error, "Couldn't create the account.") };
-        applySession(data?.user as AccountUser | undefined);
+        applySession(data.user as AccountUser | undefined);
         return { ok: true };
       },
       signInWithGoogle: async () => {

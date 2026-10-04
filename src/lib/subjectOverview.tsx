@@ -91,7 +91,7 @@ export function buildSubjectOverviews(): SubjectOverview[] {
       const games = quizGames[key];
       if (bank || games) {
         const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(key), []);
-        const last = history[history.length - 1];
+        const last = history.at(-1);
         const due = readJSON<string[]>(STORAGE_KEYS.quizDue(key), []).length;
         activityScore += due;
         facets.push({

@@ -96,7 +96,7 @@ export async function sendToAlfond(text: string, page: PageContext | null): Prom
       messages: history.filter((m) => m.content.trim()).map(({ role, content }) => ({ role, content })),
       page: page ?? undefined,
     },
-    (answer) => patchMessage(reply.id, { content: answer }),
+    (answer) => { patchMessage(reply.id, { content: answer }); },
     ctrl.signal,
   );
   if (controller === ctrl) controller = null;
@@ -149,7 +149,7 @@ const prefListeners = new Set<() => void>();
 if (typeof window !== "undefined") {
   // A sync can bring the setting from another device.
   window.addEventListener(STORAGE_UPDATED_EVENT, (e) => {
-    const keys = (e as CustomEvent<{ keys: string[] }>).detail?.keys ?? [];
+    const keys = (e as CustomEvent<{ keys?: string[] } | null>).detail?.keys ?? [];
     if (!keys.includes(STORAGE_KEYS.alfondPrefs)) return;
     prefs = readJSON<AlfondPrefs>(STORAGE_KEYS.alfondPrefs, {});
     for (const l of prefListeners) l();
@@ -191,7 +191,7 @@ const BLOCKS = "h1,h2,h3,h4,h5,p,li,dt,dd,td,th,figcaption,blockquote,pre,label,
  * part on screen, starting a little above it, after the page's heading.
  */
 export function pageText(root: HTMLElement, limit = PAGE_CHARS): string {
-  const full = clean(root.innerText ?? root.textContent ?? "");
+  const full = clean(root.innerText);
   if (full.length <= limit) return full;
   // Menus (a book's table of contents) aren't what the student is reading.
   const blocks = Array.from(root.querySelectorAll<HTMLElement>(BLOCKS)).filter((el) => !el.querySelector(BLOCKS) && !el.closest("nav, aside"));
@@ -204,7 +204,7 @@ export function pageText(root: HTMLElement, limit = PAGE_CHARS): string {
   const heading = clean(root.querySelector("h1")?.textContent ?? "");
   let out = heading ? `${heading}\n(Part of a long page: the section on screen.)\n` : "";
   for (const el of blocks.slice(first)) {
-    const text = clean(el.innerText ?? el.textContent ?? "");
+    const text = clean(el.innerText);
     if (!text) continue;
     if (out.length + text.length + 1 > limit) break;
     out += `${text}\n`;

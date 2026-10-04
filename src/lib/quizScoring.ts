@@ -1,4 +1,4 @@
-import type { QuizQuestion } from "../types/content";
+import type { Answers, QuizQuestion } from "../types/content";
 
 export interface QuizScore {
   score: number;
@@ -9,7 +9,7 @@ export interface QuizScore {
 /** Scores a set of answers against a question bank. Unanswered questions count as missed. */
 export function scoreQuiz(
   questions: QuizQuestion[],
-  answers: Record<string, number>,
+  answers: Answers,
 ): QuizScore {
   const missedIds = questions
     .filter((q) => answers[q.id] !== q.answer)

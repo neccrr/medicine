@@ -69,7 +69,7 @@ export function bestStudyTime(log: StudyLog, minimum = 40): string | null {
 /** One day's work by subject, for tapping a day on the heatmap. */
 export function dayDetail(log: StudyLog, date: string): { subject: string; counts: Partial<Record<StudyKind, number>> }[] {
   return Object.entries(log.days[date] ?? {})
-    .map(([subject, counts]) => ({ subject, counts }))
+    .map(([subject, counts = {}]) => ({ subject, counts }))
     .sort((a, b) => a.subject.localeCompare(b.subject));
 }
 

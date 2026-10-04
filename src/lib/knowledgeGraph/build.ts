@@ -143,11 +143,11 @@ const BOLD_RE = /\*\*([^*\n]{2,80})\*\*/g;
 
 export interface GraphInput {
   chapters: Record<string, string>;
-  summaries: Record<string, string>;
+  summaries: Partial<Record<string, string>>;
   occlusion: Record<string, OcclusionNote[]>;
   /** Flashcard decks and quiz banks, by subject key. */
-  decks?: Record<string, Flashcard[]>;
-  banks?: Record<string, QuizQuestion[]>;
+  decks?: Partial<Record<string, Flashcard[]>>;
+  banks?: Partial<Record<string, QuizQuestion[]>>;
   /** A concept needs this many mentions to be kept (default MIN_MENTIONS). */
   minMentions?: number;
   /** AI-labelled relations, by "termA|termB" (keys sorted). */
@@ -164,7 +164,7 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
     forms.set(t.label, (forms.get(t.label) ?? 0) + 1);
     surfaces.set(t.key, forms);
   };
-  for (const md of [...Object.values(input.chapters), ...Object.values(input.summaries)]) for (const m of md.matchAll(BOLD_RE)) addSurface(m[1]);
+  for (const md of [...Object.values(input.chapters), ...Object.values(input.summaries)]) if (md) for (const m of md.matchAll(BOLD_RE)) addSurface(m[1]);
   const maxWords = 5;
 
   // 2. The units concepts are looked for in.
@@ -185,9 +185,9 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
     const [blockId, subjectId] = chapterKey.split("/");
     sectionUnits(md, `${blockId}/${subjectId}`, chapterKey);
   }
-  for (const [key, md] of Object.entries(input.summaries)) sectionUnits(md, key, `summary:${key}`);
-  for (const [key, deck] of Object.entries(input.decks ?? {})) for (const card of deck) units.push({ subject: key, text: `${card.front}\n${card.back}`, pairWeight: 2, card: card.id });
-  for (const [key, bank] of Object.entries(input.banks ?? {})) {
+  for (const [key, md] of Object.entries(input.summaries)) if (md) sectionUnits(md, key, `summary:${key}`);
+  for (const [key, deck = []] of Object.entries(input.decks ?? {})) for (const card of deck) units.push({ subject: key, text: `${card.front}\n${card.back}`, pairWeight: 2, card: card.id });
+  for (const [key, bank = []] of Object.entries(input.banks ?? {})) {
     for (const q of bank) units.push({ subject: key, text: `${q.question}\n${q.options[q.answer] ?? ""}\n${q.explanation}`, pairWeight: 2, question: q.id });
   }
   for (const [key, notes] of Object.entries(input.occlusion)) {
@@ -318,7 +318,7 @@ function layout(nodes: GraphNode[], edges: GraphEdge[]) {
   });
   const links: SimulationLinkDatum<SimNode>[] = edges.map((e) => ({ source: e.s, target: e.t, w: e.w }) as SimulationLinkDatum<SimNode> & { w: number });
   const simulation = forceSimulation(sim)
-    .force("link", forceLink(links).distance(46).strength((l) => Math.min(0.7, ((l as unknown as { w: number }).w ?? 1) / 10)))
+    .force("link", forceLink(links).distance(46).strength((l) => Math.min(0.7, ((l as unknown as { w?: number }).w ?? 1) / 10)))
     .force("charge", forceManyBody().strength(-42).distanceMax(380))
     .force("collide", forceCollide<SimNode>((d) => d.r + 3))
     .force("x", forceX<SimNode>((d) => d.cx).strength(0.045))

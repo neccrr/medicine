@@ -23,7 +23,7 @@ export function QuizSubjects() {
               const games = quizGames[keyOf(subject)];
               const history = readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(keyOf(subject)), []);
               const dueCount = readJSON<string[]>(STORAGE_KEYS.quizDue(keyOf(subject)), []).length;
-              const last = history[history.length - 1];
+              const last = history.at(-1);
 
               return (
                 <Link key={subject.id} to={`/quizzes/${block.id}/${subject.id}`} className="nav-card">

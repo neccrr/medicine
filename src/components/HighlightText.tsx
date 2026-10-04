@@ -13,7 +13,7 @@ export function HighlightText({
   const sorted = [...ranges].sort((a, b) => a[0] - b[0]);
   const parts: { start: number; end: number }[] = [];
   for (const [start, end] of sorted) {
-    const last = parts[parts.length - 1];
+    const last = parts.at(-1);
     if (last && start <= last.end + 1) {
       last.end = Math.max(last.end, end);
     } else {

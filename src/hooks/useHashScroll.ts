@@ -14,8 +14,8 @@ export function useHashScroll(ready: unknown) {
       if (!el) return;
       el.scrollIntoView({ block: "start" });
       el.classList.add("is-target");
-      window.setTimeout(() => el.classList.remove("is-target"), 2400);
+      window.setTimeout(() => { el.classList.remove("is-target"); }, 2400);
     });
-    return () => cancelAnimationFrame(frame);
+    return () => { cancelAnimationFrame(frame); };
   }, [ready, hash]);
 }

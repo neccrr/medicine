@@ -75,7 +75,7 @@ const short = (s: SubjectReadiness) => s.label;
 function candidates(br: BlockReadiness, phase: Phase, daysLeft: number | null): Candidate[] {
   const out: Candidate[] = [];
   const subjects = [...br.subjects].sort((a, b) => a.readiness - b.readiness);
-  const weakest = subjects[0];
+  const weakest = subjects.at(0);
 
   if (phase === "exam-day" || phase === "past") {
     for (const s of subjects) {
@@ -116,7 +116,7 @@ function candidates(br: BlockReadiness, phase: Phase, daysLeft: number | null): 
 
   // Weak spots, from the strengthen phase on.
   if (phase === "strengthen" || phase === "mock") {
-    const topic = subjects.flatMap((s) => weakTopics(s.key).slice(0, 1)).sort((a, b) => b.weak - a.weak)[0];
+    const topic = subjects.flatMap((s) => weakTopics(s.key).slice(0, 1)).sort((a, b) => b.weak - a.weak).at(0);
     if (topic) {
       const label = br.subjects.find((s) => s.key === topic.subject)?.label ?? "";
       out.push({ id: `topic:${topic.subject}:${topic.tag}`, kind: "cards", subject: topic.subject, title: `Drill "${topic.tag}" (${label})`, detail: `${topic.weak} cards you keep forgetting`, target: topic.total, to: topic.to, priority: 2, min: 5 });
@@ -136,14 +136,14 @@ function candidates(br: BlockReadiness, phase: Phase, daysLeft: number | null): 
       if (labelsNew) out.push({ id: `new-labels:${s.key}`, kind: "labels", subject: s.key, title: `Learn ${labelsNew} new ${short(s)} labels`, detail: "Image occlusion", target: labelsNew, to: `/occlusion/${s.key}`, priority: phase === "learn" ? 2.2 : 3.2, min: 5 });
     }
     // One unread chapter, from the subject with the least read.
-    const reader = subjects.filter((s) => s.reading && s.reading.done < s.reading.chapters).sort((a, b) => a.reading!.done / a.reading!.chapters - b.reading!.done / b.reading!.chapters)[0];
+    const reader = subjects.filter((s) => s.reading && s.reading.done < s.reading.chapters).sort((a, b) => a.reading!.done / a.reading!.chapters - b.reading!.done / b.reading!.chapters).at(0);
     if (reader && phase !== "strengthen") {
       const done = new Set(readJSON<string[]>(STORAGE_KEYS.ebookCompleted(reader.key), []));
       const chapter = ebookMeta[reader.key]?.chapters.find((c) => !done.has(c.id));
       if (chapter) out.push({ id: `chapter:${reader.key}:${chapter.id}`, kind: "chapters", subject: reader.key, title: `Read "${chapter.title}"`, detail: `${short(reader)} ebook; mark it finished at the end`, target: 1, to: `/ebooks/${reader.key}/${chapter.id}`, priority: 2.5 });
     }
     // A quiz sitting in the subject whose quiz is least covered (or weakest).
-    const quizzer = subjects.filter((s) => s.quiz).sort((a, b) => (phase === "learn" ? a.quiz!.coverage - b.quiz!.coverage : (a.parts.quiz ?? 0) - (b.parts.quiz ?? 0)))[0];
+    const quizzer = subjects.filter((s) => s.quiz).sort((a, b) => (phase === "learn" ? a.quiz!.coverage - b.quiz!.coverage : (a.parts.quiz ?? 0) - (b.parts.quiz ?? 0))).at(0);
     if (quizzer) out.push({ id: `quiz:${quizzer.key}`, kind: "questions", subject: quizzer.key, title: `Quiz: ${Math.min(QUIZ_SITTING, quizzer.quiz!.bank)} ${short(quizzer)} questions`, detail: phase === "learn" ? "A first pass through the bank" : "Weakest quiz subject", target: Math.min(QUIZ_SITTING, quizzer.quiz!.bank), to: `/quizzes/${quizzer.key}`, priority: 3, min: 10 });
   }
   return out;

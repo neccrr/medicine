@@ -27,11 +27,11 @@ function useWidth(ref: RefObject<HTMLDivElement | null>, fallback = 640): number
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const measure = () => setWidth(Math.max(240, Math.round(el.clientWidth)));
+    const measure = () => { setWidth(Math.max(240, Math.round(el.clientWidth))); };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => { ro.disconnect(); };
   }, [ref]);
   return width;
 }
@@ -73,7 +73,7 @@ export function DailyBars({ data, unit, caption }: { data: BarDatum[]; unit: str
 
   return (
     <figure className="chart">
-      <div className="chart-wrap" ref={wrap} onPointerLeave={() => setTip(null)}>
+      <div className="chart-wrap" ref={wrap} onPointerLeave={() => { setTip(null); }}>
         <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} className="chart-svg" aria-hidden="true">
           {[0, max / 2, max].map((t) => (
             <g key={t}>
@@ -108,7 +108,7 @@ export function DailyBars({ data, unit, caption }: { data: BarDatum[]; unit: str
                   width={band}
                   height={H - pad.t - pad.b}
                   className="chart-hit"
-                  onPointerMove={(e) => show(d, i, e)}
+                  onPointerMove={(e) => { show(d, i, e); }}
                 />
               </g>
             );

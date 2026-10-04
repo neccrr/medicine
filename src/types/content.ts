@@ -49,7 +49,11 @@ export interface CardState {
   lapses: number;
 }
 
-export type CardStateMap = Record<string, CardState>;
+/** The option picked for each question, by question id; unanswered questions have no entry. */
+export type Answers = Partial<Record<string, number>>;
+
+/** Review state by card id; cards never reviewed have no entry. */
+export type CardStateMap = Partial<Record<string, CardState>>;
 
 export interface QuizAttempt {
   score: number;

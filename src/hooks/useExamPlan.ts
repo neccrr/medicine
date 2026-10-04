@@ -25,8 +25,10 @@ export function useExamPlan(blockId: string) {
   }
 
   useEffect(() => {
-    const refresh = () => setVersion((v) => v + 1);
-    const onVisible = () => document.visibilityState === "visible" && refresh();
+    const refresh = () => { setVersion((v) => v + 1); };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
     window.addEventListener(STORAGE_UPDATED_EVENT, refresh);
     document.addEventListener("visibilitychange", onVisible);
     return () => {
@@ -36,7 +38,7 @@ export function useExamPlan(blockId: string) {
   }, []);
 
   const update = useCallback(
-    (patch: ExamPlanSettings) => setSettings(writeExamPlan(blockId, patch)),
+    (patch: ExamPlanSettings) => { setSettings(writeExamPlan(blockId, patch)); },
     [blockId],
   );
 
@@ -76,6 +78,6 @@ export function useExamPlan(blockId: string) {
     plan,
     progress,
     occlusion,
-    rebuild: () => setRebuildAt(Date.now()),
+    rebuild: () => { setRebuildAt(Date.now()); },
   };
 }

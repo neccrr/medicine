@@ -162,7 +162,7 @@ export function Oscilloscope({ xMax, xLabel, xTicks, yMax, yLabel, yUnit, tracin
         onPointerMove={onPointerMove}
         onPointerUp={stop}
         onPointerCancel={stop}
-        onPointerLeave={() => setHoverX(null)}
+        onPointerLeave={() => { setHoverX(null); }}
       >
         <ScopeGrid xMax={xMax} xTicks={xTicks} xLabel={xLabel} yMax={yMax} yLabel={yLabel} />
         <g clipPath="url(#lab-scope-clip)">
@@ -205,8 +205,8 @@ export function Oscilloscope({ xMax, xLabel, xTicks, yMax, yLabel, yUnit, tracin
               <li
                 key={t.id}
                 className={focusId === t.id ? "is-focus" : undefined}
-                onMouseEnter={() => setFocusId(t.id)}
-                onMouseLeave={() => setFocusId(null)}
+                onMouseEnter={() => { setFocusId(t.id); }}
+                onMouseLeave={() => { setFocusId(null); }}
               >
                 <i style={{ background: TRACE_COLORS[t.slot] }} aria-hidden="true" />
                 {t.label}

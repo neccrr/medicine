@@ -82,8 +82,8 @@ export function deckStats(ids: readonly string[], states: CardStateMap, now: Dat
     const s = states[id];
     if (s) {
       seen += 1;
-      strength += Math.min(1, (s.interval ?? 0) / MASTERED_DAYS);
-      if ((s.interval ?? 0) >= MASTERED_DAYS) mastered += 1;
+      strength += Math.min(1, s.interval / MASTERED_DAYS);
+      if (s.interval >= MASTERED_DAYS) mastered += 1;
       if (isDue(s, now)) due += 1;
     }
   }
@@ -125,7 +125,7 @@ export function scoreBlock(subjects: number[], mockPercents: number[]): number {
 }
 
 /** Image-occlusion label ids per subject; loaded on demand, so callers pass what they have. */
-export type OcclusionIds = Record<string, readonly string[]>;
+export type OcclusionIds = Partial<Record<string, readonly string[]>>;
 
 export function subjectReadiness(key: string, occlusion: OcclusionIds = {}, now: Date = new Date()): SubjectReadiness {
   const [blockId] = key.split("/");

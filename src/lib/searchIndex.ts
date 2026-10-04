@@ -111,7 +111,7 @@ function subjectDocs(): SearchDoc[] {
     ...Object.keys(modulesByBlockSubject).map((key) => {
       const [blockId, subjectId] = key.split("/");
       const label = subjectId.charAt(0).toUpperCase() + subjectId.slice(1);
-      const count = modulesByBlockSubject[key].length;
+      const count = modulesByBlockSubject[key]?.length ?? 0;
       return {
         type: "module" as const,
         id: `md-${key}`,
@@ -143,7 +143,7 @@ function subjectOf(key: string): string {
 }
 
 function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
-  const flashcardDocs = Object.entries(flashcardDecks).flatMap(([key, cards]) =>
+  const flashcardDocs = Object.entries(flashcardDecks).flatMap(([key, cards = []]) =>
     cards.map((card) => ({
       type: "flashcard" as const,
       id: card.id,
@@ -154,7 +154,7 @@ function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
       keywords: card.tags.join(" "),
     })),
   );
-  const quizDocs = Object.entries(quizBanks).flatMap(([key, bank]) =>
+  const quizDocs = Object.entries(quizBanks).flatMap(([key, bank = []]) =>
     bank.map((q) => ({
       type: "quiz" as const,
       id: q.id,
@@ -165,7 +165,7 @@ function contentDocs(ebookChapters: Record<string, string>): SearchDoc[] {
       keywords: q.options.join(" "),
     })),
   );
-  const summaryDocs = Object.entries(summaries).flatMap(([key, markdown]) => {
+  const summaryDocs = Object.entries(summaries).flatMap(([key, markdown = ""]) => {
     const subjectId = subjectOf(key);
     const label = summarySubjects.find((s) => keyOf(s) === key)?.label ?? subjectId;
     const to = `/summaries/${key}`;

@@ -66,7 +66,7 @@ export function ActivityHeatmap({
                 title={describe(cell)}
                 aria-label={describe(cell)}
                 aria-pressed={selected === cell.key}
-                onClick={() => onSelect(cell.key)}
+                onClick={() => { onSelect(cell.key); }}
               />
             ) : (
               <div key={cell.key} className={`heatmap-cell level-${cell.level}`} title={describe(cell)} />

@@ -33,14 +33,14 @@ export function useLocalStorage<T>(key: string, fallback: T) {
   // A sync that downloads a newer copy of this key from another device updates the state too.
   useEffect(() => {
     const onUpdated = (e: Event) => {
-      const keys = (e as CustomEvent<{ keys: string[] }>).detail?.keys ?? [];
+      const keys = (e as CustomEvent<{ keys?: string[] } | null>).detail?.keys ?? [];
       if (!keys.includes(key)) return;
       const next = readJSON(key, fallback);
       setValue(next);
       setStored({ key, value: next });
     };
     window.addEventListener(STORAGE_UPDATED_EVENT, onUpdated);
-    return () => window.removeEventListener(STORAGE_UPDATED_EVENT, onUpdated);
+    return () => { window.removeEventListener(STORAGE_UPDATED_EVENT, onUpdated); };
     // fallback is a default value; re-subscribing when a caller passes a new literal is pointless.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);

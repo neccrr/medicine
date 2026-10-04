@@ -56,12 +56,12 @@ export function MuscleRig({ lengthMm, activation, stimulating, weightG = null, s
       {isotonic ? (
         <g>
           <line x1="100" y1={bottom} x2="100" y2={bottom + 22} className="lab-rig-thread" />
-          <rect x="80" y={bottom + 22} width="40" height={20 + (weightG ?? 0) * 8} rx="4" className="lab-rig-weight" />
-          <text x="100" y={bottom + 36 + (weightG ?? 0) * 4} textAnchor="middle" className="lab-rig-weight-label">
-            {weightG?.toFixed(1)} g
+          <rect x="80" y={bottom + 22} width="40" height={20 + weightG * 8} rx="4" className="lab-rig-weight" />
+          <text x="100" y={bottom + 36 + weightG * 4} textAnchor="middle" className="lab-rig-weight-label">
+            {weightG.toFixed(1)} g
           </text>
           {/* Platform the weight rests on before it is lifted */}
-          <rect x="66" y={TOP + lengthMm * PX_PER_MM + 42 + (weightG ?? 0) * 8} width="68" height="6" rx="2" className="lab-rig-metal" />
+          <rect x="66" y={TOP + lengthMm * PX_PER_MM + 42 + weightG * 8} width="68" height="6" rx="2" className="lab-rig-metal" />
         </g>
       ) : (
         <g>

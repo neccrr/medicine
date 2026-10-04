@@ -69,9 +69,9 @@ export function Progress() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   useEffect(() => {
-    const refresh = () => setVersion((v) => v + 1);
+    const refresh = () => { setVersion((v) => v + 1); };
     window.addEventListener(STORAGE_UPDATED_EVENT, refresh);
-    return () => window.removeEventListener(STORAGE_UPDATED_EVENT, refresh);
+    return () => { window.removeEventListener(STORAGE_UPDATED_EVENT, refresh); };
   }, []);
 
   const data = useMemo(() => {
@@ -134,7 +134,7 @@ export function Progress() {
   const studyDaysCount = useCountUp(data.activityDays.length);
 
   const backupDue = status !== "signed-in" && shouldNudgeBackup(readJSON<string | null>(STORAGE_KEYS.lastExport, null), data.activityDays.length > 0);
-  const focus = data.blocks[0];
+  const focus = data.blocks.at(0);
   const focusExam = focus ? examDateFor(focus.blockId).date : null;
   const focusDays = focusExam ? daysUntil(focusExam) : null;
   const detail = selectedDay ? dayDetail(data.log, selectedDay) : [];
@@ -237,7 +237,8 @@ export function Progress() {
             <h3>Quiz scores</h3>
             <ul className="quiz-trends">
               {data.quizzes.map(({ key, attempts }) => {
-                const last = attempts[attempts.length - 1];
+                const last = attempts.at(-1);
+                if (!last) return null;
                 return (
                   <li key={key}>
                     <Link to={`/quizzes/${key}`} className="quiz-trend-row">
@@ -260,7 +261,7 @@ export function Progress() {
 
       <h2 className="progress-heading">Activity</h2>
       <div className="heatmap-wrapper">
-        <ActivityHeatmap days={data.activityDays} intensity={data.intensity} selected={selectedDay} onSelect={(d) => setSelectedDay((cur) => (cur === d ? null : d))} />
+        <ActivityHeatmap days={data.activityDays} intensity={data.intensity} selected={selectedDay} onSelect={(d) => { setSelectedDay((cur) => (cur === d ? null : d)); }} />
         <p className="heatmap-note">
           {data.bestTime ? `You study most around ${data.bestTime}. ` : ""}
           Tap a day to see what you studied.

@@ -163,5 +163,5 @@ export function clearLocalProgress(storage: Storage = window.localStorage): void
     const k = storage.key(i);
     if (k?.startsWith(KEY_PREFIX) && !keptOnClear(k)) keys.push(k);
   }
-  keys.forEach((k) => storage.removeItem(k));
+  keys.forEach((k) => { storage.removeItem(k); });
 }

@@ -1,4 +1,4 @@
-import type { QuizAttempt, QuizQuestion } from "../types/content";
+import type { Answers, QuizAttempt, QuizQuestion } from "../types/content";
 import { STORAGE_KEYS } from "../lib/storage";
 import { logStudy, recordActivity } from "../lib/activity";
 import { scoreQuiz, updateDueIds } from "../lib/quizScoring";
@@ -14,11 +14,11 @@ export function useQuizProgress(quizId: string) {
     [],
   );
 
-  const lastAttempt: QuizAttempt | undefined = history[history.length - 1];
+  const lastAttempt: QuizAttempt | undefined = history.at(-1);
 
   const recordAttempt = (
     questions: QuizQuestion[],
-    answers: Record<string, number>,
+    answers: Answers,
   ) => {
     const scored = scoreQuiz(questions, answers);
     const attempt: QuizAttempt = { ...scored, date: new Date().toISOString() };

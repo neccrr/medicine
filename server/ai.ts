@@ -212,7 +212,7 @@ async function attempt(config: AiConfig, model: string, messages: ModelMessage[]
   let timer: ReturnType<typeof setTimeout> | undefined;
   const arm = (ms: number) => {
     clearTimeout(timer);
-    timer = setTimeout(() => controller.abort(), Math.max(0, Math.min(ms, deadline - Date.now())));
+    timer = setTimeout(() => { controller.abort(); }, Math.max(0, Math.min(ms, deadline - Date.now())));
   };
   const failed = (status: number, reason: string): Failure => {
     clearTimeout(timer);

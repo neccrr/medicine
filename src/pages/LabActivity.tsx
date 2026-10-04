@@ -1,4 +1,5 @@
 import { memo, useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { itemAt } from "../lib/arrays";
 import { Link, useParams } from "react-router-dom";
 import { Oscilloscope } from "../components/lab/Oscilloscope";
 import { TRACE_COLORS, freeSlot, valueAt, type Tracing } from "../lib/labTraces";
@@ -210,7 +211,7 @@ interface StepperProps {
 
 function Stepper({ label, value, min, max, step, digits, unit, disabled, onChange }: StepperProps) {
   const [draft, setDraft] = useState<string | null>(null);
-  const set = (v: number) => onChange(Math.min(max, Math.max(min, Number(v.toFixed(digits)))));
+  const set = (v: number) => { onChange(Math.min(max, Math.max(min, Number(v.toFixed(digits))))); };
   const commit = () => {
     if (draft !== null) {
       const v = Number(draft);
@@ -222,7 +223,7 @@ function Stepper({ label, value, min, max, step, digits, unit, disabled, onChang
     <div className="lab-stepper">
       <span className="lab-stepper-label">{label}</span>
       <div className="lab-stepper-row">
-        <button type="button" className="lab-stepper-btn" onClick={() => set(value - step)} disabled={disabled || value <= min} aria-label={`Decrease ${label}`}>
+        <button type="button" className="lab-stepper-btn" onClick={() => { set(value - step); }} disabled={disabled || value <= min} aria-label={`Decrease ${label}`}>
           −
         </button>
         <input
@@ -231,7 +232,7 @@ function Stepper({ label, value, min, max, step, digits, unit, disabled, onChang
           value={draft ?? value.toFixed(digits)}
           disabled={disabled}
           aria-label={label}
-          onChange={(e) => setDraft(e.target.value)}
+          onChange={(e) => { setDraft(e.target.value); }}
           onBlur={commit}
           onKeyDown={(e) => {
             if (e.key === "Enter") commit();
@@ -245,7 +246,7 @@ function Stepper({ label, value, min, max, step, digits, unit, disabled, onChang
             }
           }}
         />
-        <button type="button" className="lab-stepper-btn" onClick={() => set(value + step)} disabled={disabled || value >= max} aria-label={`Increase ${label}`}>
+        <button type="button" className="lab-stepper-btn" onClick={() => { set(value + step); }} disabled={disabled || value >= max} aria-label={`Increase ${label}`}>
           +
         </button>
         {unit && <span className="lab-stepper-unit">{unit}</span>}
@@ -349,14 +350,14 @@ const DataPanel = memo(function DataPanel({
         <h2>Data</h2>
         <div className="lab-data-actions">
           {plot && (
-            <button type="button" className="btn btn-small btn-secondary" onClick={() => setShowPlot((v) => !v)} disabled={rows.length === 0} aria-expanded={showPlot}>
+            <button type="button" className="btn btn-small btn-secondary" onClick={() => { setShowPlot((v) => !v); }} disabled={rows.length === 0} aria-expanded={showPlot}>
               {showPlot ? "Hide plot" : "Plot Data"}
             </button>
           )}
           <button type="button" className="btn btn-small btn-secondary" onClick={downloadCsv} disabled={rows.length === 0}>
             Download CSV
           </button>
-          <button type="button" className="btn btn-small btn-secondary" onClick={() => setRows([])} disabled={rows.length === 0}>
+          <button type="button" className="btn btn-small btn-secondary" onClick={() => { setRows([]); }} disabled={rows.length === 0}>
             Clear data
           </button>
         </div>
@@ -391,7 +392,7 @@ const DataPanel = memo(function DataPanel({
                     <td key={c.key}>{fmt(r[c.key], c.digits)}</td>
                   ))}
                   <td>
-                    <button type="button" className="lab-row-delete" onClick={() => setRows((prev) => prev.filter((_, j) => j !== i))} aria-label={`Delete row ${i + 1}`}>
+                    <button type="button" className="lab-row-delete" onClick={() => { setRows((prev) => prev.filter((_, j) => j !== i)); }} aria-label={`Delete row ${i + 1}`}>
                       ×
                     </button>
                   </td>
@@ -434,8 +435,8 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
   const sim = useRef<SimState>(newSim());
   const nextId = useRef(1);
 
-  useEffect(() => writeJSON(storageId, rows), [storageId, rows]);
-  useEffect(() => () => cancelAnimationFrame(sim.current.raf), []);
+  useEffect(() => { writeJSON(storageId, rows); }, [storageId, rows]);
+  useEffect(() => () => { cancelAnimationFrame(sim.current.raf); }, []);
 
   const s = view;
 
@@ -459,7 +460,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
 
   const blink = useCallback(() => {
     setFlash(true);
-    window.setTimeout(() => setFlash(false), 180);
+    window.setTimeout(() => { setFlash(false); }, 180);
   }, []);
 
   /** Advance the sweep to sweep time `to`, one sample at a time; returns the samples added. */
@@ -619,7 +620,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
     publish();
   };
 
-  const clearTracings = () => setTracings([]);
+  const clearTracings = () => { setTracings([]); };
 
   const record = () => {
     if (!result) return;
@@ -674,7 +675,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
           <p className="lab-note">{cfg.speedNote}</p>
           {mode === "twitch" && (
             <div className="lab-measure">
-              <button type="button" className={`btn btn-small btn-secondary${measure != null ? " is-active" : ""}`} onClick={() => setMeasure(measure == null ? 10 : null)} aria-pressed={measure != null}>
+              <button type="button" className={`btn btn-small btn-secondary${measure != null ? " is-active" : ""}`} onClick={() => { setMeasure(measure == null ? 10 : null); }} aria-pressed={measure != null}>
                 {measure == null ? "Measure" : "Hide measure"}
               </button>
               {measure != null && (
@@ -685,7 +686,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
                     max={cfg.xMax}
                     step={0.1}
                     value={measure}
-                    onChange={(e) => setMeasure(Number(e.target.value))}
+                    onChange={(e) => { setMeasure(Number(e.target.value)); }}
                     aria-label="Measure line time (msec)"
                   />
                 </>
@@ -705,7 +706,7 @@ function Bench({ exercise, activity }: { exercise: LabExercise; activity: LabAct
               <span className="lab-stepper-label">Weight</span>
               <div className="lab-weights" role="radiogroup" aria-label="Weight">
                 {WEIGHTS.map((w) => (
-                  <button key={w} type="button" role="radio" aria-checked={weight === w} className={`lab-weight${weight === w ? " is-on" : ""}`} onClick={() => setWeight(w)} disabled={running}>
+                  <button key={w} type="button" role="radio" aria-checked={weight === w} className={`lab-weight${weight === w ? " is-on" : ""}`} onClick={() => { setWeight(w); }} disabled={running}>
                     {w.toFixed(1)} g
                   </button>
                 ))}
@@ -752,8 +753,8 @@ export function LabActivityPage() {
   const found = findLabActivity(exerciseId, activitySlug);
   if (!found) return <NotFound />;
   const { exercise, activity } = found;
-  const prev = exercise.activities[activity.number - 2];
-  const next = exercise.activities[activity.number];
+  const prev = itemAt(exercise.activities, activity.number - 2);
+  const next = itemAt(exercise.activities, activity.number);
 
   return (
     <section className="page lab-page">

@@ -35,7 +35,13 @@ export function AlfondPanel({ onClose }: { onClose: () => void }) {
             </button>
           </div>
         </header>
-        <AlfondChat variant="overlay" autoFocus onNavigate={() => onPhone() && onClose()} />
+        <AlfondChat
+          variant="overlay"
+          autoFocus
+          onNavigate={() => {
+            if (onPhone()) onClose();
+          }}
+        />
       </div>
     </>
   );
