@@ -5,6 +5,8 @@ import {
   flashcardDecks,
   flashcardSubjects,
   keyOf,
+  loadEbookChapter,
+  loadOcclusionNotes,
   moduleSubjects,
   quizBanks,
   quizSubjects,
@@ -38,6 +40,11 @@ describe("content folders", () => {
     const questionIds = Object.values(quizBanks).flat().map((q) => q.id);
     expect(cardIds.filter((id, i) => cardIds.indexOf(id) !== i)).toEqual([]);
     expect(questionIds.filter((id, i) => questionIds.indexOf(id) !== i)).toEqual([]);
+  });
+
+  it("returns undefined for non-owned dynamic loader keys", async () => {
+    await expect(loadEbookChapter("__proto__")).resolves.toBeUndefined();
+    await expect(loadOcclusionNotes("toString")).resolves.toBeUndefined();
   });
 });
 

@@ -218,8 +218,8 @@ export const ebookChapterKeys: string[] = Object.keys(ebookChapterLoaders).sort(
 
 /** One chapter's Markdown, or undefined when there's no such chapter. */
 export function loadEbookChapter(key: string): Promise<string | undefined> {
-  const load = ebookChapterLoaders[key];
-  return load ? load() : Promise.resolve(undefined);
+  const load = Object.prototype.hasOwnProperty.call(ebookChapterLoaders, key) ? ebookChapterLoaders[key] : undefined;
+  return typeof load === "function" ? load() : Promise.resolve(undefined);
 }
 
 const occlusionLoaders: Record<string, () => Promise<OcclusionNote[]>> = Object.fromEntries(
@@ -231,8 +231,8 @@ export const occlusionKeys: string[] = Object.keys(occlusionLoaders).sort();
 
 /** A subject's image-occlusion figures, or undefined when it has none. */
 export function loadOcclusionNotes(key: string): Promise<OcclusionNote[] | undefined> {
-  const load = occlusionLoaders[key];
-  return load ? load() : Promise.resolve(undefined);
+  const load = Object.prototype.hasOwnProperty.call(occlusionLoaders, key) ? occlusionLoaders[key] : undefined;
+  return typeof load === "function" ? load() : Promise.resolve(undefined);
 }
 
 /** Every chapter's Markdown, keyed like {@link ebookChapterKeys}. */
