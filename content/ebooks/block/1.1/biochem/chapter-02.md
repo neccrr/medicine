@@ -21,36 +21,55 @@ bonds is always one less than the number of amino acids in the chain.
 <figure class="diagram">
   <svg viewBox="0 0 640 190" role="img" aria-labelledby="struct-title struct-desc">
     <title id="struct-title">The four levels of protein structure</title>
-    <desc id="struct-desc">Primary structure shown as a linear chain of beads, secondary as a coiled helix, tertiary as a single folded ribbon, and quaternary as several folded ribbons assembled together.</desc>
+    <desc id="struct-desc">Primary structure shown as a linear chain of beads,
+      secondary as a coiled helix, tertiary as a single folded ribbon, and
+      quaternary as several folded ribbons assembled together.</desc>
     <g>
       <circle cx="30" cy="60" r="9" fill="var(--accent)" />
       <circle cx="55" cy="45" r="9" fill="var(--accent)" opacity="0.75" />
       <circle cx="80" cy="60" r="9" fill="var(--accent)" opacity="0.55" />
       <circle cx="105" cy="45" r="9" fill="var(--accent)" opacity="0.75" />
       <circle cx="130" cy="60" r="9" fill="var(--accent)" opacity="0.55" />
-      <path d="M30,60 55,45 80,60 105,45 130,60" fill="none" stroke="var(--text-muted)" stroke-width="1.5" />
+      <path d="M30,60 55,45 80,60 105,45 130,60" fill="none"
+        stroke="var(--text-muted)" stroke-width="1.5" />
       <text x="80" y="100" fill="var(--text)" font-size="12" text-anchor="middle">Primary</text>
-      <text x="80" y="115" fill="var(--text-muted)" font-size="10" text-anchor="middle">amino acid sequence</text>
+      <text x="80" y="115" fill="var(--text-muted)" font-size="10"
+        text-anchor="middle">amino acid sequence</text>
     </g>
     <g transform="translate(165,0)">
-      <path d="M25,25 C55,35 5,45 35,55 C55,65 15,75 35,85" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round" />
+      <path d="M25,25 C55,35 5,45 35,55 C55,65 15,75 35,85" fill="none"
+        stroke="var(--accent)" stroke-width="7" stroke-linecap="round" />
       <text x="45" y="100" fill="var(--text)" font-size="12" text-anchor="middle">Secondary</text>
-      <text x="45" y="115" fill="var(--text-muted)" font-size="10" text-anchor="middle">&#945;-helix / &#946;-sheet</text>
+      <text x="45" y="115" fill="var(--text-muted)" font-size="10"
+        text-anchor="middle">&#945;-helix / &#946;-sheet</text>
     </g>
     <g transform="translate(320,0)">
-      <path d="M20,70 Q10,30 45,25 Q75,22 65,45 Q90,50 80,72 Q60,80 40,68 Q25,80 20,70Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+      <path
+        d="M20,70 Q10,30 45,25 Q75,22 65,45 Q90,50 80,72 Q60,80 40,68 Q25,80
+        20,70Z" fill="var(--accent-soft)" stroke="var(--accent)"
+        stroke-width="1.5" />
       <text x="50" y="100" fill="var(--text)" font-size="12" text-anchor="middle">Tertiary</text>
-      <text x="50" y="115" fill="var(--text-muted)" font-size="10" text-anchor="middle">single-chain 3D fold</text>
+      <text x="50" y="115" fill="var(--text-muted)" font-size="10"
+        text-anchor="middle">single-chain 3D fold</text>
     </g>
     <g transform="translate(470,0)">
-      <path d="M15,45 Q8,25 30,22 Q48,20 42,38 Q58,40 52,55 Q38,62 25,53Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3" />
-      <path d="M55,45 Q48,25 70,22 Q88,20 82,38 Q98,40 92,55 Q78,62 65,53Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3" opacity="0.85" />
-      <path d="M35,70 Q28,50 50,47 Q68,45 62,63 Q78,65 72,80 Q58,87 45,78Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3" opacity="0.7" />
+      <path d="M15,45 Q8,25 30,22 Q48,20 42,38 Q58,40 52,55 Q38,62 25,53Z"
+        fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3" />
+      <path d="M55,45 Q48,25 70,22 Q88,20 82,38 Q98,40 92,55 Q78,62 65,53Z"
+        fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"
+        opacity="0.85" />
+      <path d="M35,70 Q28,50 50,47 Q68,45 62,63 Q78,65 72,80 Q58,87 45,78Z"
+        fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.3"
+        opacity="0.7" />
       <text x="55" y="105" fill="var(--text)" font-size="12" text-anchor="middle">Quaternary</text>
-      <text x="55" y="120" fill="var(--text-muted)" font-size="10" text-anchor="middle">multi-subunit complex</text>
+      <text x="55" y="120" fill="var(--text-muted)" font-size="10"
+        text-anchor="middle">multi-subunit complex</text>
     </g>
   </svg>
-  <figcaption>Primary structure is sequence; secondary is local folding (helix/sheet) from backbone hydrogen bonds; tertiary is one chain's full 3D shape; quaternary is multiple folded chains assembled into one functional protein (e.g. hemoglobin's four subunits).</figcaption>
+  <figcaption>Primary structure is sequence; secondary is local folding
+    (helix/sheet) from backbone hydrogen bonds; tertiary is one chain's full 3D
+    shape; quaternary is multiple folded chains assembled into one functional
+    protein (e.g. hemoglobin's four subunits).</figcaption>
 </figure>
 
 ## Simple vs. complex proteins

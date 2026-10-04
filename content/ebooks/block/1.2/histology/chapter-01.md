@@ -41,8 +41,15 @@ The practicum classifies muscle in two ways at once: by what it looks like
 (histology) and by how it is controlled (physiology).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/muscle-types.webp" alt="Illustrations of skeletal, cardiac and smooth muscle cells" loading="lazy" width="1000" height="279" />
-  <figcaption>The three types of muscle. (a) Skeletal muscle: long, cylindrical, striated fibers with many peripheral nuclei. (b) Cardiac muscle: striated, branching cells joined end to end by intercalated discs, one or two central nuclei. (c) Smooth muscle: spindle-shaped cells without striations, one central nucleus. <span class="figure-source">Page 3, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/muscle-types.webp"
+    alt="Illustrations of skeletal, cardiac and smooth muscle cells"
+    loading="lazy" width="1000" height="279" />
+  <figcaption>The three types of muscle. (a) Skeletal muscle: long, cylindrical,
+    striated fibers with many peripheral nuclei. (b) Cardiac muscle: striated,
+    branching cells joined end to end by intercalated discs, one or two central
+    nuclei. (c) Smooth muscle: spindle-shaped cells without striations, one
+    central nucleus. <span class="figure-source">Page 3, Muscle Tissue
+    module</span></figcaption>
 </figure>
 
 | | Striated (*bergaris*) | Not striated (*tidak bergaris*) |
@@ -99,8 +106,13 @@ completely different depending on the plane of section**. Before you
 decide what kind of muscle you are looking at, decide how it was cut.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/section-planes.webp" alt="Muscle cut in two planes, labeled OL for the transverse part and IC for the longitudinal part" loading="lazy" width="349" height="321" />
-  <figcaption>The same tissue in two planes. Where the fibers were cut across (OL) they appear as round or polygonal profiles, like islands; where they were cut along their length (IC) they appear as long parallel strips. <span class="figure-source">Page 4, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/section-planes.webp"
+    alt="Muscle cut in two planes, labeled OL for the transverse part and IC for
+    the longitudinal part" loading="lazy" width="349" height="321" />
+  <figcaption>The same tissue in two planes. Where the fibers were cut across
+    (OL) they appear as round or polygonal profiles, like islands; where they
+    were cut along their length (IC) they appear as long parallel strips. <span
+    class="figure-source">Page 4, Muscle Tissue module</span></figcaption>
 </figure>
 
 | Plane | Indonesian | What you see |

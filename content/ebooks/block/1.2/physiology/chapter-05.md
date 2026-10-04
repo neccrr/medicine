@@ -64,8 +64,13 @@ A **kymograph** ("wave writer") records movement against time. Its parts
 are:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-05-prak-6-0.12_0.169_0.5_0.835.webp" alt="Experimental design" loading="lazy" width="760" height="750" />
-  <figcaption>Experimental design: the muscle hangs from a clamp; a lever with a pen writes on a rotating drum; a weight loads the muscle and a stimulator excites it. <span class="figure-source">Slide 6, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-05-prak-6-0.12_0.169_0.5_0.835.webp"
+    alt="Experimental design" loading="lazy" width="760" height="750" />
+  <figcaption>Experimental design: the muscle hangs from a clamp; a lever with a
+    pen writes on a rotating drum; a weight loads the muscle and a stimulator
+    excites it. <span class="figure-source">Slide 6, Praktikum Kontraksi Otot
+    &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 - a **rotating drum** covered with graph (or smoked) paper, turning at a
@@ -118,13 +123,22 @@ still attached, hanging from the knee with a thread on the Achilles
 tendon.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-05-prak-12-0.062_0.195_0.335_0.643.webp" alt="Frog hind limb muscles, with the gastrocnemius marked" loading="lazy" width="546" height="505" />
-  <figcaption>Frog hind limb muscles, with the gastrocnemius marked. <span class="figure-source">Slide 12, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-05-prak-12-0.062_0.195_0.335_0.643.webp"
+    alt="Frog hind limb muscles, with the gastrocnemius marked" loading="lazy"
+    width="546" height="505" />
+  <figcaption>Frog hind limb muscles, with the gastrocnemius marked. <span
+    class="figure-source">Slide 12, Praktikum Kontraksi Otot &amp; Refleks Tubuh
+    (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-05-prak-12-0.69_0.146_0.96_0.684.webp" alt="The sciatic nerve" loading="lazy" width="540" height="606" />
-  <figcaption>The sciatic nerve (n. ischiadicus) exposed in the frog's thigh. <span class="figure-source">Slide 12, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-05-prak-12-0.69_0.146_0.96_0.684.webp"
+    alt="The sciatic nerve" loading="lazy" width="540" height="606" />
+  <figcaption>The sciatic nerve (n. ischiadicus) exposed in the frog's thigh.
+    <span class="figure-source">Slide 12, Praktikum Kontraksi Otot &amp; Refleks
+    Tubuh (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 1. **Cut the skin around the thigh** in a ring.
@@ -152,8 +166,13 @@ damages it and the muscle will not respond to nerve stimulation.
 3. **Observe and label the tracing** that forms on the drum.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-05-prak-14-0.315_0.243_0.665_0.814.webp" alt="The gastrocnemius being mounted on the kymograph" loading="lazy" width="700" height="643" />
-  <figcaption>The gastrocnemius being mounted on the kymograph. <span class="figure-source">Slide 14, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-05-prak-14-0.315_0.243_0.665_0.814.webp"
+    alt="The gastrocnemius being mounted on the kymograph" loading="lazy"
+    width="700" height="643" />
+  <figcaption>The gastrocnemius being mounted on the kymograph. <span
+    class="figure-source">Slide 14, Praktikum Kontraksi Otot &amp; Refleks Tubuh
+    (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 Typical protocol and what you should see:
@@ -184,8 +203,14 @@ oscilloscope display) and the **active**, **passive** and **total**
 force, and **Record Data** saves each run in a table for your report.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-05-prak-18-0.09_0.146_0.595_0.728.webp" alt="PhysioEx 9.1, Exercise 2, Activity 1" loading="lazy" width="1010" height="655" />
-  <figcaption>PhysioEx 9.1, Exercise 2, Activity 1: the simulated muscle, stimulator controls and force display. <span class="figure-source">Slide 18, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-05-prak-18-0.09_0.146_0.595_0.728.webp"
+    alt="PhysioEx 9.1, Exercise 2, Activity 1" loading="lazy" width="1010"
+    height="655" />
+  <figcaption>PhysioEx 9.1, Exercise 2, Activity 1: the simulated muscle,
+    stimulator controls and force display. <span class="figure-source">Slide 18,
+    Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp;
+    Arina)</span></figcaption>
 </figure>
 
 ### Aims
@@ -270,37 +295,178 @@ force must come from frequency, length or load.
 <figure class="diagram">
   <svg viewBox="0 0 600 240" role="img" aria-labelledby="c5g-title c5g-desc">
     <title id="c5g-title">Expected PhysioEx results</title>
-    <desc id="c5g-desc">Three small graphs. a: active force is zero below a threshold of about 0.8 volts, then rises with voltage and levels off at about 8.5 volts, the maximal stimulus. b: force rises with stimulus frequency from the single-twitch level and levels off at maximal tetanic tension near 150 stimuli per second. c: shortening velocity is highest with the lightest load and falls as the load increases, reaching zero when the load is too heavy to lift, where the contraction becomes isometric.</desc>
+    <desc id="c5g-desc">Three small graphs. a: active force is zero below a
+      threshold of about 0.8 volts, then rises with voltage and levels off at
+      about 8.5 volts, the maximal stimulus. b: force rises with stimulus
+      frequency from the single-twitch level and levels off at maximal tetanic
+      tension near 150 stimuli per second. c: shortening velocity is highest
+      with the lightest load and falls as the load increases, reaching zero when
+      the load is too heavy to lift, where the contraction becomes
+      isometric.</desc>
     <g>
-      <text x="100.0" y="18" fill="var(--text)" font-size="12" font-weight="600" text-anchor="middle">a. Stimulus voltage</text>
-      <line x1="44" y1="190" x2="184" y2="190" stroke="var(--text-muted)" stroke-width="1.2" />
-      <line x1="44" y1="190" x2="44" y2="40" stroke="var(--text-muted)" stroke-width="1.2" />
-      <path d="M44.0,190.0 L44.7,190.0 L45.4,190.0 L46.0,190.0 L46.7,190.0 L47.4,190.0 L48.1,190.0 L48.8,190.0 L49.4,190.0 L50.1,190.0 L50.8,190.0 L51.5,190.0 L52.2,190.0 L52.8,190.0 L53.5,190.0 L54.2,190.0 L54.9,190.0 L55.6,186.8 L56.2,183.6 L56.9,180.6 L57.6,177.6 L58.3,174.7 L59.0,171.9 L59.6,169.2 L60.3,166.5 L61.0,163.9 L61.7,161.3 L62.4,158.9 L63.0,156.5 L63.7,154.1 L64.4,151.8 L65.1,149.6 L65.8,147.4 L66.4,145.3 L67.1,143.3 L67.8,141.3 L68.5,139.3 L69.2,137.4 L69.8,135.5 L70.5,133.7 L71.2,132.0 L71.9,130.3 L72.6,128.6 L73.2,127.0 L73.9,125.4 L74.6,123.9 L75.3,122.4 L76.0,120.9 L76.6,119.5 L77.3,118.1 L78.0,116.7 L78.7,115.4 L79.4,114.1 L80.0,112.9 L80.7,111.7 L81.4,110.5 L82.1,109.3 L82.8,108.2 L83.4,107.1 L84.1,106.1 L84.8,105.0 L85.5,104.0 L86.2,103.0 L86.8,102.1 L87.5,101.1 L88.2,100.2 L88.9,99.3 L89.6,98.5 L90.2,97.6 L90.9,96.8 L91.6,96.0 L92.3,95.2 L93.0,94.5 L93.6,93.8 L94.3,93.0 L95.0,92.3 L95.7,91.7 L96.4,91.0 L97.0,90.3 L97.7,89.7 L98.4,89.1 L99.1,88.5 L99.8,87.9 L100.4,87.4 L101.1,86.8 L101.8,86.3 L102.5,85.7 L103.2,85.2 L103.8,84.7 L104.5,84.3 L105.2,83.8 L105.9,83.3 L106.6,82.9 L107.2,82.4 L107.9,82.0 L108.6,81.6 L109.3,81.2 L110.0,80.8 L110.6,80.4 L111.3,80.1 L112.0,79.7 L112.7,79.3 L113.4,79.0 L114.0,78.7 L114.7,78.3 L115.4,78.0 L116.1,77.7 L116.8,77.4 L117.4,77.1 L118.1,76.8 L118.8,76.5 L119.5,76.3 L120.2,76.0 L120.8,75.8 L121.5,75.5 L122.2,75.3 L122.9,75.0 L123.6,74.8 L124.2,74.6 L124.9,74.3 L125.6,74.1 L126.3,73.9 L127.0,73.7 L127.6,73.5 L128.3,73.3 L129.0,73.1 L129.7,73.0 L130.4,72.8 L131.0,72.6 L131.7,72.4 L132.4,72.3 L133.1,72.1 L133.8,72.0 L134.4,71.8 L135.1,71.7 L135.8,71.5 L136.5,71.4 L137.2,71.2 L137.8,71.1 L138.5,71.0 L139.2,70.8 L139.9,70.7 L140.6,70.6 L141.2,70.5 L141.9,70.4 L142.6,70.3 L143.3,70.2 L144.0,70.1 L144.6,69.9 L145.3,69.8 L146.0,69.8 L146.7,69.7 L147.4,69.6 L148.0,69.5 L148.7,69.4 L149.4,69.3 L150.1,69.2 L150.8,69.1 L151.4,69.1 L152.1,69.0 L152.8,68.9 L153.5,68.8 L154.2,68.8 L154.8,68.7 L155.5,68.6 L156.2,68.6 L156.9,68.5 L157.6,68.4 L158.2,68.4 L158.9,68.3 L159.6,68.3 L160.3,68.3 L161.0,68.3 L161.6,68.3 L162.3,68.3 L163.0,68.3 L163.7,68.3 L164.4,68.3 L165.0,68.3 L165.7,68.3 L166.4,68.3 L167.1,68.3 L167.8,68.3 L168.4,68.3 L169.1,68.3 L169.8,68.3 L170.5,68.3 L171.2,68.3 L171.8,68.3 L172.5,68.3 L173.2,68.3 L173.9,68.3 L174.6,68.3 L175.2,68.3 L175.9,68.3 L176.6,68.3 L177.3,68.3 L178.0,68.3 L178.6,68.3 L179.3,68.3 L180.0,68.3" fill="none" stroke="var(--accent)" stroke-width="3" />
-      <g font-size="10" fill="var(--text-muted)" text-anchor="middle"><line x1="54.9" y1="190" x2="54.9" y2="194" stroke="var(--text-muted)" /><text x="54.9" y="206">0.8</text><line x1="112.0" y1="190" x2="112.0" y2="194" stroke="var(--text-muted)" /><text x="112.0" y="206">5</text><line x1="159.6" y1="190" x2="159.6" y2="194" stroke="var(--text-muted)" /><text x="159.6" y="206">8.5</text><line x1="180.0" y1="190" x2="180.0" y2="194" stroke="var(--text-muted)" /><text x="180.0" y="206">10</text></g>
-      <text x="114.0" y="222" fill="var(--text)" font-size="11" text-anchor="middle">Voltage (V)</text>
-      <text x="30" y="115.0" fill="var(--text)" font-size="11" text-anchor="middle" transform="rotate(-90 30 115.0)">Active force</text>
-      <g font-size="10"><text x="63.0" y="185.1" fill="var(--accent-2)" text-anchor="start">threshold</text><text x="156.9" y="59.7" fill="var(--accent-2)" text-anchor="end">maximal stimulus</text></g>
+      <text x="100.0" y="18" fill="var(--text)" font-size="12" font-weight="600"
+        text-anchor="middle">a. Stimulus voltage</text>
+      <line x1="44" y1="190" x2="184" y2="190" stroke="var(--text-muted)"
+        stroke-width="1.2" />
+      <line x1="44" y1="190" x2="44" y2="40" stroke="var(--text-muted)"
+        stroke-width="1.2" />
+      <path
+        d="M44.0,190.0 L44.7,190.0 L45.4,190.0 L46.0,190.0 L46.7,190.0
+        L47.4,190.0 L48.1,190.0 L48.8,190.0 L49.4,190.0 L50.1,190.0 L50.8,190.0
+        L51.5,190.0 L52.2,190.0 L52.8,190.0 L53.5,190.0 L54.2,190.0 L54.9,190.0
+        L55.6,186.8 L56.2,183.6 L56.9,180.6 L57.6,177.6 L58.3,174.7 L59.0,171.9
+        L59.6,169.2 L60.3,166.5 L61.0,163.9 L61.7,161.3 L62.4,158.9 L63.0,156.5
+        L63.7,154.1 L64.4,151.8 L65.1,149.6 L65.8,147.4 L66.4,145.3 L67.1,143.3
+        L67.8,141.3 L68.5,139.3 L69.2,137.4 L69.8,135.5 L70.5,133.7 L71.2,132.0
+        L71.9,130.3 L72.6,128.6 L73.2,127.0 L73.9,125.4 L74.6,123.9 L75.3,122.4
+        L76.0,120.9 L76.6,119.5 L77.3,118.1 L78.0,116.7 L78.7,115.4 L79.4,114.1
+        L80.0,112.9 L80.7,111.7 L81.4,110.5 L82.1,109.3 L82.8,108.2 L83.4,107.1
+        L84.1,106.1 L84.8,105.0 L85.5,104.0 L86.2,103.0 L86.8,102.1 L87.5,101.1
+        L88.2,100.2 L88.9,99.3 L89.6,98.5 L90.2,97.6 L90.9,96.8 L91.6,96.0
+        L92.3,95.2 L93.0,94.5 L93.6,93.8 L94.3,93.0 L95.0,92.3 L95.7,91.7
+        L96.4,91.0 L97.0,90.3 L97.7,89.7 L98.4,89.1 L99.1,88.5 L99.8,87.9
+        L100.4,87.4 L101.1,86.8 L101.8,86.3 L102.5,85.7 L103.2,85.2 L103.8,84.7
+        L104.5,84.3 L105.2,83.8 L105.9,83.3 L106.6,82.9 L107.2,82.4 L107.9,82.0
+        L108.6,81.6 L109.3,81.2 L110.0,80.8 L110.6,80.4 L111.3,80.1 L112.0,79.7
+        L112.7,79.3 L113.4,79.0 L114.0,78.7 L114.7,78.3 L115.4,78.0 L116.1,77.7
+        L116.8,77.4 L117.4,77.1 L118.1,76.8 L118.8,76.5 L119.5,76.3 L120.2,76.0
+        L120.8,75.8 L121.5,75.5 L122.2,75.3 L122.9,75.0 L123.6,74.8 L124.2,74.6
+        L124.9,74.3 L125.6,74.1 L126.3,73.9 L127.0,73.7 L127.6,73.5 L128.3,73.3
+        L129.0,73.1 L129.7,73.0 L130.4,72.8 L131.0,72.6 L131.7,72.4 L132.4,72.3
+        L133.1,72.1 L133.8,72.0 L134.4,71.8 L135.1,71.7 L135.8,71.5 L136.5,71.4
+        L137.2,71.2 L137.8,71.1 L138.5,71.0 L139.2,70.8 L139.9,70.7 L140.6,70.6
+        L141.2,70.5 L141.9,70.4 L142.6,70.3 L143.3,70.2 L144.0,70.1 L144.6,69.9
+        L145.3,69.8 L146.0,69.8 L146.7,69.7 L147.4,69.6 L148.0,69.5 L148.7,69.4
+        L149.4,69.3 L150.1,69.2 L150.8,69.1 L151.4,69.1 L152.1,69.0 L152.8,68.9
+        L153.5,68.8 L154.2,68.8 L154.8,68.7 L155.5,68.6 L156.2,68.6 L156.9,68.5
+        L157.6,68.4 L158.2,68.4 L158.9,68.3 L159.6,68.3 L160.3,68.3 L161.0,68.3
+        L161.6,68.3 L162.3,68.3 L163.0,68.3 L163.7,68.3 L164.4,68.3 L165.0,68.3
+        L165.7,68.3 L166.4,68.3 L167.1,68.3 L167.8,68.3 L168.4,68.3 L169.1,68.3
+        L169.8,68.3 L170.5,68.3 L171.2,68.3 L171.8,68.3 L172.5,68.3 L173.2,68.3
+        L173.9,68.3 L174.6,68.3 L175.2,68.3 L175.9,68.3 L176.6,68.3 L177.3,68.3
+        L178.0,68.3 L178.6,68.3 L179.3,68.3 L180.0,68.3" fill="none"
+        stroke="var(--accent)" stroke-width="3" />
+      <g font-size="10" fill="var(--text-muted)" text-anchor="middle"><line
+        x1="54.9" y1="190" x2="54.9" y2="194" stroke="var(--text-muted)" /><text
+        x="54.9" y="206">0.8</text><line x1="112.0" y1="190" x2="112.0" y2="194"
+        stroke="var(--text-muted)" /><text x="112.0" y="206">5</text><line
+        x1="159.6" y1="190" x2="159.6" y2="194" stroke="var(--text-muted)"
+        /><text x="159.6" y="206">8.5</text><line x1="180.0" y1="190" x2="180.0"
+        y2="194" stroke="var(--text-muted)" /><text x="180.0"
+        y="206">10</text></g>
+      <text x="114.0" y="222" fill="var(--text)" font-size="11"
+        text-anchor="middle">Voltage (V)</text>
+      <text x="30" y="115.0" fill="var(--text)" font-size="11"
+        text-anchor="middle" transform="rotate(-90 30 115.0)">Active
+        force</text>
+      <g font-size="10"><text x="63.0" y="185.1" fill="var(--accent-2)"
+        text-anchor="start">threshold</text><text x="156.9" y="59.7"
+        fill="var(--accent-2)" text-anchor="end">maximal stimulus</text></g>
     </g><g>
-      <text x="300.0" y="18" fill="var(--text)" font-size="12" font-weight="600" text-anchor="middle">b. Stimulus frequency</text>
-      <line x1="244" y1="190" x2="384" y2="190" stroke="var(--text-muted)" stroke-width="1.2" />
-      <line x1="244" y1="190" x2="244" y2="40" stroke="var(--text-muted)" stroke-width="1.2" />
-      <path d="M244.0,159.6 L244.9,157.5 L245.8,155.4 L246.7,153.5 L247.6,151.5 L248.5,149.6 L249.4,147.7 L250.3,145.9 L251.3,144.1 L252.2,142.4 L253.1,140.7 L254.0,139.0 L254.9,137.4 L255.8,135.8 L256.7,134.3 L257.6,132.7 L258.5,131.2 L259.4,129.8 L260.3,128.4 L261.2,127.0 L262.1,125.6 L263.0,124.3 L263.9,123.0 L264.9,121.7 L265.8,120.4 L266.7,119.2 L267.6,118.0 L268.5,116.8 L269.4,115.7 L270.3,114.6 L271.2,113.5 L272.1,112.4 L273.0,111.4 L273.9,110.4 L274.8,109.4 L275.7,108.4 L276.6,107.4 L277.5,106.5 L278.5,105.6 L279.4,104.7 L280.3,103.8 L281.2,103.0 L282.1,102.1 L283.0,101.3 L283.9,100.5 L284.8,99.7 L285.7,98.9 L286.6,98.2 L287.5,97.5 L288.4,96.8 L289.3,96.1 L290.2,95.4 L291.1,94.7 L292.1,94.0 L293.0,93.4 L293.9,92.8 L294.8,92.2 L295.7,91.6 L296.6,91.0 L297.5,90.4 L298.4,89.8 L299.3,89.3 L300.2,88.8 L301.1,88.2 L302.0,87.7 L302.9,87.2 L303.8,86.7 L304.7,86.2 L305.7,85.8 L306.6,85.3 L307.5,84.9 L308.4,84.4 L309.3,84.0 L310.2,83.6 L311.1,83.2 L312.0,82.8 L312.9,82.4 L313.8,82.0 L314.7,81.6 L315.6,81.2 L316.5,80.9 L317.4,80.5 L318.3,80.2 L319.3,79.9 L320.2,79.5 L321.1,79.2 L322.0,78.9 L322.9,78.6 L323.8,78.3 L324.7,78.0 L325.6,77.7 L326.5,77.4 L327.4,77.1 L328.3,76.9 L329.2,76.6 L330.1,76.3 L331.0,76.1 L331.9,75.9 L332.9,75.6 L333.8,75.4 L334.7,75.1 L335.6,74.9 L336.5,74.7 L337.4,74.5 L338.3,74.3 L339.2,74.1 L340.1,73.9 L341.0,73.7 L341.9,73.5 L342.8,73.3 L343.7,73.1 L344.6,72.9 L345.5,72.7 L346.5,72.6 L347.4,72.4 L348.3,72.2 L349.2,72.1 L350.1,71.9 L351.0,71.8 L351.9,71.6 L352.8,71.5 L353.7,71.3 L354.6,71.2 L355.5,71.0 L356.4,70.9 L357.3,70.8 L358.2,70.6 L359.1,70.5 L360.1,70.4 L361.0,70.3 L361.9,70.2 L362.8,70.0 L363.7,69.9 L364.6,69.8 L365.5,69.7 L366.4,69.6 L367.3,69.5 L368.2,69.4 L369.1,69.3 L370.0,69.2 L370.9,69.1 L371.8,69.0 L372.7,68.9 L373.7,68.8 L374.6,68.7 L375.5,68.7 L376.4,68.6 L377.3,68.5 L378.2,68.4 L379.1,68.3 L380.0,68.3" fill="none" stroke="var(--accent)" stroke-width="3" />
-      <g font-size="10" fill="var(--text-muted)" text-anchor="middle"><line x1="244.0" y1="190" x2="244.0" y2="194" stroke="var(--text-muted)" /><text x="244.0" y="206">0</text><line x1="289.3" y1="190" x2="289.3" y2="194" stroke="var(--text-muted)" /><text x="289.3" y="206">50</text><line x1="334.7" y1="190" x2="334.7" y2="194" stroke="var(--text-muted)" /><text x="334.7" y="206">100</text><line x1="380.0" y1="190" x2="380.0" y2="194" stroke="var(--text-muted)" /><text x="380.0" y="206">150</text></g>
-      <text x="314.0" y="222" fill="var(--text)" font-size="11" text-anchor="middle">Stimuli per second</text>
-      <text x="230" y="115.0" fill="var(--text)" font-size="11" text-anchor="middle" transform="rotate(-90 230 115.0)">Force</text>
-      <g font-size="10"><text x="376.4" y="59.7" fill="var(--accent-2)" text-anchor="end">maximal tetanic tension</text><text x="253.1" y="174.2" fill="var(--accent-2)" text-anchor="start">single twitch</text></g>
+      <text x="300.0" y="18" fill="var(--text)" font-size="12" font-weight="600"
+        text-anchor="middle">b. Stimulus frequency</text>
+      <line x1="244" y1="190" x2="384" y2="190" stroke="var(--text-muted)"
+        stroke-width="1.2" />
+      <line x1="244" y1="190" x2="244" y2="40" stroke="var(--text-muted)"
+        stroke-width="1.2" />
+      <path
+        d="M244.0,159.6 L244.9,157.5 L245.8,155.4 L246.7,153.5 L247.6,151.5
+        L248.5,149.6 L249.4,147.7 L250.3,145.9 L251.3,144.1 L252.2,142.4
+        L253.1,140.7 L254.0,139.0 L254.9,137.4 L255.8,135.8 L256.7,134.3
+        L257.6,132.7 L258.5,131.2 L259.4,129.8 L260.3,128.4 L261.2,127.0
+        L262.1,125.6 L263.0,124.3 L263.9,123.0 L264.9,121.7 L265.8,120.4
+        L266.7,119.2 L267.6,118.0 L268.5,116.8 L269.4,115.7 L270.3,114.6
+        L271.2,113.5 L272.1,112.4 L273.0,111.4 L273.9,110.4 L274.8,109.4
+        L275.7,108.4 L276.6,107.4 L277.5,106.5 L278.5,105.6 L279.4,104.7
+        L280.3,103.8 L281.2,103.0 L282.1,102.1 L283.0,101.3 L283.9,100.5
+        L284.8,99.7 L285.7,98.9 L286.6,98.2 L287.5,97.5 L288.4,96.8 L289.3,96.1
+        L290.2,95.4 L291.1,94.7 L292.1,94.0 L293.0,93.4 L293.9,92.8 L294.8,92.2
+        L295.7,91.6 L296.6,91.0 L297.5,90.4 L298.4,89.8 L299.3,89.3 L300.2,88.8
+        L301.1,88.2 L302.0,87.7 L302.9,87.2 L303.8,86.7 L304.7,86.2 L305.7,85.8
+        L306.6,85.3 L307.5,84.9 L308.4,84.4 L309.3,84.0 L310.2,83.6 L311.1,83.2
+        L312.0,82.8 L312.9,82.4 L313.8,82.0 L314.7,81.6 L315.6,81.2 L316.5,80.9
+        L317.4,80.5 L318.3,80.2 L319.3,79.9 L320.2,79.5 L321.1,79.2 L322.0,78.9
+        L322.9,78.6 L323.8,78.3 L324.7,78.0 L325.6,77.7 L326.5,77.4 L327.4,77.1
+        L328.3,76.9 L329.2,76.6 L330.1,76.3 L331.0,76.1 L331.9,75.9 L332.9,75.6
+        L333.8,75.4 L334.7,75.1 L335.6,74.9 L336.5,74.7 L337.4,74.5 L338.3,74.3
+        L339.2,74.1 L340.1,73.9 L341.0,73.7 L341.9,73.5 L342.8,73.3 L343.7,73.1
+        L344.6,72.9 L345.5,72.7 L346.5,72.6 L347.4,72.4 L348.3,72.2 L349.2,72.1
+        L350.1,71.9 L351.0,71.8 L351.9,71.6 L352.8,71.5 L353.7,71.3 L354.6,71.2
+        L355.5,71.0 L356.4,70.9 L357.3,70.8 L358.2,70.6 L359.1,70.5 L360.1,70.4
+        L361.0,70.3 L361.9,70.2 L362.8,70.0 L363.7,69.9 L364.6,69.8 L365.5,69.7
+        L366.4,69.6 L367.3,69.5 L368.2,69.4 L369.1,69.3 L370.0,69.2 L370.9,69.1
+        L371.8,69.0 L372.7,68.9 L373.7,68.8 L374.6,68.7 L375.5,68.7 L376.4,68.6
+        L377.3,68.5 L378.2,68.4 L379.1,68.3 L380.0,68.3" fill="none"
+        stroke="var(--accent)" stroke-width="3" />
+      <g font-size="10" fill="var(--text-muted)" text-anchor="middle"><line
+        x1="244.0" y1="190" x2="244.0" y2="194" stroke="var(--text-muted)"
+        /><text x="244.0" y="206">0</text><line x1="289.3" y1="190" x2="289.3"
+        y2="194" stroke="var(--text-muted)" /><text x="289.3"
+        y="206">50</text><line x1="334.7" y1="190" x2="334.7" y2="194"
+        stroke="var(--text-muted)" /><text x="334.7" y="206">100</text><line
+        x1="380.0" y1="190" x2="380.0" y2="194" stroke="var(--text-muted)"
+        /><text x="380.0" y="206">150</text></g>
+      <text x="314.0" y="222" fill="var(--text)" font-size="11"
+        text-anchor="middle">Stimuli per second</text>
+      <text x="230" y="115.0" fill="var(--text)" font-size="11"
+        text-anchor="middle" transform="rotate(-90 230 115.0)">Force</text>
+      <g font-size="10"><text x="376.4" y="59.7" fill="var(--accent-2)"
+        text-anchor="end">maximal tetanic tension</text><text x="253.1"
+        y="174.2" fill="var(--accent-2)" text-anchor="start">single
+        twitch</text></g>
     </g><g>
-      <text x="500.0" y="18" fill="var(--text)" font-size="12" font-weight="600" text-anchor="middle">c. Load (isotonic)</text>
-      <line x1="444" y1="190" x2="584" y2="190" stroke="var(--text-muted)" stroke-width="1.2" />
-      <line x1="444" y1="190" x2="444" y2="40" stroke="var(--text-muted)" stroke-width="1.2" />
-      <path d="M444.0,68.3 L445.2,73.3 L446.5,77.9 L447.7,82.3 L448.9,86.5 L450.2,90.4 L451.4,94.1 L452.7,97.6 L453.9,100.9 L455.1,104.0 L456.4,107.0 L457.6,109.8 L458.8,112.5 L460.1,115.1 L461.3,117.6 L462.5,119.9 L463.8,122.2 L465.0,124.3 L466.3,126.4 L467.5,128.3 L468.7,130.2 L470.0,132.1 L471.2,133.8 L472.4,135.5 L473.7,137.1 L474.9,138.7 L476.1,140.2 L477.4,141.7 L478.6,143.1 L479.9,144.4 L481.1,145.7 L482.3,147.0 L483.6,148.2 L484.8,149.4 L486.0,150.6 L487.3,151.7 L488.5,152.8 L489.7,153.8 L491.0,154.8 L492.2,155.8 L493.5,156.8 L494.7,157.7 L495.9,158.6 L497.2,159.5 L498.4,160.4 L499.6,161.2 L500.9,162.0 L502.1,162.8 L503.3,163.6 L504.6,164.4 L505.8,165.1 L507.1,165.8 L508.3,166.5 L509.5,167.2 L510.8,167.9 L512.0,168.5 L513.2,169.2 L514.5,169.8 L515.7,170.4 L516.9,171.0 L518.2,171.6 L519.4,172.1 L520.7,172.7 L521.9,173.2 L523.1,173.8 L524.4,174.3 L525.6,174.8 L526.8,175.3 L528.1,175.8 L529.3,176.2 L530.5,176.7 L531.8,177.2 L533.0,177.6 L534.3,178.1 L535.5,178.5 L536.7,178.9 L538.0,179.4 L539.2,179.8 L540.4,180.2 L541.7,180.6 L542.9,180.9 L544.1,181.3 L545.4,181.7 L546.6,182.1 L547.9,182.4 L549.1,182.8 L550.3,183.1 L551.6,183.5 L552.8,183.8 L554.0,184.1 L555.3,184.5 L556.5,184.8 L557.7,185.1 L559.0,185.4 L560.2,185.7 L561.5,186.0 L562.7,186.3 L563.9,186.6 L565.2,186.9 L566.4,187.2 L567.6,187.4 L568.9,187.7 L570.1,188.0 L571.3,188.3 L572.6,188.5 L573.8,188.8 L575.1,189.0 L576.3,189.3 L577.5,189.5 L578.8,189.8 L580.0,190.0" fill="none" stroke="var(--accent)" stroke-width="3" />
-      <g font-size="10" fill="var(--text-muted)" text-anchor="middle"><line x1="444.0" y1="190" x2="444.0" y2="194" stroke="var(--text-muted)" /><text x="444.0" y="206">0</text><line x1="474.9" y1="190" x2="474.9" y2="194" stroke="var(--text-muted)" /><text x="474.9" y="206">0.5</text><line x1="505.8" y1="190" x2="505.8" y2="194" stroke="var(--text-muted)" /><text x="505.8" y="206">1</text><line x1="536.7" y1="190" x2="536.7" y2="194" stroke="var(--text-muted)" /><text x="536.7" y="206">1.5</text><line x1="567.6" y1="190" x2="567.6" y2="194" stroke="var(--text-muted)" /><text x="567.6" y="206">2</text></g>
-      <text x="514.0" y="222" fill="var(--text)" font-size="11" text-anchor="middle">Load (g)</text>
-      <text x="430" y="115.0" fill="var(--text)" font-size="11" text-anchor="middle" transform="rotate(-90 430 115.0)">Shortening velocity</text>
+      <text x="500.0" y="18" fill="var(--text)" font-size="12" font-weight="600"
+        text-anchor="middle">c. Load (isotonic)</text>
+      <line x1="444" y1="190" x2="584" y2="190" stroke="var(--text-muted)"
+        stroke-width="1.2" />
+      <line x1="444" y1="190" x2="444" y2="40" stroke="var(--text-muted)"
+        stroke-width="1.2" />
+      <path
+        d="M444.0,68.3 L445.2,73.3 L446.5,77.9 L447.7,82.3 L448.9,86.5
+        L450.2,90.4 L451.4,94.1 L452.7,97.6 L453.9,100.9 L455.1,104.0
+        L456.4,107.0 L457.6,109.8 L458.8,112.5 L460.1,115.1 L461.3,117.6
+        L462.5,119.9 L463.8,122.2 L465.0,124.3 L466.3,126.4 L467.5,128.3
+        L468.7,130.2 L470.0,132.1 L471.2,133.8 L472.4,135.5 L473.7,137.1
+        L474.9,138.7 L476.1,140.2 L477.4,141.7 L478.6,143.1 L479.9,144.4
+        L481.1,145.7 L482.3,147.0 L483.6,148.2 L484.8,149.4 L486.0,150.6
+        L487.3,151.7 L488.5,152.8 L489.7,153.8 L491.0,154.8 L492.2,155.8
+        L493.5,156.8 L494.7,157.7 L495.9,158.6 L497.2,159.5 L498.4,160.4
+        L499.6,161.2 L500.9,162.0 L502.1,162.8 L503.3,163.6 L504.6,164.4
+        L505.8,165.1 L507.1,165.8 L508.3,166.5 L509.5,167.2 L510.8,167.9
+        L512.0,168.5 L513.2,169.2 L514.5,169.8 L515.7,170.4 L516.9,171.0
+        L518.2,171.6 L519.4,172.1 L520.7,172.7 L521.9,173.2 L523.1,173.8
+        L524.4,174.3 L525.6,174.8 L526.8,175.3 L528.1,175.8 L529.3,176.2
+        L530.5,176.7 L531.8,177.2 L533.0,177.6 L534.3,178.1 L535.5,178.5
+        L536.7,178.9 L538.0,179.4 L539.2,179.8 L540.4,180.2 L541.7,180.6
+        L542.9,180.9 L544.1,181.3 L545.4,181.7 L546.6,182.1 L547.9,182.4
+        L549.1,182.8 L550.3,183.1 L551.6,183.5 L552.8,183.8 L554.0,184.1
+        L555.3,184.5 L556.5,184.8 L557.7,185.1 L559.0,185.4 L560.2,185.7
+        L561.5,186.0 L562.7,186.3 L563.9,186.6 L565.2,186.9 L566.4,187.2
+        L567.6,187.4 L568.9,187.7 L570.1,188.0 L571.3,188.3 L572.6,188.5
+        L573.8,188.8 L575.1,189.0 L576.3,189.3 L577.5,189.5 L578.8,189.8
+        L580.0,190.0" fill="none" stroke="var(--accent)" stroke-width="3" />
+      <g font-size="10" fill="var(--text-muted)" text-anchor="middle"><line
+        x1="444.0" y1="190" x2="444.0" y2="194" stroke="var(--text-muted)"
+        /><text x="444.0" y="206">0</text><line x1="474.9" y1="190" x2="474.9"
+        y2="194" stroke="var(--text-muted)" /><text x="474.9"
+        y="206">0.5</text><line x1="505.8" y1="190" x2="505.8" y2="194"
+        stroke="var(--text-muted)" /><text x="505.8" y="206">1</text><line
+        x1="536.7" y1="190" x2="536.7" y2="194" stroke="var(--text-muted)"
+        /><text x="536.7" y="206">1.5</text><line x1="567.6" y1="190" x2="567.6"
+        y2="194" stroke="var(--text-muted)" /><text x="567.6"
+        y="206">2</text></g>
+      <text x="514.0" y="222" fill="var(--text)" font-size="11"
+        text-anchor="middle">Load (g)</text>
+      <text x="430" y="115.0" fill="var(--text)" font-size="11"
+        text-anchor="middle" transform="rotate(-90 430 115.0)">Shortening
+        velocity</text>
       <g font-size="10"><text x="576.9" y="175.4" fill="var(--accent-2)" text-anchor="end">isometric</text></g>
     </g>
   </svg>
-  <figcaption>The shapes to expect in PhysioEx Exercise 2. More voltage recruits more fibers up to the maximal stimulus; more frequency adds summation up to maximal tetanic tension; more load slows shortening until the contraction becomes isometric.</figcaption>
+  <figcaption>The shapes to expect in PhysioEx Exercise 2. More voltage recruits
+    more fibers up to the maximal stimulus; more frequency adds summation up to
+    maximal tetanic tension; more load slows shortening until the contraction
+    becomes isometric.</figcaption>
 </figure>
 
 In a single fiber, the all-or-none law holds. The graded response here is
@@ -350,8 +516,13 @@ becomes a tetanus.
 skeletal muscle. Summation waves come in two forms:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-05-prak-26-0.222_0.234_0.795_0.906.webp" alt="Treppe, wave summation, incomplete tetanus and complete tetanus compared" loading="lazy" width="1100" height="727" />
-  <figcaption>Treppe, wave summation, incomplete tetanus and complete tetanus compared. <span class="figure-source">Slide 26, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-05-prak-26-0.222_0.234_0.795_0.906.webp"
+    alt="Treppe, wave summation, incomplete tetanus and complete tetanus
+    compared" loading="lazy" width="1100" height="727" />
+  <figcaption>Treppe, wave summation, incomplete tetanus and complete tetanus
+    compared. <span class="figure-source">Slide 26, Praktikum Kontraksi Otot
+    &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 - **Unfused (incomplete) tetanus:** stimuli come before relaxation is

@@ -52,6 +52,7 @@ muscle can still grade its force because it contains many fibers with
 different thresholds, as Chapter 3 explains.
 
 > **Clinical links at the NMJ.**
+>
 > - **Myasthenia gravis:** autoantibodies destroy nicotinic receptors, so
 >   end-plate potentials shrink and muscles tire with repeated use
 >   (drooping eyelids by evening, double vision). Treated with
@@ -71,32 +72,62 @@ electrical event at the sarcolemma to the mechanical event in the
 myofibrils. The link is calcium.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-02-kon-15-0.045_0.26_0.61_0.944.webp" alt="Excitation–contraction coupling and relaxation as drawn for cardiac muscle, with calcium-induced calcium release" loading="lazy" width="1100" height="749" />
-  <figcaption>Excitation–contraction coupling and relaxation as drawn for cardiac muscle, with calcium-induced calcium release (steps 1–6) and Ca²⁺ removal by SERCA and the Na⁺/Ca²⁺ exchanger (steps 7–10). <span class="figure-source">Slide 15, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-02-kon-15-0.045_0.26_0.61_0.944.webp"
+    alt="Excitation–contraction coupling and relaxation as drawn for cardiac
+    muscle, with calcium-induced calcium release" loading="lazy" width="1100"
+    height="749" />
+  <figcaption>Excitation–contraction coupling and relaxation as drawn for
+    cardiac muscle, with calcium-induced calcium release (steps 1–6) and Ca²⁺
+    removal by SERCA and the Na⁺/Ca²⁺ exchanger (steps 7–10). <span
+    class="figure-source">Slide 15, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 620 350" role="img" aria-labelledby="c2e-title c2e-desc">
     <title id="c2e-title">From nerve impulse to calcium signal</title>
-    <desc id="c2e-desc">A motor neuron terminal full of acetylcholine vesicles sits over the folded motor end plate. The sarcolemma continues to the right and dips into the fiber as a T-tubule. Two sarcoplasmic reticulum cisternae flank the T-tubule, with voltage-sensing DHP receptors in the tubule wall touching ryanodine receptor channels in the reticulum. Calcium ions leave the reticulum and reach the myofibril below. A pump on the reticulum returns calcium. Numbered circles one to eight mark the steps.</desc>
+    <desc id="c2e-desc">A motor neuron terminal full of acetylcholine vesicles
+      sits over the folded motor end plate. The sarcolemma continues to the
+      right and dips into the fiber as a T-tubule. Two sarcoplasmic reticulum
+      cisternae flank the T-tubule, with voltage-sensing DHP receptors in the
+      tubule wall touching ryanodine receptor channels in the reticulum. Calcium
+      ions leave the reticulum and reach the myofibril below. A pump on the
+      reticulum returns calcium. Numbered circles one to eight mark the
+      steps.</desc>
     <defs>
-      <marker id="c2e-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <marker id="c2e-arrow" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)" />
       </marker>
     </defs>
-    <path d="M72,0 L72,32 C44,38 34,62 42,86 L150,86 C158,62 146,38 102,32 L102,0 Z" fill="var(--surface-2)" stroke="var(--text-muted)" stroke-width="1.5" />
+    <path
+      d="M72,0 L72,32 C44,38 34,62 42,86 L150,86 C158,62 146,38 102,32 L102,0 Z"
+      fill="var(--surface-2)" stroke="var(--text-muted)" stroke-width="1.5" />
     <g fill="var(--accent-3)" opacity="0.8">
-      <circle cx="68" cy="62" r="6" /><circle cx="90" cy="72" r="6" /><circle cx="112" cy="60" r="6" /><circle cx="128" cy="74" r="6" /><circle cx="58" cy="76" r="5" />
+      <circle cx="68" cy="62" r="6" /><circle cx="90" cy="72" r="6" /><circle
+        cx="112" cy="60" r="6" /><circle cx="128" cy="74" r="6" /><circle
+        cx="58" cy="76" r="5" />
     </g>
-    <text x="112" y="18" fill="var(--text)" font-size="12">Motor neuron terminal (ACh vesicles)</text>
-    <path d="M20,100 L30,100 L36,118 L42,100 L60,100 L66,118 L72,100 L90,100 L96,118 L102,100 L120,100 L126,118 L132,100 L150,100 L156,118 L162,100 L322,100 L322,250 L338,250 L338,100 L600,100" fill="none" stroke="var(--text-muted)" stroke-width="3" />
+    <text x="112" y="18" fill="var(--text)" font-size="12">Motor neuron terminal
+      (ACh vesicles)</text>
+    <path
+      d="M20,100 L30,100 L36,118 L42,100 L60,100 L66,118 L72,100 L90,100 L96,118
+      L102,100 L120,100 L126,118 L132,100 L150,100 L156,118 L162,100 L322,100
+      L322,250 L338,250 L338,100 L600,100" fill="none"
+      stroke="var(--text-muted)" stroke-width="3" />
     <g fill="var(--accent)">
-      <rect x="47" y="95" width="7" height="9" /><rect x="77" y="95" width="7" height="9" /><rect x="107" y="95" width="7" height="9" /><rect x="137" y="95" width="7" height="9" />
+      <rect x="47" y="95" width="7" height="9" /><rect x="77" y="95" width="7"
+        height="9" /><rect x="107" y="95" width="7" height="9" /><rect x="137"
+        y="95" width="7" height="9" />
     </g>
-    <text x="96" y="138" fill="var(--text-muted)" font-size="12" text-anchor="middle">Motor end plate</text>
+    <text x="96" y="138" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Motor end plate</text>
     <text x="500" y="92" fill="var(--text-muted)" font-size="12" text-anchor="middle">Sarcolemma</text>
-    <line x1="230" y1="88" x2="300" y2="88" stroke="var(--accent)" stroke-width="2" marker-end="url(#c2e-arrow)" />
-    <line x1="330" y1="112" x2="330" y2="150" stroke="var(--accent)" stroke-width="2" marker-end="url(#c2e-arrow)" />
+    <line x1="230" y1="88" x2="300" y2="88" stroke="var(--accent)"
+      stroke-width="2" marker-end="url(#c2e-arrow)" />
+    <line x1="330" y1="112" x2="330" y2="150" stroke="var(--accent)"
+      stroke-width="2" marker-end="url(#c2e-arrow)" />
     <g fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5">
       <rect x="236" y="160" width="80" height="80" rx="14" />
       <rect x="344" y="160" width="80" height="80" rx="14" />
@@ -108,40 +139,65 @@ myofibrils. The link is calcium.
     <rect x="308" y="176" width="10" height="14" fill="var(--accent-2)" />
     <rect x="342" y="176" width="10" height="14" fill="var(--accent-2)" />
     <text x="274" y="198" fill="var(--text)" font-size="12" text-anchor="middle">SR</text>
-    <text x="274" y="214" fill="var(--text-muted)" font-size="11" text-anchor="middle">Ca²⁺ store</text>
+    <text x="274" y="214" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">Ca²⁺ store</text>
     <text x="384" y="206" fill="var(--text)" font-size="12" text-anchor="middle">SR</text>
     <text x="330" y="270" fill="var(--text-muted)" font-size="12" text-anchor="middle">T-tubule</text>
     <g fill="var(--red)">
-      <circle cx="256" cy="252" r="3.5" /><circle cx="272" cy="264" r="3.5" /><circle cx="290" cy="276" r="3.5" /><circle cx="248" cy="272" r="3.5" />
-      <circle cx="372" cy="252" r="3.5" /><circle cx="388" cy="266" r="3.5" /><circle cx="404" cy="278" r="3.5" />
+      <circle cx="256" cy="252" r="3.5" /><circle cx="272" cy="264" r="3.5"
+        /><circle cx="290" cy="276" r="3.5" /><circle cx="248" cy="272" r="3.5"
+        />
+      <circle cx="372" cy="252" r="3.5" /><circle cx="388" cy="266" r="3.5"
+        /><circle cx="404" cy="278" r="3.5" />
     </g>
     <text x="420" y="262" fill="var(--red)" font-size="12">Ca²⁺</text>
-    <circle cx="480" cy="198" r="7" fill="var(--surface)" stroke="var(--accent)" stroke-width="2" />
-    <line x1="480" y1="286" x2="480" y2="210" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#c2e-arrow)" />
+    <circle cx="480" cy="198" r="7" fill="var(--surface)" stroke="var(--accent)"
+      stroke-width="2" />
+    <line x1="480" y1="286" x2="480" y2="210" stroke="var(--accent)"
+      stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#c2e-arrow)" />
     <text x="492" y="238" fill="var(--text-muted)" font-size="11">SERCA pump</text>
-    <rect x="40" y="290" width="540" height="34" fill="var(--surface-2)" stroke="var(--border)" />
+    <rect x="40" y="290" width="540" height="34" fill="var(--surface-2)"
+      stroke="var(--border)" />
     <g stroke="var(--accent-2)" stroke-width="2">
-      <line x1="40" y1="297" x2="580" y2="297" /><line x1="40" y1="317" x2="580" y2="317" />
+      <line x1="40" y1="297" x2="580" y2="297" /><line x1="40" y1="317" x2="580"
+        y2="317" />
     </g>
     <g fill="var(--accent)">
-      <rect x="80" y="303" width="100" height="8" rx="3" /><rect x="260" y="303" width="100" height="8" rx="3" /><rect x="440" y="303" width="100" height="8" rx="3" />
+      <rect x="80" y="303" width="100" height="8" rx="3" /><rect x="260" y="303"
+        width="100" height="8" rx="3" /><rect x="440" y="303" width="100"
+        height="8" rx="3" />
     </g>
     <g stroke="var(--text)" stroke-width="2">
-      <line x1="40" y1="290" x2="40" y2="324" /><line x1="220" y1="290" x2="220" y2="324" /><line x1="400" y1="290" x2="400" y2="324" /><line x1="580" y1="290" x2="580" y2="324" />
+      <line x1="40" y1="290" x2="40" y2="324" /><line x1="220" y1="290" x2="220"
+        y2="324" /><line x1="400" y1="290" x2="400" y2="324" /><line x1="580"
+        y1="290" x2="580" y2="324" />
     </g>
-    <text x="310" y="342" fill="var(--text-muted)" font-size="12" text-anchor="middle">Myofibril: Ca²⁺ binds troponin C and crossbridges form</text>
+    <text x="310" y="342" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Myofibril: Ca²⁺ binds troponin C and crossbridges
+      form</text>
     <g font-size="12" font-weight="700" text-anchor="middle">
-      <circle cx="44" cy="22" r="10" fill="var(--accent)" /><text x="44" y="26" fill="var(--surface)">1</text>
-      <circle cx="176" cy="74" r="10" fill="var(--accent)" /><text x="176" y="78" fill="var(--surface)">2</text>
-      <circle cx="214" cy="88" r="10" fill="var(--accent)" /><text x="214" y="92" fill="var(--surface)">3</text>
-      <circle cx="354" cy="128" r="10" fill="var(--accent)" /><text x="354" y="132" fill="var(--surface)">4</text>
-      <circle cx="300" cy="144" r="10" fill="var(--accent)" /><text x="300" y="148" fill="var(--surface)">5</text>
-      <circle cx="226" cy="256" r="10" fill="var(--accent)" /><text x="226" y="260" fill="var(--surface)">6</text>
-      <circle cx="600" cy="307" r="10" fill="var(--accent)" /><text x="600" y="311" fill="var(--surface)">7</text>
-      <circle cx="510" cy="176" r="10" fill="var(--accent)" /><text x="510" y="180" fill="var(--surface)">8</text>
+      <circle cx="44" cy="22" r="10" fill="var(--accent)" /><text x="44" y="26"
+        fill="var(--surface)">1</text>
+      <circle cx="176" cy="74" r="10" fill="var(--accent)" /><text x="176"
+        y="78" fill="var(--surface)">2</text>
+      <circle cx="214" cy="88" r="10" fill="var(--accent)" /><text x="214"
+        y="92" fill="var(--surface)">3</text>
+      <circle cx="354" cy="128" r="10" fill="var(--accent)" /><text x="354"
+        y="132" fill="var(--surface)">4</text>
+      <circle cx="300" cy="144" r="10" fill="var(--accent)" /><text x="300"
+        y="148" fill="var(--surface)">5</text>
+      <circle cx="226" cy="256" r="10" fill="var(--accent)" /><text x="226"
+        y="260" fill="var(--surface)">6</text>
+      <circle cx="600" cy="307" r="10" fill="var(--accent)" /><text x="600"
+        y="311" fill="var(--surface)">7</text>
+      <circle cx="510" cy="176" r="10" fill="var(--accent)" /><text x="510"
+        y="180" fill="var(--surface)">8</text>
     </g>
   </svg>
-  <figcaption>Steps 1–8 from nerve impulse to relaxation. Where the T-tubule touches the SR, the small blocks in the tubule wall are DHP receptors, and the ones in the SR membrane beside them are ryanodine receptors (RyR1).</figcaption>
+  <figcaption>Steps 1–8 from nerve impulse to relaxation. Where the T-tubule
+    touches the SR, the small blocks in the tubule wall are DHP receptors, and
+    the ones in the SR membrane beside them are ryanodine receptors
+    (RyR1).</figcaption>
 </figure>
 
 Following the numbers in the diagram:
@@ -186,8 +242,15 @@ myosin heads, already "cocked" with ADP and Pi bound, cannot attach.
 When Ca²⁺ arrives:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-02-kon-16-0.113_0.28_0.905_0.873.webp" alt="Relaxed state with the myosin head cocked and tropomyosin blocking actin, and initiation of contraction once Ca²⁺ binds troponin" loading="lazy" width="1100" height="464" />
-  <figcaption>Relaxed state with the myosin head cocked and tropomyosin blocking actin, and initiation of contraction once Ca²⁺ binds troponin. <span class="figure-source">Slide 16, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-02-kon-16-0.113_0.28_0.905_0.873.webp"
+    alt="Relaxed state with the myosin head cocked and tropomyosin blocking
+    actin, and initiation of contraction once Ca²⁺ binds troponin"
+    loading="lazy" width="1100" height="464" />
+  <figcaption>Relaxed state with the myosin head cocked and tropomyosin blocking
+    actin, and initiation of contraction once Ca²⁺ binds troponin. <span
+    class="figure-source">Slide 16, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 1. Cytosolic Ca²⁺ rises.
@@ -208,16 +271,29 @@ conventionally described **starting from the rigor state** (*fase
 rigor/kaku*) and that ATP has two separate jobs in it.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-02-kon-17-0.486_0.08_0.955_0.94.webp" alt="The six-step crossbridge cycle, starting from the rigor state" loading="lazy" width="1100" height="1134" />
-  <figcaption>The six-step crossbridge cycle, starting from the rigor state. <span class="figure-source">Slide 17, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-02-kon-17-0.486_0.08_0.955_0.94.webp"
+    alt="The six-step crossbridge cycle, starting from the rigor state"
+    loading="lazy" width="1100" height="1134" />
+  <figcaption>The six-step crossbridge cycle, starting from the rigor state.
+    <span class="figure-source">Slide 17, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 620 430" role="img" aria-labelledby="c2c-title c2c-desc">
     <title id="c2c-title">The crossbridge cycle</title>
-    <desc id="c2c-desc">Four panels arranged in a circle, each showing an actin filament above a thick filament with one myosin head. Top: rigor state, the head bound to actin at 45 degrees with no nucleotide. Right: ATP binds and the head releases actin. Bottom: ATP is split into ADP and phosphate, the head cocks to 90 degrees and binds actin weakly. Left: phosphate is released, the head swings back in the power stroke, pulling actin toward the M line, and ADP is released, returning to rigor. Arrows run clockwise.</desc>
+    <desc id="c2c-desc">Four panels arranged in a circle, each showing an actin
+      filament above a thick filament with one myosin head. Top: rigor state,
+      the head bound to actin at 45 degrees with no nucleotide. Right: ATP binds
+      and the head releases actin. Bottom: ATP is split into ADP and phosphate,
+      the head cocks to 90 degrees and binds actin weakly. Left: phosphate is
+      released, the head swings back in the power stroke, pulling actin toward
+      the M line, and ADP is released, returning to rigor. Arrows run
+      clockwise.</desc>
     <defs>
-      <marker id="c2c-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <marker id="c2c-arrow" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)" />
       </marker>
     </defs>
@@ -228,12 +304,28 @@ rigor/kaku*) and that ATP has two separate jobs in it.
       <rect x="5" y="154" width="210" height="122" rx="12" />
     </g>
     <g fill="var(--accent-soft)" stroke="var(--accent-2)" stroke-width="1">
-      <circle cx="240" cy="30" r="8" /><circle cx="258" cy="30" r="8" /><circle cx="276" cy="30" r="8" /><circle cx="294" cy="30" r="8" /><circle cx="312" cy="30" r="8" /><circle cx="330" cy="30" r="8" /><circle cx="348" cy="30" r="8" /><circle cx="366" cy="30" r="8" /><circle cx="384" cy="30" r="8" />
+      <circle cx="240" cy="30" r="8" /><circle cx="258" cy="30" r="8" /><circle
+        cx="276" cy="30" r="8" /><circle cx="294" cy="30" r="8" /><circle
+        cx="312" cy="30" r="8" /><circle cx="330" cy="30" r="8" /><circle
+        cx="348" cy="30" r="8" /><circle cx="366" cy="30" r="8" /><circle
+        cx="384" cy="30" r="8" />
     </g>
     <g fill="var(--accent-soft)" stroke="var(--accent-2)" stroke-width="1">
-      <circle cx="440" cy="176" r="8" /><circle cx="458" cy="176" r="8" /><circle cx="476" cy="176" r="8" /><circle cx="494" cy="176" r="8" /><circle cx="512" cy="176" r="8" /><circle cx="530" cy="176" r="8" /><circle cx="548" cy="176" r="8" /><circle cx="566" cy="176" r="8" /><circle cx="584" cy="176" r="8" />
-      <circle cx="240" cy="322" r="8" /><circle cx="258" cy="322" r="8" /><circle cx="276" cy="322" r="8" /><circle cx="294" cy="322" r="8" /><circle cx="312" cy="322" r="8" /><circle cx="330" cy="322" r="8" /><circle cx="348" cy="322" r="8" /><circle cx="366" cy="322" r="8" /><circle cx="384" cy="322" r="8" />
-      <circle cx="28" cy="176" r="8" /><circle cx="46" cy="176" r="8" /><circle cx="64" cy="176" r="8" /><circle cx="82" cy="176" r="8" /><circle cx="100" cy="176" r="8" /><circle cx="118" cy="176" r="8" /><circle cx="136" cy="176" r="8" /><circle cx="154" cy="176" r="8" /><circle cx="172" cy="176" r="8" />
+      <circle cx="440" cy="176" r="8" /><circle cx="458" cy="176" r="8"
+        /><circle cx="476" cy="176" r="8" /><circle cx="494" cy="176" r="8"
+        /><circle cx="512" cy="176" r="8" /><circle cx="530" cy="176" r="8"
+        /><circle cx="548" cy="176" r="8" /><circle cx="566" cy="176" r="8"
+        /><circle cx="584" cy="176" r="8" />
+      <circle cx="240" cy="322" r="8" /><circle cx="258" cy="322" r="8"
+        /><circle cx="276" cy="322" r="8" /><circle cx="294" cy="322" r="8"
+        /><circle cx="312" cy="322" r="8" /><circle cx="330" cy="322" r="8"
+        /><circle cx="348" cy="322" r="8" /><circle cx="366" cy="322" r="8"
+        /><circle cx="384" cy="322" r="8" />
+      <circle cx="28" cy="176" r="8" /><circle cx="46" cy="176" r="8" /><circle
+        cx="64" cy="176" r="8" /><circle cx="82" cy="176" r="8" /><circle
+        cx="100" cy="176" r="8" /><circle cx="118" cy="176" r="8" /><circle
+        cx="136" cy="176" r="8" /><circle cx="154" cy="176" r="8" /><circle
+        cx="172" cy="176" r="8" />
     </g>
     <g fill="var(--accent)">
       <rect x="222" y="86" width="176" height="8" rx="3" />
@@ -242,28 +334,44 @@ rigor/kaku*) and that ATP has two separate jobs in it.
       <rect x="22" y="232" width="176" height="8" rx="3" />
     </g>
     <g stroke="var(--accent)" stroke-width="4" stroke-linecap="round" fill="var(--accent)">
-      <line x1="300" y1="86" x2="322" y2="56" /><ellipse cx="328" cy="48" rx="10" ry="12" transform="rotate(35 328 48)" />
-      <line x1="500" y1="232" x2="500" y2="212" /><ellipse cx="500" cy="203" rx="10" ry="12" />
-      <line x1="300" y1="378" x2="300" y2="346" /><ellipse cx="300" cy="338" rx="10" ry="12" />
-      <line x1="100" y1="232" x2="122" y2="202" /><ellipse cx="128" cy="194" rx="10" ry="12" transform="rotate(35 128 194)" />
+      <line x1="300" y1="86" x2="322" y2="56" /><ellipse cx="328" cy="48"
+        rx="10" ry="12" transform="rotate(35 328 48)" />
+      <line x1="500" y1="232" x2="500" y2="212" /><ellipse cx="500" cy="203"
+        rx="10" ry="12" />
+      <line x1="300" y1="378" x2="300" y2="346" /><ellipse cx="300" cy="338"
+        rx="10" ry="12" />
+      <line x1="100" y1="232" x2="122" y2="202" /><ellipse cx="128" cy="194"
+        rx="10" ry="12" transform="rotate(35 128 194)" />
     </g>
     <g font-size="11" font-weight="600">
-      <circle cx="522" cy="206" r="10" fill="var(--accent-3)" /><text x="522" y="210" fill="var(--surface)" text-anchor="middle">ATP</text>
-      <circle cx="324" cy="346" r="10" fill="var(--accent-3)" /><text x="324" y="350" fill="var(--surface)" text-anchor="middle">ADP</text>
-      <circle cx="342" cy="364" r="7" fill="var(--accent-2)" /><text x="342" y="368" fill="var(--surface)" text-anchor="middle" font-size="9">Pi</text>
-      <circle cx="160" cy="214" r="7" fill="var(--accent-2)" /><text x="160" y="218" fill="var(--surface)" text-anchor="middle" font-size="9">Pi</text>
-      <circle cx="184" cy="206" r="10" fill="var(--accent-3)" /><text x="184" y="210" fill="var(--surface)" text-anchor="middle">ADP</text>
+      <circle cx="522" cy="206" r="10" fill="var(--accent-3)" /><text x="522"
+        y="210" fill="var(--surface)" text-anchor="middle">ATP</text>
+      <circle cx="324" cy="346" r="10" fill="var(--accent-3)" /><text x="324"
+        y="350" fill="var(--surface)" text-anchor="middle">ADP</text>
+      <circle cx="342" cy="364" r="7" fill="var(--accent-2)" /><text x="342"
+        y="368" fill="var(--surface)" text-anchor="middle"
+        font-size="9">Pi</text>
+      <circle cx="160" cy="214" r="7" fill="var(--accent-2)" /><text x="160"
+        y="218" fill="var(--surface)" text-anchor="middle"
+        font-size="9">Pi</text>
+      <circle cx="184" cy="206" r="10" fill="var(--accent-3)" /><text x="184"
+        y="210" fill="var(--surface)" text-anchor="middle">ADP</text>
     </g>
-    <line x1="140" y1="196" x2="60" y2="196" stroke="var(--red)" stroke-width="2" marker-end="url(#c2c-arrow)" />
+    <line x1="140" y1="196" x2="60" y2="196" stroke="var(--red)"
+      stroke-width="2" marker-end="url(#c2c-arrow)" />
     <g font-size="12" text-anchor="middle" fill="var(--text)">
       <text x="310" y="110">1. Rigor: head bound at 45°</text>
-      <text x="310" y="124" fill="var(--text-muted)" font-size="11">no nucleotide attached</text>
+      <text x="310" y="124" fill="var(--text-muted)" font-size="11">no
+        nucleotide attached</text>
       <text x="510" y="256">2. ATP binds</text>
-      <text x="510" y="270" fill="var(--text-muted)" font-size="11">myosin lets go of actin</text>
+      <text x="510" y="270" fill="var(--text-muted)" font-size="11">myosin lets
+        go of actin</text>
       <text x="310" y="402">3. ATP → ADP + Pi</text>
-      <text x="310" y="416" fill="var(--text-muted)" font-size="11">head cocks to 90°, binds weakly</text>
+      <text x="310" y="416" fill="var(--text-muted)" font-size="11">head cocks
+        to 90°, binds weakly</text>
       <text x="110" y="256">4. Pi released: power stroke</text>
-      <text x="110" y="270" fill="var(--text-muted)" font-size="11">actin pulled to M line; ADP leaves</text>
+      <text x="110" y="270" fill="var(--text-muted)" font-size="11">actin pulled
+        to M line; ADP leaves</text>
     </g>
     <g fill="none" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#c2c-arrow)">
       <path d="M420,68 Q510,70 510,148" />
@@ -271,10 +379,14 @@ rigor/kaku*) and that ATP has two separate jobs in it.
       <path d="M200,362 Q110,362 110,282" />
       <path d="M110,148 Q110,68 200,68" />
     </g>
-    <text x="310" y="208" fill="var(--text-muted)" font-size="12" text-anchor="middle">Repeats as long as</text>
-    <text x="310" y="224" fill="var(--text-muted)" font-size="12" text-anchor="middle">Ca²⁺ and ATP are present</text>
+    <text x="310" y="208" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Repeats as long as</text>
+    <text x="310" y="224" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Ca²⁺ and ATP are present</text>
   </svg>
-  <figcaption>One turn of the crossbridge cycle. ATP binding releases the head; ATP hydrolysis recocks it; release of Pi powers the stroke. Each stroke moves the thin filament about 10 nm.</figcaption>
+  <figcaption>One turn of the crossbridge cycle. ATP binding releases the head;
+    ATP hydrolysis recocks it; release of Pi powers the stroke. Each stroke
+    moves the thin filament about 10 nm.</figcaption>
 </figure>
 
 Step by step:
@@ -352,13 +464,24 @@ it can keep contracting for hours. It manages this with three pathways
 that regenerate ATP at different speeds.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-02-kon-20-0.045_0.247_0.672_0.873.webp" alt="The three ways muscle regenerates ATP" loading="lazy" width="1100" height="618" />
-  <figcaption>The three ways muscle regenerates ATP: direct phosphorylation by creatine phosphate, anaerobic glycolysis and aerobic respiration. <span class="figure-source">Slide 20, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-02-kon-20-0.045_0.247_0.672_0.873.webp"
+    alt="The three ways muscle regenerates ATP" loading="lazy" width="1100"
+    height="618" />
+  <figcaption>The three ways muscle regenerates ATP: direct phosphorylation by
+    creatine phosphate, anaerobic glycolysis and aerobic respiration. <span
+    class="figure-source">Slide 20, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-02-kon-21-0.146_0.253_0.875_0.893.webp" alt="Which energy source dominates as exercise goes on" loading="lazy" width="1100" height="544" />
-  <figcaption>Which energy source dominates as exercise goes on. <span class="figure-source">Slide 21, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-02-kon-21-0.146_0.253_0.875_0.893.webp"
+    alt="Which energy source dominates as exercise goes on" loading="lazy"
+    width="1100" height="544" />
+  <figcaption>Which energy source dominates as exercise goes on. <span
+    class="figure-source">Slide 21, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 | Pathway | Reaction | O₂ needed? | ATP yield | How long it lasts at maximal effort | Typical activities |
@@ -410,8 +533,12 @@ Endurance training, by contrast, increases mitochondria, capillaries and
 myoglobin more than size.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-02-kon-23-0.297_0.48_0.722_0.873.webp" alt="Hypertrophy" loading="lazy" width="1100" height="573" />
-  <figcaption>Hypertrophy: the same arm before and after resistance training. <span class="figure-source">Slide 23, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-02-kon-23-0.297_0.48_0.722_0.873.webp"
+    alt="Hypertrophy" loading="lazy" width="1100" height="573" />
+  <figcaption>Hypertrophy: the same arm before and after resistance training.
+    <span class="figure-source">Slide 23, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 ### Atrophy
@@ -420,8 +547,12 @@ myoglobin more than size.
 smaller and weaker. It has three common causes:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-02-kon-24-0.556_0.307_0.917_0.787.webp" alt="Atrophy" loading="lazy" width="962" height="721" />
-  <figcaption>Atrophy: an active arm compared with an inactive one. <span class="figure-source">Slide 24, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-02-kon-24-0.556_0.307_0.917_0.787.webp"
+    alt="Atrophy" loading="lazy" width="962" height="721" />
+  <figcaption>Atrophy: an active arm compared with an inactive one. <span
+    class="figure-source">Slide 24, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 - **Disuse:** prolonged bed rest, immobilization in a cast, or

@@ -49,104 +49,185 @@ account environment variables it runs as a plain static site.
 ## Features
 
 **Flashcards**
+
 - SM-2 spaced repetition with a due-card queue and a session summary
 - Tag filtering (remembered per deck), with color-coded tag pills
 - "Hardest cards" ranked by lapses, per deck and globally on the Progress page
 - Optional card images and read-aloud (Web Speech API)
 
 **Image Occlusion** (anatomy)
-- Anki-style: atlas figures with their labels covered; name the one under the red box, reveal it, grade it. Every label has its own SM-2 schedule, with the next interval shown on each grade button
-- Review (what's due) or Browse all (every figure in order): previous/next label and figure, tap any box or numbered chip to ask that label, swipe on phones
-- Gallery of every figure with its progress, colour-coded label chips (new, due, learning, mastered), undo the last grade, show every label to study a figure whole, zoom, hide all or one, filter by region; picks up where you left off
+
+- Anki-style: atlas figures with their labels covered; name the one under the
+  red box, reveal it, grade it. Every label has its own SM-2 schedule, with the
+  next interval shown on each grade button
+- Review (what's due) or Browse all (every figure in order): previous/next label
+  and figure, tap any box or numbered chip to ask that label, swipe on phones
+- Gallery of every figure with its progress, colour-coded label chips (new, due,
+  learning, mastered), undo the last grade, show every label to study a figure
+  whole, zoom, hide all or one, filter by region; picks up where you left off
 
 **Explain this** (quizzes and flashcards)
-- Shows the passages of the subject's own ebook and summary that match the question: free, instant, works offline
-- Signed-in students can ask an AI to explain the answer (and why their pick was wrong), streamed in, grounded in those passages, with a daily allowance per student
+
+- Shows the passages of the subject's own ebook and summary that match the
+  question: free, instant, works offline
+- Signed-in students can ask an AI to explain the answer (and why their pick was
+  wrong), streamed in, grounded in those passages, with a daily allowance per
+  student
 
 **Alfond** (study assistant)
-- A chat that can be asked anything, from its own page or from a floating button on every page
-- From the button, each question carries the text of the page on screen, so "what does this mean?" is about what you're reading (switch it off per question)
+
+- A chat that can be asked anything, from its own page or from a floating button
+  on every page
+- From the button, each question carries the text of the page on screen, so
+  "what does this mean?" is about what you're reading (switch it off per
+  question)
 - One conversation across pages, kept on the device; stop, retry, new chat
 - The floating button can be turned off on Alfond's page or in Account
 - Signed-in students only, on the same daily AI allowance as "Explain this"
 
 **Quizzes**
+
 - One question at a time with instant feedback and an explanation for every answer
 - A numbered navigator, previous/next, and full keyboard control
-- Question and option order reshuffled on every attempt, so answers can't be memorized by position
-- Banks over 50 questions split into about 25-question sections you can take one at a time
+- Question and option order reshuffled on every attempt, so answers can't be
+  memorized by position
+- Banks over 50 questions split into about 25-question sections you can take one
+  at a time
 - An unfinished attempt resumes where you left off
-- "Review missed only" retry, and a due queue where missed questions come back until you answer them correctly
-- Score-trend sparkline, question images (micrographs and diagrams), and confetti on a perfect score
+- "Review missed only" retry, and a due queue where missed questions come back
+  until you answer them correctly
+- Score-trend sparkline, question images (micrographs and diagrams), and
+  confetti on a perfect score
 
 **Exam**
-- Timed block exams: up to 100 questions at 1 minute each, scaled down for smaller banks
-- A block can have several **exam packages** (e.g. past papers from different sources) to choose between. Without packages, the exam pools the block's quiz banks.
+
+- Timed block exams: up to 100 questions at 1 minute each, scaled down for
+  smaller banks
+- A block can have several **exam packages** (e.g. past papers from different
+  sources) to choose between. Without packages, the exam pools the block's quiz
+  banks.
 - **Real exam** mode (scored only at the end) or **instant feedback** mode
-- Flag for review, a navigator showing answered and flagged questions, and a low-time warning
+- Flag for review, a navigator showing answered and flagged questions, and a
+  low-time warning
 - Submitting with questions unanswered or flagged asks for confirmation first
-- Review with explanations after submitting, a "retry missed" round, and score history per package
+- Review with explanations after submitting, a "retry missed" round, and score
+  history per package
 
 **Modules**
-- The original lecture slides and practicum PDFs, viewable in-app with an "open in new tab" fallback
-- Grouped as **Lecture**, then **Practicum** (Reports, Assistance), with empty sections marked "To be added"
+
+- The original lecture slides and practicum PDFs, viewable in-app with an "open
+  in new tab" fallback
+- Grouped as **Lecture**, then **Practicum** (Reports, Assistance), with empty
+  sections marked "To be added"
 
 **Virtual Lab**
-- A practice simulator for the PhysioEx 9.1 Exercise 2 (skeletal muscle) dry lab: all seven activities, from the twitch and latent period to the load–velocity relationship
-- A muscle on a force transducer with an oscilloscope trace, voltage, length, stimulus rate and weight controls, and a **Measure** line for the latent period
-- Summation, unfused and fused tetanus, fatigue with rest periods, length–tension (active, passive, total) and isotonic lifts, from one tested model (`src/lib/muscleSim.ts`) tuned to the practicum's numbers (threshold 0.8 V, maximal 8.5 V, 1.82 g twitch, optimal length 75 mm)
-- **Record Data** into a table that is kept per activity, **Plot Data**, CSV download, and check questions with explanations
+
+- A practice simulator for the PhysioEx 9.1 Exercise 2 (skeletal muscle) dry
+  lab: all seven activities, from the twitch and latent period to the
+  load–velocity relationship
+- A muscle on a force transducer with an oscilloscope trace, voltage, length,
+  stimulus rate and weight controls, and a **Measure** line for the latent
+  period
+- Summation, unfused and fused tetanus, fatigue with rest periods,
+  length–tension (active, passive, total) and isotonic lifts, from one tested
+  model (`src/lib/muscleSim.ts`) tuned to the practicum's numbers (threshold 0.8
+  V, maximal 8.5 V, 1.82 g twitch, optimal length 75 mm)
+- **Record Data** into a table that is kept per activity, **Plot Data**, CSV
+  download, and check questions with explanations
 
 **Ebooks and summaries**
-- Chaptered Markdown with original inline SVG diagrams, a table of contents, and previous/next navigation
+
+- Chaptered Markdown with original inline SVG diagrams, a table of contents, and
+  previous/next navigation
 - Resume position and chapter-completion tracking
-- Adjustable font size, an accessible-font toggle (Atkinson Hyperlegible), and print-friendly styling
+- Adjustable font size, an accessible-font toggle (Atkinson Hyperlegible), and
+  print-friendly styling
 - Optional PDFs and a "Further reading" list of external links
 
 **Search and navigation**
-- Fuzzy search (Fuse.js) across every flashcard, quiz question, summary section and ebook chapter, with type and subject filters
+
+- Fuzzy search (Fuse.js) across every flashcard, quiz question, summary section
+  and ebook chapter, with type and subject filters
 - A **⌘K / Ctrl+K** command palette to jump to any page or subject
-- A collapsible sidebar that shrinks to an icon rail on desktop (remembered between visits), giving pages such as the ebook reader a wider column
+- A collapsible sidebar that shrinks to an icon rail on desktop (remembered
+  between visits), giving pages such as the ebook reader a wider column
 
 **Knowledge map** (`/map`)
-- One graph of every concept across all blocks and subjects (about 700), from the terms the ebooks and summaries put in bold, linked where they come up together in a paragraph, flashcard or quiz question; a concept taught in two subjects or blocks is one dot that joins them
-- Built at deploy time into `/knowledge-graph.json` (layout included, so it opens instantly); past-paper exam questions are never read
-- Tap a concept: what it links to, the exact ebook and summary sections about it, its flashcards (opened as just those cards), quiz questions (as a drill) and labelled figures, and "Ask Alfond" how it connects
-- Color by subject or by your own mastery (weak concepts ringed), search, block and subject filters, "only links between subjects", focus on one concept's links, and a list view
-- Optional AI relationship labels ("innervates", "part of"…): `AI_BASE_URL=… AI_API_KEY=… AI_MODEL=… npm run graph:relations`, then commit `content/graph/relations.json`
+
+- One graph of every concept across all blocks and subjects (about 700), from
+  the terms the ebooks and summaries put in bold, linked where they come up
+  together in a paragraph, flashcard or quiz question; a concept taught in two
+  subjects or blocks is one dot that joins them
+- Built at deploy time into `/knowledge-graph.json` (layout included, so it
+  opens instantly); past-paper exam questions are never read
+- Tap a concept: what it links to, the exact ebook and summary sections about
+  it, its flashcards (opened as just those cards), quiz questions (as a drill)
+  and labelled figures, and "Ask Alfond" how it connects
+- Color by subject or by your own mastery (weak concepts ringed), search, block
+  and subject filters, "only links between subjects", focus on one concept's
+  links, and a list view
+- Optional AI relationship labels ("innervates", "part of"…): `AI_BASE_URL=…
+  AI_API_KEY=… AI_MODEL=… npm run graph:relations`, then commit
+  `content/graph/relations.json`
 
 **Exam plan** (`/plan`)
-- One exam date per block: the block's official date (`examDate` in `src/lib/blocks.ts`) unless the student sets their own
-- A readiness score per subject and block, from card and image-occlusion mastery, quiz accuracy and coverage, chapters read and timed mock scores
-- **Today's plan**, also on Home: a checklist sized to the minutes the student has, which ticks itself off as they study and spreads a missed day over the days left
-- Phases that change the plan as the exam nears: Learn (new material) → Strengthen (2 weeks out: weak spots) → Mock exams (last 3 days) → Final review
+
+- One exam date per block: the block's official date (`examDate` in
+  `src/lib/blocks.ts`) unless the student sets their own
+- A readiness score per subject and block, from card and image-occlusion
+  mastery, quiz accuracy and coverage, chapters read and timed mock scores
+- **Today's plan**, also on Home: a checklist sized to the minutes the student
+  has, which ticks itself off as they study and spreads a missed day over the
+  days left
+- Phases that change the plan as the exam nears: Learn (new material) →
+  Strengthen (2 weeks out: weak spots) → Mock exams (last 3 days) → Final review
 - Mock score trend against a target score, projected to exam day
-- Weak spots by name (flashcard topics, most-missed questions, slipping labels), each with a one-tap drill
-- "Add to calendar" (.ics), "Plan my week with Alfond", and readiness against the class average (signed in; shown once 3+ classmates have one)
+- Weak spots by name (flashcard topics, most-missed questions, slipping labels),
+  each with a one-tap drill
+- "Add to calendar" (.ics), "Plan my week with Alfond", and readiness against
+  the class average (signed in; shown once 3+ classmates have one)
 
 **Progress**
-- A summary of the current block (readiness, countdown, weakest subject) and every subject with meters for cards, labels, quiz, reading and mocks
+
+- A summary of the current block (readiness, countdown, weakest subject) and
+  every subject with meters for cards, labels, quiz, reading and mocks
 - This week against last week, reviews per day, quiz and mock score trends
-- An activity heatmap shaded by how much was studied; tap a day to see what; the time of day you study most
+- An activity heatmap shaded by how much was studied; tap a day to see what; the
+  time of day you study most
 - Weak spots, milestones, and "Ask Alfond about my progress"
-- Export and import of all progress as a JSON file, plus a reminder if you haven't backed up in 14 days
+- Export and import of all progress as a JSON file, plus a reminder if you
+  haven't backed up in 14 days
 
 **Accounts (optional)**
+
 - Guest mode by default: everything works without signing in
-- Sign up with Google (one tap, with the account chooser) or email and password; profile with name and cohort
-- Connect Google to a password account from the Account page; a Google sign-in never silently joins an unverified password account with the same email
-- Clear messages when Google sign-in is cancelled or fails, and a hint to open the page in a real browser when it's inside an app (Instagram, LINE…) where Google blocks sign-in
-- Flashcard reviews, quiz and exam history, reading progress, streak days and settings sync across devices, offline-first
-- Guest progress is merged into the account on first sign-in (per-card, per-attempt, per-day, so nothing studied on either device is lost)
-- Sign out keeps local progress; "sign out and clear" for shared computers; download all account data; delete the account
+- Sign up with Google (one tap, with the account chooser) or email and password;
+  profile with name and cohort
+- Connect Google to a password account from the Account page; a Google sign-in
+  never silently joins an unverified password account with the same email
+- Clear messages when Google sign-in is cancelled or fails, and a hint to open
+  the page in a real browser when it's inside an app (Instagram, LINE…) where
+  Google blocks sign-in
+- Flashcard reviews, quiz and exam history, reading progress, streak days and
+  settings sync across devices, offline-first
+- Guest progress is merged into the account on first sign-in (per-card,
+  per-attempt, per-day, so nothing studied on either device is lost)
+- Sign out keeps local progress; "sign out and clear" for shared computers;
+  download all account data; delete the account
 - A "current block" setting (guests too) that puts your block first on Home
-- Opt-in **leaderboard**: this week, all time and study streak, for everyone or just your cohort. Points are worked out on the server from synced progress (1 per correct answer, 2 per learned flashcard, 10 per finished chapter, 5 per study day), and you choose the display name
+- Opt-in **leaderboard**: this week, all time and study streak, for everyone or
+  just your cohort. Points are worked out on the server from synced progress (1
+  per correct answer, 2 per learned flashcard, 10 per finished chapter, 5 per
+  study day), and you choose the display name
 
 **App**
-- Installable PWA that works offline after the first visit (details in [Offline and updates](#offline-and-updates))
+
+- Installable PWA that works offline after the first visit (details in [Offline
+  and updates](#offline-and-updates))
 - Light and dark themes, with a color per content type and per subject
 - Blocks with no content yet appear as "coming soon" placeholders
-- A recovery screen instead of a blank page if saved progress from an older version breaks something
+- A recovery screen instead of a blank page if saved progress from an older
+  version breaks something
 
 ## Quick start
 
@@ -169,20 +250,31 @@ any code. Nothing is fetched at runtime.
 
 ```
 content/
-  flashcards/block/{blockId}/{subject}/deck.json       → Flashcard[]     { id, front, back, tags, image? }
-  occlusion/block/{blockId}/{subject}/notes.json       → OcclusionNote[] { id, image, width, height, title, region, chapter, masks: [{ id, x, y, w, h, label }] }
-  quizzes/block/{blockId}/{subject}/bank.json          → QuizQuestion[]  { id, question, options, answer, explanation, image? }
-  quizzes/block/{blockId}/{subject}/*.html             → self-contained interactive quiz, embedded in an iframe
-  exams/block/{blockId}/{packageId}/bank.json          → QuizQuestion[], one exam package
-  exams/block/{blockId}/{packageId}/meta.json          → { name }, the package's display name
-  ebooks/block/{blockId}/{subject}/meta.json           → { title, description, chapters: [{ id, title }], resources?: [{ title, url }] }
-  ebooks/block/{blockId}/{subject}/chapter-NN.md       → Markdown chapter (inline <svg> diagrams allowed)
-  ebooks/block/{blockId}/{subject}/*.pdf               → PDF shown alongside the chapters
-  summaries/block/{blockId}/{subject}.md               → Markdown summary
-  modules/block/{blockId}/{subject}/lecture/*.pdf              → lecturer slides
-  modules/block/{blockId}/{subject}/practicum/reports/*.pdf    → practicum reports
-  modules/block/{blockId}/{subject}/practicum/assistance/*.pdf → practicum assistance (asistensi) decks
-  tips/tips.json                                       → string[], the tip of the day
+  flashcards/block/{blockId}/{subject}/
+    deck.json        → Flashcard[] { id, front, back, tags, image? }
+  occlusion/block/{blockId}/{subject}/
+    notes.json       → OcclusionNote[] { id, image, width, height, title,
+                       region, chapter, masks: [{ id, x, y, w, h, label }] }
+  quizzes/block/{blockId}/{subject}/
+    bank.json        → QuizQuestion[] { id, question, options, answer,
+                       explanation, image? }
+    *.html           → self-contained interactive quiz, embedded in an iframe
+  exams/block/{blockId}/{packageId}/
+    bank.json        → QuizQuestion[], one exam package
+    meta.json        → { name }, the package's display name
+  ebooks/block/{blockId}/{subject}/
+    meta.json        → { title, description, chapters: [{ id, title }],
+                       resources?: [{ title, url }] }
+    chapter-NN.md    → Markdown chapter (inline <svg> diagrams allowed)
+    *.pdf            → PDF shown alongside the chapters
+  summaries/block/{blockId}/
+    {subject}.md     → Markdown summary
+  modules/block/{blockId}/{subject}/
+    lecture/*.pdf              → lecturer slides
+    practicum/reports/*.pdf    → practicum reports
+    practicum/assistance/*.pdf → practicum assistance (asistensi) decks
+  tips/
+    tips.json        → string[], the tip of the day
 ```
 
 ### Blocks and subjects
@@ -292,17 +384,21 @@ src/
   hooks/        useSpacedRepetition, useQuizProgress, useExamHistory, useTheme,
                 useReadingPrefs, useServiceWorkerUpdate, useLocalStorage…
   lib/          pure logic (each piece has a *.test.ts beside it)
-  styles/       theme.css (design tokens) plus one stylesheet per area, imported by index.css
+  styles/       theme.css (design tokens) plus one stylesheet per area,
+                imported by index.css
   types/        content.ts: Flashcard, QuizQuestion, ExamAttempt, EbookMeta…
   context/      AccountContext: session, sync scheduling, sign-in actions
 api/
   index.ts      the Vercel Function; vercel.json rewrites /api/* here
 server/         the API behind it:
   app.ts          routes: auth (Better Auth), config, sync, export, leaderboard
-  schema.ts       every MongoDB collection and its indexes, created once per cold start
-  progressStore.ts  synced progress, one document per user per key (MongoDB and in-memory)
+  schema.ts       every MongoDB collection and its indexes, created once per
+                  cold start
+  progressStore.ts  synced progress, one document per user per key
+                    (MongoDB and in-memory)
   leaderboard.ts  scoring and ranking, one document per user (MongoDB and in-memory)
-  mongo.ts        the shared client; devApi.ts serves the API from the Vite dev server
+  mongo.ts        the shared client; devApi.ts serves the API from the Vite
+                  dev server
 ```
 
 ### Storage
@@ -377,7 +473,8 @@ grid. An EKG pulse trace is the logo and hero decoration.
   plus your name, email, optional cohort and a hashed password. Nothing is
   shared with other users unless you join the leaderboard, which shows your
   chosen display name, cohort and scores to other signed-in students (never
-  your email or answers). Leave it any time. **Account → Download my data** exports it all, and
+  your email or answers). Leave it any time. **Account → Download my data**
+  exports it all, and
   **Delete account** removes the account and its stored progress.
 - The public [Privacy Policy](https://medicine.necr.help/privacy) and
   [Terms of Service](https://medicine.necr.help/terms) are static pages in
@@ -393,7 +490,8 @@ grid. An EKG pulse trace is the logo and hero decoration.
 ```bash
 npm run dev          # dev server on http://localhost:5173 (guest-only)
 npm run dev:api      # same, plus the account API with in-memory storage
-npm run build        # type-check (tsc -b), build to dist/, generate the service worker
+npm run build        # type-check (tsc -b), build to dist/ and generate the
+                     # service worker
 npm run preview      # serve the production build locally
 npm run lint         # oxlint
 npm run test         # vitest, single run
@@ -440,7 +538,8 @@ accounts (see `.env.example`):
 
 ### AI: explanations and Alfond (optional, free tier)
 
-"Ask AI to explain" and Alfond's chat call any OpenAI-compatible gateway from the server; the
+"Ask AI to explain" and Alfond's chat call any OpenAI-compatible gateway from
+the server; the
 site is set up for [NaraRouter](https://bynara.id/) and its free daily
 allowance. In Vercel → Environment Variables (never in the repo):
 

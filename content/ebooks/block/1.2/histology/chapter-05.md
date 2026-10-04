@@ -10,8 +10,15 @@ burn that spares the deep dermis).
 ## Hair
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/hair-diagram.webp" alt="Drawing of a hair and its follicle in the skin, with the bulb, papilla, sebaceous gland and arrector pili labeled, and micrographs of the follicle" loading="lazy" width="1000" height="775" />
-  <figcaption>A hair and its follicle: the shaft above the skin, the root within the follicle, and the expanded bulb at the base with its dermal papilla. A sebaceous gland empties into the follicle, and the arrector pili muscle attaches to it. <span class="figure-source">Page 37, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/hair-diagram.webp"
+    alt="Drawing of a hair and its follicle in the skin, with the bulb, papilla,
+    sebaceous gland and arrector pili labeled, and micrographs of the follicle"
+    loading="lazy" width="1000" height="775" />
+  <figcaption>A hair and its follicle: the shaft above the skin, the root within
+    the follicle, and the expanded bulb at the base with its dermal papilla. A
+    sebaceous gland empties into the follicle, and the arrector pili muscle
+    attaches to it. <span class="figure-source">Page 37, Integumentary System
+    module</span></figcaption>
 </figure>
 
 A hair is divided into:
@@ -41,8 +48,13 @@ out**:
    like roof tiles.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/hair-longitudinal.webp" alt="Drawing of a hair follicle in longitudinal section from the bulb to the surface" loading="lazy" width="708" height="1000" />
-  <figcaption>A hair follicle in longitudinal section, from the bulb with its papilla at the base up to where the hair leaves the skin. <span class="figure-source">Page 38, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/hair-longitudinal.webp"
+    alt="Drawing of a hair follicle in longitudinal section from the bulb to the
+    surface" loading="lazy" width="708" height="1000" />
+  <figcaption>A hair follicle in longitudinal section, from the bulb with its
+    papilla at the base up to where the hair leaves the skin. <span
+    class="figure-source">Page 38, Integumentary System
+    module</span></figcaption>
 </figure>
 
 ### The follicle's sheaths
@@ -60,13 +72,27 @@ parts, separated by the glassy membrane** (a thick basement membrane):
   the hair).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/hair-cross-section-diagram.webp" alt="Drawing of a hair follicle in cross-section showing its concentric layers" loading="lazy" width="1000" height="550" />
-  <figcaption>A follicle in cross-section, labeled from outside in (Indonesian labels: <em>sarung jaringan ikat</em> = connective tissue sheath, <em>membran kemaca</em> = glassy membrane, <em>sarung akar rambut luar/dalam</em> = outer/inner root sheath, <em>lapis Henle</em>, <em>lapis Huxley</em>, <em>kutikula</em>, <em>korteks</em>, <em>medula</em>). <span class="figure-source">Page 39, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/hair-cross-section-diagram.webp"
+    alt="Drawing of a hair follicle in cross-section showing its concentric
+    layers" loading="lazy" width="1000" height="550" />
+  <figcaption>A follicle in cross-section, labeled from outside in (Indonesian
+    labels: <em>sarung jaringan ikat</em> = connective tissue sheath,
+    <em>membran kemaca</em> = glassy membrane, <em>sarung akar rambut
+    luar/dalam</em> = outer/inner root sheath, <em>lapis Henle</em>, <em>lapis
+    Huxley</em>, <em>kutikula</em>, <em>korteks</em>, <em>medula</em>). <span
+    class="figure-source">Page 39, Integumentary System
+    module</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image63.jpg" alt="A hair follicle cut across: a pigmented hair in the center surrounded by rings of epithelial cells and connective tissue" loading="lazy" width="760" height="609" />
-  <figcaption>A hair follicle in transverse section: the pigmented hair shaft in the center, ringed by the epithelial root sheaths and then the connective tissue sheath. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image63.jpg"
+    alt="A hair follicle cut across: a pigmented hair in the center surrounded
+    by rings of epithelial cells and connective tissue" loading="lazy"
+    width="760" height="609" />
+  <figcaption>A hair follicle in transverse section: the pigmented hair shaft in
+    the center, ringed by the epithelial root sheaths and then the connective
+    tissue sheath. <span class="figure-source">Histology practicum
+    quiz</span></figcaption>
 </figure>
 
 ### Arrector pili
@@ -90,8 +116,13 @@ in the Block 1.1 histology ebook.
 ### Sebaceous glands
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image46.jpg" alt="Section of hairy skin with a boxed sebaceous gland beside a follicle, enlarged to show clusters of large pale cells" loading="lazy" width="760" height="505" />
-  <figcaption>A sebaceous gland (boxed, and enlarged on the right) opening into a hair follicle: clusters of large, pale, foamy cells filled with lipid. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image46.jpg"
+    alt="Section of hairy skin with a boxed sebaceous gland beside a follicle,
+    enlarged to show clusters of large pale cells" loading="lazy" width="760"
+    height="505" />
+  <figcaption>A sebaceous gland (boxed, and enlarged on the right) opening into
+    a hair follicle: clusters of large, pale, foamy cells filled with lipid.
+    <span class="figure-source">Histology practicum quiz</span></figcaption>
 </figure>
 
 - **Simple branched acinar** glands.
@@ -109,8 +140,13 @@ in the Block 1.1 histology ebook.
 ### Eccrine sweat glands
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image51.jpg" alt="Dermis with coiled tubular glands cut in many places, enlarged on the right" loading="lazy" width="760" height="514" />
-  <figcaption>Eccrine sweat glands: a coiled tube cut many times, so it appears as a cluster of small round profiles deep in the dermis. The pale secretory tubules and the darker, narrower ducts lie side by side. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image51.jpg"
+    alt="Dermis with coiled tubular glands cut in many places, enlarged on the
+    right" loading="lazy" width="760" height="514" />
+  <figcaption>Eccrine sweat glands: a coiled tube cut many times, so it appears
+    as a cluster of small round profiles deep in the dermis. The pale secretory
+    tubules and the darker, narrower ducts lie side by side. <span
+    class="figure-source">Histology practicum quiz</span></figcaption>
 </figure>
 
 - **Simple coiled tubular** glands, found in **almost all skin** and most
@@ -133,8 +169,12 @@ in the Block 1.1 histology ebook.
 ### Myoepithelial cells
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image72.jpg" alt="Secretory tubules of a sweat gland with a red arrow pointing to a flat cell at the edge of a tubule" loading="lazy" width="760" height="504" />
-  <figcaption>Myoepithelial cells (red arrow): flattened, contractile cells lying between the secretory cells and the basal lamina. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image72.jpg"
+    alt="Secretory tubules of a sweat gland with a red arrow pointing to a flat
+    cell at the edge of a tubule" loading="lazy" width="760" height="504" />
+  <figcaption>Myoepithelial cells (red arrow): flattened, contractile cells
+    lying between the secretory cells and the basal lamina. <span
+    class="figure-source">Histology practicum quiz</span></figcaption>
 </figure>
 
 **Myoepithelial cells** are flattened, contractile epithelial cells that
@@ -147,8 +187,12 @@ in the duct**.
 ### Apocrine sweat glands
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image50.jpg" alt="Dermis with a circled cluster of large glands with wide lumens" loading="lazy" width="760" height="506" />
-  <figcaption>Apocrine sweat glands (circled): larger coils than eccrine glands, with much wider lumens. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image50.jpg"
+    alt="Dermis with a circled cluster of large glands with wide lumens"
+    loading="lazy" width="760" height="506" />
+  <figcaption>Apocrine sweat glands (circled): larger coils than eccrine glands,
+    with much wider lumens. <span class="figure-source">Histology practicum
+    quiz</span></figcaption>
 </figure>
 
 - Also coiled tubular glands, but **larger, with a much wider lumen**.
@@ -173,8 +217,13 @@ in the duct**.
 ## Nails
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image66.jpg" alt="Longitudinal section of a fingertip showing the nail as a dense, darkly stained plate on the upper surface" loading="lazy" width="760" height="608" />
-  <figcaption>A nail in longitudinal section: the keratin nail plate lying on the dorsal surface of the fingertip. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image66.jpg"
+    alt="Longitudinal section of a fingertip showing the nail as a dense, darkly
+    stained plate on the upper surface" loading="lazy" width="760" height="608"
+    />
+  <figcaption>A nail in longitudinal section: the keratin nail plate lying on
+    the dorsal surface of the fingertip. <span class="figure-source">Histology
+    practicum quiz</span></figcaption>
 </figure>
 
 The **nail** is a plate of hard keratin on the **dorsal surface of the

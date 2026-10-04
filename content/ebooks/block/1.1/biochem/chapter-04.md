@@ -20,28 +20,47 @@ the single most abundant protein in blood, synthesized by hepatocytes.
 <figure class="diagram">
   <svg viewBox="0 0 640 220" role="img" aria-labelledby="epg-title epg-desc">
     <title id="epg-title">Serum protein electrophoresis pattern</title>
-    <desc id="epg-desc">A bar chart of relative band position from the loading origin: albumin travels farthest, then alpha-1, alpha-2, beta, and gamma globulin closest to the origin, alongside a note that smaller proteins migrate faster.</desc>
-    <line x1="60" y1="20" x2="60" y2="180" stroke="var(--border)" stroke-width="1.5" />
+    <desc id="epg-desc">A bar chart of relative band position from the loading
+      origin: albumin travels farthest, then alpha-1, alpha-2, beta, and gamma
+      globulin closest to the origin, alongside a note that smaller proteins
+      migrate faster.</desc>
+    <line x1="60" y1="20" x2="60" y2="180" stroke="var(--border)"
+      stroke-width="1.5" />
     <text x="45" y="15" fill="var(--text-muted)" font-size="11" text-anchor="middle">origin</text>
-    <line x1="60" y1="180" x2="610" y2="180" stroke="var(--border)" stroke-width="1.5" />
-    <text x="610" y="200" fill="var(--text-muted)" font-size="11" text-anchor="end">farther travel (smaller, faster) &#8594;</text>
+    <line x1="60" y1="180" x2="610" y2="180" stroke="var(--border)"
+      stroke-width="1.5" />
+    <text x="610" y="200" fill="var(--text-muted)" font-size="11"
+      text-anchor="end">farther travel (smaller, faster) &#8594;</text>
     <g>
-      <rect x="90" y="160" width="70" height="14" fill="var(--surface-2)" stroke="var(--border)" />
+      <rect x="90" y="160" width="70" height="14" fill="var(--surface-2)"
+        stroke="var(--border)" />
       <text x="125" y="150" fill="var(--text)" font-size="11" text-anchor="middle">&#947;</text>
-      <rect x="190" y="160" width="70" height="14" fill="var(--surface-2)" stroke="var(--border)" />
+      <rect x="190" y="160" width="70" height="14" fill="var(--surface-2)"
+        stroke="var(--border)" />
       <text x="225" y="150" fill="var(--text)" font-size="11" text-anchor="middle">&#946;</text>
-      <rect x="290" y="160" width="70" height="14" fill="var(--surface-2)" stroke="var(--border)" />
+      <rect x="290" y="160" width="70" height="14" fill="var(--surface-2)"
+        stroke="var(--border)" />
       <text x="325" y="150" fill="var(--text)" font-size="11" text-anchor="middle">&#945;2</text>
-      <rect x="390" y="160" width="70" height="14" fill="var(--surface-2)" stroke="var(--border)" />
+      <rect x="390" y="160" width="70" height="14" fill="var(--surface-2)"
+        stroke="var(--border)" />
       <text x="425" y="150" fill="var(--text)" font-size="11" text-anchor="middle">&#945;1</text>
-      <rect x="490" y="155" width="90" height="19" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <text x="535" y="145" fill="var(--accent)" font-size="12" text-anchor="middle" font-weight="600">Albumin</text>
+      <rect x="490" y="155" width="90" height="19" fill="var(--accent-soft)"
+        stroke="var(--accent)" stroke-width="1.5" />
+      <text x="535" y="145" fill="var(--accent)" font-size="12"
+        text-anchor="middle" font-weight="600">Albumin</text>
     </g>
-    <text x="320" y="60" fill="var(--text-muted)" font-size="12" text-anchor="middle">Globulin bands sit closer to the origin (larger, slower)</text>
-    <text x="535" y="100" fill="var(--text-muted)" font-size="12" text-anchor="middle">Albumin's small size lets it run</text>
-    <text x="535" y="115" fill="var(--text-muted)" font-size="12" text-anchor="middle">farthest and fastest</text>
+    <text x="320" y="60" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Globulin bands sit closer to the origin (larger,
+      slower)</text>
+    <text x="535" y="100" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Albumin's small size lets it run</text>
+    <text x="535" y="115" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">farthest and fastest</text>
   </svg>
-  <figcaption>Smaller proteins migrate farther in a given time. Albumin, the smallest major plasma protein, produces the band farthest from the origin; the larger globulin fractions (&#945;1, &#945;2, &#946;, &#947;) stay closer to it.</figcaption>
+  <figcaption>Smaller proteins migrate farther in a given time. Albumin, the
+    smallest major plasma protein, produces the band farthest from the origin;
+    the larger globulin fractions (&#945;1, &#945;2, &#946;, &#947;) stay closer
+    to it.</figcaption>
 </figure>
 
 ## Albumin's two jobs

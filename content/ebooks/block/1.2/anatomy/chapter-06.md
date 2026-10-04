@@ -19,8 +19,12 @@ An S-shaped bone lying horizontally at the root of the neck. It is the
 only bony connection between the upper limb and the trunk.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p04_0.webp" alt="Right scapula and clavicle, anterior view" loading="lazy" width="1100" height="948" />
-  <figcaption>Right scapula and clavicle, anterior view. <span class="figure-source">Slide 4, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p04_0.webp"
+    alt="Right scapula and clavicle, anterior view" loading="lazy" width="1100"
+    height="948" />
+  <figcaption>Right scapula and clavicle, anterior view. <span
+    class="figure-source">Slide 4, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 - **Extremitas sternalis**: articulates with the manubrium
@@ -44,8 +48,12 @@ outstretched hand.
 A flat, triangular bone on the posterior thoracic wall (over ribs II–VII).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p06_0.webp" alt="The scapula from the front, side and back" loading="lazy" width="901" height="1112" />
-  <figcaption>The scapula from the front, side and back. <span class="figure-source">Slide 6, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p06_0.webp"
+    alt="The scapula from the front, side and back" loading="lazy" width="901"
+    height="1112" />
+  <figcaption>The scapula from the front, side and back. <span
+    class="figure-source">Slide 6, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 - **Two surfaces**:
@@ -67,8 +75,10 @@ A flat, triangular bone on the posterior thoracic wall (over ribs II–VII).
 
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p10_0.webp" alt="Skeleton of the upper limb" loading="lazy" width="596" height="1192" />
-  <figcaption>Skeleton of the upper limb. <span class="figure-source">Slide 10, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p10_0.webp"
+    alt="Skeleton of the upper limb" loading="lazy" width="596" height="1192" />
+  <figcaption>Skeleton of the upper limb. <span class="figure-source">Slide 10,
+    Extremitas Superior (Dapa)</span></figcaption>
 </figure>
 ### Humerus
 
@@ -149,31 +159,57 @@ interossea**, a syndesmosis.
 <figure class="diagram">
   <svg viewBox="-30 0 520 330" role="img" aria-labelledby="carp-title carp-desc">
     <title id="carp-title">Carpal bones of the right hand, palmar view</title>
-    <desc id="carp-desc">The eight carpal bones in two rows, thumb side on the left. Proximal row: scaphoid, lunate, triquetrum, with pisiform sitting on the triquetrum. Distal row: trapezium, trapezoid, capitate, hamate with its hook. The radius and ulna lie above the proximal row and the five metacarpals below the distal row.</desc>
-    <rect x="120" y="20" width="170" height="40" rx="10" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
-    <rect x="300" y="26" width="100" height="34" rx="10" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
+    <desc id="carp-desc">The eight carpal bones in two rows, thumb side on the
+      left. Proximal row: scaphoid, lunate, triquetrum, with pisiform sitting on
+      the triquetrum. Distal row: trapezium, trapezoid, capitate, hamate with
+      its hook. The radius and ulna lie above the proximal row and the five
+      metacarpals below the distal row.</desc>
+    <rect x="120" y="20" width="170" height="40" rx="10"
+      fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
+    <rect x="300" y="26" width="100" height="34" rx="10"
+      fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
     <text x="205" y="45" fill="var(--text)" font-size="12" text-anchor="middle">Radius</text>
     <text x="350" y="48" fill="var(--text)" font-size="12" text-anchor="middle">Ulna</text>
     <g stroke="var(--text-muted)" stroke-width="1.5">
-      <path d="M110,90 C110,72 150,68 190,78 L196,120 C170,130 128,128 116,116 Z" fill="var(--accent)" opacity="0.55" />
-      <path d="M198,78 C220,70 262,70 268,80 L264,122 C246,128 214,128 200,120 Z" fill="var(--accent)" opacity="0.4" />
-      <path d="M272,82 C292,78 330,86 336,98 L326,126 C306,130 282,128 268,120 Z" fill="var(--accent)" opacity="0.55" />
-      <ellipse cx="352" cy="120" rx="22" ry="17" fill="var(--accent)" opacity="0.4" />
-      <path d="M80,150 C88,132 122,130 140,138 L142,184 C124,192 96,192 84,180 Z" fill="var(--accent-2)" opacity="0.55" />
-      <path d="M144,138 C160,132 182,132 194,138 L194,178 C180,184 158,184 144,178 Z" fill="var(--accent-2)" opacity="0.4" />
-      <path d="M198,134 C216,122 250,124 262,136 L258,184 C240,192 212,192 198,182 Z" fill="var(--accent-2)" opacity="0.55" />
-      <path d="M266,134 C286,128 316,132 326,144 L316,184 C300,190 280,190 266,182 Z" fill="var(--accent-2)" opacity="0.4" />
-      <path d="M296,150 C306,140 318,142 318,150 L312,160 Z" fill="var(--text-muted)" />
+      <path
+        d="M110,90 C110,72 150,68 190,78 L196,120 C170,130 128,128 116,116 Z"
+        fill="var(--accent)" opacity="0.55" />
+      <path
+        d="M198,78 C220,70 262,70 268,80 L264,122 C246,128 214,128 200,120 Z"
+        fill="var(--accent)" opacity="0.4" />
+      <path
+        d="M272,82 C292,78 330,86 336,98 L326,126 C306,130 282,128 268,120 Z"
+        fill="var(--accent)" opacity="0.55" />
+      <ellipse cx="352" cy="120" rx="22" ry="17" fill="var(--accent)"
+        opacity="0.4" />
+      <path
+        d="M80,150 C88,132 122,130 140,138 L142,184 C124,192 96,192 84,180 Z"
+        fill="var(--accent-2)" opacity="0.55" />
+      <path
+        d="M144,138 C160,132 182,132 194,138 L194,178 C180,184 158,184 144,178
+        Z" fill="var(--accent-2)" opacity="0.4" />
+      <path
+        d="M198,134 C216,122 250,124 262,136 L258,184 C240,192 212,192 198,182
+        Z" fill="var(--accent-2)" opacity="0.55" />
+      <path
+        d="M266,134 C286,128 316,132 326,144 L316,184 C300,190 280,190 266,182
+        Z" fill="var(--accent-2)" opacity="0.4" />
+      <path d="M296,150 C306,140 318,142 318,150 L312,160 Z"
+        fill="var(--text-muted)" />
     </g>
     <g fill="var(--surface-2)" stroke="var(--text-muted)" stroke-width="1.5">
-      <rect x="86" y="198" width="36" height="100" rx="14" transform="rotate(-18 104 198)" />
+      <rect x="86" y="198" width="36" height="100" rx="14"
+        transform="rotate(-18 104 198)" />
       <rect x="152" y="198" width="30" height="120" rx="12" />
       <rect x="206" y="198" width="30" height="124" rx="12" />
       <rect x="254" y="198" width="30" height="116" rx="12" />
-      <rect x="296" y="198" width="28" height="104" rx="12" transform="rotate(8 310 198)" />
+      <rect x="296" y="198" width="28" height="104" rx="12"
+        transform="rotate(8 310 198)" />
     </g>
     <g font-size="11" fill="var(--text-muted)" text-anchor="middle">
-      <text x="86" y="268">I</text><text x="167" y="268">II</text><text x="221" y="268">III</text><text x="269" y="268">IV</text><text x="326" y="290">V</text>
+      <text x="86" y="268">I</text><text x="167" y="268">II</text><text x="221"
+        y="268">III</text><text x="269" y="268">IV</text><text x="326"
+        y="290">V</text>
     </g>
     <g font-size="10" fill="var(--text)" text-anchor="middle">
       <text x="152" y="104">Scaphoid</text>
@@ -185,7 +221,8 @@ interossea**, a syndesmosis.
       <text x="229" y="162">Capitate</text>
       <text x="290" y="172">Hamate</text>
     </g>
-    <line x1="312" y1="150" x2="380" y2="168" stroke="var(--text-muted)" stroke-width="1" />
+    <line x1="312" y1="150" x2="380" y2="168" stroke="var(--text-muted)"
+      stroke-width="1" />
     <text x="384" y="172" fill="var(--text)" font-size="11">hook of hamate</text>
     <g font-size="11" fill="var(--text-muted)">
       <text x="10" y="112">proximal row</text>
@@ -193,7 +230,9 @@ interossea**, a syndesmosis.
       <text x="10" y="310">metacarpals</text>
     </g>
   </svg>
-  <figcaption>Proximal row (green): scaphoid, lunate, triquetrum, pisiform. Distal row (purple): trapezium, trapezoid, capitate, hamate. The scaphoid and trapezium are on the thumb side.</figcaption>
+  <figcaption>Proximal row (green): scaphoid, lunate, triquetrum, pisiform.
+    Distal row (purple): trapezium, trapezoid, capitate, hamate. The scaphoid
+    and trapezium are on the thumb side.</figcaption>
 </figure>
 
 ## Joints and ligaments
@@ -209,13 +248,20 @@ interossea**, a syndesmosis.
 | **Artt. intercarpales**, **carpometacarpales** | Between carpals; carpals ↔ metacarpals | Mostly plane; the **CMC joint of the thumb is a saddle** joint, which allows opposition | |
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p20_0.webp" alt="The elbow joint and its ligaments" loading="lazy" width="1100" height="751" />
-  <figcaption>The elbow joint and its ligaments. <span class="figure-source">Slide 20, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p20_0.webp"
+    alt="The elbow joint and its ligaments" loading="lazy" width="1100"
+    height="751" />
+  <figcaption>The elbow joint and its ligaments. <span
+    class="figure-source">Slide 20, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p21_0.webp" alt="Joints of the wrist and hand" loading="lazy" width="1100" height="705" />
-  <figcaption>Joints of the wrist and hand. <span class="figure-source">Slide 21, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p21_0.webp"
+    alt="Joints of the wrist and hand" loading="lazy" width="1100" height="705"
+    />
+  <figcaption>Joints of the wrist and hand. <span class="figure-source">Slide
+    21, Extremitas Superior (Dapa)</span></figcaption>
 </figure>
 
 The deck calls the shoulder joint "saddle in shape, ball in function",
@@ -252,8 +298,12 @@ The deck names the nerve to latissimus dorsi "n. thoracica". It is the
 | **M. serratus anterior** | Outer surfaces of ribs I–VIII | Anterior surface of the medial border of scapula | Protracts the scapula and holds it against the chest wall; rotates it upward | **N. thoracicus longus** |
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p28_0.webp" alt="Serratus anterior on the side of the chest wall" loading="lazy" width="1100" height="643" />
-  <figcaption>Serratus anterior on the side of the chest wall. <span class="figure-source">Slide 28, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p28_0.webp"
+    alt="Serratus anterior on the side of the chest wall" loading="lazy"
+    width="1100" height="643" />
+  <figcaption>Serratus anterior on the side of the chest wall. <span
+    class="figure-source">Slide 28, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 ### Shoulder (deltoid and scapular) region
@@ -268,13 +318,18 @@ The deck names the nerve to latissimus dorsi "n. thoracica". It is the
 | **M. teres major** | Inferior angle of scapula | Crest of the lesser tubercle | Adducts, extends and medially rotates the arm | N. subscapularis inferior |
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p30_0.webp" alt="Deltoid" loading="lazy" width="715" height="1022" />
-  <figcaption>Deltoid. <span class="figure-source">Slide 30, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p30_0.webp" alt="Deltoid"
+    loading="lazy" width="715" height="1022" />
+  <figcaption>Deltoid. <span class="figure-source">Slide 30, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p32_0.webp" alt="The rotator cuff" loading="lazy" width="1100" height="480" />
-  <figcaption>The rotator cuff: supraspinatus, infraspinatus, teres minor and subscapularis. <span class="figure-source">Slide 32, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p32_0.webp"
+    alt="The rotator cuff" loading="lazy" width="1100" height="480" />
+  <figcaption>The rotator cuff: supraspinatus, infraspinatus, teres minor and
+    subscapularis. <span class="figure-source">Slide 32, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 **The rotator cuff** is four muscles whose tendons blend with the
@@ -289,8 +344,11 @@ The arm has two compartments separated by the humerus and
 intermuscular septa.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p34_1.webp" alt="Triceps brachii" loading="lazy" width="964" height="1072" />
-  <figcaption>Triceps brachii: long, lateral and medial heads. <span class="figure-source">Slide 34, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p34_1.webp"
+    alt="Triceps brachii" loading="lazy" width="964" height="1072" />
+  <figcaption>Triceps brachii: long, lateral and medial heads. <span
+    class="figure-source">Slide 34, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 **Anterior compartment (flexors), all supplied by the n.
@@ -314,18 +372,30 @@ musculocutaneus:**
 **medial epicondyle** (common flexor origin), in layers:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p37_0.webp" alt="Flexor muscles of the forearm, by layer" loading="lazy" width="1100" height="742" />
-  <figcaption>Flexor muscles of the forearm, by layer. <span class="figure-source">Slide 37, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p37_0.webp"
+    alt="Flexor muscles of the forearm, by layer" loading="lazy" width="1100"
+    height="742" />
+  <figcaption>Flexor muscles of the forearm, by layer. <span
+    class="figure-source">Slide 37, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p39_0.webp" alt="Superficial extensor muscles of the forearm" loading="lazy" width="1001" height="996" />
-  <figcaption>Superficial extensor muscles of the forearm. <span class="figure-source">Slide 39, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p39_0.webp"
+    alt="Superficial extensor muscles of the forearm" loading="lazy"
+    width="1001" height="996" />
+  <figcaption>Superficial extensor muscles of the forearm. <span
+    class="figure-source">Slide 39, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p40_0.webp" alt="Deep extensor muscles of the forearm" loading="lazy" width="1100" height="860" />
-  <figcaption>Deep extensor muscles of the forearm. <span class="figure-source">Slide 40, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p40_0.webp"
+    alt="Deep extensor muscles of the forearm" loading="lazy" width="1100"
+    height="860" />
+  <figcaption>Deep extensor muscles of the forearm. <span
+    class="figure-source">Slide 40, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 - **Superficial layer**: m. pronator teres, m. flexor carpi radialis, m.
@@ -385,8 +455,10 @@ the "**LOAF**" muscles, which get the median nerve: the first two
 A pyramid-shaped space between the arm and the chest wall.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p45_0.webp" alt="Walls of the axilla" loading="lazy" width="942" height="1092" />
-  <figcaption>Walls of the axilla. <span class="figure-source">Slide 45, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p45_0.webp"
+    alt="Walls of the axilla" loading="lazy" width="942" height="1092" />
+  <figcaption>Walls of the axilla. <span class="figure-source">Slide 45,
+    Extremitas Superior (Dapa)</span></figcaption>
 </figure>
 
 | Wall | Formed by |
@@ -418,8 +490,12 @@ A pyramid-shaped space between the arm and the chest wall.
 | **Interval triangulare** (triangular interval) | Teres major above, long head of triceps medially, lateral head of triceps/humerus laterally | **Radial nerve** and deep brachial artery (a. profunda brachii) |
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p48_0.webp" alt="The quadrangular space, triangular space and triangular interval, with their contents" loading="lazy" width="1100" height="882" />
-  <figcaption>The quadrangular space, triangular space and triangular interval, with their contents. <span class="figure-source">Slide 48, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p48_0.webp"
+    alt="The quadrangular space, triangular space and triangular interval, with
+    their contents" loading="lazy" width="1100" height="882" />
+  <figcaption>The quadrangular space, triangular space and triangular interval,
+    with their contents. <span class="figure-source">Slide 48, Extremitas
+    Superior (Dapa)</span></figcaption>
 </figure>
 
 ### Fossa cubiti (cubital fossa)
@@ -427,8 +503,13 @@ A pyramid-shaped space between the arm and the chest wall.
 A triangular hollow in front of the elbow.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p46_0.webp" alt="Boundaries of the cubital fossa (Indonesian" loading="lazy" width="1058" height="1025" />
-  <figcaption>Boundaries of the cubital fossa (Indonesian: garis antara epicondyli = line between the epicondyles). <span class="figure-source">Slide 46, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p46_0.webp"
+    alt="Boundaries of the cubital fossa (Indonesian" loading="lazy"
+    width="1058" height="1025" />
+  <figcaption>Boundaries of the cubital fossa (Indonesian: garis antara
+    epicondyli = line between the epicondyles). <span
+    class="figure-source">Slide 46, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 - **Boundaries**:
@@ -458,8 +539,12 @@ A tunnel at the wrist formed by the arch of carpal bones, roofed by the
 **retinaculum musculorum flexorum** (transverse carpal ligament).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p47_1.webp" alt="The carpal tunnel in cross-section" loading="lazy" width="1100" height="655" />
-  <figcaption>The carpal tunnel in cross-section: flexor tendons and the median nerve under the flexor retinaculum. <span class="figure-source">Slide 47, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p47_1.webp"
+    alt="The carpal tunnel in cross-section" loading="lazy" width="1100"
+    height="655" />
+  <figcaption>The carpal tunnel in cross-section: flexor tendons and the median
+    nerve under the flexor retinaculum. <span class="figure-source">Slide 47,
+    Extremitas Superior (Dapa)</span></figcaption>
 </figure>
 
 - **Attachments of the roof**:
@@ -480,8 +565,12 @@ The hollow on the back of the wrist at the base of the thumb, visible when
 the thumb is extended.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p49_0.webp" alt="The anatomical snuffbox, with the radial artery in its floor" loading="lazy" width="1100" height="579" />
-  <figcaption>The anatomical snuffbox, with the radial artery in its floor. <span class="figure-source">Slide 49, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p49_0.webp"
+    alt="The anatomical snuffbox, with the radial artery in its floor"
+    loading="lazy" width="1100" height="579" />
+  <figcaption>The anatomical snuffbox, with the radial artery in its floor.
+    <span class="figure-source">Slide 49, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 - **Medial border**: tendon of extensor pollicis longus.
@@ -502,17 +591,26 @@ even when the first radiograph looks normal.
 <figure class="diagram">
   <svg viewBox="0 0 600 470" role="img" aria-labelledby="art-title art-desc">
     <title id="art-title">Main arteries of the upper limb</title>
-    <desc id="art-desc">A branching diagram. The subclavian artery becomes the axillary artery at the outer border of rib I, which becomes the brachial artery at the lower border of teres major. The brachial artery gives the deep brachial artery and divides in the cubital fossa into radial and ulnar arteries. They join in the hand as the superficial palmar arch, mainly from the ulnar artery, and the deep palmar arch, mainly from the radial artery.</desc>
+    <desc id="art-desc">A branching diagram. The subclavian artery becomes the
+      axillary artery at the outer border of rib I, which becomes the brachial
+      artery at the lower border of teres major. The brachial artery gives the
+      deep brachial artery and divides in the cubital fossa into radial and
+      ulnar arteries. They join in the hand as the superficial palmar arch,
+      mainly from the ulnar artery, and the deep palmar arch, mainly from the
+      radial artery.</desc>
     <g stroke="var(--red)" stroke-width="7" stroke-linecap="round" fill="none">
       <path d="M100,40 L230,40" />
       <path d="M230,40 L300,110" />
       <path d="M300,110 L300,250" />
       <path d="M300,250 L240,370" />
       <path d="M300,250 L360,370" />
-      <path d="M240,370 C240,420 360,420 360,370" stroke-width="4" opacity="0.75" />
-      <path d="M244,378 C252,440 348,440 356,378" stroke-width="4" opacity="0.45" />
+      <path d="M240,370 C240,420 360,420 360,370" stroke-width="4"
+        opacity="0.75" />
+      <path d="M244,378 C252,440 348,440 356,378" stroke-width="4"
+        opacity="0.45" />
     </g>
-    <path d="M300,160 L260,200 L264,236" stroke="var(--red)" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8" />
+    <path d="M300,160 L260,200 L264,236" stroke="var(--red)" stroke-width="4"
+      fill="none" stroke-linecap="round" opacity="0.8" />
     <g stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4 3">
       <line x1="210" y1="20" x2="250" y2="60" />
       <line x1="270" y1="120" x2="330" y2="120" />
@@ -542,17 +640,28 @@ even when the first radiograph looks normal.
       <text x="20" y="396">deep arch: mainly radial a.</text>
     </g>
   </svg>
-  <figcaption>One artery, three names: subclavian → axillary (at rib I) → brachial (at teres major). The brachial artery splits in the cubital fossa, and the radial and ulnar arteries rejoin in the palm as two arches.</figcaption>
+  <figcaption>One artery, three names: subclavian → axillary (at rib I) →
+    brachial (at teres major). The brachial artery splits in the cubital fossa,
+    and the radial and ulnar arteries rejoin in the palm as two
+    arches.</figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p52_0.webp" alt="Arteries of the shoulder and arm, from the subclavian to the brachial artery" loading="lazy" width="1100" height="1004" />
-  <figcaption>Arteries of the shoulder and arm, from the subclavian to the brachial artery. <span class="figure-source">Slide 52, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p52_0.webp"
+    alt="Arteries of the shoulder and arm, from the subclavian to the brachial
+    artery" loading="lazy" width="1100" height="1004" />
+  <figcaption>Arteries of the shoulder and arm, from the subclavian to the
+    brachial artery. <span class="figure-source">Slide 52, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p53_0.webp" alt="Arteries of the forearm and hand" loading="lazy" width="817" height="1054" />
-  <figcaption>Arteries of the forearm and hand. <span class="figure-source">Slide 53, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p53_0.webp"
+    alt="Arteries of the forearm and hand" loading="lazy" width="817"
+    height="1054" />
+  <figcaption>Arteries of the forearm and hand. <span
+    class="figure-source">Slide 53, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 - The **a. subclavia** becomes the **a. axillaris** at the outer border of
@@ -586,8 +695,12 @@ even when the first radiograph looks normal.
     usual vein for taking blood.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p54_1.webp" alt="Deep (vena profunda) and superficial (vena superficialis) veins of the upper limb" loading="lazy" width="1100" height="836" />
-  <figcaption>Deep (vena profunda) and superficial (vena superficialis) veins of the upper limb. <span class="figure-source">Slide 54, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p54_1.webp"
+    alt="Deep (vena profunda) and superficial (vena superficialis) veins of the
+    upper limb" loading="lazy" width="1100" height="836" />
+  <figcaption>Deep (vena profunda) and superficial (vena superficialis) veins of
+    the upper limb. <span class="figure-source">Slide 54, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 ### The brachial plexus
@@ -596,8 +709,11 @@ The whole upper limb is supplied by the **plexus brachialis**, formed by
 the ventral rami of **C5–T1**. It is organised in five stages:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p56_0.webp" alt="The brachial plexus" loading="lazy" width="1100" height="866" />
-  <figcaption>The brachial plexus: roots, trunks, divisions, cords and terminal branches. <span class="figure-source">Slide 56, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p56_0.webp"
+    alt="The brachial plexus" loading="lazy" width="1100" height="866" />
+  <figcaption>The brachial plexus: roots, trunks, divisions, cords and terminal
+    branches. <span class="figure-source">Slide 56, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 1. **Roots**: C5, C6, C7, C8, T1.
@@ -618,9 +734,19 @@ the ventral rami of **C5–T1**. It is organised in five stages:
 <figure class="diagram">
   <svg viewBox="0 0 700 380" role="img" aria-labelledby="bp-title bp-desc">
     <title id="bp-title">Schematic of the brachial plexus</title>
-    <desc id="bp-desc">Five roots C5 to T1 on the left join into three trunks: superior from C5 and C6, middle from C7, inferior from C8 and T1. Each trunk splits into anterior and posterior divisions. The posterior divisions all join the posterior cord; anterior divisions of the upper and middle trunks form the lateral cord; the anterior division of the lower trunk forms the medial cord. On the right, five terminal branches: musculocutaneous from the lateral cord, median from lateral and medial cords, ulnar from the medial cord, and axillary and radial from the posterior cord.</desc>
+    <desc id="bp-desc">Five roots C5 to T1 on the left join into three trunks:
+      superior from C5 and C6, middle from C7, inferior from C8 and T1. Each
+      trunk splits into anterior and posterior divisions. The posterior
+      divisions all join the posterior cord; anterior divisions of the upper and
+      middle trunks form the lateral cord; the anterior division of the lower
+      trunk forms the medial cord. On the right, five terminal branches:
+      musculocutaneous from the lateral cord, median from lateral and medial
+      cords, ulnar from the medial cord, and axillary and radial from the
+      posterior cord.</desc>
     <g font-size="12" fill="var(--text)" text-anchor="end">
-      <text x="44" y="64">C5</text><text x="44" y="124">C6</text><text x="44" y="184">C7</text><text x="44" y="244">C8</text><text x="44" y="304">T1</text>
+      <text x="44" y="64">C5</text><text x="44" y="124">C6</text><text x="44"
+        y="184">C7</text><text x="44" y="244">C8</text><text x="44"
+        y="304">T1</text>
     </g>
     <g stroke="var(--accent)" stroke-width="4" fill="none" stroke-linecap="round">
       <path d="M52,60 L150,90" /><path d="M52,120 L150,90" />
@@ -628,13 +754,17 @@ the ventral rami of **C5–T1**. It is organised in five stages:
       <path d="M52,240 L150,270" /><path d="M52,300 L150,270" />
     </g>
     <g stroke="var(--accent)" stroke-width="4" fill="none" stroke-linecap="round">
-      <path d="M150,90 L230,90" /><path d="M150,180 L230,180" /><path d="M150,270 L230,270" />
+      <path d="M150,90 L230,90" /><path d="M150,180 L230,180" /><path
+        d="M150,270 L230,270" />
     </g>
     <g stroke="var(--accent-2)" stroke-width="3.5" fill="none" stroke-linecap="round">
-      <path d="M230,90 L330,70" /><path d="M230,180 L330,90" /><path d="M230,270 L330,300" />
+      <path d="M230,90 L330,70" /><path d="M230,180 L330,90" /><path
+        d="M230,270 L330,300" />
     </g>
-    <g stroke="var(--accent-3)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="7 4">
-      <path d="M230,90 L330,180" /><path d="M230,180 L330,186" /><path d="M230,270 L330,192" />
+    <g stroke="var(--accent-3)" stroke-width="3.5" fill="none"
+      stroke-linecap="round" stroke-dasharray="7 4">
+      <path d="M230,90 L330,180" /><path d="M230,180 L330,186" /><path
+        d="M230,270 L330,192" />
     </g>
     <g stroke-width="5" fill="none" stroke-linecap="round">
       <path d="M330,80 L450,80" stroke="var(--accent-2)" />
@@ -665,14 +795,21 @@ the ventral rami of **C5–T1**. It is organised in five stages:
       <text x="390" y="320">medial cord</text>
     </g>
     <g font-size="12" font-weight="700" fill="var(--text-muted)" text-anchor="middle">
-      <text x="44" y="30">Roots</text><text x="190" y="30">Trunks</text><text x="280" y="30">Divisions</text><text x="390" y="30">Cords</text><text x="610" y="24">Branches</text>
+      <text x="44" y="30">Roots</text><text x="190" y="30">Trunks</text><text
+        x="280" y="30">Divisions</text><text x="390" y="30">Cords</text><text
+        x="610" y="24">Branches</text>
     </g>
     <g font-size="11" fill="var(--text)">
-      <rect x="40" y="350" width="18" height="4" fill="var(--accent-2)" /><text x="64" y="356">anterior divisions → flexor compartments</text>
-      <rect x="330" y="350" width="18" height="4" fill="var(--accent-3)" /><text x="354" y="356">posterior divisions → extensor compartments</text>
+      <rect x="40" y="350" width="18" height="4" fill="var(--accent-2)" /><text
+        x="64" y="356">anterior divisions → flexor compartments</text>
+      <rect x="330" y="350" width="18" height="4" fill="var(--accent-3)" /><text
+        x="354" y="356">posterior divisions → extensor compartments</text>
     </g>
   </svg>
-  <figcaption>The anterior divisions (solid) form the lateral and medial cords and supply the flexors; the posterior divisions (dashed) join as the posterior cord and supply the extensors. The median nerve takes one root from each of the lateral and medial cords.</figcaption>
+  <figcaption>The anterior divisions (solid) form the lateral and medial cords
+    and supply the flexors; the posterior divisions (dashed) join as the
+    posterior cord and supply the extensors. The median nerve takes one root
+    from each of the lateral and medial cords.</figcaption>
 </figure>
 
 | Cord | Branches |
@@ -694,8 +831,12 @@ All lymph from the upper limb drains to the **axillary lymph nodes**, in
 five groups:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p57_0.webp" alt="Axillary lymph node groups and the drainage of the breast" loading="lazy" width="1100" height="774" />
-  <figcaption>Axillary lymph node groups and the drainage of the breast. <span class="figure-source">Slide 57, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p57_0.webp"
+    alt="Axillary lymph node groups and the drainage of the breast"
+    loading="lazy" width="1100" height="774" />
+  <figcaption>Axillary lymph node groups and the drainage of the breast. <span
+    class="figure-source">Slide 57, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 | Group | Position | Drains |
@@ -725,23 +866,38 @@ axillary nodes are examined, and often removed, in breast cancer.
 | **Surgical neck fracture** | **Axillary nerve** | Weak abduction (deltoid) and numbness over the lower deltoid ("regimental badge" area) |
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p59_0.webp" alt="Course of the median, ulnar and radial nerves" loading="lazy" width="1100" height="718" />
-  <figcaption>Course of the median, ulnar and radial nerves. <span class="figure-source">Slide 59, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p59_0.webp"
+    alt="Course of the median, ulnar and radial nerves" loading="lazy"
+    width="1100" height="718" />
+  <figcaption>Course of the median, ulnar and radial nerves. <span
+    class="figure-source">Slide 59, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p61_0.webp" alt="Wrist drop after radial nerve injury" loading="lazy" width="950" height="588" />
-  <figcaption>Wrist drop after radial nerve injury. <span class="figure-source">Slide 61, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p61_0.webp"
+    alt="Wrist drop after radial nerve injury" loading="lazy" width="950"
+    height="588" />
+  <figcaption>Wrist drop after radial nerve injury. <span
+    class="figure-source">Slide 61, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p61_1.webp" alt="Carpal tunnel syndrome" loading="lazy" width="1012" height="784" />
-  <figcaption>Carpal tunnel syndrome: numbness in the median nerve territory of the hand. <span class="figure-source">Slide 61, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p61_1.webp"
+    alt="Carpal tunnel syndrome" loading="lazy" width="1012" height="784" />
+  <figcaption>Carpal tunnel syndrome: numbness in the median nerve territory of
+    the hand. <span class="figure-source">Slide 61, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p62_0.webp" alt="Winged scapula after long thoracic nerve injury" loading="lazy" width="846" height="1128" />
-  <figcaption>Winged scapula after long thoracic nerve injury. <span class="figure-source">Slide 62, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p62_0.webp"
+    alt="Winged scapula after long thoracic nerve injury" loading="lazy"
+    width="846" height="1128" />
+  <figcaption>Winged scapula after long thoracic nerve injury. <span
+    class="figure-source">Slide 62, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 ### Fracture of the humerus
@@ -750,8 +906,12 @@ The three nerves in contact with the humerus are each at risk at a
 typical fracture site:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-06-sup_p63_0.webp" alt="Radiograph of a humeral shaft fracture, where the radial nerve is at risk" loading="lazy" width="626" height="1084" />
-  <figcaption>Radiograph of a humeral shaft fracture, where the radial nerve is at risk. <span class="figure-source">Slide 63, Extremitas Superior (Dapa)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-06-sup_p63_0.webp"
+    alt="Radiograph of a humeral shaft fracture, where the radial nerve is at
+    risk" loading="lazy" width="626" height="1084" />
+  <figcaption>Radiograph of a humeral shaft fracture, where the radial nerve is
+    at risk. <span class="figure-source">Slide 63, Extremitas Superior
+    (Dapa)</span></figcaption>
 </figure>
 
 - the **axillary nerve** at the surgical neck;

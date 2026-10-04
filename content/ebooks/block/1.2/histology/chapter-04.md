@@ -13,8 +13,13 @@ The dermis has two layers that differ in thickness and in the kind of
 connective tissue they are made of.
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image43.jpg" alt="Skin section with blue arrows marking the thin loose layer of dermis just under the epidermis" loading="lazy" width="760" height="510" />
-  <figcaption>The papillary layer of the dermis (blue arrows): the thin band of loose connective tissue just beneath the epidermis, filling the dermal papillae. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image43.jpg"
+    alt="Skin section with blue arrows marking the thin loose layer of dermis
+    just under the epidermis" loading="lazy" width="760" height="510" />
+  <figcaption>The papillary layer of the dermis (blue arrows): the thin band of
+    loose connective tissue just beneath the epidermis, filling the dermal
+    papillae. <span class="figure-source">Histology practicum
+    quiz</span></figcaption>
 </figure>
 
 ### Stratum papillare (papillary layer)
@@ -56,8 +61,12 @@ incisions made along them gape less and heal with thinner scars.
 ## The hypodermis
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image48.jpg" alt="Low-power section of skin with a long blue arrow spanning the deep fatty layer beneath the dermis" loading="lazy" width="760" height="511" />
-  <figcaption>The hypodermis (blue arrow): the deep layer of loose connective tissue and fat beneath the dermis. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image48.jpg"
+    alt="Low-power section of skin with a long blue arrow spanning the deep
+    fatty layer beneath the dermis" loading="lazy" width="760" height="511" />
+  <figcaption>The hypodermis (blue arrow): the deep layer of loose connective
+    tissue and fat beneath the dermis. <span class="figure-source">Histology
+    practicum quiz</span></figcaption>
 </figure>
 
 The hypodermis (**subcutis**, *hipodermis*) is:
@@ -75,15 +84,28 @@ but it is studied with it. Its thickness varies greatly between sites and
 people; the layer of fat in it is called the *panniculus adiposus*.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/hypodermis-diagram.webp" alt="Drawing of skin with the hypodermis of fat lobules and vessels at its base" loading="lazy" width="1000" height="814" />
-  <figcaption>Skin and its hypodermis: the lobules of fat at the bottom, with vessels passing through and Pacinian corpuscles among them. <span class="figure-source">Page 19, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/hypodermis-diagram.webp"
+    alt="Drawing of skin with the hypodermis of fat lobules and vessels at its
+    base" loading="lazy" width="1000" height="814" />
+  <figcaption>Skin and its hypodermis: the lobules of fat at the bottom, with
+    vessels passing through and Pacinian corpuscles among them. <span
+    class="figure-source">Page 19, Integumentary System
+    module</span></figcaption>
 </figure>
 
 ## Sensory nerve endings
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/nerve-endings.webp" alt="Drawing of skin showing where free nerve endings, Merkel discs, Meissner, Pacinian, Krause and Ruffini endings sit, each with a small icon" loading="lazy" width="1000" height="673" />
-  <figcaption>The sensory endings of the skin and where they sit: free nerve endings and Merkel discs in the epidermis, Meissner's corpuscles in the dermal papillae, Ruffini and Krause endings in the dermis, and Pacinian corpuscles deep in the dermis and hypodermis. <span class="figure-source">Page 35, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/nerve-endings.webp"
+    alt="Drawing of skin showing where free nerve endings, Merkel discs,
+    Meissner, Pacinian, Krause and Ruffini endings sit, each with a small icon"
+    loading="lazy" width="1000" height="673" />
+  <figcaption>The sensory endings of the skin and where they sit: free nerve
+    endings and Merkel discs in the epidermis, Meissner's corpuscles in the
+    dermal papillae, Ruffini and Krause endings in the dermis, and Pacinian
+    corpuscles deep in the dermis and hypodermis. <span
+    class="figure-source">Page 35, Integumentary System
+    module</span></figcaption>
 </figure>
 
 The skin's nerve endings are either **free** (bare branches of the axon)
@@ -102,8 +124,12 @@ responds to.
 ### Corpusculum Vater-Pacini (Pacinian corpuscle)
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/pacini-drawing.webp" alt="Drawing of an oval Pacinian corpuscle made of many concentric layers around a central nerve ending" loading="lazy" width="627" height="1000" />
-  <figcaption>A Pacinian corpuscle: many concentric lamellae around a central nerve ending, like a cut onion. <span class="figure-source">Page 31, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/pacini-drawing.webp"
+    alt="Drawing of an oval Pacinian corpuscle made of many concentric layers
+    around a central nerve ending" loading="lazy" width="627" height="1000" />
+  <figcaption>A Pacinian corpuscle: many concentric lamellae around a central
+    nerve ending, like a cut onion. <span class="figure-source">Page 31,
+    Integumentary System module</span></figcaption>
 </figure>
 
 - **Oval, onion-shaped.**
@@ -115,15 +141,24 @@ responds to.
 - Large (up to 1–2 mm), so it is easy to spot even at low power.
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image45.jpg" alt="Two large onion-like corpuscles in the deep dermis, each marked by a black arrow" loading="lazy" width="383" height="493" />
-  <figcaption>Pacinian corpuscles (arrows): large oval structures of concentric lamellae deep in the dermis. Their onion-like pattern makes them the easiest nerve ending to identify. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image45.jpg"
+    alt="Two large onion-like corpuscles in the deep dermis, each marked by a
+    black arrow" loading="lazy" width="383" height="493" />
+  <figcaption>Pacinian corpuscles (arrows): large oval structures of concentric
+    lamellae deep in the dermis. Their onion-like pattern makes them the easiest
+    nerve ending to identify. <span class="figure-source">Histology practicum
+    quiz</span></figcaption>
 </figure>
 
 ### Corpusculum Meissner (Meissner's corpuscle)
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/meissner-drawing.webp" alt="Drawing of an elongated Meissner&#x27;s corpuscle with a branched nerve ending inside" loading="lazy" width="581" height="1000" />
-  <figcaption>A Meissner's corpuscle: a cylindrical capsule with a branched nerve ending winding through it. <span class="figure-source">Page 32, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/meissner-drawing.webp"
+    alt="Drawing of an elongated Meissner&#x27;s corpuscle with a branched nerve
+    ending inside" loading="lazy" width="581" height="1000" />
+  <figcaption>A Meissner's corpuscle: a cylindrical capsule with a branched
+    nerve ending winding through it. <span class="figure-source">Page 32,
+    Integumentary System module</span></figcaption>
 </figure>
 
 - **Cylindrical** (elongated, oval).
@@ -135,15 +170,23 @@ responds to.
   palms and soles.
 
 <figure class="diagram slide-figure">
-  <img src="/histology/1.2/i-image64.jpg" alt="A dermal papilla containing an oval encapsulated nerve ending with transversely stacked cells" loading="lazy" width="660" height="392" />
-  <figcaption>A Meissner's corpuscle filling a dermal papilla, with its flattened cells stacked across it. <span class="figure-source">Histology practicum quiz</span></figcaption>
+  <img src="/histology/1.2/i-image64.jpg"
+    alt="A dermal papilla containing an oval encapsulated nerve ending with
+    transversely stacked cells" loading="lazy" width="660" height="392" />
+  <figcaption>A Meissner's corpuscle filling a dermal papilla, with its
+    flattened cells stacked across it. <span class="figure-source">Histology
+    practicum quiz</span></figcaption>
 </figure>
 
 ### Corpusculum Ruffini (Ruffini ending)
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/ruffini-drawing.webp" alt="Drawing of a small spindle-shaped Ruffini ending with spray-like nerve branches" loading="lazy" width="647" height="1000" />
-  <figcaption>A Ruffini ending: a thin capsule enclosing nerve branches spread like a spray. <span class="figure-source">Page 33, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/ruffini-drawing.webp"
+    alt="Drawing of a small spindle-shaped Ruffini ending with spray-like nerve
+    branches" loading="lazy" width="647" height="1000" />
+  <figcaption>A Ruffini ending: a thin capsule enclosing nerve branches spread
+    like a spray. <span class="figure-source">Page 33, Integumentary System
+    module</span></figcaption>
 </figure>
 
 - **Cylindrical, and smaller than Meissner's corpuscles.**
@@ -156,8 +199,12 @@ responds to.
 ### Corpusculum Krause (Krause end bulb)
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/krause-drawing.webp" alt="Drawing of a round Krause end bulb with a coiled branched nerve ending inside a capsule" loading="lazy" width="801" height="1000" />
-  <figcaption>A Krause end bulb: a round capsule with a coiled, branched nerve ending inside. <span class="figure-source">Page 34, Integumentary System module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/krause-drawing.webp"
+    alt="Drawing of a round Krause end bulb with a coiled branched nerve ending
+    inside a capsule" loading="lazy" width="801" height="1000" />
+  <figcaption>A Krause end bulb: a round capsule with a coiled, branched nerve
+    ending inside. <span class="figure-source">Page 34, Integumentary System
+    module</span></figcaption>
 </figure>
 
 - **Round / spherical.**

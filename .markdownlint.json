@@ -26,5 +26,8 @@
       "clipPath",
       "clippath"
     ]
+  },
+  "MD013": {
+    "tables": false
   }
 }

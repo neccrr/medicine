@@ -46,52 +46,92 @@ wrapped in its own connective tissue sheath, and all those sheaths merge
 at the ends of the muscle to form the tendon.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-4-0.428_0.487_0.897_0.92.webp" alt="From muscle to myofilament" loading="lazy" width="1100" height="572" />
-  <figcaption>From muscle to myofilament (Indonesian labels: otot = muscle, serat otot = muscle fiber, pembuluh darah = blood vessel, sarkomer = sarcomere, miofibril = myofibril, aktin/miosin = actin/myosin). <span class="figure-source">Slide 4, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-4-0.428_0.487_0.897_0.92.webp"
+    alt="From muscle to myofilament" loading="lazy" width="1100" height="572" />
+  <figcaption>From muscle to myofilament (Indonesian labels: otot = muscle,
+    serat otot = muscle fiber, pembuluh darah = blood vessel, sarkomer =
+    sarcomere, miofibril = myofibril, aktin/miosin = actin/myosin). <span
+    class="figure-source">Slide 4, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 640 230" role="img" aria-labelledby="c1h-title c1h-desc">
     <title id="c1h-title">Levels of organization in skeletal muscle</title>
-    <desc id="c1h-desc">Six cards connected by arrows: whole muscle wrapped in epimysium, fascicle wrapped in perimysium, muscle fiber wrapped in endomysium over its sarcolemma, myofibril, sarcomere from Z disc to Z disc, and the myofilaments actin and myosin.</desc>
+    <desc id="c1h-desc">Six cards connected by arrows: whole muscle wrapped in
+      epimysium, fascicle wrapped in perimysium, muscle fiber wrapped in
+      endomysium over its sarcolemma, myofibril, sarcomere from Z disc to Z
+      disc, and the myofilaments actin and myosin.</desc>
     <defs>
-      <marker id="c1h-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <marker id="c1h-arrow" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)" />
       </marker>
     </defs>
     <g font-size="13">
-      <rect x="10" y="14" width="180" height="78" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <text x="100" y="40" fill="var(--text)" text-anchor="middle" font-weight="600">1. Muscle (organ)</text>
-      <text x="100" y="60" fill="var(--text-muted)" text-anchor="middle" font-size="12">wrapped in epimysium</text>
-      <text x="100" y="78" fill="var(--text-muted)" text-anchor="middle" font-size="12">e.g. biceps brachii</text>
-      <rect x="230" y="14" width="180" height="78" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <text x="320" y="40" fill="var(--text)" text-anchor="middle" font-weight="600">2. Fascicle</text>
-      <text x="320" y="60" fill="var(--text-muted)" text-anchor="middle" font-size="12">bundle of fibers</text>
-      <text x="320" y="78" fill="var(--text-muted)" text-anchor="middle" font-size="12">wrapped in perimysium</text>
-      <rect x="450" y="14" width="180" height="78" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <text x="540" y="40" fill="var(--text)" text-anchor="middle" font-weight="600">3. Muscle fiber (cell)</text>
-      <text x="540" y="60" fill="var(--text-muted)" text-anchor="middle" font-size="12">sarcolemma, many nuclei</text>
-      <text x="540" y="78" fill="var(--text-muted)" text-anchor="middle" font-size="12">wrapped in endomysium</text>
-      <rect x="450" y="136" width="180" height="78" rx="10" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.5" />
-      <text x="540" y="162" fill="var(--text)" text-anchor="middle" font-weight="600">4. Myofibril</text>
-      <text x="540" y="182" fill="var(--text-muted)" text-anchor="middle" font-size="12">1–2 µm rod, fills the fiber</text>
-      <text x="540" y="200" fill="var(--text-muted)" text-anchor="middle" font-size="12">chain of sarcomeres</text>
-      <rect x="230" y="136" width="180" height="78" rx="10" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.5" />
-      <text x="320" y="162" fill="var(--text)" text-anchor="middle" font-weight="600">5. Sarcomere</text>
-      <text x="320" y="182" fill="var(--text-muted)" text-anchor="middle" font-size="12">Z disc to Z disc, ≈2 µm</text>
-      <text x="320" y="200" fill="var(--text-muted)" text-anchor="middle" font-size="12">smallest contractile unit</text>
-      <rect x="10" y="136" width="180" height="78" rx="10" fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.5" />
-      <text x="100" y="162" fill="var(--text)" text-anchor="middle" font-weight="600">6. Myofilaments</text>
-      <text x="100" y="182" fill="var(--text-muted)" text-anchor="middle" font-size="12">thin: actin</text>
-      <text x="100" y="200" fill="var(--text-muted)" text-anchor="middle" font-size="12">thick: myosin</text>
+      <rect x="10" y="14" width="180" height="78" rx="10"
+        fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+      <text x="100" y="40" fill="var(--text)" text-anchor="middle"
+        font-weight="600">1. Muscle (organ)</text>
+      <text x="100" y="60" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">wrapped in epimysium</text>
+      <text x="100" y="78" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">e.g. biceps brachii</text>
+      <rect x="230" y="14" width="180" height="78" rx="10"
+        fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+      <text x="320" y="40" fill="var(--text)" text-anchor="middle"
+        font-weight="600">2. Fascicle</text>
+      <text x="320" y="60" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">bundle of fibers</text>
+      <text x="320" y="78" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">wrapped in perimysium</text>
+      <rect x="450" y="14" width="180" height="78" rx="10"
+        fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+      <text x="540" y="40" fill="var(--text)" text-anchor="middle"
+        font-weight="600">3. Muscle fiber (cell)</text>
+      <text x="540" y="60" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">sarcolemma, many nuclei</text>
+      <text x="540" y="78" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">wrapped in endomysium</text>
+      <rect x="450" y="136" width="180" height="78" rx="10"
+        fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.5" />
+      <text x="540" y="162" fill="var(--text)" text-anchor="middle"
+        font-weight="600">4. Myofibril</text>
+      <text x="540" y="182" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">1–2 µm rod, fills the fiber</text>
+      <text x="540" y="200" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">chain of sarcomeres</text>
+      <rect x="230" y="136" width="180" height="78" rx="10"
+        fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.5" />
+      <text x="320" y="162" fill="var(--text)" text-anchor="middle"
+        font-weight="600">5. Sarcomere</text>
+      <text x="320" y="182" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">Z disc to Z disc, ≈2 µm</text>
+      <text x="320" y="200" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">smallest contractile unit</text>
+      <rect x="10" y="136" width="180" height="78" rx="10"
+        fill="var(--surface-2)" stroke="var(--accent-2)" stroke-width="1.5" />
+      <text x="100" y="162" fill="var(--text)" text-anchor="middle"
+        font-weight="600">6. Myofilaments</text>
+      <text x="100" y="182" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">thin: actin</text>
+      <text x="100" y="200" fill="var(--text-muted)" text-anchor="middle"
+        font-size="12">thick: myosin</text>
     </g>
-    <line x1="192" y1="53" x2="226" y2="53" stroke="var(--accent)" stroke-width="2" marker-end="url(#c1h-arrow)" />
-    <line x1="412" y1="53" x2="446" y2="53" stroke="var(--accent)" stroke-width="2" marker-end="url(#c1h-arrow)" />
-    <line x1="540" y1="94" x2="540" y2="132" stroke="var(--accent)" stroke-width="2" marker-end="url(#c1h-arrow)" />
-    <line x1="448" y1="175" x2="414" y2="175" stroke="var(--accent)" stroke-width="2" marker-end="url(#c1h-arrow)" />
-    <line x1="228" y1="175" x2="194" y2="175" stroke="var(--accent)" stroke-width="2" marker-end="url(#c1h-arrow)" />
+    <line x1="192" y1="53" x2="226" y2="53" stroke="var(--accent)"
+      stroke-width="2" marker-end="url(#c1h-arrow)" />
+    <line x1="412" y1="53" x2="446" y2="53" stroke="var(--accent)"
+      stroke-width="2" marker-end="url(#c1h-arrow)" />
+    <line x1="540" y1="94" x2="540" y2="132" stroke="var(--accent)"
+      stroke-width="2" marker-end="url(#c1h-arrow)" />
+    <line x1="448" y1="175" x2="414" y2="175" stroke="var(--accent)"
+      stroke-width="2" marker-end="url(#c1h-arrow)" />
+    <line x1="228" y1="175" x2="194" y2="175" stroke="var(--accent)"
+      stroke-width="2" marker-end="url(#c1h-arrow)" />
   </svg>
-  <figcaption>From organ to molecule. The top row consists of whole cells and groups of cells; the bottom row lies inside a single cell.</figcaption>
+  <figcaption>From organ to molecule. The top row consists of whole cells and
+    groups of cells; the bottom row lies inside a single cell.</figcaption>
 </figure>
 
 A useful way to remember the order is the "pyramid" shown in the
@@ -105,8 +145,14 @@ thing, the single multinucleated cell.
 From outside to inside:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-8-0.66_0.127_0.942_0.92.webp" alt="Tendon, deep fascia, epimysium, perimysium around fascicles, and endomysium around each muscle fiber" loading="lazy" width="752" height="1190" />
-  <figcaption>Tendon, deep fascia, epimysium, perimysium around fascicles, and endomysium around each muscle fiber. <span class="figure-source">Slide 8, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-8-0.66_0.127_0.942_0.92.webp"
+    alt="Tendon, deep fascia, epimysium, perimysium around fascicles, and
+    endomysium around each muscle fiber" loading="lazy" width="752"
+    height="1190" />
+  <figcaption>Tendon, deep fascia, epimysium, perimysium around fascicles, and
+    endomysium around each muscle fiber. <span class="figure-source">Slide 8,
+    Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
 </figure>
 
 1. **Deep fascia:** a sheet of dense connective tissue that separates
@@ -136,13 +182,23 @@ between them lie mitochondria, glycogen granules and a red oxygen-binding
 pigment, **myoglobin**.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-6-0.056_0.133_0.477_0.887.webp" alt="Ultrastructure of a skeletal muscle fiber" loading="lazy" width="1100" height="1110" />
-  <figcaption>Ultrastructure of a skeletal muscle fiber: sarcolemma, T-tubules, sarcoplasmic reticulum and myofibrils, with a triad (T-tubule plus two terminal cisternae) enlarged below. <span class="figure-source">Slide 6, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-6-0.056_0.133_0.477_0.887.webp"
+    alt="Ultrastructure of a skeletal muscle fiber" loading="lazy" width="1100"
+    height="1110" />
+  <figcaption>Ultrastructure of a skeletal muscle fiber: sarcolemma, T-tubules,
+    sarcoplasmic reticulum and myofibrils, with a triad (T-tubule plus two
+    terminal cisternae) enlarged below. <span class="figure-source">Slide 6,
+    Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-8-0.169_0.413_0.631_0.927.webp" alt="Details of a muscle fiber" loading="lazy" width="1100" height="690" />
-  <figcaption>Details of a muscle fiber: myofibrils, sarcoplasm, mitochondria, nuclei and the triad. <span class="figure-source">Slide 8, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-8-0.169_0.413_0.631_0.927.webp"
+    alt="Details of a muscle fiber" loading="lazy" width="1100" height="690" />
+  <figcaption>Details of a muscle fiber: myofibrils, sarcoplasm, mitochondria,
+    nuclei and the triad. <span class="figure-source">Slide 8, Kontraksi Otot
+    (Reno &amp; Nabilah)</span></figcaption>
 </figure>
 
 Several structures have their own names because they are specialized
@@ -166,8 +222,13 @@ at the junctions of the A and I bands.
 <figure class="diagram">
   <svg viewBox="0 0 580 270" role="img" aria-labelledby="c1t-title c1t-desc">
     <title id="c1t-title">The triad</title>
-    <desc id="c1t-desc">A longitudinal slice under the sarcolemma. Two T-tubules dip down from the surface membrane. Each is flanked by two swollen terminal cisternae of the sarcoplasmic reticulum, forming a triad. Between the triads, thin longitudinal tubules of sarcoplasmic reticulum run along the myofibril, which is drawn below with its bands.</desc>
-    <line x1="20" y1="40" x2="560" y2="40" stroke="var(--text-muted)" stroke-width="3" />
+    <desc id="c1t-desc">A longitudinal slice under the sarcolemma. Two T-tubules
+      dip down from the surface membrane. Each is flanked by two swollen
+      terminal cisternae of the sarcoplasmic reticulum, forming a triad. Between
+      the triads, thin longitudinal tubules of sarcoplasmic reticulum run along
+      the myofibril, which is drawn below with its bands.</desc>
+    <line x1="20" y1="40" x2="560" y2="40" stroke="var(--text-muted)"
+      stroke-width="3" />
     <text x="24" y="28" fill="var(--text)" font-size="12">Sarcolemma</text>
     <g fill="var(--surface)" stroke="var(--text-muted)" stroke-width="1.5">
       <rect x="143" y="40" width="14" height="150" />
@@ -193,20 +254,35 @@ at the junctions of the A and I bands.
       <line x1="280" y1="100" x2="250" y2="60" />
     </g>
     <text x="92" y="122" fill="var(--text)" font-size="12" text-anchor="end">T-tubule</text>
-    <text x="108" y="50" fill="var(--text)" font-size="12" text-anchor="end">Terminal cisterna</text>
-    <text x="206" y="56" fill="var(--text)" font-size="12">Longitudinal SR (stores Ca²⁺)</text>
-    <path d="M112,196 L112,204 L188,204 L188,196" fill="none" stroke="var(--accent)" stroke-width="1.5" />
-    <text x="150" y="218" fill="var(--accent)" font-size="12" text-anchor="middle" font-weight="600">Triad</text>
-    <path d="M372,196 L372,204 L448,204 L448,196" fill="none" stroke="var(--accent)" stroke-width="1.5" />
-    <text x="410" y="218" fill="var(--accent)" font-size="12" text-anchor="middle" font-weight="600">Triad</text>
-    <rect x="20" y="232" width="540" height="18" fill="var(--surface-2)" stroke="var(--border)" />
-    <rect x="150" y="232" width="260" height="18" fill="var(--accent-2)" opacity="0.35" />
-    <text x="280" y="245" fill="var(--text)" font-size="11" text-anchor="middle">A band</text>
-    <text x="85" y="245" fill="var(--text-muted)" font-size="11" text-anchor="middle">I band</text>
-    <text x="485" y="245" fill="var(--text-muted)" font-size="11" text-anchor="middle">I band</text>
-    <text x="280" y="266" fill="var(--text-muted)" font-size="11" text-anchor="middle">Myofibril beneath: triads sit at the A–I junctions</text>
+    <text x="108" y="50" fill="var(--text)" font-size="12"
+      text-anchor="end">Terminal cisterna</text>
+    <text x="206" y="56" fill="var(--text)" font-size="12">Longitudinal SR
+      (stores Ca²⁺)</text>
+    <path d="M112,196 L112,204 L188,204 L188,196" fill="none"
+      stroke="var(--accent)" stroke-width="1.5" />
+    <text x="150" y="218" fill="var(--accent)" font-size="12"
+      text-anchor="middle" font-weight="600">Triad</text>
+    <path d="M372,196 L372,204 L448,204 L448,196" fill="none"
+      stroke="var(--accent)" stroke-width="1.5" />
+    <text x="410" y="218" fill="var(--accent)" font-size="12"
+      text-anchor="middle" font-weight="600">Triad</text>
+    <rect x="20" y="232" width="540" height="18" fill="var(--surface-2)"
+      stroke="var(--border)" />
+    <rect x="150" y="232" width="260" height="18" fill="var(--accent-2)"
+      opacity="0.35" />
+    <text x="280" y="245" fill="var(--text)" font-size="11"
+      text-anchor="middle">A band</text>
+    <text x="85" y="245" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">I band</text>
+    <text x="485" y="245" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">I band</text>
+    <text x="280" y="266" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">Myofibril beneath: triads sit at the A–I
+      junctions</text>
   </svg>
-  <figcaption>A triad is one T-tubule sandwiched between two terminal cisternae. The action potential travels down the T-tubule, and the neighboring cisternae release Ca²⁺ onto the myofibril.</figcaption>
+  <figcaption>A triad is one T-tubule sandwiched between two terminal cisternae.
+    The action potential travels down the T-tubule, and the neighboring
+    cisternae release Ca²⁺ onto the myofibril.</figcaption>
 </figure>
 
 ### Myofibrils and the sarcomere
@@ -217,13 +293,26 @@ the cell. A myofibril is a chain of repeating units called
 **sarcomeres**, joined end to end at the **Z discs** (Z lines).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-7-0.056_0.123_0.559_0.9.webp" alt="A myofibril with its M line, Z lines, A and I bands and H zone; the thick and thin filament proteins; and titin running from Z line to M line" loading="lazy" width="1100" height="956" />
-  <figcaption>A myofibril with its M line, Z lines, A and I bands and H zone; the thick and thin filament proteins; and titin running from Z line to M line. <span class="figure-source">Slide 7, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-7-0.056_0.123_0.559_0.9.webp"
+    alt="A myofibril with its M line, Z lines, A and I bands and H zone; the
+    thick and thin filament proteins; and titin running from Z line to M line"
+    loading="lazy" width="1100" height="956" />
+  <figcaption>A myofibril with its M line, Z lines, A and I bands and H zone;
+    the thick and thin filament proteins; and titin running from Z line to M
+    line. <span class="figure-source">Slide 7, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-9-0.409_0.233_0.931_0.94.webp" alt="The sarcomere from Z disc to Z disc, and the molecules of the thick filament" loading="lazy" width="1100" height="838" />
-  <figcaption>The sarcomere from Z disc to Z disc, and the molecules of the thick filament (myosin tail, hinge and heads) and thin filament (G-actin, tropomyosin, troponin, nebulin). <span class="figure-source">Slide 9, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-9-0.409_0.233_0.931_0.94.webp"
+    alt="The sarcomere from Z disc to Z disc, and the molecules of the thick
+    filament" loading="lazy" width="1100" height="838" />
+  <figcaption>The sarcomere from Z disc to Z disc, and the molecules of the
+    thick filament (myosin tail, hinge and heads) and thin filament (G-actin,
+    tropomyosin, troponin, nebulin). <span class="figure-source">Slide 9,
+    Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
 </figure>
 
 **The sarcomere is the smallest functional unit of striated muscle: the
@@ -249,10 +338,18 @@ shorten. Only their overlap changes.
 <figure class="diagram">
   <svg viewBox="0 0 600 340" role="img" aria-labelledby="c1s-title c1s-desc">
     <title id="c1s-title">The sarcomere, relaxed and contracted</title>
-    <desc id="c1s-desc">Two sarcomeres drawn one above the other. In the relaxed sarcomere the Z discs are far apart; the thin actin filaments extend inward from each Z disc but do not meet, leaving an H zone of thick filament only in the middle. In the contracted sarcomere the Z discs are closer, the thin filaments overlap in the center, the H zone has disappeared and the I bands are shorter, while the A band is the same length.</desc>
+    <desc id="c1s-desc">Two sarcomeres drawn one above the other. In the relaxed
+      sarcomere the Z discs are far apart; the thin actin filaments extend
+      inward from each Z disc but do not meet, leaving an H zone of thick
+      filament only in the middle. In the contracted sarcomere the Z discs are
+      closer, the thin filaments overlap in the center, the H zone has
+      disappeared and the I bands are shorter, while the A band is the same
+      length.</desc>
     <text x="8" y="18" fill="var(--text)" font-size="13" font-weight="600">Relaxed</text>
-    <path d="M180,36 L180,30 L420,30 L420,36" fill="none" stroke="var(--accent)" stroke-width="1.5" />
-    <text x="300" y="25" fill="var(--accent)" font-size="12" text-anchor="middle">A band</text>
+    <path d="M180,36 L180,30 L420,30 L420,36" fill="none" stroke="var(--accent)"
+      stroke-width="1.5" />
+    <text x="300" y="25" fill="var(--accent)" font-size="12"
+      text-anchor="middle">A band</text>
     <g stroke="var(--accent-2)" stroke-width="3">
       <line x1="60" y1="58" x2="250" y2="58" />
       <line x1="60" y1="80" x2="250" y2="80" />
@@ -275,12 +372,14 @@ shorten. Only their overlap changes.
       <line x1="60" y1="46" x2="60" y2="114" />
       <line x1="540" y1="46" x2="540" y2="114" />
     </g>
-    <line x1="300" y1="44" x2="300" y2="116" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4 3" />
+    <line x1="300" y1="44" x2="300" y2="116" stroke="var(--text-muted)"
+      stroke-width="1.5" stroke-dasharray="4 3" />
     <g fill="none" stroke="var(--accent-2)" stroke-width="1.5">
       <path d="M60,122 L60,128 L180,128 L180,122" />
       <path d="M420,122 L420,128 L540,128 L540,122" />
     </g>
-    <path d="M250,122 L250,128 L350,128 L350,122" fill="none" stroke="var(--text-muted)" stroke-width="1.5" />
+    <path d="M250,122 L250,128 L350,128 L350,122" fill="none"
+      stroke="var(--text-muted)" stroke-width="1.5" />
     <g font-size="12" text-anchor="middle">
       <text x="120" y="144" fill="var(--accent-2)">½ I band</text>
       <text x="480" y="144" fill="var(--accent-2)">½ I band</text>
@@ -290,8 +389,10 @@ shorten. Only their overlap changes.
       <text x="540" y="160" fill="var(--text)">Z disc</text>
     </g>
     <text x="8" y="192" fill="var(--text)" font-size="13" font-weight="600">Contracted</text>
-    <path d="M180,210 L180,204 L420,204 L420,210" fill="none" stroke="var(--accent)" stroke-width="1.5" />
-    <text x="300" y="199" fill="var(--accent)" font-size="12" text-anchor="middle">A band (same length)</text>
+    <path d="M180,210 L180,204 L420,204 L420,210" fill="none"
+      stroke="var(--accent)" stroke-width="1.5" />
+    <text x="300" y="199" fill="var(--accent)" font-size="12"
+      text-anchor="middle">A band (same length)</text>
     <g stroke="var(--accent-2)" stroke-width="3">
       <line x1="110" y1="232" x2="298" y2="232" />
       <line x1="110" y1="254" x2="298" y2="254" />
@@ -314,7 +415,8 @@ shorten. Only their overlap changes.
       <line x1="110" y1="220" x2="110" y2="288" />
       <line x1="490" y1="220" x2="490" y2="288" />
     </g>
-    <line x1="300" y1="218" x2="300" y2="290" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4 3" />
+    <line x1="300" y1="218" x2="300" y2="290" stroke="var(--text-muted)"
+      stroke-width="1.5" stroke-dasharray="4 3" />
     <g fill="none" stroke="var(--accent-2)" stroke-width="1.5">
       <path d="M110,296 L110,302 L180,302 L180,296" />
       <path d="M420,296 L420,302 L490,302 L490,296" />
@@ -326,12 +428,16 @@ shorten. Only their overlap changes.
     </g>
     <g font-size="12">
       <rect x="8" y="326" width="16" height="6" fill="var(--accent)" />
-      <text x="30" y="333" fill="var(--text)">Thick filament (myosin, heads as ticks)</text>
-      <line x1="330" y1="329" x2="348" y2="329" stroke="var(--accent-2)" stroke-width="3" />
+      <text x="30" y="333" fill="var(--text)">Thick filament (myosin, heads as
+        ticks)</text>
+      <line x1="330" y1="329" x2="348" y2="329" stroke="var(--accent-2)"
+        stroke-width="3" />
       <text x="354" y="333" fill="var(--text)">Thin filament (actin)</text>
     </g>
   </svg>
-  <figcaption>Contraction pulls the Z discs toward the M line. Neither filament changes length: the A band is unchanged, while the I bands and H zone shrink as overlap increases.</figcaption>
+  <figcaption>Contraction pulls the Z discs toward the M line. Neither filament
+    changes length: the A band is unchanged, while the I bands and H zone shrink
+    as overlap increases.</figcaption>
 </figure>
 
 In three dimensions the filaments are arranged in a precise lattice. In
@@ -372,24 +478,41 @@ center. The heads that project from the filament and bind actin are the
 <figure class="diagram">
   <svg viewBox="0 0 580 200" role="img" aria-labelledby="c1a-title c1a-desc">
     <title id="c1a-title">Structure of the thin filament</title>
-    <desc id="c1a-desc">A chain of round G-actin subunits in two rows forms the F-actin helix. Each actin has a small myosin-binding site. A long strand of tropomyosin lies along the groove, covering the binding sites. At intervals a troponin complex made of three small subunits sits on the tropomyosin.</desc>
+    <desc id="c1a-desc">A chain of round G-actin subunits in two rows forms the
+      F-actin helix. Each actin has a small myosin-binding site. A long strand
+      of tropomyosin lies along the groove, covering the binding sites. At
+      intervals a troponin complex made of three small subunits sits on the
+      tropomyosin.</desc>
     <g fill="var(--accent-soft)" stroke="var(--accent-2)" stroke-width="1.2">
-      <circle cx="40" cy="96" r="10" /><circle cx="58" cy="112" r="10" /><circle cx="76" cy="96" r="10" /><circle cx="94" cy="112" r="10" />
-      <circle cx="112" cy="96" r="10" /><circle cx="130" cy="112" r="10" /><circle cx="148" cy="96" r="10" /><circle cx="166" cy="112" r="10" />
-      <circle cx="184" cy="96" r="10" /><circle cx="202" cy="112" r="10" /><circle cx="220" cy="96" r="10" /><circle cx="238" cy="112" r="10" />
-      <circle cx="256" cy="96" r="10" /><circle cx="274" cy="112" r="10" /><circle cx="292" cy="96" r="10" /><circle cx="310" cy="112" r="10" />
-      <circle cx="328" cy="96" r="10" /><circle cx="346" cy="112" r="10" /><circle cx="364" cy="96" r="10" /><circle cx="382" cy="112" r="10" />
-      <circle cx="400" cy="96" r="10" /><circle cx="418" cy="112" r="10" /><circle cx="436" cy="96" r="10" /><circle cx="454" cy="112" r="10" />
-      <circle cx="472" cy="96" r="10" /><circle cx="490" cy="112" r="10" /><circle cx="508" cy="96" r="10" /><circle cx="526" cy="112" r="10" />
+      <circle cx="40" cy="96" r="10" /><circle cx="58" cy="112" r="10" /><circle
+        cx="76" cy="96" r="10" /><circle cx="94" cy="112" r="10" />
+      <circle cx="112" cy="96" r="10" /><circle cx="130" cy="112" r="10"
+        /><circle cx="148" cy="96" r="10" /><circle cx="166" cy="112" r="10" />
+      <circle cx="184" cy="96" r="10" /><circle cx="202" cy="112" r="10"
+        /><circle cx="220" cy="96" r="10" /><circle cx="238" cy="112" r="10" />
+      <circle cx="256" cy="96" r="10" /><circle cx="274" cy="112" r="10"
+        /><circle cx="292" cy="96" r="10" /><circle cx="310" cy="112" r="10" />
+      <circle cx="328" cy="96" r="10" /><circle cx="346" cy="112" r="10"
+        /><circle cx="364" cy="96" r="10" /><circle cx="382" cy="112" r="10" />
+      <circle cx="400" cy="96" r="10" /><circle cx="418" cy="112" r="10"
+        /><circle cx="436" cy="96" r="10" /><circle cx="454" cy="112" r="10" />
+      <circle cx="472" cy="96" r="10" /><circle cx="490" cy="112" r="10"
+        /><circle cx="508" cy="96" r="10" /><circle cx="526" cy="112" r="10" />
     </g>
     <g fill="var(--red)">
-      <circle cx="76" cy="90" r="3" /><circle cx="148" cy="90" r="3" /><circle cx="220" cy="90" r="3" /><circle cx="292" cy="90" r="3" />
-      <circle cx="364" cy="90" r="3" /><circle cx="436" cy="90" r="3" /><circle cx="508" cy="90" r="3" />
+      <circle cx="76" cy="90" r="3" /><circle cx="148" cy="90" r="3" /><circle
+        cx="220" cy="90" r="3" /><circle cx="292" cy="90" r="3" />
+      <circle cx="364" cy="90" r="3" /><circle cx="436" cy="90" r="3" /><circle
+        cx="508" cy="90" r="3" />
     </g>
-    <path d="M26,92 Q70,80 112,96 T198,100 T284,96 T370,100 T456,96 T542,98" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" opacity="0.85" />
+    <path d="M26,92 Q70,80 112,96 T198,100 T284,96 T370,100 T456,96 T542,98"
+      fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"
+      opacity="0.85" />
     <g fill="var(--accent-3)" stroke="var(--surface)" stroke-width="1">
-      <circle cx="140" cy="80" r="7" /><circle cx="152" cy="74" r="6" /><circle cx="150" cy="86" r="6" />
-      <circle cx="400" cy="80" r="7" /><circle cx="412" cy="74" r="6" /><circle cx="410" cy="86" r="6" />
+      <circle cx="140" cy="80" r="7" /><circle cx="152" cy="74" r="6" /><circle
+        cx="150" cy="86" r="6" />
+      <circle cx="400" cy="80" r="7" /><circle cx="412" cy="74" r="6" /><circle
+        cx="410" cy="86" r="6" />
     </g>
     <g stroke="var(--text-muted)" stroke-width="1">
       <line x1="58" y1="124" x2="58" y2="150" />
@@ -403,14 +526,26 @@ center. The heads that project from the filament and bind actin are the
       <text x="334" y="164">Tropomyosin strand</text>
       <text x="152" y="34" text-anchor="middle">Troponin</text>
     </g>
-    <text x="290" y="192" fill="var(--text-muted)" font-size="11" text-anchor="middle">Troponin has three subunits: TnC binds Ca²⁺, TnI inhibits actin–myosin binding, TnT anchors to tropomyosin</text>
+    <text x="290" y="192" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">Troponin has three subunits: TnC binds Ca²⁺, TnI
+      inhibits actin–myosin binding, TnT anchors to tropomyosin</text>
   </svg>
-  <figcaption>The thin filament. Two strands of F-actin twist around each other; tropomyosin lies along the groove and, at rest, blocks the myosin-binding sites. Troponin holds tropomyosin in place until Ca²⁺ arrives.</figcaption>
+  <figcaption>The thin filament. Two strands of F-actin twist around each other;
+    tropomyosin lies along the groove and, at rest, blocks the myosin-binding
+    sites. Troponin holds tropomyosin in place until Ca²⁺ arrives.</figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-10-0.619_0.087_0.927_0.953.webp" alt="Actin molecules assembling into a helix, joined by tropomyosin and troponin to form the thin filament; below, nebulin aligns actin and titin stabilizes myosin" loading="lazy" width="822" height="1300" />
-  <figcaption>Actin molecules assembling into a helix, joined by tropomyosin and troponin to form the thin filament; below, nebulin aligns actin and titin stabilizes myosin (Indonesian: molekul aktin = actin molecules, filamen tipis = thin filament). <span class="figure-source">Slide 10, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-10-0.619_0.087_0.927_0.953.webp"
+    alt="Actin molecules assembling into a helix, joined by tropomyosin and
+    troponin to form the thin filament; below, nebulin aligns actin and titin
+    stabilizes myosin" loading="lazy" width="822" height="1300" />
+  <figcaption>Actin molecules assembling into a helix, joined by tropomyosin and
+    troponin to form the thin filament; below, nebulin aligns actin and titin
+    stabilizes myosin (Indonesian: molekul aktin = actin molecules, filamen
+    tipis = thin filament). <span class="figure-source">Slide 10, Kontraksi Otot
+    (Reno &amp; Nabilah)</span></figcaption>
 </figure>
 
 - **Actin.** Globular **G-actin** subunits polymerize into long strands of
@@ -454,8 +589,13 @@ striated because their filaments are organized into sarcomeres; smooth
 muscle is not.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-13-0.195_0.213_0.831_0.917.webp" alt="Skeletal, smooth and cardiac muscle compared" loading="lazy" width="1100" height="686" />
-  <figcaption>Skeletal, smooth and cardiac muscle compared. <span class="figure-source">Slide 13, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-13-0.195_0.213_0.831_0.917.webp"
+    alt="Skeletal, smooth and cardiac muscle compared" loading="lazy"
+    width="1100" height="686" />
+  <figcaption>Skeletal, smooth and cardiac muscle compared. <span
+    class="figure-source">Slide 13, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 | Feature | Skeletal | Smooth | Cardiac |
@@ -493,8 +633,13 @@ The summary map from the session is worth being able to draw from
 memory:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-01-kon-11-0.272_0.235_0.742_0.933.webp" alt="Summary map of skeletal muscle organization" loading="lazy" width="1100" height="920" />
-  <figcaption>Summary map of skeletal muscle organization. <span class="figure-source">Slide 11, Kontraksi Otot (Reno &amp; Nabilah)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-01-kon-11-0.272_0.235_0.742_0.933.webp"
+    alt="Summary map of skeletal muscle organization" loading="lazy"
+    width="1100" height="920" />
+  <figcaption>Summary map of skeletal muscle organization. <span
+    class="figure-source">Slide 11, Kontraksi Otot (Reno &amp;
+    Nabilah)</span></figcaption>
 </figure>
 
 - A **skeletal muscle** is composed of connective tissue, blood vessels,

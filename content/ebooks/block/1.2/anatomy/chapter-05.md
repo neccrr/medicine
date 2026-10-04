@@ -10,8 +10,12 @@ the neck viscera, and lymphatic drainage.
 The scalp has five layers. Their initials spell **SCALP**:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p04_0.webp" alt="Layers of the scalp" loading="lazy" width="1100" height="1256" />
-  <figcaption>Layers of the scalp: skin, dense connective tissue, galea aponeurotica, loose connective tissue and pericranium. <span class="figure-source">Slide 4, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p04_0.webp"
+    alt="Layers of the scalp" loading="lazy" width="1100" height="1256" />
+  <figcaption>Layers of the scalp: skin, dense connective tissue, galea
+    aponeurotica, loose connective tissue and pericranium. <span
+    class="figure-source">Slide 4, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 | Layer | Features |
@@ -45,23 +49,37 @@ develop from the **second pharyngeal arch**, and all are supplied by the
 **facial nerve (CN VII)**. They are grouped by the opening they surround:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p10_0.webp" alt="Muscles of facial expression, lateral view" loading="lazy" width="1100" height="952" />
-  <figcaption>Muscles of facial expression, lateral view. <span class="figure-source">Slide 10, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p10_0.webp"
+    alt="Muscles of facial expression, lateral view" loading="lazy" width="1100"
+    height="952" />
+  <figcaption>Muscles of facial expression, lateral view. <span
+    class="figure-source">Slide 10, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p07_0.webp" alt="Orbital group" loading="lazy" width="1100" height="528" />
-  <figcaption>Orbital group: corrugator supercilii and the orbital and palpebral parts of orbicularis oculi. <span class="figure-source">Slide 7, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p07_0.webp"
+    alt="Orbital group" loading="lazy" width="1100" height="528" />
+  <figcaption>Orbital group: corrugator supercilii and the orbital and palpebral
+    parts of orbicularis oculi. <span class="figure-source">Slide 7, Situs
+    Faciales et Colli (Kezia)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p08_0.webp" alt="Nasal group" loading="lazy" width="1100" height="1141" />
-  <figcaption>Nasal group: procerus, nasalis (transverse and alar parts) and depressor septi nasi. <span class="figure-source">Slide 8, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p08_0.webp" alt="Nasal group"
+    loading="lazy" width="1100" height="1141" />
+  <figcaption>Nasal group: procerus, nasalis (transverse and alar parts) and
+    depressor septi nasi. <span class="figure-source">Slide 8, Situs Faciales et
+    Colli (Kezia)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p09_0.webp" alt="Oral group around the mouth, with the modiolus" loading="lazy" width="1100" height="733" />
-  <figcaption>Oral group around the mouth, with the modiolus. <span class="figure-source">Slide 9, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p09_0.webp"
+    alt="Oral group around the mouth, with the modiolus" loading="lazy"
+    width="1100" height="733" />
+  <figcaption>Oral group around the mouth, with the modiolus. <span
+    class="figure-source">Slide 9, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 | Group | Muscles | Main action |
@@ -112,8 +130,12 @@ artery**, through the **ophthalmic artery** (supraorbital and
 supratrochlear branches).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p13_0.webp" alt="Branches of the external carotid artery in the face and scalp" loading="lazy" width="1100" height="878" />
-  <figcaption>Branches of the external carotid artery in the face and scalp. <span class="figure-source">Slide 13, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p13_0.webp"
+    alt="Branches of the external carotid artery in the face and scalp"
+    loading="lazy" width="1100" height="878" />
+  <figcaption>Branches of the external carotid artery in the face and scalp.
+    <span class="figure-source">Slide 13, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 Branches of the external carotid artery, from below upward:
@@ -146,8 +168,12 @@ the **v. retromandibularis** and drains into the **v. jugularis
 interna**, which drains most of the face and head.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p14_0.webp" alt="Veins of the face and scalp draining to the internal jugular vein; note the pterygoid plexus" loading="lazy" width="1100" height="956" />
-  <figcaption>Veins of the face and scalp draining to the internal jugular vein; note the pterygoid plexus. <span class="figure-source">Slide 14, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p14_0.webp"
+    alt="Veins of the face and scalp draining to the internal jugular vein; note
+    the pterygoid plexus" loading="lazy" width="1100" height="956" />
+  <figcaption>Veins of the face and scalp draining to the internal jugular vein;
+    note the pterygoid plexus. <span class="figure-source">Slide 14, Situs
+    Faciales et Colli (Kezia)</span></figcaption>
 </figure>
 
 The facial vein has no effective valves. Through the ophthalmic veins it
@@ -161,13 +187,21 @@ region is called the **danger triangle of the face**.
 The face has two separate nerve supplies:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p15_0.webp" alt="Sensory territories of the trigeminal divisions (V1, V2, V3) and of the cervical nerves" loading="lazy" width="1100" height="483" />
-  <figcaption>Sensory territories of the trigeminal divisions (V1, V2, V3) and of the cervical nerves. <span class="figure-source">Slide 15, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p15_0.webp"
+    alt="Sensory territories of the trigeminal divisions (V1, V2, V3) and of the
+    cervical nerves" loading="lazy" width="1100" height="483" />
+  <figcaption>Sensory territories of the trigeminal divisions (V1, V2, V3) and
+    of the cervical nerves. <span class="figure-source">Slide 15, Situs Faciales
+    et Colli (Kezia)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p16_0.webp" alt="Terminal branches of the facial nerve fanning out from the parotid gland" loading="lazy" width="1100" height="753" />
-  <figcaption>Terminal branches of the facial nerve fanning out from the parotid gland. <span class="figure-source">Slide 16, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p16_0.webp"
+    alt="Terminal branches of the facial nerve fanning out from the parotid
+    gland" loading="lazy" width="1100" height="753" />
+  <figcaption>Terminal branches of the facial nerve fanning out from the parotid
+    gland. <span class="figure-source">Slide 16, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 - **Sensory: trigeminal nerve (CN V)**, in three divisions:
@@ -196,27 +230,57 @@ The face has two separate nerve supplies:
 <figure class="diagram">
   <svg viewBox="0 0 660 330" role="img" aria-labelledby="face-title face-desc">
     <title id="face-title">Sensory and motor nerve supply of the face</title>
-    <desc id="face-desc">Two face profiles side by side. Left: sensory territories of the trigeminal nerve: V1 over the forehead and nose bridge, V2 over the cheek and upper lip, V3 over the lower jaw and temple; the angle of the jaw and neck are supplied by cervical nerves. Right: the facial nerve emerging in front of the ear and fanning into five branches: temporal, zygomatic, buccal, marginal mandibular and cervical.</desc>
+    <desc id="face-desc">Two face profiles side by side. Left: sensory
+      territories of the trigeminal nerve: V1 over the forehead and nose bridge,
+      V2 over the cheek and upper lip, V3 over the lower jaw and temple; the
+      angle of the jaw and neck are supplied by cervical nerves. Right: the
+      facial nerve emerging in front of the ear and fanning into five branches:
+      temporal, zygomatic, buccal, marginal mandibular and cervical.</desc>
     <defs>
-      <clipPath id="face-clip-l"><path id="face-shape-l" d="M180,30 C110,30 70,70 64,110 L50,140 L62,146 L58,176 L66,184 L60,200 C62,222 76,236 100,240 L150,246 C176,250 196,236 212,212 L232,212 L230,300 L290,300 L270,210 C290,180 290,120 270,80 C254,48 222,30 180,30 Z" /></clipPath>
+      <clipPath id="face-clip-l"><path id="face-shape-l"
+        d="M180,30 C110,30 70,70 64,110 L50,140 L62,146 L58,176 L66,184 L60,200
+        C62,222 76,236 100,240 L150,246 C176,250 196,236 212,212 L232,212
+        L230,300 L290,300 L270,210 C290,180 290,120 270,80 C254,48 222,30 180,30
+        Z" /></clipPath>
     </defs>
     <g clip-path="url(#face-clip-l)">
-      <rect x="0" y="0" width="330" height="330" fill="var(--accent-2)" opacity="0.18" />
-      <path d="M0,0 L240,0 L200,76 L150,102 L110,112 L66,118 L0,118 Z" fill="var(--accent)" opacity="0.55" />
-      <path d="M0,118 L66,118 L110,112 L150,102 L200,76 L230,70 L190,150 L150,170 L90,180 L0,180 Z" fill="var(--type-flashcard)" opacity="0.55" />
-      <path d="M0,180 L90,180 L150,170 L190,150 L230,70 L260,60 L230,150 L218,210 L200,240 L150,260 L0,260 Z" fill="var(--type-summary)" opacity="0.55" />
+      <rect x="0" y="0" width="330" height="330" fill="var(--accent-2)"
+        opacity="0.18" />
+      <path d="M0,0 L240,0 L200,76 L150,102 L110,112 L66,118 L0,118 Z"
+        fill="var(--accent)" opacity="0.55" />
+      <path
+        d="M0,118 L66,118 L110,112 L150,102 L200,76 L230,70 L190,150 L150,170
+        L90,180 L0,180 Z" fill="var(--type-flashcard)" opacity="0.55" />
+      <path
+        d="M0,180 L90,180 L150,170 L190,150 L230,70 L260,60 L230,150 L218,210
+        L200,240 L150,260 L0,260 Z" fill="var(--type-summary)" opacity="0.55" />
     </g>
-    <path d="M180,30 C110,30 70,70 64,110 L50,140 L62,146 L58,176 L66,184 L60,200 C62,222 76,236 100,240 L150,246 C176,250 196,236 212,212 L232,212 L230,300 L290,300 L270,210 C290,180 290,120 270,80 C254,48 222,30 180,30 Z" fill="none" stroke="var(--text-muted)" stroke-width="2" />
-    <ellipse cx="238" cy="130" rx="10" ry="18" fill="none" stroke="var(--text-muted)" stroke-width="1.5" />
+    <path
+      d="M180,30 C110,30 70,70 64,110 L50,140 L62,146 L58,176 L66,184 L60,200
+      C62,222 76,236 100,240 L150,246 C176,250 196,236 212,212 L232,212 L230,300
+      L290,300 L270,210 C290,180 290,120 270,80 C254,48 222,30 180,30 Z"
+      fill="none" stroke="var(--text-muted)" stroke-width="2" />
+    <ellipse cx="238" cy="130" rx="10" ry="18" fill="none"
+      stroke="var(--text-muted)" stroke-width="1.5" />
     <g font-size="13" font-weight="700" fill="var(--text)">
-      <text x="140" y="76">V1</text><text x="112" y="150">V2</text><text x="130" y="220">V3</text>
+      <text x="140" y="76">V1</text><text x="112" y="150">V2</text><text x="130"
+        y="220">V3</text>
     </g>
     <text x="252" y="252" fill="var(--text-muted)" font-size="10">C2–C3</text>
-    <text x="165" y="324" fill="var(--text-muted)" font-size="12" text-anchor="middle">Sensory: trigeminal (CN V)</text>
+    <text x="165" y="324" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Sensory: trigeminal (CN V)</text>
     <g transform="translate(330,0)">
-      <path d="M180,30 C110,30 70,70 64,110 L50,140 L62,146 L58,176 L66,184 L60,200 C62,222 76,236 100,240 L150,246 C176,250 196,236 212,212 L232,212 L230,300 L290,300 L270,210 C290,180 290,120 270,80 C254,48 222,30 180,30 Z" fill="var(--surface)" stroke="var(--text-muted)" stroke-width="2" />
-      <ellipse cx="238" cy="130" rx="10" ry="18" fill="none" stroke="var(--text-muted)" stroke-width="1.5" />
-      <path d="M212,152 C222,160 226,188 216,208 L204,206 C196,180 198,160 212,152 Z" fill="var(--accent-3)" opacity="0.35" stroke="var(--accent-3)" stroke-width="1" />
+      <path
+        d="M180,30 C110,30 70,70 64,110 L50,140 L62,146 L58,176 L66,184 L60,200
+        C62,222 76,236 100,240 L150,246 C176,250 196,236 212,212 L232,212
+        L230,300 L290,300 L270,210 C290,180 290,120 270,80 C254,48 222,30 180,30
+        Z" fill="var(--surface)" stroke="var(--text-muted)" stroke-width="2" />
+      <ellipse cx="238" cy="130" rx="10" ry="18" fill="none"
+        stroke="var(--text-muted)" stroke-width="1.5" />
+      <path
+        d="M212,152 C222,160 226,188 216,208 L204,206 C196,180 198,160 212,152
+        Z" fill="var(--accent-3)" opacity="0.35" stroke="var(--accent-3)"
+        stroke-width="1" />
       <g stroke="var(--accent-3)" stroke-width="3" fill="none" stroke-linecap="round">
         <path d="M226,166 L210,172" />
         <path d="M210,172 C196,140 186,110 176,70" />
@@ -236,10 +300,13 @@ The face has two separate nerve supplies:
       <text x="252" y="162" fill="var(--text-muted)" font-size="10">stylomastoid</text>
       <text x="252" y="174" fill="var(--text-muted)" font-size="10">foramen</text>
       <text x="190" y="206" fill="var(--text-muted)" font-size="10" text-anchor="end">parotid</text>
-      <text x="165" y="324" fill="var(--text-muted)" font-size="12" text-anchor="middle">Motor: facial (CN VII)</text>
+      <text x="165" y="324" fill="var(--text-muted)" font-size="12"
+        text-anchor="middle">Motor: facial (CN VII)</text>
     </g>
   </svg>
-  <figcaption>The trigeminal nerve feels the face; the facial nerve moves it. The skin over the angle of the jaw belongs to the cervical plexus, not to V3.</figcaption>
+  <figcaption>The trigeminal nerve feels the face; the facial nerve moves it.
+    The skin over the angle of the jaw belongs to the cervical plexus, not to
+    V3.</figcaption>
 </figure>
 
 ### Lymphatic drainage of the face
@@ -250,8 +317,12 @@ and preauricular, retroauricular, occipital), and from there to the
 **deep cervical nodes**.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p17_0.webp" alt="Lymph node groups of the head and neck" loading="lazy" width="1100" height="796" />
-  <figcaption>Lymph node groups of the head and neck. <span class="figure-source">Slide 17, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p17_0.webp"
+    alt="Lymph node groups of the head and neck" loading="lazy" width="1100"
+    height="796" />
+  <figcaption>Lymph node groups of the head and neck. <span
+    class="figure-source">Slide 17, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 ## The neck (*regio colli*)
@@ -277,13 +348,23 @@ Deep to the skin, the neck has two layers of fascia:
 The fascial layers create four compartments:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p20_0.webp" alt="Fascial layers and compartments of the neck" loading="lazy" width="1100" height="953" />
-  <figcaption>Fascial layers and compartments of the neck. <span class="figure-source">Slide 20, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p20_0.webp"
+    alt="Fascial layers and compartments of the neck" loading="lazy"
+    width="1100" height="953" />
+  <figcaption>Fascial layers and compartments of the neck. <span
+    class="figure-source">Slide 20, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p19_0.webp" alt="Cross-section of the neck with the pretracheal, superficial and prevertebral layers and the carotid sheath" loading="lazy" width="1100" height="529" />
-  <figcaption>Cross-section of the neck with the pretracheal, superficial and prevertebral layers and the carotid sheath. <span class="figure-source">Slide 19, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p19_0.webp"
+    alt="Cross-section of the neck with the pretracheal, superficial and
+    prevertebral layers and the carotid sheath" loading="lazy" width="1100"
+    height="529" />
+  <figcaption>Cross-section of the neck with the pretracheal, superficial and
+    prevertebral layers and the carotid sheath. <span
+    class="figure-source">Slide 19, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 | Compartment | Bounded by | Contents |
@@ -295,28 +376,61 @@ The fascial layers create four compartments:
 <figure class="diagram">
   <svg viewBox="0 0 640 330" role="img" aria-labelledby="neck-title neck-desc">
     <title id="neck-title">Cross-section of the neck at C6</title>
-    <desc id="neck-desc">A transverse section of the neck, anterior at the top. An investing fascia surrounds everything and splits around the sternocleidomastoid muscles at the front-sides and trapezius at the back. The visceral compartment in front contains the trachea, oesophagus behind it and thyroid lobes on either side. A carotid sheath on each side contains the common carotid artery, internal jugular vein and vagus nerve. The vertebral compartment behind contains a vertebra surrounded by prevertebral fascia and deep muscles.</desc>
-    <ellipse cx="240" cy="170" rx="200" ry="148" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="3" />
+    <desc id="neck-desc">A transverse section of the neck, anterior at the top.
+      An investing fascia surrounds everything and splits around the
+      sternocleidomastoid muscles at the front-sides and trapezius at the back.
+      The visceral compartment in front contains the trachea, oesophagus behind
+      it and thyroid lobes on either side. A carotid sheath on each side
+      contains the common carotid artery, internal jugular vein and vagus nerve.
+      The vertebral compartment behind contains a vertebra surrounded by
+      prevertebral fascia and deep muscles.</desc>
+    <ellipse cx="240" cy="170" rx="200" ry="148" fill="var(--surface)"
+      stroke="var(--accent-2)" stroke-width="3" />
     <text x="240" y="16" fill="var(--text-muted)" font-size="12" text-anchor="middle">Anterior</text>
-    <path d="M82,86 C100,70 128,74 136,96 L118,150 C96,146 80,120 82,86 Z" fill="var(--red)" opacity="0.45" />
-    <path d="M398,86 C380,70 352,74 344,96 L362,150 C384,146 400,120 398,86 Z" fill="var(--red)" opacity="0.45" />
-    <path d="M60,200 C70,260 140,310 240,316 C340,310 410,260 420,200 C396,240 330,270 240,272 C150,270 84,240 60,200 Z" fill="var(--red)" opacity="0.35" />
-    <path d="M160,52 C200,40 280,40 320,52 L330,120 C300,140 180,140 150,120 Z" fill="var(--accent-3)" opacity="0.18" stroke="var(--accent-3)" stroke-width="2" stroke-dasharray="5 3" />
-    <circle cx="240" cy="78" r="24" fill="var(--surface)" stroke="var(--text)" stroke-width="3" />
+    <path d="M82,86 C100,70 128,74 136,96 L118,150 C96,146 80,120 82,86 Z"
+      fill="var(--red)" opacity="0.45" />
+    <path d="M398,86 C380,70 352,74 344,96 L362,150 C384,146 400,120 398,86 Z"
+      fill="var(--red)" opacity="0.45" />
+    <path
+      d="M60,200 C70,260 140,310 240,316 C340,310 410,260 420,200 C396,240
+      330,270 240,272 C150,270 84,240 60,200 Z" fill="var(--red)" opacity="0.35"
+      />
+    <path d="M160,52 C200,40 280,40 320,52 L330,120 C300,140 180,140 150,120 Z"
+      fill="var(--accent-3)" opacity="0.18" stroke="var(--accent-3)"
+      stroke-width="2" stroke-dasharray="5 3" />
+    <circle cx="240" cy="78" r="24" fill="var(--surface)" stroke="var(--text)"
+      stroke-width="3" />
     <circle cx="240" cy="78" r="14" fill="var(--surface-2)" />
-    <ellipse cx="240" cy="120" rx="18" ry="9" fill="var(--accent-3)" opacity="0.7" />
-    <path d="M194,64 C178,74 176,104 196,112 L212,98 C206,84 204,74 194,64 Z" fill="var(--type-summary)" opacity="0.7" />
-    <path d="M286,64 C302,74 304,104 284,112 L268,98 C274,84 276,74 286,64 Z" fill="var(--type-summary)" opacity="0.7" />
-    <circle cx="150" cy="140" r="26" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="4 3" />
-    <circle cx="330" cy="140" r="26" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-dasharray="4 3" />
-    <circle cx="160" cy="134" r="9" fill="var(--red)" /><circle cx="140" cy="144" r="11" fill="var(--type-flashcard)" /><circle cx="156" cy="156" r="4" fill="var(--accent-3)" />
-    <circle cx="320" cy="134" r="9" fill="var(--red)" /><circle cx="340" cy="144" r="11" fill="var(--type-flashcard)" /><circle cx="324" cy="156" r="4" fill="var(--accent-3)" />
-    <path d="M120,176 C150,160 330,160 360,176 L360,250 C330,270 150,270 120,250 Z" fill="var(--accent)" opacity="0.1" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3" />
-    <ellipse cx="240" cy="188" rx="36" ry="18" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="2" />
-    <circle cx="240" cy="222" r="12" fill="var(--surface)" stroke="var(--text-muted)" stroke-width="2" />
-    <path d="M226,232 L240,262 L254,232" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="2" />
-    <line x1="200" y1="196" x2="162" y2="206" stroke="var(--text-muted)" stroke-width="6" stroke-linecap="round" />
-    <line x1="280" y1="196" x2="318" y2="206" stroke="var(--text-muted)" stroke-width="6" stroke-linecap="round" />
+    <ellipse cx="240" cy="120" rx="18" ry="9" fill="var(--accent-3)"
+      opacity="0.7" />
+    <path d="M194,64 C178,74 176,104 196,112 L212,98 C206,84 204,74 194,64 Z"
+      fill="var(--type-summary)" opacity="0.7" />
+    <path d="M286,64 C302,74 304,104 284,112 L268,98 C274,84 276,74 286,64 Z"
+      fill="var(--type-summary)" opacity="0.7" />
+    <circle cx="150" cy="140" r="26" fill="none" stroke="var(--accent-2)"
+      stroke-width="2" stroke-dasharray="4 3" />
+    <circle cx="330" cy="140" r="26" fill="none" stroke="var(--accent-2)"
+      stroke-width="2" stroke-dasharray="4 3" />
+    <circle cx="160" cy="134" r="9" fill="var(--red)" /><circle cx="140"
+      cy="144" r="11" fill="var(--type-flashcard)" /><circle cx="156" cy="156"
+      r="4" fill="var(--accent-3)" />
+    <circle cx="320" cy="134" r="9" fill="var(--red)" /><circle cx="340"
+      cy="144" r="11" fill="var(--type-flashcard)" /><circle cx="324" cy="156"
+      r="4" fill="var(--accent-3)" />
+    <path
+      d="M120,176 C150,160 330,160 360,176 L360,250 C330,270 150,270 120,250 Z"
+      fill="var(--accent)" opacity="0.1" stroke="var(--accent)" stroke-width="2"
+      stroke-dasharray="5 3" />
+    <ellipse cx="240" cy="188" rx="36" ry="18" fill="var(--accent-soft)"
+      stroke="var(--text-muted)" stroke-width="2" />
+    <circle cx="240" cy="222" r="12" fill="var(--surface)"
+      stroke="var(--text-muted)" stroke-width="2" />
+    <path d="M226,232 L240,262 L254,232" fill="var(--accent-soft)"
+      stroke="var(--text-muted)" stroke-width="2" />
+    <line x1="200" y1="196" x2="162" y2="206" stroke="var(--text-muted)"
+      stroke-width="6" stroke-linecap="round" />
+    <line x1="280" y1="196" x2="318" y2="206" stroke="var(--text-muted)"
+      stroke-width="6" stroke-linecap="round" />
     <g stroke="var(--text-muted)" stroke-width="1">
       <line x1="264" y1="78" x2="460" y2="40" />
       <line x1="258" y1="122" x2="460" y2="66" />
@@ -346,7 +460,9 @@ The fascial layers create four compartments:
       <text x="150" y="182">carotid sheath</text>
     </g>
   </svg>
-  <figcaption>The visceral compartment in front, the two carotid sheaths at the sides, and the vertebral compartment behind, all wrapped in the investing layer of deep cervical fascia.</figcaption>
+  <figcaption>The visceral compartment in front, the two carotid sheaths at the
+    sides, and the vertebral compartment behind, all wrapped in the investing
+    layer of deep cervical fascia.</figcaption>
 </figure>
 
 ### Os hyoideum
@@ -355,8 +471,11 @@ The hyoid bone is a U-shaped bone in the anterior midline, between the
 mandible and the thyroid cartilage, at the level of **C3**.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p21_0.webp" alt="Os hyoideum" loading="lazy" width="1100" height="1471" />
-  <figcaption>Os hyoideum: body, greater and lesser horns, and its position above the larynx. <span class="figure-source">Slide 21, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p21_0.webp" alt="Os hyoideum"
+    loading="lazy" width="1100" height="1471" />
+  <figcaption>Os hyoideum: body, greater and lesser horns, and its position
+    above the larynx. <span class="figure-source">Slide 21, Situs Faciales et
+    Colli (Kezia)</span></figcaption>
 </figure>
 
 - It has a **corpus** (body), two **cornua majora** (greater horns) and
@@ -377,15 +496,29 @@ an anterior and a posterior triangle.
 <figure class="diagram">
   <svg viewBox="0 0 720 380" role="img" aria-labelledby="tri-title tri-desc">
     <title id="tri-title">Triangles of the neck, lateral view</title>
-    <desc id="tri-desc">A lateral view of the neck, face to the left. Sternocleidomastoid runs diagonally from the mastoid process down to the sternum, separating the anterior triangle in front from the posterior triangle behind. Trapezius bounds the posterior triangle behind and the clavicle below. The digastric bellies and the superior belly of omohyoid subdivide the anterior triangle into submental, submandibular, carotid and muscular triangles. The inferior belly of omohyoid divides the posterior triangle into occipital and subclavian triangles.</desc>
+    <desc id="tri-desc">A lateral view of the neck, face to the left.
+      Sternocleidomastoid runs diagonally from the mastoid process down to the
+      sternum, separating the anterior triangle in front from the posterior
+      triangle behind. Trapezius bounds the posterior triangle behind and the
+      clavicle below. The digastric bellies and the superior belly of omohyoid
+      subdivide the anterior triangle into submental, submandibular, carotid and
+      muscular triangles. The inferior belly of omohyoid divides the posterior
+      triangle into occipital and subclavian triangles.</desc>
     <g transform="translate(60,0)">
-    <polygon points="90,150 230,150 300,70 190,335 90,335" fill="var(--accent)" opacity="0.14" />
-    <polygon points="300,70 370,60 480,335 190,335" fill="var(--accent-2)" opacity="0.16" />
-    <polyline points="70,120 90,150 230,150 244,70" fill="none" stroke="var(--text-muted)" stroke-width="3" />
-    <line x1="90" y1="150" x2="90" y2="340" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="5 4" />
-    <polygon points="292,66 312,72 204,338 180,338" fill="var(--red)" opacity="0.55" />
-    <polygon points="366,56 382,60 494,338 474,338" fill="var(--red)" opacity="0.4" />
-    <line x1="180" y1="344" x2="500" y2="344" stroke="var(--text-muted)" stroke-width="10" stroke-linecap="round" />
+    <polygon points="90,150 230,150 300,70 190,335 90,335" fill="var(--accent)"
+      opacity="0.14" />
+    <polygon points="300,70 370,60 480,335 190,335" fill="var(--accent-2)"
+      opacity="0.16" />
+    <polyline points="70,120 90,150 230,150 244,70" fill="none"
+      stroke="var(--text-muted)" stroke-width="3" />
+    <line x1="90" y1="150" x2="90" y2="340" stroke="var(--text-muted)"
+      stroke-width="1.5" stroke-dasharray="5 4" />
+    <polygon points="292,66 312,72 204,338 180,338" fill="var(--red)"
+      opacity="0.55" />
+    <polygon points="366,56 382,60 494,338 474,338" fill="var(--red)"
+      opacity="0.4" />
+    <line x1="180" y1="344" x2="500" y2="344" stroke="var(--text-muted)"
+      stroke-width="10" stroke-linecap="round" />
     <ellipse cx="148" cy="192" rx="14" ry="5" fill="var(--text)" />
     <g stroke="var(--accent-3)" stroke-width="5" stroke-linecap="round" fill="none">
       <line x1="100" y1="160" x2="142" y2="188" />
@@ -401,7 +534,8 @@ an anterior and a posterior triangle.
       <text x="360" y="190">Occipital</text>
       <text x="318" y="326">Subclavian</text>
     </g>
-    <line x1="112" y1="186" x2="40" y2="200" stroke="var(--text-muted)" stroke-width="1" />
+    <line x1="112" y1="186" x2="40" y2="200" stroke="var(--text-muted)"
+      stroke-width="1" />
     <text x="36" y="204" fill="var(--text)" font-size="11" text-anchor="end">Submental</text>
     <text x="150" y="112" fill="var(--text-muted)" font-size="11" text-anchor="middle">mandible</text>
     <text x="300" y="56" fill="var(--text-muted)" font-size="10" text-anchor="middle">mastoid</text>
@@ -422,13 +556,19 @@ an anterior and a posterior triangle.
       <text x="546" y="284">Clavicle</text>
     </g>
     <g font-size="12" font-weight="700">
-      <rect x="20" y="16" width="12" height="12" fill="var(--accent)" opacity="0.5" /><text x="38" y="27" fill="var(--text)">Anterior triangle</text>
-      <rect x="20" y="36" width="12" height="12" fill="var(--accent-2)" opacity="0.6" /><text x="38" y="47" fill="var(--text)">Posterior triangle</text>
+      <rect x="20" y="16" width="12" height="12" fill="var(--accent)"
+        opacity="0.5" /><text x="38" y="27" fill="var(--text)">Anterior
+        triangle</text>
+      <rect x="20" y="36" width="12" height="12" fill="var(--accent-2)"
+        opacity="0.6" /><text x="38" y="47" fill="var(--text)">Posterior
+        triangle</text>
     </g>
     <text x="90" y="362" fill="var(--text-muted)" font-size="10" text-anchor="middle">midline</text>
     </g>
   </svg>
-  <figcaption>SCM divides the neck into anterior and posterior triangles. The digastric and omohyoid muscles subdivide them further. The submental triangle lies across the midline under the chin.</figcaption>
+  <figcaption>SCM divides the neck into anterior and posterior triangles. The
+    digastric and omohyoid muscles subdivide them further. The submental
+    triangle lies across the midline under the chin.</figcaption>
 </figure>
 
 #### Trigonum cervicale anterius
@@ -438,13 +578,19 @@ The anterior triangle is bounded by the **midline of the neck**, the
 subdivided into four smaller triangles:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p23_0.webp" alt="Anterior triangle" loading="lazy" width="1100" height="1045" />
-  <figcaption>Anterior triangle: infrahyoid muscles, larynx, carotid artery and internal jugular vein. <span class="figure-source">Slide 23, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p23_0.webp"
+    alt="Anterior triangle" loading="lazy" width="1100" height="1045" />
+  <figcaption>Anterior triangle: infrahyoid muscles, larynx, carotid artery and
+    internal jugular vein. <span class="figure-source">Slide 23, Situs Faciales
+    et Colli (Kezia)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p23_1.webp" alt="Suprahyoid muscles" loading="lazy" width="1100" height="1654" />
-  <figcaption>Suprahyoid muscles: digastric, stylohyoid, mylohyoid and geniohyoid. <span class="figure-source">Slide 23, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p23_1.webp"
+    alt="Suprahyoid muscles" loading="lazy" width="1100" height="1654" />
+  <figcaption>Suprahyoid muscles: digastric, stylohyoid, mylohyoid and
+    geniohyoid. <span class="figure-source">Slide 23, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 | Triangle | Boundaries | Key contents |
@@ -483,8 +629,11 @@ clavicle**. Its floor is formed by splenius capitis, levator scapulae
 and the scalene muscles. The inferior belly of omohyoid divides it into:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p24_0.webp" alt="Posterior triangle" loading="lazy" width="1100" height="440" />
-  <figcaption>Posterior triangle: occipital and omoclavicular (subclavian) parts, with the muscles forming its floor. <span class="figure-source">Slide 24, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p24_0.webp"
+    alt="Posterior triangle" loading="lazy" width="1100" height="440" />
+  <figcaption>Posterior triangle: occipital and omoclavicular (subclavian)
+    parts, with the muscles forming its floor. <span class="figure-source">Slide
+    24, Situs Faciales et Colli (Kezia)</span></figcaption>
 </figure>
 
 - the **trigonum occipitale** (above), which contains the **accessory
@@ -535,8 +684,12 @@ and the scalene muscles. The inferior belly of omohyoid divides it into:
   structure most at risk in thyroid surgery: injury causes hoarseness.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p26_0.webp" alt="The thyroid gland, its arteries and the recurrent laryngeal nerves" loading="lazy" width="1100" height="1109" />
-  <figcaption>The thyroid gland, its arteries and the recurrent laryngeal nerves. <span class="figure-source">Slide 26, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p26_0.webp"
+    alt="The thyroid gland, its arteries and the recurrent laryngeal nerves"
+    loading="lazy" width="1100" height="1109" />
+  <figcaption>The thyroid gland, its arteries and the recurrent laryngeal
+    nerves. <span class="figure-source">Slide 26, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 ### Glandulae parathyroideae
@@ -554,8 +707,12 @@ and the scalene muscles. The inferior belly of omohyoid divides it into:
   nerves.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p27_0.webp" alt="The parathyroid glands on the back of the thyroid lobes" loading="lazy" width="1100" height="1100" />
-  <figcaption>The parathyroid glands on the back of the thyroid lobes. <span class="figure-source">Slide 27, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p27_0.webp"
+    alt="The parathyroid glands on the back of the thyroid lobes" loading="lazy"
+    width="1100" height="1100" />
+  <figcaption>The parathyroid glands on the back of the thyroid lobes. <span
+    class="figure-source">Slide 27, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 ### Thymus
@@ -570,8 +727,12 @@ and the scalene muscles. The inferior belly of omohyoid divides it into:
   thoracic and inferior thyroid arteries).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p28_0.webp" alt="The thymus in the superior mediastinum" loading="lazy" width="1100" height="776" />
-  <figcaption>The thymus in the superior mediastinum. <span class="figure-source">Slide 28, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p28_0.webp"
+    alt="The thymus in the superior mediastinum" loading="lazy" width="1100"
+    height="776" />
+  <figcaption>The thymus in the superior mediastinum. <span
+    class="figure-source">Slide 28, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 ## Lymphatic drainage of the head and neck
@@ -581,8 +742,12 @@ lymph nodes** (*nodi lymphoidei cervicales profundi*). These form a chain
 along the **internal jugular vein**, mostly under cover of SCM.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p30_0.webp" alt="Deep cervical lymph nodes along the internal jugular vein, and the thoracic duct" loading="lazy" width="1100" height="583" />
-  <figcaption>Deep cervical lymph nodes along the internal jugular vein, and the thoracic duct. <span class="figure-source">Slide 30, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p30_0.webp"
+    alt="Deep cervical lymph nodes along the internal jugular vein, and the
+    thoracic duct" loading="lazy" width="1100" height="583" />
+  <figcaption>Deep cervical lymph nodes along the internal jugular vein, and the
+    thoracic duct. <span class="figure-source">Slide 30, Situs Faciales et Colli
+    (Kezia)</span></figcaption>
 </figure>
 
 - **Superficial nodes** drain into the deep nodes. They are:
@@ -611,13 +776,17 @@ because the thoracic duct drains past it.
   - the corner of the mouth droops.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-05-sfc_p32_0.webp" alt="Facial nerve palsy" loading="lazy" width="1100" height="1398" />
-  <figcaption>Facial nerve palsy: the brow, eyelid and corner of the mouth droop on the affected side. <span class="figure-source">Slide 32, Situs Faciales et Colli (Kezia)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-05-sfc_p32_0.webp"
+    alt="Facial nerve palsy" loading="lazy" width="1100" height="1398" />
+  <figcaption>Facial nerve palsy: the brow, eyelid and corner of the mouth droop
+    on the affected side. <span class="figure-source">Slide 32, Situs Faciales
+    et Colli (Kezia)</span></figcaption>
 </figure>
 
   Because the whole side, forehead included, is affected, it is a lower
   motor neuron lesion. An upper motor neuron lesion (such as a stroke)
   spares the forehead.
+
 - **Paralysis of platysma**: damage to the **cervical branch of the facial
   nerve** (for example in neck surgery). The skin of the neck loses its
   tone and falls into slack folds.

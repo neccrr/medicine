@@ -50,28 +50,52 @@ Every epithelial cell has three functionally distinct faces:
 <figure class="diagram">
   <svg viewBox="0 0 640 340" role="img" aria-labelledby="jc-title jc-desc">
     <title id="jc-title">The epithelial junctional complex, apical to basal</title>
-    <desc id="jc-desc">Two adjacent epithelial cells with, from apical to basal along the lateral membrane, a tight junction, a zonula adherens, several desmosomes, and a gap junction, with hemidesmosomes anchoring the basal surface to the basement membrane.</desc>
-    <rect x="40" y="15" width="150" height="290" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
-    <rect x="230" y="15" width="150" height="290" rx="10" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
-    <text x="115" y="45" fill="var(--text-muted)" font-size="11" text-anchor="middle">cell A</text>
-    <text x="305" y="45" fill="var(--text-muted)" font-size="11" text-anchor="middle">cell B</text>
-    <text x="210" y="12" fill="var(--text-muted)" font-size="10.5" text-anchor="middle">apical (lumen)</text>
+    <desc id="jc-desc">Two adjacent epithelial cells with, from apical to basal
+      along the lateral membrane, a tight junction, a zonula adherens, several
+      desmosomes, and a gap junction, with hemidesmosomes anchoring the basal
+      surface to the basement membrane.</desc>
+    <rect x="40" y="15" width="150" height="290" rx="10" fill="var(--surface-2)"
+      stroke="var(--border)" stroke-width="1.5" />
+    <rect x="230" y="15" width="150" height="290" rx="10"
+      fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
+    <text x="115" y="45" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">cell A</text>
+    <text x="305" y="45" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">cell B</text>
+    <text x="210" y="12" fill="var(--text-muted)" font-size="10.5"
+      text-anchor="middle">apical (lumen)</text>
     <rect x="188" y="35" width="44" height="14" rx="4" fill="var(--accent)" />
-    <text x="392" y="45" fill="var(--text)" font-size="11">Tight junction (zonula occludens)</text>
-    <rect x="188" y="65" width="44" height="10" rx="4" fill="var(--accent)" opacity="0.75" />
+    <text x="392" y="45" fill="var(--text)" font-size="11">Tight junction
+      (zonula occludens)</text>
+    <rect x="188" y="65" width="44" height="10" rx="4" fill="var(--accent)"
+      opacity="0.75" />
     <text x="392" y="73" fill="var(--text)" font-size="11">Zonula adherens</text>
-    <rect x="192" y="105" width="36" height="10" rx="3" fill="var(--amber, #f2b134)" />
+    <rect x="192" y="105" width="36" height="10" rx="3"
+      fill="var(--amber, #f2b134)" />
     <text x="392" y="113" fill="var(--text)" font-size="11">Desmosome (macula adherens)</text>
-    <rect x="192" y="150" width="36" height="10" rx="3" fill="var(--amber, #f2b134)" />
-    <rect x="192" y="195" width="36" height="10" rx="3" fill="var(--amber, #f2b134)" />
-    <rect x="190" y="235" width="40" height="12" rx="4" fill="var(--red, #ff6b5e)" opacity="0.8" />
+    <rect x="192" y="150" width="36" height="10" rx="3"
+      fill="var(--amber, #f2b134)" />
+    <rect x="192" y="195" width="36" height="10" rx="3"
+      fill="var(--amber, #f2b134)" />
+    <rect x="190" y="235" width="40" height="12" rx="4"
+      fill="var(--red, #ff6b5e)" opacity="0.8" />
     <text x="392" y="244" fill="var(--text)" font-size="11">Gap junction (connexons)</text>
-    <line x1="20" y1="315" x2="400" y2="315" stroke="var(--text-muted)" stroke-width="4" />
-    <text x="210" y="335" fill="var(--text-muted)" font-size="10.5" text-anchor="middle">basement membrane</text>
-    <path d="M70,305 70,315 M115,305 115,315 M160,305 160,315 M260,305 260,315 M305,305 305,315 M350,305 350,315" stroke="var(--accent-dim, var(--accent))" stroke-width="3" />
+    <line x1="20" y1="315" x2="400" y2="315" stroke="var(--text-muted)"
+      stroke-width="4" />
+    <text x="210" y="335" fill="var(--text-muted)" font-size="10.5"
+      text-anchor="middle">basement membrane</text>
+    <path
+      d="M70,305 70,315 M115,305 115,315 M160,305 160,315 M260,305 260,315
+      M305,305 305,315 M350,305 350,315"
+      stroke="var(--accent-dim, var(--accent))" stroke-width="3" />
     <text x="392" y="310" fill="var(--text)" font-size="11">Hemidesmosomes</text>
   </svg>
-  <figcaption>Reading apical to basal along the lateral membrane: tight junction seals the paracellular space, zonula adherens anchors the actin cytoskeleton, desmosomes anchor intermediate (keratin) filaments at spot welds, and gap junctions allow direct cell-to-cell communication. Hemidesmosomes, on the basal surface only, anchor the cell to the basement membrane.</figcaption>
+  <figcaption>Reading apical to basal along the lateral membrane: tight junction
+    seals the paracellular space, zonula adherens anchors the actin
+    cytoskeleton, desmosomes anchor intermediate (keratin) filaments at spot
+    welds, and gap junctions allow direct cell-to-cell communication.
+    Hemidesmosomes, on the basal surface only, anchor the cell to the basement
+    membrane.</figcaption>
 </figure>
 
 - **Tight junction (zonula occludens)** — seals the space between cells,
@@ -110,12 +134,18 @@ Every epithelial cell has three functionally distinct faces:
 <figure class="diagram">
   <svg viewBox="0 0 300 220" role="img" aria-labelledby="cil-title cil-desc">
     <title id="cil-title">Ciliary axoneme cross-section (9+2 arrangement)</title>
-    <desc id="cil-desc">A cross-section through a cilium showing nine peripheral microtubule doublets arranged in a ring around two central single microtubules, the classic 9+2 pattern, enclosed by the plasma membrane.</desc>
-    <circle cx="150" cy="100" r="85" fill="none" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3 3" />
-    <text x="150" y="205" fill="var(--text-muted)" font-size="11" text-anchor="middle">plasma membrane</text>
+    <desc id="cil-desc">A cross-section through a cilium showing nine peripheral
+      microtubule doublets arranged in a ring around two central single
+      microtubules, the classic 9+2 pattern, enclosed by the plasma
+      membrane.</desc>
+    <circle cx="150" cy="100" r="85" fill="none" stroke="var(--border)"
+      stroke-width="1.5" stroke-dasharray="3 3" />
+    <text x="150" y="205" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">plasma membrane</text>
     <circle cx="140" cy="100" r="7" fill="var(--accent)" />
     <circle cx="160" cy="100" r="7" fill="var(--accent)" />
-    <text x="150" y="135" fill="var(--text-muted)" font-size="10" text-anchor="middle">2 central singlets</text>
+    <text x="150" y="135" fill="var(--text-muted)" font-size="10"
+      text-anchor="middle">2 central singlets</text>
     <g stroke="var(--amber, #f2b134)" stroke-width="1.5" fill="var(--surface-2)">
       <ellipse cx="150" cy="45" rx="10" ry="7" />
       <ellipse cx="188" cy="57" rx="10" ry="7" />
@@ -127,9 +157,13 @@ Every epithelial cell has three functionally distinct faces:
       <ellipse cx="92" cy="90" rx="10" ry="7" />
       <ellipse cx="112" cy="57" rx="10" ry="7" />
     </g>
-    <text x="150" y="20" fill="var(--text-muted)" font-size="10" text-anchor="middle">9 peripheral doublets</text>
+    <text x="150" y="20" fill="var(--text-muted)" font-size="10"
+      text-anchor="middle">9 peripheral doublets</text>
   </svg>
-  <figcaption>The "9+2" axoneme: nine outer microtubule doublets surround a central pair of single microtubules. Dynein arms on the doublets (not shown) drive the sliding motion that bends the cilium — the same core machinery in every motile cilium in the body.</figcaption>
+  <figcaption>The "9+2" axoneme: nine outer microtubule doublets surround a
+    central pair of single microtubules. Dynein arms on the doublets (not shown)
+    drive the sliding motion that bends the cilium — the same core machinery in
+    every motile cilium in the body.</figcaption>
 </figure>
 
 ## Goblet cells
@@ -154,34 +188,56 @@ development to form glands.
 <figure class="diagram">
   <svg viewBox="0 0 460 230" role="img" aria-labelledby="gl-title gl-desc">
     <title id="gl-title">Exocrine gland structural classification</title>
-    <desc id="gl-desc">A simple duct branches once to a single secretory unit, shown as tubular or alveolar; a compound duct branches repeatedly to many secretory units.</desc>
+    <desc id="gl-desc">A simple duct branches once to a single secretory unit,
+      shown as tubular or alveolar; a compound duct branches repeatedly to many
+      secretory units.</desc>
     <g>
-      <path d="M40,20 40,80" stroke="var(--text-muted)" stroke-width="4" fill="none" />
-      <rect x="20" y="80" width="40" height="60" rx="18" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+      <path d="M40,20 40,80" stroke="var(--text-muted)" stroke-width="4"
+        fill="none" />
+      <rect x="20" y="80" width="40" height="60" rx="18"
+        fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
       <text x="40" y="160" fill="var(--text)" font-size="11" text-anchor="middle">tubular</text>
       <text x="40" y="174" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">(intestine)</text>
     </g>
     <g transform="translate(110,0)">
-      <path d="M40,20 40,80" stroke="var(--text-muted)" stroke-width="4" fill="none" />
-      <circle cx="40" cy="110" r="32" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <text x="40" y="160" fill="var(--text)" font-size="11" text-anchor="middle">alveolar (acinar)</text>
-      <text x="40" y="174" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">(sebaceous glands)</text>
+      <path d="M40,20 40,80" stroke="var(--text-muted)" stroke-width="4"
+        fill="none" />
+      <circle cx="40" cy="110" r="32" fill="var(--accent-soft)"
+        stroke="var(--accent)" stroke-width="1.5" />
+      <text x="40" y="160" fill="var(--text)" font-size="11"
+        text-anchor="middle">alveolar (acinar)</text>
+      <text x="40" y="174" fill="var(--text-muted)" font-size="9.5"
+        text-anchor="middle">(sebaceous glands)</text>
     </g>
-    <text x="95" y="10" fill="var(--text-muted)" font-size="11" text-anchor="middle">Simple gland</text>
-    <line x1="230" y1="0" x2="230" y2="220" stroke="var(--border)" stroke-width="1" stroke-dasharray="3 3" />
+    <text x="95" y="10" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">Simple gland</text>
+    <line x1="230" y1="0" x2="230" y2="220" stroke="var(--border)"
+      stroke-width="1" stroke-dasharray="3 3" />
     <g transform="translate(270,0)">
-      <path d="M40,20 40,55" stroke="var(--text-muted)" stroke-width="4" fill="none" />
-      <path d="M40,55 15,55 M40,55 65,55" stroke="var(--text-muted)" stroke-width="3" fill="none" />
-      <path d="M15,55 15,80 M65,55 65,80" stroke="var(--text-muted)" stroke-width="3" fill="none" />
-      <circle cx="15" cy="105" r="24" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <circle cx="65" cy="105" r="24" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <circle cx="40" cy="140" r="24" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <text x="40" y="185" fill="var(--text)" font-size="11" text-anchor="middle">compound tubuloalveolar</text>
-      <text x="40" y="199" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">(salivary glands, pancreas)</text>
+      <path d="M40,20 40,55" stroke="var(--text-muted)" stroke-width="4"
+        fill="none" />
+      <path d="M40,55 15,55 M40,55 65,55" stroke="var(--text-muted)"
+        stroke-width="3" fill="none" />
+      <path d="M15,55 15,80 M65,55 65,80" stroke="var(--text-muted)"
+        stroke-width="3" fill="none" />
+      <circle cx="15" cy="105" r="24" fill="var(--accent-soft)"
+        stroke="var(--accent)" stroke-width="1.5" />
+      <circle cx="65" cy="105" r="24" fill="var(--accent-soft)"
+        stroke="var(--accent)" stroke-width="1.5" />
+      <circle cx="40" cy="140" r="24" fill="var(--accent-soft)"
+        stroke="var(--accent)" stroke-width="1.5" />
+      <text x="40" y="185" fill="var(--text)" font-size="11"
+        text-anchor="middle">compound tubuloalveolar</text>
+      <text x="40" y="199" fill="var(--text-muted)" font-size="9.5"
+        text-anchor="middle">(salivary glands, pancreas)</text>
     </g>
-    <text x="310" y="10" fill="var(--text-muted)" font-size="11" text-anchor="middle">Compound gland</text>
+    <text x="310" y="10" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">Compound gland</text>
   </svg>
-  <figcaption>Simple glands have one unbranched duct serving one secretory unit (tubular or alveolar in shape); compound glands have a branching duct system feeding many secretory units, and can themselves be tubular, alveolar, or tubuloalveolar.</figcaption>
+  <figcaption>Simple glands have one unbranched duct serving one secretory unit
+    (tubular or alveolar in shape); compound glands have a branching duct system
+    feeding many secretory units, and can themselves be tubular, alveolar, or
+    tubuloalveolar.</figcaption>
 </figure>
 
 Structurally, exocrine glands are classified by their **duct** (simple =
@@ -209,48 +265,68 @@ mechanism* — merocrine, apocrine, and holocrine.
 
 <figure class="diagram micrograph-grid">
   <div class="micrograph-item">
-    <img src="/histology/epithelium/glomerulus-simple-squamous.jpg" alt="Simple squamous epithelium lining Bowman's capsule around a renal glomerulus" />
-    <p>Simple squamous — parietal layer of Bowman's capsule, renal corpuscle (arrows mark the thin squamous cells).</p>
+    <img src="/histology/epithelium/glomerulus-simple-squamous.jpg"
+      alt="Simple squamous epithelium lining Bowman's capsule around a renal
+      glomerulus" />
+    <p>Simple squamous — parietal layer of Bowman's capsule, renal corpuscle
+      (arrows mark the thin squamous cells).</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/renal-tubule-simple-cuboidal.jpg" alt="Simple cuboidal epithelium lining renal tubules" />
+    <img src="/histology/epithelium/renal-tubule-simple-cuboidal.jpg"
+      alt="Simple cuboidal epithelium lining renal tubules" />
     <p>Simple cuboidal — renal tubules.</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/thyroid-follicle-simple-cuboidal.jpg" alt="Simple cuboidal follicular cells of the thyroid gland" />
+    <img src="/histology/epithelium/thyroid-follicle-simple-cuboidal.jpg"
+      alt="Simple cuboidal follicular cells of the thyroid gland" />
     <p>Simple cuboidal — follicular cells of the thyroid gland.</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/esophagus-stratified-squamous-nonkeratinized.jpg" alt="Stratified squamous non-keratinized epithelium of the esophagus" />
+    <img
+      src="/histology/epithelium/esophagus-stratified-squamous-nonkeratinized.jpg"
+      alt="Stratified squamous non-keratinized epithelium of the esophagus" />
     <p>Stratified squamous, non-keratinized — esophagus.</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/skin-stratified-squamous-keratinized.jpg" alt="Stratified squamous keratinized epithelium of the skin" />
-    <p>Stratified squamous, keratinized — skin (epidermis), with its dense pink keratin layer on top.</p>
+    <img src="/histology/epithelium/skin-stratified-squamous-keratinized.jpg"
+      alt="Stratified squamous keratinized epithelium of the skin" />
+    <p>Stratified squamous, keratinized — skin (epidermis), with its dense pink
+      keratin layer on top.</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/salivary-duct-stratified-cuboidal.jpg" alt="Stratified cuboidal epithelium of a salivary gland excretory duct" />
-    <p>Stratified cuboidal — excretory duct of a salivary gland. (Micrograph: Kit Ng, CC BY-NC.)</p>
+    <img src="/histology/epithelium/salivary-duct-stratified-cuboidal.jpg"
+      alt="Stratified cuboidal epithelium of a salivary gland excretory duct" />
+    <p>Stratified cuboidal — excretory duct of a salivary gland. (Micrograph:
+      Kit Ng, CC BY-NC.)</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/sweat-duct-stratified-cuboidal.jpg" alt="Stratified cuboidal epithelium of sweat gland excretory ducts" />
+    <img src="/histology/epithelium/sweat-duct-stratified-cuboidal.jpg"
+      alt="Stratified cuboidal epithelium of sweat gland excretory ducts" />
     <p>Stratified cuboidal — excretory ducts of sweat glands.</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/urethra-stratified-columnar.jpg" alt="Stratified columnar epithelium of the male urethra, pars cavernosa" />
+    <img src="/histology/epithelium/urethra-stratified-columnar.jpg"
+      alt="Stratified columnar epithelium of the male urethra, pars cavernosa"
+      />
     <p>Stratified columnar — male urethra, pars cavernosa.</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/trachea-pseudostratified-columnar.jpg" alt="Pseudostratified ciliated columnar epithelium of the tracheal mucosa" />
+    <img src="/histology/epithelium/trachea-pseudostratified-columnar.jpg"
+      alt="Pseudostratified ciliated columnar epithelium of the tracheal mucosa"
+      />
     <p>Pseudostratified ciliated columnar — tracheal mucosa.</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/bladder-transitional-relaxed.jpg" alt="Transitional epithelium of the relaxed urinary bladder" />
+    <img src="/histology/epithelium/bladder-transitional-relaxed.jpg"
+      alt="Transitional epithelium of the relaxed urinary bladder" />
     <p>Transitional epithelium — bladder, relaxed (dome-shaped surface cells).</p>
   </div>
   <div class="micrograph-item">
-    <img src="/histology/epithelium/bladder-transitional-distended.jpg" alt="Transitional epithelium of the bladder comparing relaxed and distended states" />
-    <p>Transitional epithelium — bladder, relaxed vs. distended (surface cells flatten as the wall stretches).</p>
+    <img src="/histology/epithelium/bladder-transitional-distended.jpg"
+      alt="Transitional epithelium of the bladder comparing relaxed and
+      distended states" />
+    <p>Transitional epithelium — bladder, relaxed vs. distended (surface cells
+      flatten as the wall stretches).</p>
   </div>
 </figure>
 

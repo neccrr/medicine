@@ -73,8 +73,11 @@ are used to describe where a structure sits or where a patient reports
 symptoms. Some you will use constantly:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p04_0.webp" alt="Named regions of the body, anterior and posterior views" loading="lazy" width="1100" height="788" />
-  <figcaption>Named regions of the body, anterior and posterior views. <span class="figure-source">Slide 4, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p04_0.webp"
+    alt="Named regions of the body, anterior and posterior views" loading="lazy"
+    width="1100" height="788" />
+  <figcaption>Named regions of the body, anterior and posterior views. <span
+    class="figure-source">Slide 4, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 | Area | Region names (Latin → English) |
@@ -94,8 +97,12 @@ Planes let us describe where a structure lies, which way a movement goes,
 and which orientation a scan or a cut specimen shows.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p07_0.webp" alt="The median, sagittal, frontal (coronal) and transverse planes" loading="lazy" width="1100" height="673" />
-  <figcaption>The median, sagittal, frontal (coronal) and transverse planes. <span class="figure-source">Slide 7, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p07_0.webp"
+    alt="The median, sagittal, frontal (coronal) and transverse planes"
+    loading="lazy" width="1100" height="673" />
+  <figcaption>The median, sagittal, frontal (coronal) and transverse planes.
+    <span class="figure-source">Slide 7, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 - **Median (midsagittal) plane**: the single vertical plane through the
@@ -111,34 +118,56 @@ and which orientation a scan or a cut specimen shows.
 <figure class="diagram">
   <svg viewBox="0 0 560 290" role="img" aria-labelledby="planes-title planes-desc">
     <title id="planes-title">The main anatomical planes</title>
-    <desc id="planes-desc">Two simplified body outlines. The front view shows the median plane as a vertical line through the midline, a parasagittal plane parallel to it, and a transverse plane cutting horizontally across the abdomen. The side view shows a coronal plane dividing the body into front and back halves.</desc>
+    <desc id="planes-desc">Two simplified body outlines. The front view shows
+      the median plane as a vertical line through the midline, a parasagittal
+      plane parallel to it, and a transverse plane cutting horizontally across
+      the abdomen. The side view shows a coronal plane dividing the body into
+      front and back halves.</desc>
     <g transform="translate(60,10)">
-      <circle cx="90" cy="30" r="17" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
-      <path d="M68,54 L112,54 L108,134 L72,134 Z" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
-      <line x1="64" y1="60" x2="48" y2="140" stroke="var(--text-muted)" stroke-width="9" stroke-linecap="round" />
-      <line x1="116" y1="60" x2="132" y2="140" stroke="var(--text-muted)" stroke-width="9" stroke-linecap="round" />
-      <line x1="80" y1="138" x2="76" y2="238" stroke="var(--text-muted)" stroke-width="11" stroke-linecap="round" />
-      <line x1="100" y1="138" x2="104" y2="238" stroke="var(--text-muted)" stroke-width="11" stroke-linecap="round" />
-      <line x1="90" y1="0" x2="90" y2="250" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="7 4" />
-      <line x1="118" y1="0" x2="118" y2="250" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.7" />
-      <line x1="10" y1="108" x2="170" y2="108" stroke="var(--accent-3)" stroke-width="2.5" stroke-dasharray="7 4" />
-      <text x="90" y="268" fill="var(--text-muted)" font-size="12" text-anchor="middle">Front view</text>
+      <circle cx="90" cy="30" r="17" fill="var(--accent-soft)"
+        stroke="var(--text-muted)" stroke-width="1.5" />
+      <path d="M68,54 L112,54 L108,134 L72,134 Z" fill="var(--accent-soft)"
+        stroke="var(--text-muted)" stroke-width="1.5" />
+      <line x1="64" y1="60" x2="48" y2="140" stroke="var(--text-muted)"
+        stroke-width="9" stroke-linecap="round" />
+      <line x1="116" y1="60" x2="132" y2="140" stroke="var(--text-muted)"
+        stroke-width="9" stroke-linecap="round" />
+      <line x1="80" y1="138" x2="76" y2="238" stroke="var(--text-muted)"
+        stroke-width="11" stroke-linecap="round" />
+      <line x1="100" y1="138" x2="104" y2="238" stroke="var(--text-muted)"
+        stroke-width="11" stroke-linecap="round" />
+      <line x1="90" y1="0" x2="90" y2="250" stroke="var(--accent)"
+        stroke-width="2.5" stroke-dasharray="7 4" />
+      <line x1="118" y1="0" x2="118" y2="250" stroke="var(--accent)"
+        stroke-width="1.5" stroke-dasharray="3 4" opacity="0.7" />
+      <line x1="10" y1="108" x2="170" y2="108" stroke="var(--accent-3)"
+        stroke-width="2.5" stroke-dasharray="7 4" />
+      <text x="90" y="268" fill="var(--text-muted)" font-size="12"
+        text-anchor="middle">Front view</text>
     </g>
     <g transform="translate(330,10)">
-      <circle cx="90" cy="30" r="17" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
-      <path d="M78,54 L104,54 L102,134 L76,134 Z" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
-      <line x1="90" y1="62" x2="92" y2="140" stroke="var(--text-muted)" stroke-width="9" stroke-linecap="round" />
-      <line x1="88" y1="138" x2="88" y2="238" stroke="var(--text-muted)" stroke-width="12" stroke-linecap="round" />
-      <line x1="84" y1="238" x2="104" y2="238" stroke="var(--text-muted)" stroke-width="7" stroke-linecap="round" />
-      <line x1="89" y1="0" x2="89" y2="250" stroke="var(--accent-2)" stroke-width="2.5" stroke-dasharray="7 4" />
+      <circle cx="90" cy="30" r="17" fill="var(--accent-soft)"
+        stroke="var(--text-muted)" stroke-width="1.5" />
+      <path d="M78,54 L104,54 L102,134 L76,134 Z" fill="var(--accent-soft)"
+        stroke="var(--text-muted)" stroke-width="1.5" />
+      <line x1="90" y1="62" x2="92" y2="140" stroke="var(--text-muted)"
+        stroke-width="9" stroke-linecap="round" />
+      <line x1="88" y1="138" x2="88" y2="238" stroke="var(--text-muted)"
+        stroke-width="12" stroke-linecap="round" />
+      <line x1="84" y1="238" x2="104" y2="238" stroke="var(--text-muted)"
+        stroke-width="7" stroke-linecap="round" />
+      <line x1="89" y1="0" x2="89" y2="250" stroke="var(--accent-2)"
+        stroke-width="2.5" stroke-dasharray="7 4" />
       <text x="40" y="100" fill="var(--text-muted)" font-size="12" text-anchor="middle">Posterior</text>
       <text x="140" y="100" fill="var(--text-muted)" font-size="12" text-anchor="middle">Anterior</text>
-      <text x="90" y="268" fill="var(--text-muted)" font-size="12" text-anchor="middle">Side view</text>
+      <text x="90" y="268" fill="var(--text-muted)" font-size="12"
+        text-anchor="middle">Side view</text>
     </g>
     <g font-size="12">
       <rect x="10" y="12" width="12" height="4" fill="var(--accent)" />
       <text x="28" y="18" fill="var(--text)">Median</text>
-      <rect x="10" y="30" width="12" height="4" fill="var(--accent)" opacity="0.6" />
+      <rect x="10" y="30" width="12" height="4" fill="var(--accent)"
+        opacity="0.6" />
       <text x="28" y="36" fill="var(--text)">Sagittal</text>
       <rect x="10" y="48" width="12" height="4" fill="var(--accent-3)" />
       <text x="28" y="54" fill="var(--text)">Transverse</text>
@@ -146,7 +175,9 @@ and which orientation a scan or a cut specimen shows.
       <text x="498" y="18" fill="var(--text)">Coronal</text>
     </g>
   </svg>
-  <figcaption>Median and sagittal planes separate right from left; the coronal plane separates front from back; the transverse plane separates top from bottom.</figcaption>
+  <figcaption>Median and sagittal planes separate right from left; the coronal
+    plane separates front from back; the transverse plane separates top from
+    bottom.</figcaption>
 </figure>
 
 ### Sections (*sectio*)
@@ -155,8 +186,12 @@ A **section** is a cut made along a plane. It is the language of specimens,
 CT and MRI:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p08_0.webp" alt="Sectional planes through the brain, and longitudinal, transverse and oblique sections of a limb" loading="lazy" width="1100" height="1194" />
-  <figcaption>Sectional planes through the brain, and longitudinal, transverse and oblique sections of a limb. <span class="figure-source">Slide 8, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p08_0.webp"
+    alt="Sectional planes through the brain, and longitudinal, transverse and
+    oblique sections of a limb" loading="lazy" width="1100" height="1194" />
+  <figcaption>Sectional planes through the brain, and longitudinal, transverse
+    and oblique sections of a limb. <span class="figure-source">Slide 8, Basic
+    Anatomy (Naufal)</span></figcaption>
 </figure>
 
 - **Sectio longitudinalis**: a cut along the long axis of the body or a
@@ -177,8 +212,12 @@ Directional terms describe the position of one structure **relative to
 another**, always from the anatomical position.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p12_0.webp" alt="Directional terms on the body" loading="lazy" width="1097" height="942" />
-  <figcaption>Directional terms on the body: superior/inferior, anterior/posterior, medial/lateral and proximal/distal. <span class="figure-source">Slide 12, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p12_0.webp"
+    alt="Directional terms on the body" loading="lazy" width="1097" height="942"
+    />
+  <figcaption>Directional terms on the body: superior/inferior,
+    anterior/posterior, medial/lateral and proximal/distal. <span
+    class="figure-source">Slide 12, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 | Term | Meaning | Opposite |
@@ -210,37 +249,58 @@ the sole; **dorsum** is the back of the hand or the top of the foot.
 <figure class="diagram">
   <svg viewBox="0 0 520 300" role="img" aria-labelledby="dir-title dir-desc">
     <title id="dir-title">Directional terms on the body</title>
-    <desc id="dir-desc">A front-view body outline with arrows: superior toward the head and inferior toward the feet; medial toward the midline and lateral away from it; proximal toward the shoulder and distal toward the hand along the upper limb.</desc>
+    <desc id="dir-desc">A front-view body outline with arrows: superior toward
+      the head and inferior toward the feet; medial toward the midline and
+      lateral away from it; proximal toward the shoulder and distal toward the
+      hand along the upper limb.</desc>
     <g transform="translate(170,15)">
-      <circle cx="90" cy="30" r="17" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
-      <path d="M68,54 L112,54 L108,134 L72,134 Z" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="1.5" />
-      <line x1="64" y1="60" x2="48" y2="140" stroke="var(--text-muted)" stroke-width="9" stroke-linecap="round" />
-      <line x1="116" y1="60" x2="132" y2="140" stroke="var(--text-muted)" stroke-width="9" stroke-linecap="round" />
-      <line x1="80" y1="138" x2="76" y2="238" stroke="var(--text-muted)" stroke-width="11" stroke-linecap="round" />
-      <line x1="100" y1="138" x2="104" y2="238" stroke="var(--text-muted)" stroke-width="11" stroke-linecap="round" />
-      <line x1="90" y1="0" x2="90" y2="260" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="4 4" />
+      <circle cx="90" cy="30" r="17" fill="var(--accent-soft)"
+        stroke="var(--text-muted)" stroke-width="1.5" />
+      <path d="M68,54 L112,54 L108,134 L72,134 Z" fill="var(--accent-soft)"
+        stroke="var(--text-muted)" stroke-width="1.5" />
+      <line x1="64" y1="60" x2="48" y2="140" stroke="var(--text-muted)"
+        stroke-width="9" stroke-linecap="round" />
+      <line x1="116" y1="60" x2="132" y2="140" stroke="var(--text-muted)"
+        stroke-width="9" stroke-linecap="round" />
+      <line x1="80" y1="138" x2="76" y2="238" stroke="var(--text-muted)"
+        stroke-width="11" stroke-linecap="round" />
+      <line x1="100" y1="138" x2="104" y2="238" stroke="var(--text-muted)"
+        stroke-width="11" stroke-linecap="round" />
+      <line x1="90" y1="0" x2="90" y2="260" stroke="var(--border)"
+        stroke-width="1.5" stroke-dasharray="4 4" />
     </g>
     <defs>
-      <marker id="dir-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <marker id="dir-arrow" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)" />
       </marker>
     </defs>
-    <line x1="470" y1="140" x2="470" y2="38" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#dir-arrow)" />
-    <line x1="470" y1="160" x2="470" y2="258" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#dir-arrow)" />
+    <line x1="470" y1="140" x2="470" y2="38" stroke="var(--accent)"
+      stroke-width="2.5" marker-end="url(#dir-arrow)" />
+    <line x1="470" y1="160" x2="470" y2="258" stroke="var(--accent)"
+      stroke-width="2.5" marker-end="url(#dir-arrow)" />
     <text x="470" y="26" fill="var(--text)" font-size="13" text-anchor="middle">Superior</text>
     <text x="470" y="280" fill="var(--text)" font-size="13" text-anchor="middle">Inferior</text>
-    <line x1="130" y1="110" x2="185" y2="110" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#dir-arrow)" />
-    <line x1="126" y1="110" x2="72" y2="110" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#dir-arrow)" />
+    <line x1="130" y1="110" x2="185" y2="110" stroke="var(--accent)"
+      stroke-width="2.5" marker-end="url(#dir-arrow)" />
+    <line x1="126" y1="110" x2="72" y2="110" stroke="var(--accent)"
+      stroke-width="2.5" marker-end="url(#dir-arrow)" />
     <text x="185" y="96" fill="var(--text)" font-size="13" text-anchor="middle">Medial</text>
     <text x="64" y="115" fill="var(--text)" font-size="13" text-anchor="end">Lateral</text>
-    <text x="128" y="136" fill="var(--text-muted)" font-size="11" text-anchor="middle">(toward / away from midline)</text>
-    <line x1="332" y1="146" x2="320" y2="84" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#dir-arrow)" />
-    <line x1="335" y1="160" x2="348" y2="220" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#dir-arrow)" />
+    <text x="128" y="136" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">(toward / away from midline)</text>
+    <line x1="332" y1="146" x2="320" y2="84" stroke="var(--accent-2)"
+      stroke-width="2.5" marker-end="url(#dir-arrow)" />
+    <line x1="335" y1="160" x2="348" y2="220" stroke="var(--accent-2)"
+      stroke-width="2.5" marker-end="url(#dir-arrow)" />
     <text x="332" y="76" fill="var(--text)" font-size="13" text-anchor="start">Proximal</text>
     <text x="356" y="232" fill="var(--text)" font-size="13" text-anchor="start">Distal</text>
-    <text x="260" y="292" fill="var(--text-muted)" font-size="12" text-anchor="middle">Median plane (dashed)</text>
+    <text x="260" y="292" fill="var(--text-muted)" font-size="12"
+      text-anchor="middle">Median plane (dashed)</text>
   </svg>
-  <figcaption>Superior/inferior and medial/lateral describe position relative to the whole body; proximal/distal describe position along a limb or tube, relative to its origin.</figcaption>
+  <figcaption>Superior/inferior and medial/lateral describe position relative to
+    the whole body; proximal/distal describe position along a limb or tube,
+    relative to its origin.</figcaption>
 </figure>
 
 ### Topographic terms
@@ -263,8 +323,12 @@ A few more words describe position *within* a structure:
 - **Contralateral**: on the *opposite* side.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p18_0.webp" alt="Unilateral, bilateral, ipsilateral and contralateral, shown on the limbs" loading="lazy" width="1097" height="604" />
-  <figcaption>Unilateral, bilateral, ipsilateral and contralateral, shown on the limbs. <span class="figure-source">Slide 18, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p18_0.webp"
+    alt="Unilateral, bilateral, ipsilateral and contralateral, shown on the
+    limbs" loading="lazy" width="1097" height="604" />
+  <figcaption>Unilateral, bilateral, ipsilateral and contralateral, shown on the
+    limbs. <span class="figure-source">Slide 18, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 **Clinical relevance.** A bilateral, symmetrical rash on both legs points
@@ -278,8 +342,12 @@ Vertical reference lines are used to locate structures on the chest and
 back, for example to place a stethoscope or a chest drain.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p15_0.webp" alt="Vertical reference lines on the anterior, lateral and posterior trunk" loading="lazy" width="1100" height="898" />
-  <figcaption>Vertical reference lines on the anterior, lateral and posterior trunk. <span class="figure-source">Slide 15, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p15_0.webp"
+    alt="Vertical reference lines on the anterior, lateral and posterior trunk"
+    loading="lazy" width="1100" height="898" />
+  <figcaption>Vertical reference lines on the anterior, lateral and posterior
+    trunk. <span class="figure-source">Slide 15, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 | Surface | Lines (medial → lateral) |
@@ -363,23 +431,39 @@ Movements happen at joints, in a plane, around an axis at right angles to
 that plane.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_0.webp" alt="Abduction, adduction and circumduction at the shoulder; rotation of the head, neck and lower limb" loading="lazy" width="1100" height="939" />
-  <figcaption>Abduction, adduction and circumduction at the shoulder; rotation of the head, neck and lower limb. <span class="figure-source">Slide 24, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_0.webp"
+    alt="Abduction, adduction and circumduction at the shoulder; rotation of the
+    head, neck and lower limb" loading="lazy" width="1100" height="939" />
+  <figcaption>Abduction, adduction and circumduction at the shoulder; rotation
+    of the head, neck and lower limb. <span class="figure-source">Slide 24,
+    Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_1.webp" alt="Elevation and depression of the mandible; opposition of the thumb" loading="lazy" width="899" height="652" />
-  <figcaption>Elevation and depression of the mandible; opposition of the thumb. <span class="figure-source">Slide 24, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_1.webp"
+    alt="Elevation and depression of the mandible; opposition of the thumb"
+    loading="lazy" width="899" height="652" />
+  <figcaption>Elevation and depression of the mandible; opposition of the thumb.
+    <span class="figure-source">Slide 24, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_2.webp" alt="Inversion and eversion of the foot; protraction and retraction of the mandible" loading="lazy" width="792" height="564" />
-  <figcaption>Inversion and eversion of the foot; protraction and retraction of the mandible. <span class="figure-source">Slide 24, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p24_2.webp"
+    alt="Inversion and eversion of the foot; protraction and retraction of the
+    mandible" loading="lazy" width="792" height="564" />
+  <figcaption>Inversion and eversion of the foot; protraction and retraction of
+    the mandible. <span class="figure-source">Slide 24, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p25_0.webp" alt="Pronation and supination of the forearm; dorsiflexion and plantar flexion of the foot" loading="lazy" width="1100" height="813" />
-  <figcaption>Pronation and supination of the forearm; dorsiflexion and plantar flexion of the foot. <span class="figure-source">Slide 25, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p25_0.webp"
+    alt="Pronation and supination of the forearm; dorsiflexion and plantar
+    flexion of the foot" loading="lazy" width="1100" height="813" />
+  <figcaption>Pronation and supination of the forearm; dorsiflexion and plantar
+    flexion of the foot. <span class="figure-source">Slide 25, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 | Movement | Description | Example |
@@ -404,8 +488,11 @@ the palm.
 **Osteology** is the study of bones. Bones are classified by shape:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p29_0.webp" alt="Bones classified by shape" loading="lazy" width="890" height="990" />
-  <figcaption>Bones classified by shape: long, short, flat, irregular and sesamoid. <span class="figure-source">Slide 29, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p29_0.webp"
+    alt="Bones classified by shape" loading="lazy" width="890" height="990" />
+  <figcaption>Bones classified by shape: long, short, flat, irregular and
+    sesamoid. <span class="figure-source">Slide 29, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 - **Long bones**, longer than they are wide, such as the humerus and femur.
@@ -429,23 +516,48 @@ the palm.
   painful.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p30_0.webp" alt="Parts of a long bone" loading="lazy" width="717" height="993" />
-  <figcaption>Parts of a long bone. Indonesian labels: tulang rawan = cartilage, sumsum merah/kuning = red/yellow marrow, tulang spons/kompak = spongy/compact bone, saraf = nerve, pembuluh darah = blood vessel. <span class="figure-source">Slide 30, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p30_0.webp"
+    alt="Parts of a long bone" loading="lazy" width="717" height="993" />
+  <figcaption>Parts of a long bone. Indonesian labels: tulang rawan = cartilage,
+    sumsum merah/kuning = red/yellow marrow, tulang spons/kompak =
+    spongy/compact bone, saraf = nerve, pembuluh darah = blood vessel. <span
+    class="figure-source">Slide 30, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 480 310" role="img" aria-labelledby="bone-title bone-desc">
     <title id="bone-title">Parts of a long bone</title>
-    <desc id="bone-desc">A long bone in longitudinal section. Brackets on the left mark the epiphysis at each end, the metaphysis next to it, and the diaphysis or shaft. Labels on the right mark articular cartilage, spongy bone, the epiphyseal line, compact bone, the medullary cavity and the periosteum.</desc>
-    <path d="M200,22 C172,22 160,40 164,60 C168,78 186,84 190,100 L190,210 C186,226 168,232 164,250 C160,270 172,288 200,288 L240,288 C268,288 280,270 276,250 C272,232 254,226 250,210 L250,100 C254,84 272,78 276,60 C280,40 268,22 240,22 Z" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="2" />
-    <path d="M167,44 C178,18 262,18 273,44" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" />
-    <path d="M167,266 C178,292 262,292 273,266" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" />
-    <rect x="203" y="104" width="34" height="102" rx="14" fill="var(--accent-3)" opacity="0.35" stroke="var(--accent-3)" stroke-width="1" />
-    <line x1="172" y1="80" x2="268" y2="80" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 3" />
-    <line x1="172" y1="230" x2="268" y2="230" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 3" />
+    <desc id="bone-desc">A long bone in longitudinal section. Brackets on the
+      left mark the epiphysis at each end, the metaphysis next to it, and the
+      diaphysis or shaft. Labels on the right mark articular cartilage, spongy
+      bone, the epiphyseal line, compact bone, the medullary cavity and the
+      periosteum.</desc>
+    <path
+      d="M200,22 C172,22 160,40 164,60 C168,78 186,84 190,100 L190,210 C186,226
+      168,232 164,250 C160,270 172,288 200,288 L240,288 C268,288 280,270 276,250
+      C272,232 254,226 250,210 L250,100 C254,84 272,78 276,60 C280,40 268,22
+      240,22 Z" fill="var(--accent-soft)" stroke="var(--text-muted)"
+      stroke-width="2" />
+    <path d="M167,44 C178,18 262,18 273,44" fill="none" stroke="var(--accent)"
+      stroke-width="5" stroke-linecap="round" />
+    <path d="M167,266 C178,292 262,292 273,266" fill="none"
+      stroke="var(--accent)" stroke-width="5" stroke-linecap="round" />
+    <rect x="203" y="104" width="34" height="102" rx="14" fill="var(--accent-3)"
+      opacity="0.35" stroke="var(--accent-3)" stroke-width="1" />
+    <line x1="172" y1="80" x2="268" y2="80" stroke="var(--text)"
+      stroke-width="1.5" stroke-dasharray="5 3" />
+    <line x1="172" y1="230" x2="268" y2="230" stroke="var(--text)"
+      stroke-width="1.5" stroke-dasharray="5 3" />
     <g fill="var(--text-muted)" opacity="0.6">
-      <circle cx="190" cy="50" r="2.5" /><circle cx="205" cy="62" r="2.5" /><circle cx="222" cy="48" r="2.5" /><circle cx="238" cy="64" r="2.5" /><circle cx="252" cy="50" r="2.5" /><circle cx="214" cy="72" r="2.5" /><circle cx="232" cy="36" r="2.5" /><circle cx="198" cy="36" r="2.5" /><circle cx="246" cy="72" r="2.5" />
-      <circle cx="192" cy="258" r="2.5" /><circle cx="208" cy="246" r="2.5" /><circle cx="226" cy="262" r="2.5" /><circle cx="244" cy="248" r="2.5" /><circle cx="250" cy="266" r="2.5" /><circle cx="214" cy="272" r="2.5" />
+      <circle cx="190" cy="50" r="2.5" /><circle cx="205" cy="62" r="2.5"
+        /><circle cx="222" cy="48" r="2.5" /><circle cx="238" cy="64" r="2.5"
+        /><circle cx="252" cy="50" r="2.5" /><circle cx="214" cy="72" r="2.5"
+        /><circle cx="232" cy="36" r="2.5" /><circle cx="198" cy="36" r="2.5"
+        /><circle cx="246" cy="72" r="2.5" />
+      <circle cx="192" cy="258" r="2.5" /><circle cx="208" cy="246" r="2.5"
+        /><circle cx="226" cy="262" r="2.5" /><circle cx="244" cy="248" r="2.5"
+        /><circle cx="250" cy="266" r="2.5" /><circle cx="214" cy="272" r="2.5"
+        />
     </g>
     <g stroke="var(--text-muted)" stroke-width="1.5" fill="none">
       <path d="M150,26 L142,26 L142,78 L150,78" />
@@ -476,7 +588,9 @@ the palm.
       <text x="316" y="204">Periosteum (outer surface)</text>
     </g>
   </svg>
-  <figcaption>A long bone in longitudinal section. In a child the dashed epiphyseal lines are cartilaginous growth plates; in an adult they have ossified.</figcaption>
+  <figcaption>A long bone in longitudinal section. In a child the dashed
+    epiphyseal lines are cartilaginous growth plates; in an adult they have
+    ossified.</figcaption>
 </figure>
 
 ## Arthrology: joints
@@ -486,13 +600,21 @@ where two or more bones meet. Joints are classified by the tissue that
 joins the bones:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p37_0.webp" alt="Fibrous joints (suture, gomphosis, syndesmosis) and cartilaginous joints (synchondrosis, symphysis)" loading="lazy" width="1100" height="1076" />
-  <figcaption>Fibrous joints (suture, gomphosis, syndesmosis) and cartilaginous joints (synchondrosis, symphysis). <span class="figure-source">Slide 37, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p37_0.webp"
+    alt="Fibrous joints (suture, gomphosis, syndesmosis) and cartilaginous
+    joints (synchondrosis, symphysis)" loading="lazy" width="1100" height="1076"
+    />
+  <figcaption>Fibrous joints (suture, gomphosis, syndesmosis) and cartilaginous
+    joints (synchondrosis, symphysis). <span class="figure-source">Slide 37,
+    Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p33_0.webp" alt="Synovial, fibrous and cartilaginous joints compared" loading="lazy" width="1100" height="958" />
-  <figcaption>Synovial, fibrous and cartilaginous joints compared. <span class="figure-source">Slide 33, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p33_0.webp"
+    alt="Synovial, fibrous and cartilaginous joints compared" loading="lazy"
+    width="1100" height="958" />
+  <figcaption>Synovial, fibrous and cartilaginous joints compared. <span
+    class="figure-source">Slide 33, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 - **Fibrous joints** are joined by dense connective tissue and barely move.
@@ -515,17 +637,31 @@ as its two branches. The meaning is the same either way.
 <figure class="diagram">
   <svg viewBox="0 0 540 290" role="img" aria-labelledby="syn-title syn-desc">
     <title id="syn-title">Structure of a synovial joint</title>
-    <desc id="syn-desc">Two bone ends facing each other, each capped by articular cartilage, with a joint cavity between them. An articular capsule surrounds the joint: an outer fibrous layer and an inner synovial membrane. Periosteum continues into the fibrous capsule, and a ligament reinforces the outside.</desc>
-    <path d="M150,10 L150,100 C150,140 250,140 250,100 L250,10" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="2" />
-    <path d="M150,280 L150,190 C150,168 250,168 250,190 L250,280" fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="2" />
-    <path d="M153,108 C160,136 240,136 247,108" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" />
-    <path d="M153,184 C168,168 232,168 247,184" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" />
-    <path d="M140,70 C112,110 112,190 140,225" fill="none" stroke="var(--accent-2)" stroke-width="5" />
-    <path d="M260,70 C288,110 288,190 260,225" fill="none" stroke="var(--accent-2)" stroke-width="5" />
-    <path d="M147,82 C126,114 126,184 147,214" fill="none" stroke="var(--accent-3)" stroke-width="2.5" stroke-dasharray="5 3" />
-    <path d="M253,82 C274,114 274,184 253,214" fill="none" stroke="var(--accent-3)" stroke-width="2.5" stroke-dasharray="5 3" />
-    <line x1="296" y1="40" x2="296" y2="255" stroke="var(--text-muted)" stroke-width="6" stroke-linecap="round" opacity="0.6" />
-    <text x="200" y="154" fill="var(--text-muted)" font-size="11" text-anchor="middle">joint cavity</text>
+    <desc id="syn-desc">Two bone ends facing each other, each capped by
+      articular cartilage, with a joint cavity between them. An articular
+      capsule surrounds the joint: an outer fibrous layer and an inner synovial
+      membrane. Periosteum continues into the fibrous capsule, and a ligament
+      reinforces the outside.</desc>
+    <path d="M150,10 L150,100 C150,140 250,140 250,100 L250,10"
+      fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="2" />
+    <path d="M150,280 L150,190 C150,168 250,168 250,190 L250,280"
+      fill="var(--accent-soft)" stroke="var(--text-muted)" stroke-width="2" />
+    <path d="M153,108 C160,136 240,136 247,108" fill="none"
+      stroke="var(--accent)" stroke-width="6" stroke-linecap="round" />
+    <path d="M153,184 C168,168 232,168 247,184" fill="none"
+      stroke="var(--accent)" stroke-width="6" stroke-linecap="round" />
+    <path d="M140,70 C112,110 112,190 140,225" fill="none"
+      stroke="var(--accent-2)" stroke-width="5" />
+    <path d="M260,70 C288,110 288,190 260,225" fill="none"
+      stroke="var(--accent-2)" stroke-width="5" />
+    <path d="M147,82 C126,114 126,184 147,214" fill="none"
+      stroke="var(--accent-3)" stroke-width="2.5" stroke-dasharray="5 3" />
+    <path d="M253,82 C274,114 274,184 253,214" fill="none"
+      stroke="var(--accent-3)" stroke-width="2.5" stroke-dasharray="5 3" />
+    <line x1="296" y1="40" x2="296" y2="255" stroke="var(--text-muted)"
+      stroke-width="6" stroke-linecap="round" opacity="0.6" />
+    <text x="200" y="154" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">joint cavity</text>
     <g stroke="var(--text-muted)" stroke-width="1">
       <line x1="250" y1="30" x2="330" y2="30" />
       <line x1="296" y1="60" x2="330" y2="60" />
@@ -543,7 +679,9 @@ as its two branches. The meaning is the same either way.
       <text x="336" y="224">Synovial membrane</text>
     </g>
   </svg>
-  <figcaption>A synovial joint. The fibrous capsule (outer) and synovial membrane (inner) together form the articular capsule; the membrane secretes the synovial fluid that nourishes the cartilage.</figcaption>
+  <figcaption>A synovial joint. The fibrous capsule (outer) and synovial
+    membrane (inner) together form the articular capsule; the membrane secretes
+    the synovial fluid that nourishes the cartilage.</figcaption>
 </figure>
 
 ### Types of synovial joint
@@ -558,8 +696,12 @@ as its two branches. The meaning is the same either way.
 | **Plana** (plane) | Gliding | One flat surface slides on another | Acromioclavicular joint, intercarpal joints |
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p32_0.webp" alt="Structure of a synovial joint" loading="lazy" width="971" height="1057" />
-  <figcaption>Structure of a synovial joint: articular capsule, synovial membrane, joint cavity and hyaline cartilage. <span class="figure-source">Slide 32, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p32_0.webp"
+    alt="Structure of a synovial joint" loading="lazy" width="971" height="1057"
+    />
+  <figcaption>Structure of a synovial joint: articular capsule, synovial
+    membrane, joint cavity and hyaline cartilage. <span
+    class="figure-source">Slide 32, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 Books differ on the two-axis joints. The practicum deck treats "condyloid"
@@ -572,8 +714,11 @@ the thumb). If a question uses one scheme, answer in that scheme.
 There are three types of muscle tissue:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p39_0.webp" alt="Cardiac, smooth and skeletal muscle tissue" loading="lazy" width="1045" height="697" />
-  <figcaption>Cardiac, smooth and skeletal muscle tissue. <span class="figure-source">Slide 39, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p39_0.webp"
+    alt="Cardiac, smooth and skeletal muscle tissue" loading="lazy" width="1045"
+    height="697" />
+  <figcaption>Cardiac, smooth and skeletal muscle tissue. <span
+    class="figure-source">Slide 39, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 | Type | Control | Location |
@@ -600,18 +745,28 @@ origin, insertion, innervation and action.
 Blood flows in two circuits in series:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p42_0.webp" alt="Pulmonary and systemic circulation (Indonesian labels" loading="lazy" width="1100" height="1100" />
-  <figcaption>Pulmonary and systemic circulation (Indonesian labels: atrium/ventrikel kanan and kiri = right and left atrium/ventricle). <span class="figure-source">Slide 42, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p42_0.webp"
+    alt="Pulmonary and systemic circulation (Indonesian labels" loading="lazy"
+    width="1100" height="1100" />
+  <figcaption>Pulmonary and systemic circulation (Indonesian labels:
+    atrium/ventrikel kanan and kiri = right and left atrium/ventricle). <span
+    class="figure-source">Slide 42, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p45_1.webp" alt="The aorta and its major branches in the trunk" loading="lazy" width="1100" height="1076" />
-  <figcaption>The aorta and its major branches in the trunk. <span class="figure-source">Slide 45, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p45_1.webp"
+    alt="The aorta and its major branches in the trunk" loading="lazy"
+    width="1100" height="1076" />
+  <figcaption>The aorta and its major branches in the trunk. <span
+    class="figure-source">Slide 45, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p48_0.webp" alt="The venae cavae and major veins of the trunk" loading="lazy" width="1100" height="1205" />
-  <figcaption>The venae cavae and major veins of the trunk. <span class="figure-source">Slide 48, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p48_0.webp"
+    alt="The venae cavae and major veins of the trunk" loading="lazy"
+    width="1100" height="1205" />
+  <figcaption>The venae cavae and major veins of the trunk. <span
+    class="figure-source">Slide 48, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 - **Pulmonary circulation**: the right ventricle pumps deoxygenated blood
@@ -638,8 +793,12 @@ veins. The right upper quadrant drains through the right lymphatic duct on
 the right side.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p51_0.webp" alt="Lymphatic vessels and nodes; the thoracic duct drains most of the body" loading="lazy" width="1100" height="1248" />
-  <figcaption>Lymphatic vessels and nodes; the thoracic duct drains most of the body. <span class="figure-source">Slide 51, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p51_0.webp"
+    alt="Lymphatic vessels and nodes; the thoracic duct drains most of the body"
+    loading="lazy" width="1100" height="1248" />
+  <figcaption>Lymphatic vessels and nodes; the thoracic duct drains most of the
+    body. <span class="figure-source">Slide 51, Basic Anatomy
+    (Naufal)</span></figcaption>
 </figure>
 
 ### Nervous system
@@ -650,8 +809,11 @@ the right side.
   their ganglia and plexuses.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-01-basic_p53_0.webp" alt="Central and peripheral nervous systems" loading="lazy" width="904" height="1264" />
-  <figcaption>Central and peripheral nervous systems. <span class="figure-source">Slide 53, Basic Anatomy (Naufal)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-01-basic_p53_0.webp"
+    alt="Central and peripheral nervous systems" loading="lazy" width="904"
+    height="1264" />
+  <figcaption>Central and peripheral nervous systems. <span
+    class="figure-source">Slide 53, Basic Anatomy (Naufal)</span></figcaption>
 </figure>
 
 A few words mean different things in the CNS and PNS:

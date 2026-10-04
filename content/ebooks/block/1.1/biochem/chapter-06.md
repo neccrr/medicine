@@ -30,24 +30,37 @@ regions:
 <figure class="diagram">
   <svg viewBox="0 0 420 280" role="img" aria-labelledby="chr-title chr-desc">
     <title id="chr-title">Chromosome structure</title>
-    <desc id="chr-desc">A single chromosome with a telomere cap at each end, a short p-arm above the centromere, and a longer q-arm below it.</desc>
-    <rect x="140" y="20" width="40" height="20" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-    <rect x="145" y="38" width="30" height="72" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-    <path d="M145,110 Q160,128 145,146 L175,146 Q160,128 175,110 Z" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
-    <rect x="145" y="146" width="30" height="110" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-    <rect x="140" y="256" width="40" height="20" rx="10" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-    <line x1="180" y1="30" x2="230" y2="30" stroke="var(--text-muted)" stroke-width="1" />
+    <desc id="chr-desc">A single chromosome with a telomere cap at each end, a
+      short p-arm above the centromere, and a longer q-arm below it.</desc>
+    <rect x="140" y="20" width="40" height="20" rx="10"
+      fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+    <rect x="145" y="38" width="30" height="72" fill="var(--accent-soft)"
+      stroke="var(--accent)" stroke-width="1.5" />
+    <path d="M145,110 Q160,128 145,146 L175,146 Q160,128 175,110 Z"
+      fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
+    <rect x="145" y="146" width="30" height="110" fill="var(--accent-soft)"
+      stroke="var(--accent)" stroke-width="1.5" />
+    <rect x="140" y="256" width="40" height="20" rx="10"
+      fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+    <line x1="180" y1="30" x2="230" y2="30" stroke="var(--text-muted)"
+      stroke-width="1" />
     <text x="235" y="34" fill="var(--text)" font-size="13">Telomere (cap)</text>
-    <line x1="175" y1="74" x2="230" y2="74" stroke="var(--text-muted)" stroke-width="1" />
+    <line x1="175" y1="74" x2="230" y2="74" stroke="var(--text-muted)"
+      stroke-width="1" />
     <text x="235" y="78" fill="var(--text)" font-size="13">p arm (short)</text>
-    <line x1="175" y1="128" x2="230" y2="128" stroke="var(--text-muted)" stroke-width="1" />
+    <line x1="175" y1="128" x2="230" y2="128" stroke="var(--text-muted)"
+      stroke-width="1" />
     <text x="235" y="132" fill="var(--text)" font-size="13">Centromere</text>
-    <line x1="175" y1="200" x2="230" y2="200" stroke="var(--text-muted)" stroke-width="1" />
+    <line x1="175" y1="200" x2="230" y2="200" stroke="var(--text-muted)"
+      stroke-width="1" />
     <text x="235" y="204" fill="var(--text)" font-size="13">q arm (long)</text>
-    <line x1="180" y1="266" x2="230" y2="266" stroke="var(--text-muted)" stroke-width="1" />
+    <line x1="180" y1="266" x2="230" y2="266" stroke="var(--text-muted)"
+      stroke-width="1" />
     <text x="235" y="270" fill="var(--text)" font-size="13">Telomere (cap)</text>
   </svg>
-  <figcaption>The centromere is the pinch point that divides a chromosome into a short p arm and a long q arm; telomeres cap both ends and protect the chromosome from degradation.</figcaption>
+  <figcaption>The centromere is the pinch point that divides a chromosome into a
+    short p arm and a long q arm; telomeres cap both ends and protect the
+    chromosome from degradation.</figcaption>
 </figure>
 
 **Gene vs. DNA vs. chromosome** — these three nest inside each other,
@@ -84,16 +97,29 @@ string, which then coil further to fit inside the nucleus.
 <figure class="diagram">
   <svg viewBox="0 0 420 190" role="img" aria-labelledby="nuc-title nuc-desc">
     <title id="nuc-title">Nucleosomes: DNA wound around histone proteins</title>
-    <desc id="nuc-desc">A wavy DNA strand looping around four histone protein spools in sequence, like beads on a string, with linker DNA connecting each bead.</desc>
-    <path d="M20,95 Q50,50 80,95 Q110,140 140,95 Q170,50 200,95 Q230,140 260,95 Q290,50 320,95 Q350,140 380,95 Q395,80 400,95" fill="none" stroke="var(--text-muted)" stroke-width="2.5" />
-    <circle cx="80" cy="95" r="26" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-    <circle cx="200" cy="95" r="26" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-    <circle cx="320" cy="95" r="26" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+    <desc id="nuc-desc">A wavy DNA strand looping around four histone protein
+      spools in sequence, like beads on a string, with linker DNA connecting
+      each bead.</desc>
+    <path
+      d="M20,95 Q50,50 80,95 Q110,140 140,95 Q170,50 200,95 Q230,140 260,95
+      Q290,50 320,95 Q350,140 380,95 Q395,80 400,95" fill="none"
+      stroke="var(--text-muted)" stroke-width="2.5" />
+    <circle cx="80" cy="95" r="26" fill="var(--accent-soft)"
+      stroke="var(--accent)" stroke-width="1.5" />
+    <circle cx="200" cy="95" r="26" fill="var(--accent-soft)"
+      stroke="var(--accent)" stroke-width="1.5" />
+    <circle cx="320" cy="95" r="26" fill="var(--accent-soft)"
+      stroke="var(--accent)" stroke-width="1.5" />
     <text x="210" y="30" fill="var(--text-muted)" font-size="13" text-anchor="middle">DNA</text>
-    <text x="200" y="150" fill="var(--text)" font-size="12" text-anchor="middle">histone octamer</text>
-    <text x="140" y="170" fill="var(--text-muted)" font-size="11" text-anchor="middle">linker DNA</text>
+    <text x="200" y="150" fill="var(--text)" font-size="12"
+      text-anchor="middle">histone octamer</text>
+    <text x="140" y="170" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">linker DNA</text>
   </svg>
-  <figcaption>Each histone "bead" is a cluster of eight histone proteins with DNA wound around it — one nucleosome. Short stretches of linker DNA connect adjacent nucleosomes, and this whole "beads on a string" fiber coils further to pack into a chromosome.</figcaption>
+  <figcaption>Each histone "bead" is a cluster of eight histone proteins with
+    DNA wound around it — one nucleosome. Short stretches of linker DNA connect
+    adjacent nucleosomes, and this whole "beads on a string" fiber coils further
+    to pack into a chromosome.</figcaption>
 </figure>
 
 ## What is a genome?

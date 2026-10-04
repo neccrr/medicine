@@ -14,8 +14,12 @@ place in the **ampulla of the uterine (fallopian) tube**, and it has four
 steps:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p06_0.webp" alt="Fertilization" loading="lazy" width="1100" height="760" />
-  <figcaption>Fertilization: the sperm crosses the corona radiata and zona pellucida, the oocyte completes meiosis II, and the male and female pronuclei meet. <span class="figure-source">Slide 6, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p06_0.webp"
+    alt="Fertilization" loading="lazy" width="1100" height="760" />
+  <figcaption>Fertilization: the sperm crosses the corona radiata and zona
+    pellucida, the oocyte completes meiosis II, and the male and female
+    pronuclei meet. <span class="figure-source">Slide 6, Basic Embryology
+    (Jidan)</span></figcaption>
 </figure>
 
 1. **Capacitation.** Sperm freshly deposited in the female tract cannot
@@ -60,61 +64,93 @@ the sperm) and starts cleavage.
   uterine body. It is fully embedded by the end of week 2.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p10_1.webp" alt="Early and later blastocyst" loading="lazy" width="1100" height="393" />
-  <figcaption>Early and later blastocyst: embryoblast (inner cell mass), trophoblast and blastocyst cavity. <span class="figure-source">Slide 10, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p10_1.webp"
+    alt="Early and later blastocyst" loading="lazy" width="1100" height="393" />
+  <figcaption>Early and later blastocyst: embryoblast (inner cell mass),
+    trophoblast and blastocyst cavity. <span class="figure-source">Slide 10,
+    Basic Embryology (Jidan)</span></figcaption>
 </figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 640 200" role="img" aria-labelledby="w1-title w1-desc">
     <title id="w1-title">Week 1: from zygote to blastocyst</title>
-    <desc id="w1-desc">Four stages left to right: a single-celled zygote, a two-cell stage, a solid morula of many cells, and a blastocyst with an outer trophoblast ring, an inner cell mass at one side and a fluid-filled blastocoele. All but the blastocyst sit inside a zona pellucida ring.</desc>
+    <desc id="w1-desc">Four stages left to right: a single-celled zygote, a
+      two-cell stage, a solid morula of many cells, and a blastocyst with an
+      outer trophoblast ring, an inner cell mass at one side and a fluid-filled
+      blastocoele. All but the blastocyst sit inside a zona pellucida
+      ring.</desc>
     <defs>
-      <marker id="w1-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <marker id="w1-arrow" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="7" markerHeight="7" orient="auto">
         <path d="M0,0 L10,5 L0,10 Z" fill="var(--text-muted)" />
       </marker>
     </defs>
     <g transform="translate(70,90)">
-      <circle r="46" fill="none" stroke="var(--border-strong)" stroke-width="5" />
-      <circle r="38" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+      <circle r="46" fill="none" stroke="var(--border-strong)" stroke-width="5"
+        />
+      <circle r="38" fill="var(--accent-soft)" stroke="var(--accent)"
+        stroke-width="1.5" />
       <circle cx="-8" r="7" fill="var(--accent)" opacity="0.7" />
       <circle cx="9" r="7" fill="var(--accent-2)" opacity="0.7" />
       <text y="80" fill="var(--text)" font-size="12" text-anchor="middle">Zygote</text>
-      <text y="96" fill="var(--text-muted)" font-size="11" text-anchor="middle">day 1</text>
+      <text y="96" fill="var(--text-muted)" font-size="11"
+        text-anchor="middle">day 1</text>
     </g>
-    <line x1="126" y1="90" x2="150" y2="90" stroke="var(--text-muted)" stroke-width="1.5" marker-end="url(#w1-arrow)" />
+    <line x1="126" y1="90" x2="150" y2="90" stroke="var(--text-muted)"
+      stroke-width="1.5" marker-end="url(#w1-arrow)" />
     <g transform="translate(210,90)">
-      <circle r="46" fill="none" stroke="var(--border-strong)" stroke-width="5" />
-      <circle cx="-17" r="20" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-      <circle cx="17" r="20" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+      <circle r="46" fill="none" stroke="var(--border-strong)" stroke-width="5"
+        />
+      <circle cx="-17" r="20" fill="var(--accent-soft)" stroke="var(--accent)"
+        stroke-width="1.5" />
+      <circle cx="17" r="20" fill="var(--accent-soft)" stroke="var(--accent)"
+        stroke-width="1.5" />
       <text y="80" fill="var(--text)" font-size="12" text-anchor="middle">Cleavage</text>
-      <text y="96" fill="var(--text-muted)" font-size="11" text-anchor="middle">2-cell, day 1–2</text>
+      <text y="96" fill="var(--text-muted)" font-size="11"
+        text-anchor="middle">2-cell, day 1–2</text>
     </g>
-    <line x1="266" y1="90" x2="290" y2="90" stroke="var(--text-muted)" stroke-width="1.5" marker-end="url(#w1-arrow)" />
+    <line x1="266" y1="90" x2="290" y2="90" stroke="var(--text-muted)"
+      stroke-width="1.5" marker-end="url(#w1-arrow)" />
     <g transform="translate(350,90)">
-      <circle r="46" fill="none" stroke="var(--border-strong)" stroke-width="5" />
+      <circle r="46" fill="none" stroke="var(--border-strong)" stroke-width="5"
+        />
       <g fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.2">
-        <circle cx="-20" cy="-18" r="11" /><circle cx="0" cy="-24" r="11" /><circle cx="20" cy="-18" r="11" />
-        <circle cx="-25" cy="3" r="11" /><circle cx="-4" cy="-2" r="11" /><circle cx="17" cy="4" r="11" /><circle cx="28" cy="-2" r="9" />
-        <circle cx="-16" cy="22" r="11" /><circle cx="6" cy="22" r="11" /><circle cx="24" cy="20" r="9" />
+        <circle cx="-20" cy="-18" r="11" /><circle cx="0" cy="-24" r="11"
+          /><circle cx="20" cy="-18" r="11" />
+        <circle cx="-25" cy="3" r="11" /><circle cx="-4" cy="-2" r="11"
+          /><circle cx="17" cy="4" r="11" /><circle cx="28" cy="-2" r="9" />
+        <circle cx="-16" cy="22" r="11" /><circle cx="6" cy="22" r="11"
+          /><circle cx="24" cy="20" r="9" />
       </g>
       <text y="80" fill="var(--text)" font-size="12" text-anchor="middle">Morula</text>
-      <text y="96" fill="var(--text-muted)" font-size="11" text-anchor="middle">12–16 cells, day 3</text>
+      <text y="96" fill="var(--text-muted)" font-size="11"
+        text-anchor="middle">12–16 cells, day 3</text>
     </g>
-    <line x1="406" y1="90" x2="440" y2="90" stroke="var(--text-muted)" stroke-width="1.5" marker-end="url(#w1-arrow)" />
+    <line x1="406" y1="90" x2="440" y2="90" stroke="var(--text-muted)"
+      stroke-width="1.5" marker-end="url(#w1-arrow)" />
     <g transform="translate(510,90)">
-      <circle r="50" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="7" />
-      <path d="M-34,-36 A50,50 0 0 1 34,-36 L22,-10 A30,30 0 0 0 -22,-10 Z" fill="var(--accent)" opacity="0.8" />
+      <circle r="50" fill="var(--surface)" stroke="var(--accent-2)"
+        stroke-width="7" />
+      <path d="M-34,-36 A50,50 0 0 1 34,-36 L22,-10 A30,30 0 0 0 -22,-10 Z"
+        fill="var(--accent)" opacity="0.8" />
       <text y="16" fill="var(--text-muted)" font-size="11" text-anchor="middle">blastocoele</text>
       <text y="80" fill="var(--text)" font-size="12" text-anchor="middle">Blastocyst</text>
-      <text y="96" fill="var(--text-muted)" font-size="11" text-anchor="middle">day 4–5, implants ~day 6</text>
+      <text y="96" fill="var(--text-muted)" font-size="11"
+        text-anchor="middle">day 4–5, implants ~day 6</text>
     </g>
     <g font-size="11" fill="var(--text)">
-      <rect x="440" y="4" width="10" height="10" fill="var(--accent)" opacity="0.8" /><text x="455" y="13">Inner cell mass (embryoblast)</text>
-      <rect x="440" y="20" width="10" height="10" fill="var(--accent-2)" /><text x="455" y="29">Trophoblast</text>
-      <rect x="20" y="4" width="10" height="10" fill="none" stroke="var(--border-strong)" stroke-width="3" /><text x="36" y="13">Zona pellucida</text>
+      <rect x="440" y="4" width="10" height="10" fill="var(--accent)"
+        opacity="0.8" /><text x="455" y="13">Inner cell mass
+        (embryoblast)</text>
+      <rect x="440" y="20" width="10" height="10" fill="var(--accent-2)" /><text
+        x="455" y="29">Trophoblast</text>
+      <rect x="20" y="4" width="10" height="10" fill="none"
+        stroke="var(--border-strong)" stroke-width="3" /><text x="36"
+        y="13">Zona pellucida</text>
     </g>
   </svg>
-  <figcaption>The embryo divides inside the zona pellucida without growing. The blastocyst hatches from the zona just before it implants.</figcaption>
+  <figcaption>The embryo divides inside the zona pellucida without growing. The
+    blastocyst hatches from the zona just before it implants.</figcaption>
 </figure>
 
 ## Week 2: the bilaminar disc
@@ -123,8 +159,12 @@ Week 2 is often called the "week of twos", because almost everything
 splits in two:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p12_0.webp" alt="The implanting embryo around day 8" loading="lazy" width="1100" height="825" />
-  <figcaption>The implanting embryo around day 8: cytotrophoblast, syncytiotrophoblast, epiblast, hypoblast and amniotic cavity. <span class="figure-source">Slide 12, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p12_0.webp"
+    alt="The implanting embryo around day 8" loading="lazy" width="1100"
+    height="825" />
+  <figcaption>The implanting embryo around day 8: cytotrophoblast,
+    syncytiotrophoblast, epiblast, hypoblast and amniotic cavity. <span
+    class="figure-source">Slide 12, Basic Embryology (Jidan)</span></figcaption>
 </figure>
 
 - The **trophoblast** divides into an inner, cellular
@@ -146,8 +186,12 @@ splits in two:
 defining event of week 3.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p17_0.webp" alt="Gastrulation" loading="lazy" width="1100" height="410" />
-  <figcaption>Gastrulation: epiblast cells invaginate through the primitive streak (Indonesian: sel-sel mesoderm mengalami invaginasi = mesoderm cells invaginating). <span class="figure-source">Slide 17, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p17_0.webp"
+    alt="Gastrulation" loading="lazy" width="1100" height="410" />
+  <figcaption>Gastrulation: epiblast cells invaginate through the primitive
+    streak (Indonesian: sel-sel mesoderm mengalami invaginasi = mesoderm cells
+    invaginating). <span class="figure-source">Slide 17, Basic Embryology
+    (Jidan)</span></figcaption>
 </figure>
 
 1. A thickened groove, the **primitive streak**, appears in the midline of
@@ -169,8 +213,12 @@ Cells passing through the primitive node migrate cranially in the midline
 and form a rod, the **notochord**. It has two jobs to remember:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p18_0.webp" alt="The notochord in the midline" loading="lazy" width="1100" height="402" />
-  <figcaption>The notochord in the midline. It induces neurulation through Sonic hedgehog and later becomes the nucleus pulposus. <span class="figure-source">Slide 18, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p18_0.webp"
+    alt="The notochord in the midline" loading="lazy" width="1100" height="402"
+    />
+  <figcaption>The notochord in the midline. It induces neurulation through Sonic
+    hedgehog and later becomes the nucleus pulposus. <span
+    class="figure-source">Slide 18, Basic Embryology (Jidan)</span></figcaption>
 </figure>
 
 - **Induction.** The notochord secretes **Sonic hedgehog (SHH)**, which
@@ -186,13 +234,21 @@ and form a rod, the **notochord**. It has two jobs to remember:
 nervous system:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p21_0.webp" alt="Neural folds (lipatan saraf) rising on each side of the neural groove (alur saraf), with somites beside them" loading="lazy" width="644" height="889" />
-  <figcaption>Neural folds (lipatan saraf) rising on each side of the neural groove (alur saraf), with somites beside them. <span class="figure-source">Slide 21, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p21_0.webp"
+    alt="Neural folds (lipatan saraf) rising on each side of the neural groove
+    (alur saraf), with somites beside them" loading="lazy" width="644"
+    height="889" />
+  <figcaption>Neural folds (lipatan saraf) rising on each side of the neural
+    groove (alur saraf), with somites beside them. <span
+    class="figure-source">Slide 21, Basic Embryology (Jidan)</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p21_2.webp" alt="Day 23" loading="lazy" width="751" height="867" />
-  <figcaption>Day 23: the neural tube has closed except at the anterior and posterior neuropores. <span class="figure-source">Slide 21, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p21_2.webp" alt="Day 23"
+    loading="lazy" width="751" height="867" />
+  <figcaption>Day 23: the neural tube has closed except at the anterior and
+    posterior neuropores. <span class="figure-source">Slide 21, Basic Embryology
+    (Jidan)</span></figcaption>
 </figure>
 
 1. The notochord induces the overlying ectoderm to thicken into the
@@ -236,16 +292,28 @@ The mesoderm on each side of the notochord organises into three
 longitudinal strips, from medial to lateral.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p24_0.webp" alt="Mesoderm dividing into paraxial, intermediate and lateral plate parts; the lateral plate splits into parietal and visceral layers" loading="lazy" width="1100" height="731" />
-  <figcaption>Mesoderm dividing into paraxial, intermediate and lateral plate parts; the lateral plate splits into parietal and visceral layers. <span class="figure-source">Slide 24, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p24_0.webp"
+    alt="Mesoderm dividing into paraxial, intermediate and lateral plate parts;
+    the lateral plate splits into parietal and visceral layers" loading="lazy"
+    width="1100" height="731" />
+  <figcaption>Mesoderm dividing into paraxial, intermediate and lateral plate
+    parts; the lateral plate splits into parietal and visceral layers. <span
+    class="figure-source">Slide 24, Basic Embryology (Jidan)</span></figcaption>
 </figure>
 
 <figure class="diagram">
   <svg viewBox="0 0 640 260" role="img" aria-labelledby="meso-title meso-desc">
     <title id="meso-title">Cross-section of the embryo showing mesoderm divisions</title>
-    <desc id="meso-desc">A transverse section of a week-4 embryo. The neural tube sits dorsally in the midline with the notochord below it. On each side, from medial to lateral: a paraxial mesoderm block (somite), a small intermediate mesoderm, and the lateral plate mesoderm split into a somatic layer against the ectoderm and a splanchnic layer against the endoderm, with the intraembryonic coelom between them.</desc>
-    <path d="M40,60 C140,30 500,30 600,60 L600,75 C500,48 140,48 40,75 Z" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
-    <ellipse cx="320" cy="88" rx="26" ry="36" fill="var(--accent)" opacity="0.75" />
+    <desc id="meso-desc">A transverse section of a week-4 embryo. The neural
+      tube sits dorsally in the midline with the notochord below it. On each
+      side, from medial to lateral: a paraxial mesoderm block (somite), a small
+      intermediate mesoderm, and the lateral plate mesoderm split into a somatic
+      layer against the ectoderm and a splanchnic layer against the endoderm,
+      with the intraembryonic coelom between them.</desc>
+    <path d="M40,60 C140,30 500,30 600,60 L600,75 C500,48 140,48 40,75 Z"
+      fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5" />
+    <ellipse cx="320" cy="88" rx="26" ry="36" fill="var(--accent)"
+      opacity="0.75" />
     <ellipse cx="320" cy="88" rx="6" ry="20" fill="var(--surface)" />
     <circle cx="320" cy="146" r="10" fill="var(--text)" />
     <g fill="var(--accent-2)" opacity="0.85">
@@ -257,14 +325,21 @@ longitudinal strips, from medial to lateral.
       <ellipse cx="426" cy="126" rx="14" ry="10" />
     </g>
     <g fill="none" stroke-width="7" stroke-linecap="round">
-      <path d="M198,108 C160,96 110,92 60,100" stroke="var(--red)" opacity="0.75" />
-      <path d="M442,108 C480,96 530,92 580,100" stroke="var(--red)" opacity="0.75" />
-      <path d="M200,150 C160,160 110,162 60,150" stroke="var(--red)" opacity="0.45" />
-      <path d="M440,150 C480,160 530,162 580,150" stroke="var(--red)" opacity="0.45" />
+      <path d="M198,108 C160,96 110,92 60,100" stroke="var(--red)"
+        opacity="0.75" />
+      <path d="M442,108 C480,96 530,92 580,100" stroke="var(--red)"
+        opacity="0.75" />
+      <path d="M200,150 C160,160 110,162 60,150" stroke="var(--red)"
+        opacity="0.45" />
+      <path d="M440,150 C480,160 530,162 580,150" stroke="var(--red)"
+        opacity="0.45" />
     </g>
     <text x="120" y="132" fill="var(--text-muted)" font-size="10" text-anchor="middle">coelom</text>
     <text x="520" y="132" fill="var(--text-muted)" font-size="10" text-anchor="middle">coelom</text>
-    <path d="M40,176 C160,168 480,168 600,176 L600,186 C480,178 160,178 40,186 Z" fill="var(--accent-3)" opacity="0.35" stroke="var(--accent-3)" stroke-width="1" />
+    <path
+      d="M40,176 C160,168 480,168 600,176 L600,186 C480,178 160,178 40,186 Z"
+      fill="var(--accent-3)" opacity="0.35" stroke="var(--accent-3)"
+      stroke-width="1" />
     <g stroke="var(--text-muted)" stroke-width="1">
       <line x1="320" y1="52" x2="320" y2="24" />
       <line x1="340" y1="70" x2="470" y2="24" />
@@ -286,7 +361,9 @@ longitudinal strips, from medial to lateral.
       <text x="600" y="212" text-anchor="end">Endoderm</text>
     </g>
   </svg>
-  <figcaption>From the midline outward: neural tube and notochord, paraxial mesoderm (somites), intermediate mesoderm, and lateral plate mesoderm split by the coelom into somatic and splanchnic layers.</figcaption>
+  <figcaption>From the midline outward: neural tube and notochord, paraxial
+    mesoderm (somites), intermediate mesoderm, and lateral plate mesoderm split
+    by the coelom into somatic and splanchnic layers.</figcaption>
 </figure>
 
 ### Paraxial mesoderm → somites
@@ -296,8 +373,12 @@ the **somites** (about 42–44 pairs appear, though some later regress).
 Each somite divides into three parts:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p26_0.webp" alt="A somite differentiating into sclerotome, dermatome and myotome" loading="lazy" width="1100" height="596" />
-  <figcaption>A somite differentiating into sclerotome, dermatome and myotome. <span class="figure-source">Slide 26, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p26_0.webp"
+    alt="A somite differentiating into sclerotome, dermatome and myotome"
+    loading="lazy" width="1100" height="596" />
+  <figcaption>A somite differentiating into sclerotome, dermatome and myotome.
+    <span class="figure-source">Slide 26, Basic Embryology
+    (Jidan)</span></figcaption>
 </figure>
 
 - **Sclerotome** → the vertebrae and ribs (cartilage and bone of the axial
@@ -338,8 +419,12 @@ anus). The gut is divided into three parts, each with its own artery,
 which remains true in the adult:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p30_0.webp" alt="Endoderm folded into the primitive gut, with its foregut, midgut and hindgut derivatives" loading="lazy" width="1100" height="549" />
-  <figcaption>Endoderm folded into the primitive gut, with its foregut, midgut and hindgut derivatives. <span class="figure-source">Slide 30, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p30_0.webp"
+    alt="Endoderm folded into the primitive gut, with its foregut, midgut and
+    hindgut derivatives" loading="lazy" width="1100" height="549" />
+  <figcaption>Endoderm folded into the primitive gut, with its foregut, midgut
+    and hindgut derivatives. <span class="figure-source">Slide 30, Basic
+    Embryology (Jidan)</span></figcaption>
 </figure>
 
 | Part | Adult derivatives (epithelium) | Artery |
@@ -369,8 +454,12 @@ left, the liver sits right, and the stomach lies in the left upper
 abdomen. This left–right asymmetry is set during gastrulation.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/anatomy/chapter-02-embryo_p33_0.webp" alt="Left-sided signalling at the primitive node" loading="lazy" width="1100" height="571" />
-  <figcaption>Left-sided signalling at the primitive node: FGF8, Nodal, Lefty2 and PITX2, with Lefty1 and the notochord (SHH) as a midline barrier. <span class="figure-source">Slide 33, Basic Embryology (Jidan)</span></figcaption>
+  <img src="/ebook-figures/anatomy/chapter-02-embryo_p33_0.webp"
+    alt="Left-sided signalling at the primitive node" loading="lazy"
+    width="1100" height="571" />
+  <figcaption>Left-sided signalling at the primitive node: FGF8, Nodal, Lefty2
+    and PITX2, with Lefty1 and the notochord (SHH) as a midline barrier. <span
+    class="figure-source">Slide 33, Basic Embryology (Jidan)</span></figcaption>
 </figure>
 
 - Cilia on the **primitive node** beat in a way that sweeps fluid to the

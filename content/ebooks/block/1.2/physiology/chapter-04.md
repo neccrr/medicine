@@ -44,8 +44,13 @@ A reflex appears only if the stimulus is **adequate**:
 Every reflex runs through a **reflex arc** with five components:
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-fen-31-0.493_0.316_0.942_0.808.webp" alt="The five steps of a reflex arc, from receptor activation to the effector's response" loading="lazy" width="898" height="554" />
-  <figcaption>The five steps of a reflex arc, from receptor activation to the effector's response. <span class="figure-source">Slide 31, Fenomena Kontraksi &amp; Refleks Otot (Afifah &amp; Salsabrina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-fen-31-0.493_0.316_0.942_0.808.webp"
+    alt="The five steps of a reflex arc, from receptor activation to the
+    effector's response" loading="lazy" width="898" height="554" />
+  <figcaption>The five steps of a reflex arc, from receptor activation to the
+    effector's response. <span class="figure-source">Slide 31, Fenomena
+    Kontraksi &amp; Refleks Otot (Afifah &amp; Salsabrina)</span></figcaption>
 </figure>
 
 1. **Sensory receptor:** detects the stimulus (a muscle spindle, a pain
@@ -65,46 +70,72 @@ Every reflex runs through a **reflex arc** with five components:
 <figure class="diagram">
   <svg viewBox="0 0 600 300" role="img" aria-labelledby="c4a-title c4a-desc">
     <title id="c4a-title">The five parts of a spinal reflex arc</title>
-    <desc id="c4a-desc">A cross-section of the spinal cord on the right with its butterfly-shaped gray matter. A sensory neuron runs from a receptor in the skin on the left, through the dorsal root ganglion, into the dorsal horn. It synapses with a motor neuron in the ventral horn, whose axon leaves through the ventral root and runs back to a muscle on the left. Numbers one to five mark receptor, sensory neuron, integration center, motor neuron and effector.</desc>
+    <desc id="c4a-desc">A cross-section of the spinal cord on the right with its
+      butterfly-shaped gray matter. A sensory neuron runs from a receptor in the
+      skin on the left, through the dorsal root ganglion, into the dorsal horn.
+      It synapses with a motor neuron in the ventral horn, whose axon leaves
+      through the ventral root and runs back to a muscle on the left. Numbers
+      one to five mark receptor, sensory neuron, integration center, motor
+      neuron and effector.</desc>
     <defs>
-      <marker id="c4a-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <marker id="c4a-arrow" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 Z" fill="var(--accent)" />
       </marker>
-      <marker id="c4a-arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <marker id="c4a-arrow2" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 Z" fill="var(--accent-2)" />
       </marker>
     </defs>
-    <ellipse cx="460" cy="150" rx="100" ry="82" fill="var(--surface-2)" stroke="var(--text-muted)" stroke-width="1.5" />
+    <ellipse cx="460" cy="150" rx="100" ry="82" fill="var(--surface-2)"
+      stroke="var(--text-muted)" stroke-width="1.5" />
     <g fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1">
-      <ellipse cx="432" cy="112" rx="13" ry="30" transform="rotate(-18 432 112)" />
-      <ellipse cx="488" cy="112" rx="13" ry="30" transform="rotate(18 488 112)" />
+      <ellipse cx="432" cy="112" rx="13" ry="30" transform="rotate(-18 432 112)"
+        />
+      <ellipse cx="488" cy="112" rx="13" ry="30" transform="rotate(18 488 112)"
+        />
       <ellipse cx="428" cy="182" rx="24" ry="27" />
       <ellipse cx="492" cy="182" rx="24" ry="27" />
       <rect x="432" y="140" width="56" height="18" rx="6" />
     </g>
-    <circle cx="460" cy="149" r="4" fill="var(--surface)" stroke="var(--text-muted)" />
+    <circle cx="460" cy="149" r="4" fill="var(--surface)"
+      stroke="var(--text-muted)" />
     <text x="460" y="62" fill="var(--text-muted)" font-size="11" text-anchor="middle">dorsal</text>
     <text x="460" y="246" fill="var(--text-muted)" font-size="11" text-anchor="middle">ventral</text>
-    <ellipse cx="340" cy="92" rx="16" ry="11" fill="var(--accent-2)" opacity="0.35" stroke="var(--accent-2)" />
+    <ellipse cx="340" cy="92" rx="16" ry="11" fill="var(--accent-2)"
+      opacity="0.35" stroke="var(--accent-2)" />
     <circle cx="340" cy="92" r="5" fill="var(--accent-2)" />
-    <text x="340" y="120" fill="var(--text-muted)" font-size="11" text-anchor="middle">dorsal root ganglion</text>
-    <path d="M70,66 C150,56 250,94 335,92" fill="none" stroke="var(--accent-2)" stroke-width="3" marker-end="url(#c4a-arrow2)" />
-    <path d="M345,92 C390,92 412,100 430,122" fill="none" stroke="var(--accent-2)" stroke-width="3" />
-    <path d="M430,122 C430,150 424,166 424,178" fill="none" stroke="var(--accent-2)" stroke-width="3" />
+    <text x="340" y="120" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">dorsal root ganglion</text>
+    <path d="M70,66 C150,56 250,94 335,92" fill="none" stroke="var(--accent-2)"
+      stroke-width="3" marker-end="url(#c4a-arrow2)" />
+    <path d="M345,92 C390,92 412,100 430,122" fill="none"
+      stroke="var(--accent-2)" stroke-width="3" />
+    <path d="M430,122 C430,150 424,166 424,178" fill="none"
+      stroke="var(--accent-2)" stroke-width="3" />
     <circle cx="424" cy="184" r="8" fill="var(--accent)" />
-    <path d="M416,188 C380,210 330,226 240,226 C190,226 150,222 128,216" fill="none" stroke="var(--accent)" stroke-width="3" marker-end="url(#c4a-arrow)" />
+    <path d="M416,188 C380,210 330,226 240,226 C190,226 150,222 128,216"
+      fill="none" stroke="var(--accent)" stroke-width="3"
+      marker-end="url(#c4a-arrow)" />
     <g stroke="var(--accent-2)" stroke-width="2" fill="none">
       <path d="M70,66 l-14,-10 M70,66 l-16,4 M70,66 l-10,14" />
     </g>
-    <path d="M40,212 C60,190 110,190 128,214 C110,238 60,238 40,212 Z" fill="var(--red)" opacity="0.35" stroke="var(--red)" stroke-width="1.5" />
+    <path d="M40,212 C60,190 110,190 128,214 C110,238 60,238 40,212 Z"
+      fill="var(--red)" opacity="0.35" stroke="var(--red)" stroke-width="1.5" />
     <g font-size="12" font-weight="700" text-anchor="middle">
-      <circle cx="44" cy="40" r="11" fill="var(--accent-2)" /><text x="44" y="44" fill="var(--surface)">1</text>
-      <circle cx="206" cy="58" r="11" fill="var(--accent-2)" /><text x="206" y="62" fill="var(--surface)">2</text>
-      <circle cx="586" cy="30" r="11" fill="var(--text-muted)" /><text x="586" y="34" fill="var(--surface)">3</text>
-      <circle cx="300" cy="246" r="11" fill="var(--accent)" /><text x="300" y="250" fill="var(--surface)">4</text>
-      <circle cx="84" cy="262" r="11" fill="var(--red)" /><text x="84" y="266" fill="var(--surface)">5</text>
+      <circle cx="44" cy="40" r="11" fill="var(--accent-2)" /><text x="44"
+        y="44" fill="var(--surface)">1</text>
+      <circle cx="206" cy="58" r="11" fill="var(--accent-2)" /><text x="206"
+        y="62" fill="var(--surface)">2</text>
+      <circle cx="586" cy="30" r="11" fill="var(--text-muted)" /><text x="586"
+        y="34" fill="var(--surface)">3</text>
+      <circle cx="300" cy="246" r="11" fill="var(--accent)" /><text x="300"
+        y="250" fill="var(--surface)">4</text>
+      <circle cx="84" cy="262" r="11" fill="var(--red)" /><text x="84" y="266"
+        fill="var(--surface)">5</text>
     </g>
-    <line x1="578" y1="40" x2="468" y2="146" stroke="var(--text-muted)" stroke-width="1" />
+    <line x1="578" y1="40" x2="468" y2="146" stroke="var(--text-muted)"
+      stroke-width="1" />
     <g font-size="12" fill="var(--text)">
       <text x="60" y="44">Receptor</text>
       <text x="222" y="62">Sensory (afferent) neuron</text>
@@ -112,9 +143,13 @@ Every reflex runs through a **reflex arc** with five components:
       <text x="316" y="250">Motor (efferent) neuron</text>
       <text x="100" y="266">Effector (muscle)</text>
     </g>
-    <text x="300" y="290" fill="var(--text-muted)" font-size="11" text-anchor="middle">Sensory neurons enter through the dorsal root; motor axons leave through the ventral root.</text>
+    <text x="300" y="290" fill="var(--text-muted)" font-size="11"
+      text-anchor="middle">Sensory neurons enter through the dorsal root; motor
+      axons leave through the ventral root.</text>
   </svg>
-  <figcaption>The reflex arc: receptor → sensory neuron → integration center → motor neuron → effector. A lesion anywhere along the arc weakens or abolishes the reflex.</figcaption>
+  <figcaption>The reflex arc: receptor → sensory neuron → integration center →
+    motor neuron → effector. A lesion anywhere along the arc weakens or
+    abolishes the reflex.</figcaption>
 </figure>
 
 **Reflex time** is the delay between stimulus and response. It depends
@@ -158,8 +193,14 @@ pupillary light reflex (whose effector, the sphincter pupillae, is smooth
 muscle).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-fen-35-0.12_0.24_0.9_0.808.webp" alt="A somatic reflex to skeletal muscle" loading="lazy" width="1100" height="451" />
-  <figcaption>A somatic reflex to skeletal muscle (left) and an autonomic reflex to a visceral organ through a preganglionic and a postganglionic neuron (right). <span class="figure-source">Slide 35, Fenomena Kontraksi &amp; Refleks Otot (Afifah &amp; Salsabrina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-fen-35-0.12_0.24_0.9_0.808.webp"
+    alt="A somatic reflex to skeletal muscle" loading="lazy" width="1100"
+    height="451" />
+  <figcaption>A somatic reflex to skeletal muscle (left) and an autonomic reflex
+    to a visceral organ through a preganglionic and a postganglionic neuron
+    (right). <span class="figure-source">Slide 35, Fenomena Kontraksi &amp;
+    Refleks Otot (Afifah &amp; Salsabrina)</span></figcaption>
 </figure>
 
 ### Monosynaptic vs polysynaptic
@@ -174,8 +215,15 @@ muscle).
   response in several muscles, on both sides of the body.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-fen-36-0.24_0.187_0.758_0.924.webp" alt="A monosynaptic reflex has one synapse; a polysynaptic reflex has an interneuron and two or more synapses" loading="lazy" width="1036" height="830" />
-  <figcaption>A monosynaptic reflex has one synapse; a polysynaptic reflex has an interneuron and two or more synapses. <span class="figure-source">Slide 36, Fenomena Kontraksi &amp; Refleks Otot (Afifah &amp; Salsabrina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-fen-36-0.24_0.187_0.758_0.924.webp"
+    alt="A monosynaptic reflex has one synapse; a polysynaptic reflex has an
+    interneuron and two or more synapses" loading="lazy" width="1036"
+    height="830" />
+  <figcaption>A monosynaptic reflex has one synapse; a polysynaptic reflex has
+    an interneuron and two or more synapses. <span class="figure-source">Slide
+    36, Fenomena Kontraksi &amp; Refleks Otot (Afifah &amp;
+    Salsabrina)</span></figcaption>
 </figure>
 
 ### Innate vs learned
@@ -231,8 +279,12 @@ The practicum tests six reflexes. You need a **reflex hammer**, a
 **penlight** and a **timer** (to record reaction times).
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-prak-39-0.585_0.293_0.895_0.808.webp" alt="Equipment" loading="lazy" width="620" height="580" />
-  <figcaption>Equipment: reflex hammers (Queen Square and Taylor types), a stopwatch and a penlight. <span class="figure-source">Slide 39, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-prak-39-0.585_0.293_0.895_0.808.webp"
+    alt="Equipment" loading="lazy" width="620" height="580" />
+  <figcaption>Equipment: reflex hammers (Queen Square and Taylor types), a
+    stopwatch and a penlight. <span class="figure-source">Slide 39, Praktikum
+    Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 Reflex hammers come in two common shapes: the triangular **Taylor**
@@ -284,8 +336,14 @@ A useful mnemonic counts up the segments: **"S1–2 buckle my shoe"**
 **Procedure:**
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-prak-41-0.495_0.586_0.65_0.879.webp" alt="Normal pupillary light response, and a relative afferent pupillary defect" loading="lazy" width="310" height="330" />
-  <figcaption>Normal pupillary light response, and a relative afferent pupillary defect (RAPD) of the right eye. <span class="figure-source">Slide 41, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-prak-41-0.495_0.586_0.65_0.879.webp"
+    alt="Normal pupillary light response, and a relative afferent pupillary
+    defect" loading="lazy" width="310" height="330" />
+  <figcaption>Normal pupillary light response, and a relative afferent pupillary
+    defect (RAPD) of the right eye. <span class="figure-source">Slide 41,
+    Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp;
+    Arina)</span></figcaption>
 </figure>
 
 1. In a dim room, ask the subject to look at a distant point.
@@ -319,8 +377,12 @@ in either eye constricts both pupils. This lets you localize a lesion:
 **Procedure:**
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-prak-42-0.395_0.586_0.64_0.853.webp" alt="Biceps reflex" loading="lazy" width="490" height="301" />
-  <figcaption>Biceps reflex: the examiner's thumb on the biceps tendon is struck with the hammer. <span class="figure-source">Slide 42, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-prak-42-0.395_0.586_0.64_0.853.webp"
+    alt="Biceps reflex" loading="lazy" width="490" height="301" />
+  <figcaption>Biceps reflex: the examiner's thumb on the biceps tendon is struck
+    with the hammer. <span class="figure-source">Slide 42, Praktikum Kontraksi
+    Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 1. The subject's arm is relaxed, with the elbow partly flexed and the
@@ -339,8 +401,13 @@ Segment **C5–C6**, musculocutaneous nerve.
 **Procedure:**
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-prak-43-0.705_0.213_0.905_0.853.webp" alt="Triceps reflex, with the arm supported" loading="lazy" width="400" height="721" />
-  <figcaption>Triceps reflex, with the arm supported (top) or the forearm across the body (bottom). <span class="figure-source">Slide 43, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-prak-43-0.705_0.213_0.905_0.853.webp"
+    alt="Triceps reflex, with the arm supported" loading="lazy" width="400"
+    height="721" />
+  <figcaption>Triceps reflex, with the arm supported (top) or the forearm across
+    the body (bottom). <span class="figure-source">Slide 43, Praktikum Kontraksi
+    Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 1. Flex the subject's elbow to about 90°. Either let the forearm hang
@@ -383,8 +450,13 @@ neuron lesion.
 **Procedure:**
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-prak-45-0.71_0.4_0.96_0.728.webp" alt="Patellar reflex arc" loading="lazy" width="500" height="369" />
-  <figcaption>Patellar reflex arc: a tap on the patellar ligament stretches the quadriceps, which contracts reflexly to extend the knee. <span class="figure-source">Slide 45, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-prak-45-0.71_0.4_0.96_0.728.webp"
+    alt="Patellar reflex arc" loading="lazy" width="500" height="369" />
+  <figcaption>Patellar reflex arc: a tap on the patellar ligament stretches the
+    quadriceps, which contracts reflexly to extend the knee. <span
+    class="figure-source">Slide 45, Praktikum Kontraksi Otot &amp; Refleks Tubuh
+    (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 1. The subject sits on the edge of the table with the **legs hanging
@@ -403,8 +475,12 @@ Use the Jendrassik maneuver if the reflex seems absent.
 **Procedure:**
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/physiology/chapter-04-prak-46-0.392_0.56_0.615_0.874.webp" alt="Achilles reflex" loading="lazy" width="446" height="354" />
-  <figcaption>Achilles reflex: the foot is held in slight dorsiflexion and the tendon is tapped. <span class="figure-source">Slide 46, Praktikum Kontraksi Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
+  <img
+    src="/ebook-figures/physiology/chapter-04-prak-46-0.392_0.56_0.615_0.874.webp"
+    alt="Achilles reflex" loading="lazy" width="446" height="354" />
+  <figcaption>Achilles reflex: the foot is held in slight dorsiflexion and the
+    tendon is tapped. <span class="figure-source">Slide 46, Praktikum Kontraksi
+    Otot &amp; Refleks Tubuh (Danish &amp; Arina)</span></figcaption>
 </figure>
 
 1. The subject sits with the legs hanging (or kneels on a chair with the

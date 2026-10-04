@@ -28,8 +28,13 @@ by **gap junctions**, so contraction spreads through a sheet of cells.
 ### How it looks
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/smooth-lm.webp" alt="Smooth muscle in longitudinal section: pink spindle cells with elongated central nuclei and no cross-bands" loading="lazy" width="1000" height="748" />
-  <figcaption>Smooth muscle in longitudinal section: spindle-shaped cells with no cross-striations and an elongated nucleus in the middle of each cell. <span class="figure-source">Page 7, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/smooth-lm.webp"
+    alt="Smooth muscle in longitudinal section: pink spindle cells with
+    elongated central nuclei and no cross-bands" loading="lazy" width="1000"
+    height="748" />
+  <figcaption>Smooth muscle in longitudinal section: spindle-shaped cells with
+    no cross-striations and an elongated nucleus in the middle of each cell.
+    <span class="figure-source">Page 7, Muscle Tissue module</span></figcaption>
 </figure>
 
 - **Fusiform (spindle-shaped) cells**, thick in the middle and tapering
@@ -48,8 +53,12 @@ contain a nucleus**, and it sits in the center. That mix of large profiles
 with central nuclei and small empty ones is characteristic.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/smooth-lab.webp" alt="Smooth muscle seen through the practicum microscope" loading="lazy" width="325" height="323" />
-  <figcaption>Smooth muscle as seen through the practicum microscope: a pale pink band of closely packed spindle cells with dark, elongated nuclei. <span class="figure-source">Page 9, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/smooth-lab.webp"
+    alt="Smooth muscle seen through the practicum microscope" loading="lazy"
+    width="325" height="323" />
+  <figcaption>Smooth muscle as seen through the practicum microscope: a pale
+    pink band of closely packed spindle cells with dark, elongated nuclei. <span
+    class="figure-source">Page 9, Muscle Tissue module</span></figcaption>
 </figure>
 
 ### Easily confused with
@@ -75,8 +84,14 @@ also the tongue, the external eye muscles and the upper esophagus.
 ### How it looks
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/skeletal-longitudinal.webp" alt="Skeletal muscle in longitudinal section showing cross-striations and nuclei at the edges of the fibers" loading="lazy" width="720" height="482" />
-  <figcaption>Skeletal muscle in longitudinal section: long cylindrical fibers with regular light and dark cross-bands, and oval nuclei pressed against the edge of each fiber. <span class="figure-source">Page 11, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/skeletal-longitudinal.webp"
+    alt="Skeletal muscle in longitudinal section showing cross-striations and
+    nuclei at the edges of the fibers" loading="lazy" width="720" height="482"
+    />
+  <figcaption>Skeletal muscle in longitudinal section: long cylindrical fibers
+    with regular light and dark cross-bands, and oval nuclei pressed against the
+    edge of each fiber. <span class="figure-source">Page 11, Muscle Tissue
+    module</span></figcaption>
 </figure>
 
 - **Cylindrical fibers with multiple nuclei.** Each fiber formed by the
@@ -93,8 +108,13 @@ also the tongue, the external eye muscles and the upper esophagus.
 ### Connective tissue sheaths
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/skeletal-sheaths.webp" alt="Diagram of a skeletal muscle from tendon to single fiber, with epimysium, perimysium and endomysium" loading="lazy" width="440" height="706" />
-  <figcaption>From tendon to fiber. Epimysium wraps the whole muscle, perimysium wraps each fascicle, and endomysium wraps each fiber. <span class="figure-source">Page 13, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/skeletal-sheaths.webp"
+    alt="Diagram of a skeletal muscle from tendon to single fiber, with
+    epimysium, perimysium and endomysium" loading="lazy" width="440"
+    height="706" />
+  <figcaption>From tendon to fiber. Epimysium wraps the whole muscle, perimysium
+    wraps each fascicle, and endomysium wraps each fiber. <span
+    class="figure-source">Page 13, Muscle Tissue module</span></figcaption>
 </figure>
 
 From the outside in:
@@ -115,8 +135,14 @@ around one cell.
 ### Transverse section: Cohnheim's areas
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/skeletal-cross-section.webp" alt="Skeletal muscle in cross-section: large polygonal fibers with nuclei at their edges, grouped by thin connective tissue" loading="lazy" width="1000" height="434" />
-  <figcaption>Skeletal muscle in transverse section. Each polygonal profile is one fiber, with its nuclei at the periphery; thin endomysium separates the fibers and perimysium groups them into fascicles. <span class="figure-source">Page 14, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/skeletal-cross-section.webp"
+    alt="Skeletal muscle in cross-section: large polygonal fibers with nuclei at
+    their edges, grouped by thin connective tissue" loading="lazy" width="1000"
+    height="434" />
+  <figcaption>Skeletal muscle in transverse section. Each polygonal profile is
+    one fiber, with its nuclei at the periphery; thin endomysium separates the
+    fibers and perimysium groups them into fascicles. <span
+    class="figure-source">Page 14, Muscle Tissue module</span></figcaption>
 </figure>
 
 In transverse section you can see the whole hierarchy: **epimysium,
@@ -133,8 +159,13 @@ called **Cohnheim's areas** (Cohnheim's fields). They are the answer to
 ### Longitudinal section: the bands
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/skeletal-bands.webp" alt="Skeletal muscle fibers in longitudinal section with labels for the A band, I band, Z line and H zone" loading="lazy" width="1000" height="437" />
-  <figcaption>Striations in longitudinal section, with the bands labeled: A band (dark), I band (light), Z line (in the middle of the I band) and H zone (in the middle of the A band). <span class="figure-source">Page 15, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/skeletal-bands.webp"
+    alt="Skeletal muscle fibers in longitudinal section with labels for the A
+    band, I band, Z line and H zone" loading="lazy" width="1000" height="437" />
+  <figcaption>Striations in longitudinal section, with the bands labeled: A band
+    (dark), I band (light), Z line (in the middle of the I band) and H zone (in
+    the middle of the A band). <span class="figure-source">Page 15, Muscle
+    Tissue module</span></figcaption>
 </figure>
 
 In longitudinal section, the fiber shows **alternating light and dark
@@ -159,47 +190,81 @@ sarcomeres.
 <figure class="diagram">
   <svg viewBox="0 0 640 210" role="img" aria-labelledby="h2s-title h2s-desc">
     <title id="h2s-title">One sarcomere and its bands</title>
-    <desc id="h2s-desc">A sarcomere drawn between two Z lines. Thin actin filaments attach to each Z line and point toward the center; thick myosin filaments sit in the middle, crossed by the M line. Brackets mark the I band on each side, the A band across the myosin, and the H zone in the center where only myosin lies.</desc>
-    <rect x="60" y="40" width="520" height="110" rx="6" fill="var(--surface-2)" stroke="var(--border)" />
-    <line x1="80" y1="36" x2="80" y2="154" stroke="var(--accent)" stroke-width="4" />
-    <line x1="560" y1="36" x2="560" y2="154" stroke="var(--accent)" stroke-width="4" />
-    <line x1="320" y1="46" x2="320" y2="144" stroke="var(--accent-2)" stroke-width="3" />
+    <desc id="h2s-desc">A sarcomere drawn between two Z lines. Thin actin
+      filaments attach to each Z line and point toward the center; thick myosin
+      filaments sit in the middle, crossed by the M line. Brackets mark the I
+      band on each side, the A band across the myosin, and the H zone in the
+      center where only myosin lies.</desc>
+    <rect x="60" y="40" width="520" height="110" rx="6" fill="var(--surface-2)"
+      stroke="var(--border)" />
+    <line x1="80" y1="36" x2="80" y2="154" stroke="var(--accent)"
+      stroke-width="4" />
+    <line x1="560" y1="36" x2="560" y2="154" stroke="var(--accent)"
+      stroke-width="4" />
+    <line x1="320" y1="46" x2="320" y2="144" stroke="var(--accent-2)"
+      stroke-width="3" />
     <g stroke="var(--text-muted)" stroke-width="2.5">
-      <line x1="80" y1="60" x2="270" y2="60" /><line x1="80" y1="95" x2="270" y2="95" /><line x1="80" y1="130" x2="270" y2="130" />
-      <line x1="370" y1="60" x2="560" y2="60" /><line x1="370" y1="95" x2="560" y2="95" /><line x1="370" y1="130" x2="560" y2="130" />
+      <line x1="80" y1="60" x2="270" y2="60" /><line x1="80" y1="95" x2="270"
+        y2="95" /><line x1="80" y1="130" x2="270" y2="130" />
+      <line x1="370" y1="60" x2="560" y2="60" /><line x1="370" y1="95" x2="560"
+        y2="95" /><line x1="370" y1="130" x2="560" y2="130" />
     </g>
     <g stroke="var(--text)" stroke-width="7" stroke-linecap="round">
-      <line x1="190" y1="77" x2="450" y2="77" /><line x1="190" y1="112" x2="450" y2="112" />
+      <line x1="190" y1="77" x2="450" y2="77" /><line x1="190" y1="112" x2="450"
+        y2="112" />
     </g>
     <g fill="var(--text)" font-size="13" text-anchor="middle">
-      <text x="80" y="24">Z line</text><text x="560" y="24">Z line</text><text x="320" y="24">M line</text>
+      <text x="80" y="24">Z line</text><text x="560" y="24">Z line</text><text
+        x="320" y="24">M line</text>
     </g>
     <g stroke="var(--text-muted)" stroke-width="1.5" fill="none">
-      <path d="M80 168 v6 h110 v-6" /><path d="M450 168 v6 h110 v-6" /><path d="M190 184 v6 h260 v-6" /><path d="M270 168 v6 h100 v-6" />
+      <path d="M80 168 v6 h110 v-6" /><path d="M450 168 v6 h110 v-6" /><path
+        d="M190 184 v6 h260 v-6" /><path d="M270 168 v6 h100 v-6" />
     </g>
     <g fill="var(--text-muted)" font-size="12" text-anchor="middle">
       <text x="135" y="166">I band (light)</text><text x="505" y="166">I band (light)</text>
-      <text x="320" y="204">A band (dark): the length of the myosin</text><text x="320" y="166">H zone</text>
+      <text x="320" y="204">A band (dark): the length of the myosin</text><text
+        x="320" y="166">H zone</text>
     </g>
   </svg>
-  <figcaption>One sarcomere, Z line to Z line. Thin (actin) filaments hang from the Z lines; thick (myosin) filaments fill the A band. The I band is actin only, the H zone myosin only.</figcaption>
+  <figcaption>One sarcomere, Z line to Z line. Thin (actin) filaments hang from
+    the Z lines; thick (myosin) filaments fill the A band. The I band is actin
+    only, the H zone myosin only.</figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/sarcomere-em.webp" alt="Electron micrograph of myofibrils with labels for the bands, Z line, sarcomere, mitochondria and sarcoplasmic reticulum" loading="lazy" width="750" height="484" />
-  <figcaption>The same bands in an electron micrograph (Indonesian labels: <em>stria</em> = band, <em>garis</em> = line, <em>mitokondria</em> = mitochondria, <em>retikulum sarkoplasma</em> = sarcoplasmic reticulum). <span class="figure-source">Page 16, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/sarcomere-em.webp"
+    alt="Electron micrograph of myofibrils with labels for the bands, Z line,
+    sarcomere, mitochondria and sarcoplasmic reticulum" loading="lazy"
+    width="750" height="484" />
+  <figcaption>The same bands in an electron micrograph (Indonesian labels:
+    <em>stria</em> = band, <em>garis</em> = line, <em>mitokondria</em> =
+    mitochondria, <em>retikulum sarkoplasma</em> = sarcoplasmic reticulum).
+    <span class="figure-source">Page 16, Muscle Tissue
+    module</span></figcaption>
 </figure>
 
 ### In the practicum microscope
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/skeletal-lab-cross.webp" alt="Skeletal muscle through the practicum microscope, cut transversely into polygonal fibers grouped into bundles" loading="lazy" width="288" height="275" />
-  <figcaption>Skeletal muscle in transverse section through the practicum microscope: fibers packed into bundles (fascicles). The quiz asks for the name of the islands of myofibrils inside each fiber: Cohnheim's areas. <span class="figure-source">Page 17, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/skeletal-lab-cross.webp"
+    alt="Skeletal muscle through the practicum microscope, cut transversely into
+    polygonal fibers grouped into bundles" loading="lazy" width="288"
+    height="275" />
+  <figcaption>Skeletal muscle in transverse section through the practicum
+    microscope: fibers packed into bundles (fascicles). The quiz asks for the
+    name of the islands of myofibrils inside each fiber: Cohnheim's areas. <span
+    class="figure-source">Page 17, Muscle Tissue module</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/skeletal-lab-longitudinal.webp" alt="Skeletal muscle through the practicum microscope in longitudinal section" loading="lazy" width="423" height="406" />
-  <figcaption>Longitudinal section through the practicum microscope: long parallel fibers in bundles, with the striations just visible at higher power. <span class="figure-source">Page 17, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/skeletal-lab-longitudinal.webp"
+    alt="Skeletal muscle through the practicum microscope in longitudinal
+    section" loading="lazy" width="423" height="406" />
+  <figcaption>Longitudinal section through the practicum microscope: long
+    parallel fibers in bundles, with the striations just visible at higher
+    power. <span class="figure-source">Page 17, Muscle Tissue
+    module</span></figcaption>
 </figure>
 
 Skeletal muscle has **limited regeneration**. The fibers themselves cannot
@@ -216,8 +281,12 @@ adjusted by the autonomic nervous system.
 ### How it looks
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/cardiac-lm.webp" alt="Cardiac muscle in longitudinal section with central nuclei and intercalated discs marked" loading="lazy" width="526" height="500" />
-  <figcaption>Cardiac muscle: striated cells with central oval nuclei (N) and intercalated discs (I), the dark irregular lines crossing the fibers. <span class="figure-source">Page 19, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/cardiac-lm.webp"
+    alt="Cardiac muscle in longitudinal section with central nuclei and
+    intercalated discs marked" loading="lazy" width="526" height="500" />
+  <figcaption>Cardiac muscle: striated cells with central oval nuclei (N) and
+    intercalated discs (I), the dark irregular lines crossing the fibers. <span
+    class="figure-source">Page 19, Muscle Tissue module</span></figcaption>
 </figure>
 
 - **Parallel, striated fibers**: the cross-bands are the same A and I
@@ -235,13 +304,22 @@ adjusted by the autonomic nervous system.
   surrounds it.
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/cardiac-anastomosis.webp" alt="Cardiac muscle through the practicum microscope, showing fibers that branch and rejoin" loading="lazy" width="544" height="513" />
-  <figcaption>Cardiac muscle through the practicum microscope. Follow a fiber and you will see it split and join its neighbor: that branching-and-rejoining is the anastomosis the quiz asks about. <span class="figure-source">Page 20, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/cardiac-anastomosis.webp"
+    alt="Cardiac muscle through the practicum microscope, showing fibers that
+    branch and rejoin" loading="lazy" width="544" height="513" />
+  <figcaption>Cardiac muscle through the practicum microscope. Follow a fiber
+    and you will see it split and join its neighbor: that
+    branching-and-rejoining is the anastomosis the quiz asks about. <span
+    class="figure-source">Page 20, Muscle Tissue module</span></figcaption>
 </figure>
 
 <figure class="diagram slide-figure">
-  <img src="/ebook-figures/histology-1.2/cardiac-lab.webp" alt="A second view of cardiac muscle through the practicum microscope" loading="lazy" width="350" height="312" />
-  <figcaption>Another field of cardiac muscle at low power: branching striated fibers running in several directions. <span class="figure-source">Page 21, Muscle Tissue module</span></figcaption>
+  <img src="/ebook-figures/histology-1.2/cardiac-lab.webp"
+    alt="A second view of cardiac muscle through the practicum microscope"
+    loading="lazy" width="350" height="312" />
+  <figcaption>Another field of cardiac muscle at low power: branching striated
+    fibers running in several directions. <span class="figure-source">Page 21,
+    Muscle Tissue module</span></figcaption>
 </figure>
 
 ### Easily confused with
