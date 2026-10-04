@@ -13,12 +13,10 @@ const quizModules = import.meta.glob<QuizQuestion[]>(
 );
 // Dedicated, curated question banks for a study block's exam (e.g. each sourced from a
 // different real past exam) — a block can have more than one package to choose between.
-// Falls back to pooling that block's regular quiz banks when none exist.
-const examBankModules = import.meta.glob<QuizQuestion[]>(
-  "../../content/exams/block/*/*/bank.json",
-  { eager: true, import: "default" },
-);
-const examPackageMetaModules = import.meta.glob<{ name: string }>(
+// Falls back to pooling that block's regular quiz banks when none exist. The questions load
+// when an exam opens; every other page needs only each package's name and size (meta.json).
+const examBankLoaders = import.meta.glob<QuizQuestion[]>("../../content/exams/block/*/*/bank.json", { import: "default" });
+const examPackageMetaModules = import.meta.glob<{ name: string; questions: number }>(
   "../../content/exams/block/*/*/meta.json",
   { eager: true, import: "default" },
 );
@@ -161,18 +159,22 @@ export const quizBanks: Record<string, QuizQuestion[]> = keyedBy(quizModules);
 export interface ExamPackage {
   id: string;
   name: string;
-  questions: QuizQuestion[];
+  /** From meta.json (a content test checks it against the bank). */
+  questionCount: number;
+  /** The package's questions, fetched on demand. */
+  load: () => Promise<QuizQuestion[]>;
 }
 
 /** Dedicated exam question packages, keyed by block id — a block may offer more than one. */
 export const examPackagesByBlock: Record<string, ExamPackage[]> = {};
-for (const [path, questions] of Object.entries(examBankModules)) {
+for (const [path, load] of Object.entries(examBankLoaders)) {
   const { blockId, packageId } = examPackagePath(path);
   const meta = examPackageMetaModules[path.replace(/bank\.json$/, "meta.json")];
   (examPackagesByBlock[blockId] ??= []).push({
     id: packageId,
     name: meta?.name ?? labelize(packageId),
-    questions,
+    questionCount: meta?.questions ?? 0,
+    load,
   });
 }
 for (const list of Object.values(examPackagesByBlock)) {

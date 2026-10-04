@@ -260,7 +260,7 @@ export function Home() {
             const packages = examPackagesByBlock[block.id] ?? [];
             const examPool =
               packages.length > 0
-                ? Math.max(...packages.map((p) => p.questions.length))
+                ? Math.max(...packages.map((p) => p.questionCount))
                 : quizQuestionsInBlock(block.id).length;
             // With more than one package, "last score" isn't a single number — the exam link
             // just sends the user to the picker instead of surfacing one package's history.

@@ -67,7 +67,8 @@ describe("renderSite", () => {
 
   it("never publishes past-paper exam questions", async () => {
     const { examPackagesByBlock } = await import("../lib/content");
-    const question = Object.values(examPackagesByBlock).flat()[0]?.questions[0]?.question;
+    const first = Object.values(examPackagesByBlock).flat()[0];
+    const question = first ? (await first.load())[0]?.question : undefined;
     if (!question) return;
     const needle = question.slice(0, 40).replace(/&/g, "&amp;").replace(/</g, "&lt;");
     for (const [file, html] of site.files) expect(html.includes(needle), file).toBe(false);

@@ -18,7 +18,7 @@ export function ExamBlocks() {
         {studyBlocks.map((block) => {
           const packages = examPackagesByBlock[block.id] ?? [];
           const pooledSize = quizQuestionsInBlock(block.id).length;
-          const poolSize = packages.length > 0 ? Math.max(...packages.map((p) => p.questions.length)) : pooledSize;
+          const poolSize = packages.length > 0 ? Math.max(...packages.map((p) => p.questionCount)) : pooledSize;
           const format = buildExamFormat(poolSize);
           const stillUpcoming = upcomingSubjects.some((u) => u.blockId === block.id) && poolSize === 0;
 

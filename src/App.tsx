@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { MobileTabBar, Sidebar } from "./components/Sidebar";
+import { ScrollManager } from "./components/ScrollManager";
 import { CommandPalette } from "./components/CommandPalette";
 import { PulseLine } from "./components/PulseLine";
 import { UpdateNudge } from "./components/UpdateNudge";
@@ -129,6 +130,7 @@ export default function App() {
           <a href="#main-content" className="skip-link">
             Skip to content
           </a>
+          <ScrollManager />
           <div className="app-shell">
             <Sidebar />
             <div className="app-content">

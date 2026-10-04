@@ -404,7 +404,8 @@
 .io-gallery {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  /* Above the phone tab bar. */
+  z-index: 95;
   background: rgba(10, 16, 14, 0.55);
   display: grid;
   place-items: center;

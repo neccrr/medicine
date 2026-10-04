@@ -135,7 +135,7 @@ async function content(path: string): Promise<string> {
       }
       const shown = subjectId ? packages.filter((p) => p.id === subjectId) : packages;
       return `<ul>${shown
-        .map((p) => `<li>${packages.length > 1 && !subjectId ? `<a href="/exam/${blockId}/${p.id}">${esc(p.name)}</a>` : esc(p.name)}: ${p.questions.length} questions, timed</li>`)
+        .map((p) => `<li>${packages.length > 1 && !subjectId ? `<a href="/exam/${blockId}/${p.id}">${esc(p.name)}</a>` : esc(p.name)}: ${p.questionCount} questions, timed</li>`)
         .join("")}</ul>`;
     }
     case "ebooks/*": {

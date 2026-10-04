@@ -518,16 +518,19 @@ export function QuizPlay() {
                 {selected === currentQuestion.answer ? "Correct" : "Not quite"}
               </p>
               <p className="quiz-feedback-explanation">{currentQuestion.explanation}</p>
-              <ExplainPanel
-                subjectKey={key}
-                subjectLabel={subjectLabel}
-                question={currentQuestion.question}
-                options={currentQuestion.options}
-                answer={currentQuestion.options[currentQuestion.answer]}
-                chosen={selected !== null && selected !== undefined ? currentQuestion.options[selected] : undefined}
-                explanation={currentQuestion.explanation}
-              />
             </div>
+          )}
+          {/* Outside the feedback's live region, so a screen reader doesn't re-read it as the AI types. */}
+          {revealed && (
+            <ExplainPanel
+              subjectKey={key}
+              subjectLabel={subjectLabel}
+              question={currentQuestion.question}
+              options={currentQuestion.options}
+              answer={currentQuestion.options[currentQuestion.answer]}
+              chosen={selected !== null && selected !== undefined ? currentQuestion.options[selected] : undefined}
+              explanation={currentQuestion.explanation}
+            />
           )}
 
           <div className="quiz-nav-buttons">

@@ -52,11 +52,29 @@ export function ExamPlay() {
         ? packages[0]
         : packages.find((p) => p.id === packageId);
   const showPackagePicker = packages.length > 1 && !chosenPackage;
+  // A package's questions arrive on demand; the pooled fallback is already in memory.
+  const [loadedPackage, setLoadedPackage] = useState<{ id: string; questions: QuizQuestion[] } | null>(null);
+  useEffect(() => {
+    if (!chosenPackage || loadedPackage?.id === chosenPackage.id) return;
+    let live = true;
+    chosenPackage.load().then((questions) => live && setLoadedPackage({ id: chosenPackage.id, questions }));
+    return () => {
+      live = false;
+    };
+  }, [chosenPackage, loadedPackage]);
   const pool = useMemo(
-    () => chosenPackage?.questions ?? (block ? quizQuestionsInBlock(block.id) : EMPTY_BANK),
-    [block, chosenPackage],
+    () =>
+      chosenPackage
+        ? loadedPackage?.id === chosenPackage.id
+          ? loadedPackage.questions
+          : EMPTY_BANK
+        : block
+          ? quizQuestionsInBlock(block.id)
+          : EMPTY_BANK,
+    [block, chosenPackage, loadedPackage],
   );
-  const format = useMemo(() => buildExamFormat(pool.length), [pool]);
+  const poolLoading = Boolean(chosenPackage) && pool.length === 0;
+  const format = useMemo(() => buildExamFormat(chosenPackage ? chosenPackage.questionCount : pool.length), [chosenPackage, pool]);
   const historyKey = chosenPackage && packages.length > 1 ? `${blockId}/${chosenPackage.id}` : blockId;
   const { lastAttempt, recordAttempt } = useExamHistory(historyKey);
   const [mode, setMode] = useLocalStorage<ExamMode>(STORAGE_KEYS.examMode, "real");
@@ -221,7 +239,7 @@ export function ExamPlay() {
         </div>
         <div className="card-grid">
           {packages.map((pkg) => {
-            const pkgFormat = buildExamFormat(pkg.questions.length);
+            const pkgFormat = buildExamFormat(pkg.questionCount);
             const pkgHistory = readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(`${blockId}/${pkg.id}`), []);
             const pkgLast = pkgHistory[pkgHistory.length - 1];
             return (
@@ -315,8 +333,8 @@ export function ExamPlay() {
           </div>
 
           <div className="quiz-start-actions">
-            <button className="btn quiz-start-btn" onClick={startExam}>
-              Start exam
+            <button className="btn quiz-start-btn" onClick={startExam} disabled={poolLoading}>
+              {poolLoading ? "Loading questions…" : "Start exam"}
             </button>
           </div>
         </div>

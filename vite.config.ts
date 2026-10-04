@@ -183,13 +183,15 @@ export default defineConfig({
             { name: 'vendor', test: /node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/ },
             // Study content (decks, quiz and exam banks, summaries) gets one chunk per kind, so
             // editing a quiz only invalidates that chunk, and no single chunk grows past the
-            // size limit. Ebook chapters are loaded on demand and stay one chunk each.
+            // size limit. Ebook chapters and past-exam banks are loaded on demand and stay one
+            // chunk each, out of the startup download.
             {
               name: (id) => {
                 const kind = id.match(/[\\/]content[\\/]([a-z]+)[\\/]/)?.[1]
                 return kind ? `content-${kind}` : null
               },
-              test: (id) => /[\\/]content[\\/]/.test(id) && !/chapter-[^\\/]*\.md/.test(id),
+              test: (id) =>
+                /[\\/]content[\\/]/.test(id) && !/chapter-[^\\/]*\.md/.test(id) && !/[\\/]exams[\\/].*bank\.json/.test(id),
             },
           ],
         },

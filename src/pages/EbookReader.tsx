@@ -61,7 +61,7 @@ export function EbookReader() {
         updatedAt: new Date().toISOString(),
       });
     }
-    window.scrollTo({ top: 0 });
+    // Scrolling to the top of a new chapter is ScrollManager's job (Back keeps the position).
   }, [key, chapterId, meta]);
 
   // Each chapter is its own chunk, fetched when opened (precached by the service worker).

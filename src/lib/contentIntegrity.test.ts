@@ -79,3 +79,12 @@ describe("subject covers", () => {
     expect(subjectCover("9.9/nothing")).toBeUndefined();
   });
 });
+
+describe("exam packages", () => {
+  it("state their real question count in meta.json", async () => {
+    const { examPackagesByBlock } = await import("./content");
+    const packages = Object.values(examPackagesByBlock).flat();
+    expect(packages.length).toBeGreaterThan(0);
+    for (const p of packages) expect((await p.load()).length, p.id).toBe(p.questionCount);
+  });
+});
