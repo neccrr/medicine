@@ -33,9 +33,15 @@ export const INDEXES: Record<string, IndexDescription[]> = {
     { key: { userId: 1 }, unique: true, name: "user" },
     { key: { joined: 1 }, name: "joined" },
   ],
+  // One document: the latest listing of the class Drive (see drive.ts). No indexes.
+  driveSnapshot: [],
 };
 
 /** Creates any missing index; a no-op round trip per collection when they all exist. */
 export async function ensureIndexes(db: Db): Promise<void> {
-  await Promise.all(Object.entries(INDEXES).map(([name, indexes]) => db.collection(name).createIndexes(indexes)));
+  await Promise.all(
+    Object.entries(INDEXES)
+      .filter(([, indexes]) => indexes.length > 0)
+      .map(([name, indexes]) => db.collection(name).createIndexes(indexes)),
+  );
 }

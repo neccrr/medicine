@@ -2,6 +2,7 @@ import { memoryAdapter } from "better-auth/adapters/memory";
 import { beforeEach, describe, expect, it } from "vitest";
 import { createApp, type App } from "./app.js";
 import { createAuth } from "./auth.js";
+import { DriveIndex } from "./drive.js";
 import { MemoryLeaderboardStore } from "./leaderboard.js";
 import { MemoryProgressStore } from "./progressStore.js";
 
@@ -52,7 +53,7 @@ const card = (reps: number) => ({ interval: 1, easeFactor: 2.5, dueDate: "2026-1
 
 describe("API", () => {
   it("reports that accounts are available", async () => {
-    expect(await (await req("/api/config")).json()).toEqual({ accounts: true, google: false, ai: false });
+    expect(await (await req("/api/config")).json()).toEqual({ accounts: true, google: false, ai: false, drive: false });
   });
 
   it("refuses to sync without a session", async () => {
@@ -213,7 +214,7 @@ describe("Google sign-in", () => {
 
   it("is reported by /api/config when configured", async () => {
     const res = await googleApp()(new Request(ORIGIN + "/api/config"));
-    expect(await res.json()).toEqual({ accounts: true, google: true, ai: false });
+    expect(await res.json()).toEqual({ accounts: true, google: true, ai: false, drive: false });
   });
 
   it("sends the student to Google with this site's callback and the account chooser", async () => {
@@ -239,5 +240,46 @@ describe("Google sign-in", () => {
     const location = new URL(res.headers.get("location")!, ORIGIN);
     expect(location.pathname).toBe("/account");
     expect(location.searchParams.get("error")).toBeTruthy();
+  });
+});
+
+describe("class Drive", () => {
+  const files = [{ id: "file000000001", name: "L1.pptx", mimeType: "application/vnd.ms-powerpoint" }];
+  const fakeFetch = (async () => Response.json({ files })) as unknown as typeof fetch;
+
+  function withDrive() {
+    const auth = createAuth({
+      database: memoryAdapter({ user: [], session: [], account: [], verification: [], rateLimit: [] }),
+      secret: "test-secret-test-secret-test-secret-1234",
+      baseURL: ORIGIN,
+      trustedOrigins: [ORIGIN],
+      rateLimit: false,
+    });
+    const drive = new DriveIndex({ apiKey: "k", folderId: "rootFolder0001", apiBase: "https://drive.test/v3", ttlMs: 60_000 }, undefined, fakeFetch);
+    app = createApp({ auth, store, leaderboard, googleEnabled: false, drive });
+  }
+
+  it("is only for signed-in students", async () => {
+    withDrive();
+    expect((await req("/api/config")).status).toBe(200);
+    expect(await (await req("/api/config")).json()).toMatchObject({ drive: true });
+    const res = await req("/api/drive");
+    expect(res.status).toBe(401);
+    expect(await res.text()).not.toContain("L1.pptx");
+  });
+
+  it("lists the folder for a signed-in student, never for the search engines' cache", async () => {
+    withDrive();
+    const cookie = await signUp();
+    const res = await req("/api/drive", { cookie });
+    expect(res.status).toBe(200);
+    expect(res.headers.get("cache-control")).toBe("no-store");
+    const tree = (await res.json()) as { root: { files: { name: string; kind: string }[] } };
+    expect(tree.root.files).toEqual([expect.objectContaining({ name: "L1.pptx", kind: "slides" })]);
+  });
+
+  it("says so when the Drive isn't connected", async () => {
+    const cookie = await signUp();
+    expect((await req("/api/drive", { cookie })).status).toBe(503);
   });
 });

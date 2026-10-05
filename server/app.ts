@@ -16,6 +16,7 @@ import {
 } from "./leaderboard.js";
 import type { ProgressStore, StoredEntry } from "./progressStore.js";
 import { parseChatRequest, parseExplainRequest, streamChat, streamExplanation, utcDay, type AiConfig, type AiUsageStore } from "./ai.js";
+import type { DriveIndex } from "./drive.js";
 
 const MAX_BODY_BYTES = 2_000_000;
 const MAX_CHANGES = 1000;
@@ -35,6 +36,8 @@ export interface AppDeps {
   googleEnabled: boolean;
   /** "Explain this" through an AI gateway; absent when the AI settings aren't configured. */
   ai?: { config: AiConfig; usage: AiUsageStore; fetch?: typeof fetch };
+  /** The class's shared Google Drive folder; absent when it isn't connected. */
+  drive?: DriveIndex;
 }
 
 interface SessionUser {
@@ -67,7 +70,7 @@ function isChange(c: unknown, now: number): c is SyncEntry {
 }
 
 /** The whole API as one fetch-style handler: auth, config, sync and account export. */
-export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDeps) {
+export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }: AppDeps) {
   async function sessionUser(request: Request): Promise<SessionUser | null> {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session) return null;
@@ -265,7 +268,19 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai }: AppDe
     try {
       if (pathname.startsWith("/api/auth/")) return await auth.handler(request);
       if (pathname === "/api/config" && request.method === "GET") {
-        return json({ accounts: true, google: googleEnabled, ai: Boolean(ai) });
+        return json({ accounts: true, google: googleEnabled, ai: Boolean(ai), drive: Boolean(drive) });
+      }
+      if (pathname === "/api/drive") {
+        if (request.method !== "GET") return error(405, "Method not allowed.");
+        const user = await sessionUser(request);
+        if (!user) return error(401, "Sign in to see the class Drive.");
+        if (!drive) return error(503, "The class Drive isn't connected.");
+        const refresh = new URL(request.url).searchParams.get("refresh") === "1";
+        try {
+          return json(await drive.tree({ refresh }));
+        } catch {
+          return error(502, "Couldn't reach Google Drive. Try again in a minute.");
+        }
       }
       if (pathname === "/api/ai/explain" || pathname === "/api/ai/chat") {
         if (request.method !== "POST") return error(405, "Method not allowed.");

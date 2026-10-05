@@ -38,6 +38,7 @@ const ExamBlocks = lazy(() =>
 );
 const ExamPlay = lazy(() => import("./pages/ExamPlay").then((m) => ({ default: m.ExamPlay })));
 const Modules = lazy(() => import("./pages/Modules").then((m) => ({ default: m.Modules })));
+const ClassDrive = lazy(() => import("./pages/ClassDrive").then((m) => ({ default: m.ClassDrive })));
 const ModuleViewer = lazy(() =>
   import("./pages/ModuleViewer").then((m) => ({ default: m.ModuleViewer })),
 );
@@ -106,6 +107,7 @@ function AppRoutes() {
           <Route path="/exam/:blockId/:packageId" element={<ExamPlay />} />
           <Route path="/modules" element={<Modules />} />
           <Route path="/modules/:blockId/:subjectId" element={<ModuleViewer />} />
+          <Route path="/drive" element={<ClassDrive />} />
           <Route path="/summaries" element={<Summaries />} />
           <Route path="/summaries/:blockId/:subjectId" element={<SummaryDetail />} />
           <Route path="/ebooks" element={<EbookSubjects />} />

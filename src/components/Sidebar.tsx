@@ -9,6 +9,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
 import {
   AlfondIcon,
+  DriveIcon,
   BookIcon,
   CalendarIcon,
   CardsIcon,
@@ -66,6 +67,7 @@ const groups: NavGroup[] = [
       { to: "/ebooks", label: "Ebooks", icon: <BookIcon /> },
       { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
       { to: "/modules", label: "Modules", icon: <SlidesIcon /> },
+      { to: "/drive", label: "Class Drive", icon: <DriveIcon /> },
       { to: "/map", label: "Knowledge map", icon: <MapIcon /> },
     ],
   },

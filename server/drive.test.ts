@@ -1,0 +1,187 @@
+import { describe, expect, it, vi } from "vitest";
+import { crawlDrive, DriveIndex, driveConfigFromEnv, kindOf, MemoryDriveSnapshotStore, type DriveConfig } from "./drive.js";
+
+const FOLDER = "application/vnd.google-apps.folder";
+const ROOT = "rootFolder0001";
+
+interface Item {
+  id: string;
+  name: string;
+  mimeType: string;
+  parent: string;
+  size?: string;
+  shortcutDetails?: { targetId: string; targetMimeType: string };
+}
+
+/** A Drive API that answers files.list from a list of items, two per page. */
+function fakeDrive(items: Item[], { fail = new Set<string>() } = {}) {
+  const calls: string[] = [];
+  const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
+    const url = new URL(String(input));
+    const parent = /^'([^']+)' in parents/.exec(url.searchParams.get("q") ?? "")?.[1] ?? "";
+    calls.push(parent);
+    if (url.searchParams.get("key") !== "test-key") return new Response("{}", { status: 403 });
+    if (fail.has(parent)) return new Response("{}", { status: 500 });
+    const children = items.filter((i) => i.parent === parent);
+    const start = Number(url.searchParams.get("pageToken") || 0);
+    const page = children.slice(start, start + 2).map(({ parent: _p, ...rest }) => ({ ...rest, modifiedTime: "2026-10-01T00:00:00Z" }));
+    const next = start + 2 < children.length ? String(start + 2) : undefined;
+    return Response.json({ files: page, nextPageToken: next });
+  });
+  return { fetchImpl: fetchImpl as unknown as typeof fetch, calls };
+}
+
+const config: DriveConfig = { apiKey: "test-key", folderId: ROOT, apiBase: "https://drive.test/v3", ttlMs: 5 * 60_000 };
+
+const classDrive: Item[] = [
+  { id: "semester0001", name: "SEMESTER 1", mimeType: FOLDER, parent: ROOT },
+  { id: "block12folder", name: "BLOCK 1.2 INTEGUMEN SYSTEM AND MUSKOLOSKELETAL", mimeType: FOLDER, parent: "semester0001" },
+  { id: "anatomyfolder", name: "ANATOMY", mimeType: FOLDER, parent: "block12folder" },
+  { id: "ubfolder00001", name: "UB", mimeType: FOLDER, parent: "block12folder" },
+  { id: "lecture13file", name: "L13 - Kinesiologi.pptx", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", parent: "anatomyfolder", size: "7404733" },
+  { id: "lecture02file", name: "L2 - Introduction.pptx", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", parent: "anatomyfolder", size: "26836841" },
+  { id: "tatibfile0001", name: "TATIB 1.2 .pdf", mimeType: "application/pdf", parent: "anatomyfolder", size: "14933460" },
+  { id: "recording0001", name: "Lecture 1.mp4", mimeType: "video/mp4", parent: "anatomyfolder", size: "900" },
+  { id: "googleslides1", name: "Notes", mimeType: "application/vnd.google-apps.presentation", parent: "anatomyfolder" },
+  // A shortcut to a file elsewhere, and one pointing back up the tree.
+  { id: "shortcut00001", name: "UB 2025 paper", mimeType: "application/vnd.google-apps.shortcut", parent: "ubfolder00001", shortcutDetails: { targetId: "paperelsewhere", targetMimeType: "application/pdf" } },
+  { id: "shortcut00002", name: "Back to semester", mimeType: "application/vnd.google-apps.shortcut", parent: "ubfolder00001", shortcutDetails: { targetId: "semester0001", targetMimeType: FOLDER } },
+];
+
+describe("Drive settings", () => {
+  it("needs a key and a folder, given as an id or a share link", () => {
+    expect(driveConfigFromEnv({})).toBeUndefined();
+    expect(driveConfigFromEnv({ GOOGLE_DRIVE_API_KEY: "k" })).toBeUndefined();
+    const fromLink = driveConfigFromEnv({
+      GOOGLE_DRIVE_API_KEY: "k",
+      GOOGLE_DRIVE_FOLDER_ID: "https://drive.google.com/drive/folders/1AbCdEfGhIjKlMnOpQrStUvWxYz012345?usp=share_link",
+    });
+    expect(fromLink?.folderId).toBe("1AbCdEfGhIjKlMnOpQrStUvWxYz012345");
+    expect(fromLink?.ttlMs).toBe(5 * 60_000);
+    expect(driveConfigFromEnv({ GOOGLE_DRIVE_API_KEY: "k", GOOGLE_DRIVE_FOLDER_ID: "x' or '1'='1" })).toBeUndefined();
+  });
+});
+
+describe("file kinds", () => {
+  it("comes from the type, or the extension when Drive doesn't know it", () => {
+    expect(kindOf("application/vnd.openxmlformats-officedocument.presentationml.presentation", "a.pptx")).toBe("slides");
+    expect(kindOf("application/octet-stream", "Slides.PPT")).toBe("slides");
+    expect(kindOf("application/pdf", "a.pdf")).toBe("pdf");
+    expect(kindOf("video/mp4", "a.mp4")).toBe("video");
+    expect(kindOf("application/vnd.google-apps.document", "Notes")).toBe("document");
+    expect(kindOf("application/zip", "a.zip")).toBe("other");
+  });
+});
+
+describe("walking the Drive", () => {
+  it("lists every folder, page by page, sorted the way people number things", async () => {
+    const { fetchImpl } = fakeDrive(classDrive);
+    const tree = await crawlDrive(config, fetchImpl, () => 1000);
+    expect(tree.complete).toBe(true);
+    expect(tree.updatedAt).toBe(1000);
+    const block = tree.root.folders[0].folders[0];
+    expect(block.folders.map((f) => f.name)).toEqual(["ANATOMY", "UB"]);
+    const anatomy = block.folders[0];
+    expect(anatomy.files.map((f) => f.name)).toEqual(["L2 - Introduction.pptx", "L13 - Kinesiologi.pptx", "Lecture 1.mp4", "Notes", "TATIB 1.2 .pdf"]);
+    expect(anatomy.files[0]).toEqual({ id: "lecture02file", name: "L2 - Introduction.pptx", kind: "slides", size: 26836841, modifiedTime: "2026-10-01T00:00:00Z" });
+    expect(anatomy.files.find((f) => f.name === "Notes")?.size).toBeNull();
+  });
+
+  it("follows shortcuts to files but never loops back up the tree", async () => {
+    const { fetchImpl, calls } = fakeDrive(classDrive);
+    const tree = await crawlDrive(config, fetchImpl);
+    const ub = tree.root.folders[0].folders[0].folders[1];
+    expect(ub.files).toEqual([expect.objectContaining({ id: "paperelsewhere", name: "UB 2025 paper", kind: "pdf" })]);
+    expect(ub.folders).toEqual([]);
+    expect(calls.filter((c) => c === "semester0001")).toHaveLength(1);
+  });
+
+  it("keeps going when one folder fails, and says the listing is incomplete", async () => {
+    const { fetchImpl } = fakeDrive(classDrive, { fail: new Set(["ubfolder00001"]) });
+    const tree = await crawlDrive(config, fetchImpl);
+    expect(tree.complete).toBe(false);
+    expect(tree.root.folders[0].folders[0].folders[0].files).toHaveLength(5);
+  });
+
+  it("fails when the folder itself can't be listed (wrong key, not shared)", async () => {
+    const { fetchImpl } = fakeDrive(classDrive);
+    await expect(crawlDrive({ ...config, apiKey: "wrong" }, fetchImpl)).rejects.toThrow(/403/);
+  });
+
+  it("never sends folder ids to students", async () => {
+    const { fetchImpl } = fakeDrive(classDrive);
+    const json = JSON.stringify(await crawlDrive(config, fetchImpl));
+    for (const id of [ROOT, "semester0001", "block12folder", "anatomyfolder", "ubfolder00001"]) expect(json).not.toContain(id);
+  });
+});
+
+describe("the listing students get", () => {
+  it("is reused until it is a few minutes old, then read again", async () => {
+    let now = 0;
+    const items = [...classDrive];
+    const { fetchImpl } = fakeDrive(items);
+    const index = new DriveIndex(config, new MemoryDriveSnapshotStore(), fetchImpl, () => now);
+    const first = await index.tree();
+    now = 60_000;
+    expect(await index.tree()).toBe(first);
+    // A new file in Drive appears once the listing is stale.
+    items.push({ id: "lecture20file", name: "L20 - New.pptx", mimeType: "application/pdf", parent: "anatomyfolder" });
+    now = 6 * 60_000;
+    const second = await index.tree();
+    expect(second).not.toBe(first);
+    expect(second.root.folders[0].folders[0].folders[0].files.map((f) => f.name)).toContain("L20 - New.pptx");
+  });
+
+  it("starts from the saved listing after a cold start, and saves each new one", async () => {
+    const snapshots = new MemoryDriveSnapshotStore();
+    const { fetchImpl } = fakeDrive(classDrive);
+    const saved = await crawlDrive(config, fetchImpl, () => 0);
+    await snapshots.save(saved);
+    const { fetchImpl: neverCalled, calls } = fakeDrive(classDrive);
+    const index = new DriveIndex(config, snapshots, neverCalled, () => 60_000);
+    expect(await index.tree()).toEqual(saved);
+    expect(calls).toHaveLength(0);
+
+    const refreshed = await new DriveIndex(config, snapshots, fetchImpl, () => 10 * 60_000).tree();
+    expect(refreshed.updatedAt).toBe(10 * 60_000);
+    expect((await snapshots.load())?.updatedAt).toBe(10 * 60_000);
+  });
+
+  it("keeps serving the last listing while Drive is failing, without hammering it", async () => {
+    let now = 0;
+    const fail = new Set<string>();
+    const { fetchImpl, calls } = fakeDrive(classDrive, { fail });
+    const index = new DriveIndex(config, new MemoryDriveSnapshotStore(), fetchImpl, () => now);
+    const good = await index.tree();
+    fail.add(ROOT);
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    now = 10 * 60_000;
+    expect(await index.tree()).toBe(good);
+    const before = calls.length;
+    now += 5_000;
+    expect(await index.tree()).toBe(good);
+    expect(calls.length).toBe(before);
+  });
+
+  it("lets a student refresh, but not more than every half minute", async () => {
+    let now = 0;
+    const { fetchImpl, calls } = fakeDrive(classDrive);
+    const index = new DriveIndex(config, new MemoryDriveSnapshotStore(), fetchImpl, () => now);
+    await index.tree();
+    const walked = calls.length;
+    now = 10_000;
+    await index.tree({ refresh: true });
+    expect(calls.length).toBe(walked);
+    now = 40_000;
+    await index.tree({ refresh: true });
+    expect(calls.length).toBe(walked * 2);
+  });
+
+  it("walks once when many students ask at the same time", async () => {
+    const { fetchImpl, calls } = fakeDrive(classDrive);
+    const index = new DriveIndex(config, new MemoryDriveSnapshotStore(), fetchImpl);
+    const trees = await Promise.all([index.tree(), index.tree(), index.tree()]);
+    expect(trees[1]).toBe(trees[0]);
+    expect(calls.filter((c) => c === ROOT)).toHaveLength(1);
+  });
+});

@@ -1,7 +1,11 @@
 import { useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
+import { DriveFileView, DriveKind } from "../components/drive/DriveParts";
+import { useDrive } from "../hooks/useDrive";
 import { modulesByBlockSubject, moduleSubjects, type ModulePdf } from "../lib/content";
 import { blockById } from "../lib/blocks";
+import { driveHref, fileGroups, fileTitle, folderAt, niceName, subjectFolderPath } from "../lib/drive";
+import type { DriveFile } from "../lib/driveTypes";
 import { groupModules } from "../lib/moduleSections";
 import { subjectHueStyle } from "../lib/subjectStyle";
 
@@ -20,6 +24,13 @@ function ExternalIcon() {
   );
 }
 
+/** On phones the list sits above the viewer: bring the chosen file into view. */
+function revealViewer(id: string) {
+  if (window.matchMedia("(max-width: 720px)").matches) {
+    requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+}
+
 export function ModuleViewer() {
   const { blockId = "", subjectId = "" } = useParams();
   const block = blockById(blockId);
@@ -27,18 +38,31 @@ export function ModuleViewer() {
   const pdfs = modulesByBlockSubject.get(`${blockId}/${subjectId}`) ?? [];
   const groups = groupModules(pdfs);
   const ordered = groups ? groups.flatMap((g) => g.sections.flatMap((s) => s.pdfs)) : pdfs;
-  const [selectedUrl, setSelectedUrl] = useState<string>();
+  // "pdf:{url}" or "drive:{id}".
+  const [selectedKey, setSelectedKey] = useState<string>();
 
-  if (!block || !subject) {
+  const drive = useDrive();
+  const drivePath = drive.status === "ready" ? subjectFolderPath(drive.tree.root, blockId, subjectId) : null;
+  const driveFolder = drive.status === "ready" && drivePath ? folderAt(drive.tree.root, drivePath) : null;
+  const driveGroups = driveFolder ? fileGroups(driveFolder) : [];
+  const driveFiles = driveGroups.flatMap((g) => g.files);
+
+  const label = subject?.label ?? (driveFolder ? niceName(driveFolder.name) : null);
+  if (!block || !label) {
     return (
       <section className="page">
-        <p>Unknown module subject.</p>
+        <p>{block && drive.status === "loading" ? "Loading…" : "Unknown module subject."}</p>
         <Link to="/modules">Back to modules</Link>
       </section>
     );
   }
 
-  const current = ordered.find((p) => p.url === selectedUrl) ?? ordered[0];
+  const currentPdf = ordered.find((p) => `pdf:${p.url}` === selectedKey);
+  const currentDrive = driveFiles.find((f) => `drive:${f.id}` === selectedKey);
+  // Nothing chosen yet: the first cleaned PDF, else the first Drive file.
+  const fallbackPdf = !currentPdf && !currentDrive ? ordered.at(0) : undefined;
+  const shownPdf = currentPdf ?? fallbackPdf;
+  const shownDrive = currentDrive ?? (!shownPdf ? driveFiles.at(0) : undefined);
 
   const pdfList = (list: ModulePdf[]) => (
     <ol>
@@ -46,13 +70,10 @@ export function ModuleViewer() {
         <li key={pdf.url}>
           <button
             type="button"
-            className={pdf.url === current.url ? "ebook-toc-link active" : "ebook-toc-link"}
+            className={pdf.url === shownPdf?.url ? "ebook-toc-link active" : "ebook-toc-link"}
             onClick={() => {
-              setSelectedUrl(pdf.url);
-              // On phones the list sits above the viewer: bring the chosen file into view.
-              if (window.matchMedia("(max-width: 720px)").matches) {
-                requestAnimationFrame(() => document.getElementById("module-viewer")?.scrollIntoView({ behavior: "smooth", block: "start" }));
-              }
+              setSelectedKey(`pdf:${pdf.url}`);
+              revealViewer("module-viewer");
             }}
           >
             {pdf.name}
@@ -62,19 +83,73 @@ export function ModuleViewer() {
     </ol>
   );
 
+  const driveList = (files: DriveFile[]) => (
+    <ol>
+      {files.map((file) => (
+        <li key={file.id}>
+          <button
+            type="button"
+            className={file.id === shownDrive?.id ? "ebook-toc-link drive-toc-link active" : "ebook-toc-link drive-toc-link"}
+            onClick={() => {
+              setSelectedKey(`drive:${file.id}`);
+              revealViewer("drive-viewer");
+            }}
+          >
+            <DriveKind kind={file.kind} />
+            {fileTitle(file.name)}
+          </button>
+        </li>
+      ))}
+    </ol>
+  );
+
+  const driveSection =
+    drive.status === "off" ? null : (
+      <div className="ebook-toc-section drive-toc">
+        <p className="ebook-toc-group">
+          Class Drive <span className="drive-live">live</span>
+        </p>
+        {drive.status === "loading" && <p className="ebook-toc-empty">Loading…</p>}
+        {drive.status === "signed-out" && (
+          <p className="ebook-toc-empty">
+            <Link to="/account">Sign in</Link> to see this subject's slides and recordings from the class Drive.
+          </p>
+        )}
+        {drive.status === "error" && <p className="ebook-toc-empty">{drive.message}</p>}
+        {drive.status === "ready" &&
+          (driveGroups.length === 0 ? (
+            <p className="ebook-toc-empty">Nothing for this subject in the class Drive yet.</p>
+          ) : (
+            driveGroups.map((g) => (
+              <div key={g.path.join("/")} className="ebook-toc-part">
+                {g.label && <p className="ebook-toc-sublabel">{g.label}</p>}
+                {driveList(g.files)}
+              </div>
+            ))
+          ))}
+        {drive.status === "ready" && (
+          <Link to={driveHref(drivePath ?? [])} className="drive-toc-browse">
+            Browse the class Drive →
+          </Link>
+        )}
+      </div>
+    );
+
   return (
     <section className="page ebook-page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
       <Link to="/modules" className="back-link">
         ← All modules
       </Link>
 
-      {pdfs.length === 0 ? (
+      {pdfs.length === 0 && !driveSection ? (
         <p>No PDFs yet for this subject — drop one into its module folder.</p>
       ) : (
         <div className="ebook-layout">
           <nav className="ebook-toc" aria-label="Module list">
-            <h2 className="ebook-toc-title">{subject.label}</h2>
+            <h2 className="ebook-toc-title">{label}</h2>
             <p className="ebook-toc-subhead">{block.label}</p>
+            {driveSection}
+            {pdfs.length > 0 && driveSection && <p className="ebook-toc-group drive-toc-offline">Cleaned PDFs (work offline)</p>}
             {groups
               ? groups.map((group) => (
                   <div key={group.id} className="ebook-toc-section">
@@ -95,16 +170,22 @@ export function ModuleViewer() {
           </nav>
 
           <div className="ebook-content">
-            <div className="pdf-viewer" id="module-viewer">
-              <div className="pdf-viewer-bar">
-                <p>{current.name}</p>
-                <a href={current.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                  Open in new tab
-                  <ExternalIcon />
-                </a>
+            {shownDrive ? (
+              <DriveFileView file={shownDrive} />
+            ) : shownPdf ? (
+              <div className="pdf-viewer" id="module-viewer">
+                <div className="pdf-viewer-bar">
+                  <p>{shownPdf.name}</p>
+                  <a href={shownPdf.url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                    Open in new tab
+                    <ExternalIcon />
+                  </a>
+                </div>
+                <iframe src={shownPdf.url} title={shownPdf.name} className="pdf-frame" />
               </div>
-              <iframe src={current.url} title={current.name} className="pdf-frame" />
-            </div>
+            ) : (
+              <p className="drive-empty">Pick a file from the list.</p>
+            )}
           </div>
         </div>
       )}

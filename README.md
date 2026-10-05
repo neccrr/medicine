@@ -119,6 +119,11 @@ account environment variables it runs as a plain static site.
   in new tab" fallback
 - Grouped as **Lecture**, then **Practicum** (Reports, Assistance), with empty
   sections marked "To be added"
+- **Class Drive** (signed-in students): the class's Google Drive folder, live.
+  Every slide deck, recording, tutorial and exam file, folder by folder, with
+  a file search and Google's own viewer. Each subject's module page lists its
+  Drive files above the cleaned PDFs. Files added to or removed from the Drive
+  show up within a few minutes
 
 **Virtual Lab**
 
@@ -556,6 +561,30 @@ Redeploy; `/api/config` then answers `"ai":true`: the AI button and Alfond appea
 Without these variables the AI button and Alfond's floating button stay hidden,
 Alfond's page says it isn't switched on, and "Explain this" shows only the
 matching passages from the notes.
+
+### Class Drive (optional)
+
+The Class Drive page lists a shared Google Drive folder for signed-in
+students. The server walks the folder with the Drive API, keeps the listing
+for five minutes (a student's Refresh asks again after 30 seconds) and saves
+the latest copy in MongoDB for cold starts. Only names and file ids reach the
+browser, never folder ids, and nothing from the Drive goes into the static
+pages, the search index or the knowledge map.
+
+1. In [Google Cloud](https://console.cloud.google.com/), enable the **Google
+   Drive API** and create an **API key** under APIs & Services → Credentials.
+   Restrict it to the Drive API.
+2. Share the folder as "Anyone with the link" (**Viewer** is enough; see
+   below).
+3. In Vercel → Environment Variables, set `GOOGLE_DRIVE_API_KEY` and
+   `GOOGLE_DRIVE_FOLDER_ID` (the folder's id, or its whole share link).
+   `GOOGLE_DRIVE_REFRESH_MINUTES` (optional) changes the five minutes.
+4. Redeploy. `/api/config` then answers `"drive":true`.
+
+Students open files in Google's viewer, so they get the folder's own sharing
+rights: if the folder is shared as "Anyone with the link can **edit**", any
+student can rename, change or remove the class's files from there. Share it as
+**Viewer** and keep editing for the people who upload.
 
 ### Search engines
 

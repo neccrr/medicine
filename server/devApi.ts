@@ -9,6 +9,7 @@ import { MemoryLeaderboardStore, MongoLeaderboardStore, type LeaderboardStore } 
 import { MemoryProgressStore, MongoProgressStore, type ProgressStore } from "./progressStore.js";
 import { ensureIndexes } from "./schema.js";
 import { aiConfigFromEnv, MemoryAiUsageStore, MongoAiUsageStore, type AiUsageStore } from "./ai.js";
+import { DriveIndex, driveConfigFromEnv } from "./drive.js";
 
 let app: Promise<App> | null = null;
 
@@ -48,7 +49,15 @@ export function getDevApp(): Promise<App> {
       rateLimit: false,
     });
     const aiConfig = aiConfigFromEnv(env);
-    return createApp({ auth, store, leaderboard, googleEnabled: Boolean(google), ai: aiConfig ? { config: aiConfig, usage } : undefined });
+    const driveConfig = driveConfigFromEnv(env);
+    return createApp({
+      auth,
+      store,
+      leaderboard,
+      googleEnabled: Boolean(google),
+      ai: aiConfig ? { config: aiConfig, usage } : undefined,
+      drive: driveConfig ? new DriveIndex(driveConfig) : undefined,
+    });
   })();
   return app;
 }

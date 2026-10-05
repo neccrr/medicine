@@ -4,9 +4,47 @@ import { groupByBlock } from "../lib/blocks";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { SubjectCover } from "../components/SubjectCover";
 import { UpcomingSubjectCard } from "../components/UpcomingSubjectCard";
+import { DriveKind } from "../components/drive/DriveParts";
+import { useDrive } from "../hooks/useDrive";
+import { countFiles, folderAt, subjectFolderPath, updatedAgo } from "../lib/drive";
+
+/** The class Google Drive, for signed-in students: a way in, and how much is there. */
+function DriveCard() {
+  const drive = useDrive();
+  if (drive.status === "off") return null;
+  const total = drive.status === "ready" ? countFiles(drive.tree.root) : null;
+  return (
+    <Link to="/drive" className="drive-card">
+      <DriveKind kind="folder" />
+      <span>
+        <strong>Class Drive</strong>
+        <small>
+          {drive.status === "signed-out"
+            ? "Sign in to open every slide, recording, tutorial and exam from the class's Google Drive."
+            : total !== null && drive.status === "ready"
+              ? `${total} files: slides, recordings, tutorials and exams, live from Google Drive (updated ${updatedAgo(drive.tree.updatedAt)}).`
+              : "Slides, recordings, tutorials and exams, live from the class's Google Drive."}
+        </small>
+      </span>
+      <span aria-hidden="true">→</span>
+    </Link>
+  );
+}
+
+/** How many files a subject has in the class Drive, once it's loaded. */
+function useDriveCount(): (blockId: string, subjectId: string) => number | null {
+  const drive = useDrive();
+  return (blockId, subjectId) => {
+    if (drive.status !== "ready") return null;
+    const path = subjectFolderPath(drive.tree.root, blockId, subjectId);
+    const folder = path && folderAt(drive.tree.root, path);
+    return folder ? countFiles(folder) : null;
+  };
+}
 
 export function Modules() {
   const groups = groupByBlock(moduleSubjects);
+  const driveCount = useDriveCount();
 
   if (groups.length === 0) {
     return (
@@ -21,12 +59,14 @@ export function Modules() {
     <section className="page">
       <h1>Modules</h1>
       <p className="subtitle">Original lecture slides, as PDFs — organized by block and subject.</p>
+      <DriveCard />
       {groups.map(({ block, subjects, upcoming }) => (
         <div key={block.id} className="block-section">
           <h2 className="block-section-heading">{block.label}</h2>
           <div className="card-grid">
             {subjects.map((subject) => {
               const pdfs = modulesByBlockSubject.get(`${block.id}/${subject.id}`) ?? [];
+              const inDrive = driveCount(block.id, subject.id);
               return (
                 <Link key={subject.id} to={`/modules/${block.id}/${subject.id}`} className="nav-card">
                   <SubjectCover subjectKey={`${block.id}/${subject.id}`} />
@@ -36,6 +76,7 @@ export function Modules() {
                   </div>
                   <p>
                     {pdfs.length} PDF{pdfs.length === 1 ? "" : "s"}
+                    {inDrive !== null && ` · ${inDrive} in the class Drive`}
                   </p>
                 </Link>
               );

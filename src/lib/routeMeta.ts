@@ -183,6 +183,8 @@ const SECTIONS = new Map<string, { name: string; meta: PageMeta }>(Object.entrie
   },
   plan: { name: "Exam plan", meta: { title: titled("Exam Plan"), description: HOME_DESCRIPTION, indexable: false } },
   alfond: { name: "Alfond", meta: { title: titled("Alfond, Your Study Assistant"), description: HOME_DESCRIPTION, indexable: false } },
+  // Signed-in students only, and never in search results: it lists the class's exam papers.
+  drive: { name: "Class Drive", meta: { title: titled("Class Drive"), description: HOME_DESCRIPTION, indexable: false } },
 }));
 
 /** Whether a block has an exam: its own past-paper packages, or else its quiz questions. */
@@ -365,4 +367,4 @@ export function indexablePaths(): string[] {
 }
 
 /** App pages that are rendered for everyone but kept out of search. */
-export const PRIVATE_PATHS = ["/search", "/progress", "/leaderboard", "/account", "/alfond", "/plan"];
+export const PRIVATE_PATHS = ["/search", "/progress", "/leaderboard", "/account", "/alfond", "/plan", "/drive"];

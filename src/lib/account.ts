@@ -4,6 +4,8 @@ export interface AccountConfig {
   google: boolean;
   /** AI explanations are configured on the server (they still need a signed-in student). */
   ai: boolean;
+  /** The class Google Drive is connected (signed-in students only). */
+  drive: boolean;
 }
 
 export interface AccountUser {
@@ -21,12 +23,13 @@ export function getAccountConfig(): Promise<AccountConfig> {
   configPromise ??= fetch("/api/config", { cache: "no-store" })
     .then(async (res) => {
       if (!res.ok || !res.headers.get("content-type")?.includes("application/json")) {
-        return { accounts: false, google: false, ai: false };
+        return { accounts: false, google: false, ai: false, drive: false };
       }
       const data = (await res.json()) as Partial<AccountConfig>;
-      return { accounts: data.accounts === true, google: data.google === true, ai: data.accounts === true && data.ai === true };
+      const accounts = data.accounts === true;
+      return { accounts, google: data.google === true, ai: accounts && data.ai === true, drive: accounts && data.drive === true };
     })
-    .catch(() => ({ accounts: false, google: false, ai: false }));
+    .catch(() => ({ accounts: false, google: false, ai: false, drive: false }));
   return configPromise;
 }
 

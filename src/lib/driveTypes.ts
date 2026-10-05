@@ -1,0 +1,29 @@
+// The class Google Drive as the API sends it (see server/drive.ts): folders by name, files with
+// the id Drive's viewer needs. Import-free, so the server can load it too. Folder ids are never
+// sent: the shared folder lets anyone with a link edit it.
+
+export type DriveFileKind = "slides" | "pdf" | "video" | "audio" | "document" | "sheet" | "image" | "other";
+
+export interface DriveFile {
+  id: string;
+  name: string;
+  kind: DriveFileKind;
+  /** Bytes; null for Google Docs/Slides, which have no file size. */
+  size: number | null;
+  /** ISO time of the last change. */
+  modifiedTime: string;
+}
+
+export interface DriveFolder {
+  name: string;
+  folders: DriveFolder[];
+  files: DriveFile[];
+}
+
+export interface DriveTree {
+  root: DriveFolder;
+  /** When the listing was read from Drive, in ms since the epoch. */
+  updatedAt: number;
+  /** False when the walk stopped early (too many folders, or a folder failed to list). */
+  complete: boolean;
+}

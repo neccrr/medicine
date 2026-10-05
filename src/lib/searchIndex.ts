@@ -38,6 +38,7 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "quizzes", title: "Quizzes", detail: "Multiple-choice question banks", to: "/quizzes" },
   { type: "page", id: "exam", title: "Exam", detail: "Timed block exams, scored at the end", to: "/exam" },
   { type: "page", id: "modules", title: "Modules", detail: "Original lecture slide PDFs", to: "/modules" },
+  { type: "page", id: "drive", title: "Class Drive", detail: "Slides, recordings and exams from the class Google Drive", to: "/drive", keywords: "google drive ppt slides recordings ub exams tutorial" },
   { type: "page", id: "ebooks", title: "Ebooks", detail: "Chapter readers", to: "/ebooks" },
   { type: "page", id: "summaries", title: "Summaries", detail: "Written subject summaries", to: "/summaries" },
   { type: "page", id: "subjects", title: "Subjects", detail: "Everything for each subject in one place", to: "/subjects", keywords: "subject overview hub" },
