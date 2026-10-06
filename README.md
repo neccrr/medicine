@@ -262,6 +262,9 @@ account environment variables it runs as a plain static site.
   to leaderboard points.
 - **Running your own copy:** [deploying](docs/deploying.md).
 
+All of it is also on the [wiki](https://github.com/neccrr/medicine/wiki),
+regenerated from `docs/` and `content/help/` on every push.
+
 ## Quick start
 
 ```bash

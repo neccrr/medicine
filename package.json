@@ -18,7 +18,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "dev:api": "MEDICINE_API=memory vite",
-    "graph:relations": "node scripts/graph-relations.mjs"
+    "graph:relations": "node scripts/graph-relations.mjs",
+    "docs:wiki": "node scripts/wiki.mjs"
   },
   "dependencies": {
     "better-auth": "^1.7.6",

@@ -1,5 +1,9 @@
 # Documentation
 
+These pages, and the student help, are also published to the [GitHub
+wiki](https://github.com/neccrr/medicine/wiki) on every push to `major`
+(`.github/workflows/wiki.yml`). Edit them here: the wiki is a generated copy.
+
 **Students:** the help for using the app is built in. Open **Help** in the
 app's sidebar, or go to [/docs](https://medicine.necr.help/docs). Its pages
 are written in [`content/help/`](../content/help/).

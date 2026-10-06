@@ -83,9 +83,9 @@ function DocsIndex() {
       ))}
 
       <p className="docs-footnote">
-        Building or editing the app? The developer and content guides are in the{" "}
-        <a href="https://github.com/neccrr/medicine/tree/main/docs" target="_blank" rel="noopener noreferrer">
-          docs folder of the source
+        Building or editing the app? The developer and content guides are on the{" "}
+        <a href="https://github.com/neccrr/medicine/wiki" target="_blank" rel="noopener noreferrer">
+          project wiki
         </a>
         .
       </p>

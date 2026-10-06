@@ -35,6 +35,7 @@ npm run lint:css     # Stylelint
 npm run test         # Vitest, single run
 npm run test:watch   # Vitest, watch mode
 npm run graph:relations   # AI labels for the knowledge map's links
+npm run docs:wiki         # build the wiki pages into wiki-out/ (CI publishes them)
 npx markdownlint-cli2 "**/*.md"   # Markdown style
 ```
 
