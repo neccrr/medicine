@@ -29,6 +29,18 @@ import {
 const DEFAULT_LAYERS = ["skeletal"];
 const QUICK = ["Femur", "Heart", "Brain", "Deltoid muscle", "Kidney", "Scapula", "Liver", "Sciatic nerve"];
 
+/** Typing in a text box (so single-key shortcuts stay out of the way). */
+function isTyping(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.isContentEditable || target.tagName === "TEXTAREA" || target.tagName === "SELECT") return true;
+  return target instanceof HTMLInputElement && !["checkbox", "radio", "range", "button"].includes(target.type);
+}
+
+/** The same structure on the other side ("Femur.r" → "Femur.l"), if it has one. */
+const otherSide = (node: string) => (/\.r$/.test(node) ? node.replace(/\.r$/, ".l") : /\.l$/.test(node) ? node.replace(/\.l$/, ".r") : null);
+
+const VIEW_KEYS: Record<string, ViewName> = { "1": "front", "2": "back", "3": "left", "4": "right", "5": "top" };
+
 function hasWebGL(): boolean {
   try {
     const c = document.createElement("canvas");
@@ -43,6 +55,9 @@ export function Atlas() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const host = useRef<HTMLDivElement>(null);
+  const infoPanel = useRef<HTMLElement>(null);
+  const searchBox = useRef<HTMLInputElement>(null);
+  const resultsList = useRef<HTMLUListElement>(null);
   const viewer = useRef<AtlasViewer | null>(null);
   const [index, setIndex] = useState<AtlasIndex | null>(null);
   const [failed, setFailed] = useState(false);
@@ -126,6 +141,10 @@ export function Atlas() {
     };
   }, [webgl]);
 
+  // A link to a structure opens on it; otherwise the page opens on the whole body.
+  const openedOn = useRef(rawSelected);
+  const focusOnce = useRef(Boolean(rawSelected));
+
   // Layers on and off, loading each model the first time it's shown.
   const shownBefore = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -138,7 +157,7 @@ export function Atlas() {
       const on = want.has(s);
       if (on || shownBefore.current.has(s)) {
         void v.show(s, on).then(() => {
-          if (first && on) v.frameAll();
+          if (first && on && !openedOn.current) v.frameAll();
         });
       }
       if (on) shownBefore.current.add(s);
@@ -171,6 +190,10 @@ export function Atlas() {
     const apply = () => {
       if (!live) return;
       v.select(selected);
+      if (focusOnce.current) {
+        focusOnce.current = false;
+        v.focus(selected);
+      }
       const marks = (index?.landmarks[selected.system] ?? []).filter((l) => l[4] === selected.node);
       v.setMarkers(
         marks.map(([name, x, y, z]) => ({ name, at: [x, y, z] })),
@@ -227,6 +250,8 @@ export function Atlas() {
   };
 
   const all = useMemo(() => (index ? allStructures(index) : []), [index]);
+  const quick = useMemo(() => QUICK.flatMap((name) => searchAtlas(all, name, 1).slice(0, 1)), [all]);
+  const structureCount = useMemo(() => new Set(all.map((h) => h.name)).size, [all]);
   const results = useMemo(() => (query.trim().length >= 2 ? searchAtlas(all, query) : []), [all, query]);
   const labelOf = (system: string) => (system === ATTACHMENTS ? "Muscle attachments" : (index?.systems.find((s) => s.id === system)?.label ?? system));
 
@@ -255,6 +280,48 @@ export function Atlas() {
     setIsolating(viewer.current?.isolating ?? false);
     setHiddenCount(viewer.current?.hiddenCount ?? 0);
   };
+
+  const toggleIsolate = () => {
+    if (!selected) return;
+    viewer.current?.isolate(viewer.current.isolating ? null : [selected]);
+    refreshCounts();
+  };
+  const hideSelected = () => {
+    if (!selected) return;
+    viewer.current?.hide(selected);
+    refreshCounts();
+    select(null);
+  };
+  const showEverything = () => {
+    viewer.current?.showAll();
+    refreshCounts();
+  };
+  const other = selected ? otherSide(selected.node) : null;
+  const otherPicked = selected && other && index?.nodes[selected.system]?.some(([n]) => n === other) ? { system: selected.system, node: other } : null;
+
+  // Keys: / to search, Esc to let go, F focus, H hide, O only this, A show all, 1–5 views, 0 whole body.
+  const keys = useRef<(e: KeyboardEvent) => void>(() => {});
+  useEffect(() => {
+    keys.current = (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey || isTyping(e.target)) return;
+      const k = e.key.toLowerCase();
+      if (k === "/") searchBox.current?.focus();
+      else if (k === "escape" && selected) select(null);
+      else if (k === "f" && selected) viewer.current?.focus(selected);
+      else if (k === "h" && selected) hideSelected();
+      else if (k === "o" && selected) toggleIsolate();
+      else if (k === "a") showEverything();
+      else if (k === "0") viewer.current?.frameAll();
+      else if (VIEW_KEYS[k]) view(VIEW_KEYS[k]);
+      else return;
+      e.preventDefault();
+    };
+  });
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { keys.current(e); };
+    window.addEventListener("keydown", onKey);
+    return () => { window.removeEventListener("keydown", onKey); };
+  }, []);
 
   const systemsPanel = index && (
     <div className="atlas-systems" role="group" aria-label="Body systems">
@@ -309,6 +376,11 @@ export function Atlas() {
                     </button>
                   );
                 })}
+                {(hiddenGroups[s.id]?.length ?? 0) > 0 && (
+                  <button type="button" className="atlas-group-reset" onClick={() => { setHiddenGroups((prev) => ({ ...prev, [s.id]: [] })); }}>
+                    Show all parts
+                  </button>
+                )}
               </div>
             )}
             {s.id === ATTACHMENTS && on && <p className="atlas-legend"><span className="atlas-swatch origin" /> origin <span className="atlas-swatch insertion" /> insertion{attachFor ? ` · ${attachFor}` : ""}</p>}
@@ -337,10 +409,42 @@ export function Atlas() {
           <label className="atlas-search">
             <SearchIcon />
             <span className="sr-only">Find a structure</span>
-            <input type="search" placeholder="Find a structure" value={query} onChange={(e) => { setQuery(e.target.value); }} />
+            <input
+              ref={searchBox}
+              type="search"
+              placeholder="Find a structure"
+              value={query}
+              onChange={(e) => { setQuery(e.target.value); }}
+              onKeyDown={(e) => {
+                const first = results[0];
+                if (e.key === "Enter" && first) {
+                  setQuery("");
+                  select({ system: first.system, node: first.node }, true);
+                } else if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  resultsList.current?.querySelector("button")?.focus();
+                } else if (e.key === "Escape") {
+                  setQuery("");
+                }
+              }}
+            />
+            <kbd className="atlas-key" aria-hidden="true">/</kbd>
           </label>
           {results.length > 0 ? (
-            <ul className="atlas-results" aria-label="Matches">
+            <ul
+              className="atlas-results"
+              aria-label="Matches"
+              ref={resultsList}
+              onKeyDown={(e) => {
+                // Up and down move between matches; up from the first goes back to the box.
+                if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+                e.preventDefault();
+                const buttons = [...(resultsList.current?.querySelectorAll("button") ?? [])];
+                const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+                const next = e.key === "ArrowDown" ? buttons[at + 1] : at <= 0 ? searchBox.current : buttons[at - 1];
+                next?.focus();
+              }}
+            >
               {results.map((r) => (
                 <li key={`${r.system}/${r.node}`}>
                   <button type="button" onClick={() => { setQuery(""); select({ system: r.system, node: r.node }, true); }}>
@@ -368,8 +472,21 @@ export function Atlas() {
                 {parseNode(hover.node).side && <small> {sideLabel(parseNode(hover.node).side)}</small>}
               </div>
             )}
-            {Object.keys(progress).length > 0 && <div className="atlas-loading">Loading {Object.keys(progress).map(labelOf).join(", ")}…</div>}
+            {Object.keys(progress).length > 0 && (
+              <div className="atlas-loading" role="status">
+                <span className="atlas-spinner" aria-hidden="true" />
+                Loading {Object.entries(progress).map(([id, f]) => `${labelOf(id).toLowerCase()} ${Math.round(f * 100)}%`).join(", ")}
+              </div>
+            )}
           </div>
+          {selected && sel && (
+            // On a phone the panel is further down: the name shows on the model, and leads there.
+            <button type="button" className="atlas-picked" onClick={() => { infoPanel.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>
+              <strong>{attachment ? `${attachment[2] === "o" ? "Origin" : "Insertion"} of ${parseNode(attachment[1]).name}` : sel.name}</strong>
+              {sel.side && <small> {sideLabel(sel.side)}</small>}
+              <span aria-hidden="true"> ↓</span>
+            </button>
+          )}
           <div className="atlas-tools" role="toolbar" aria-label="View">
             {(["front", "back", "left", "right", "top"] as const).map((v) => (
               <button key={v} type="button" className="atlas-chip" onClick={() => { view(v); }}>
@@ -380,21 +497,14 @@ export function Atlas() {
               Whole body
             </button>
             {(isolating || hiddenCount > 0) && (
-              <button
-                type="button"
-                className="atlas-chip is-on"
-                onClick={() => {
-                  viewer.current?.showAll();
-                  refreshCounts();
-                }}
-              >
+              <button type="button" className="atlas-chip is-on" onClick={showEverything}>
                 Show all{hiddenCount > 0 ? ` (${hiddenCount} hidden)` : ""}
               </button>
             )}
           </div>
         </div>
 
-        <aside className="atlas-info" aria-live="polite">
+        <aside className="atlas-info" aria-live="polite" ref={infoPanel}>
           {selected && sel ? (
             <>
               <p className="atlas-kicker">
@@ -403,33 +513,32 @@ export function Atlas() {
               </p>
               <h2>{attachment ? `${attachment[2] === "o" ? "Origin" : "Insertion"} of ${parseNode(attachment[1]).name}` : sel.name}</h2>
               {selPath >= 0 && index && (index.paths[selPath]?.length ?? 0) > 0 && (
-                <p className="atlas-path">{index.paths[selPath]?.join(" › ")}</p>
+                <p className="atlas-path">
+                  {index.paths[selPath]?.map((g, i) => (
+                    <span key={g}>
+                      {i > 0 && " › "}
+                      <button type="button" className="atlas-path-link" title={`Everything in ${g}`} onClick={() => { setQuery(g); searchBox.current?.focus(); }}>
+                        {g}
+                      </button>
+                    </span>
+                  ))}
+                </p>
               )}
               <div className="atlas-actions">
-                <button type="button" className="atlas-chip" onClick={() => viewer.current?.focus(selected)}>
+                <button type="button" className="atlas-chip" onClick={() => viewer.current?.focus(selected)} aria-keyshortcuts="F">
                   Focus
                 </button>
-                <button
-                  type="button"
-                  className="atlas-chip"
-                  onClick={() => {
-                    viewer.current?.isolate(viewer.current.isolating ? null : [selected]);
-                    refreshCounts();
-                  }}
-                >
+                <button type="button" className={isolating ? "atlas-chip is-on" : "atlas-chip"} onClick={toggleIsolate} aria-keyshortcuts="O">
                   {isolating ? "Show the rest" : "Only this"}
                 </button>
-                <button
-                  type="button"
-                  className="atlas-chip"
-                  onClick={() => {
-                    viewer.current?.hide(selected);
-                    refreshCounts();
-                    select(null);
-                  }}
-                >
+                <button type="button" className="atlas-chip" onClick={hideSelected} aria-keyshortcuts="H">
                   Hide
                 </button>
+                {otherPicked && (
+                  <button type="button" className="atlas-chip" onClick={() => { select(otherPicked, true); }}>
+                    {sel.side === "r" ? "Left" : "Right"} side
+                  </button>
+                )}
                 {muscleAttachments.length > 0 && (
                   <button type="button" className="atlas-chip" onClick={showAttachments}>
                     Where it attaches
@@ -493,17 +602,21 @@ export function Atlas() {
           ) : (
             <div className="atlas-empty">
               <p className="atlas-empty-title">Click any part to name it</p>
-              <p>Drag to turn the body, right-drag (or two fingers) to move it, scroll or pinch to zoom. Search finds any of the {all.length ? new Set(all.map((h) => h.name)).size.toLocaleString() : "1,800"} structures.</p>
+              <p>Drag to turn the body, right-drag (or two fingers) to move it, scroll or pinch to zoom. Double-click a part to fly to it. Search finds any of the {structureCount ? structureCount.toLocaleString() : "1,800"} structures.</p>
               <div className="atlas-quick">
-                {QUICK.map((name) => {
-                  const hit = searchAtlas(all, name, 1)[0];
-                  return hit ? (
+                {quick.map((hit) => {
+                  const name = hit.name;
+                  return (
                     <button key={name} type="button" className="atlas-chip" onClick={() => { select({ system: hit.system, node: hit.node }, true); }}>
                       {name}
                     </button>
-                  ) : null;
+                  );
                 })}
               </div>
+              <p className="atlas-keys">
+                <kbd>/</kbd> search · <kbd>F</kbd> focus · <kbd>H</kbd> hide · <kbd>O</kbd> only this · <kbd>A</kbd> show all · <kbd>1</kbd>–<kbd>5</kbd> views ·{" "}
+                <kbd>0</kbd> whole body · <kbd>Esc</kbd> let go
+              </p>
             </div>
           )}
         </aside>

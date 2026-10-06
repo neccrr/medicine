@@ -171,11 +171,14 @@ export function attachmentsFor(index: AtlasIndex, muscle: string): { node: strin
     .map(([node, , type]) => ({ node, type }));
 }
 
-/** Each layer's model URL, versioned by its size so a new model replaces the cached one. */
-export function atlasFiles(index: AtlasIndex): Record<string, string> {
-  const files: Record<string, string> = {};
-  for (const s of index.systems) files[s.id] = `${ATLAS_BASE}${s.file}?v=${s.bytes}`;
-  if (index.attachmentsFile) files[ATTACHMENTS] = `${ATLAS_BASE}${index.attachmentsFile.file}?v=${index.attachmentsFile.bytes}`;
+/** Each layer's model: its URL, versioned by its size so a new model replaces the cached one. */
+export function atlasFiles(index: AtlasIndex): Record<string, { url: string; bytes: number }> {
+  const files: Record<string, { url: string; bytes: number }> = {};
+  const add = (id: string, f: { file: string; bytes: number }) => {
+    files[id] = { url: `${ATLAS_BASE}${f.file}?v=${f.bytes}`, bytes: f.bytes };
+  };
+  for (const s of index.systems) add(s.id, s);
+  if (index.attachmentsFile) add(ATTACHMENTS, index.attachmentsFile);
   return files;
 }
 

@@ -141,7 +141,7 @@ questions and anything from the Class Drive are never written to these pages;
 - PDFs are cached the first time you open them, which keeps the first visit
   fast even though the modules add up to about 300 MB.
 - The 3D atlas's models are cached the same way, one body system at a time
-  (about 22 MB for all of them). Their URLs carry the file size, so a rebuilt
+  (about 15 MB for all of them). Their URLs carry the file size, so a rebuilt
   model replaces the cached one.
 - When a new version is deployed, the app checks for it on focus and every
   30 minutes, then shows a **"A new version is ready"** prompt. It never

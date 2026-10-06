@@ -179,9 +179,12 @@ account environment variables it runs as a plain static site.
 - The whole body in 3D from [Z-Anatomy](https://www.z-anatomy.com/): skeleton,
   joints and ligaments, muscles, heart and vessels, nerves, organs, lymphatic
   system, skin and regions, about 1,800 named structures
-- Each body system loads only when switched on (the skeleton alone is 2 MB,
-  everything about 22 MB) and is kept for offline use; per-system opacity and
-  groups (the fasciae start hidden)
+- Each body system loads only when switched on (the skeleton alone is
+  1.4 MB, everything about 15 MB) and is kept for offline use; per-system
+  opacity and groups (the fasciae start hidden)
+- Drawn in batches (a few draw calls per system), so even the whole body
+  turns smoothly on a phone; hover lights a part, double-click flies to it,
+  and keyboard shortcuts for search, focus, hide, only this and the views
 - Click or search any structure: its name, side and group, a short
   description, focus, only this, hide, and Ask Alfond
 - 786 bony landmarks, and "Where it attaches" shows a muscle's origin and

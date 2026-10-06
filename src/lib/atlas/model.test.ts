@@ -71,7 +71,7 @@ describe("searching the atlas", () => {
 });
 
 const shippedIndex = Object.values(import.meta.glob<AtlasIndex>("/public/atlas/atlas.json", { eager: true, import: "default" })).at(0);
-const shippedFiles = new Set(Object.keys(import.meta.glob("/public/atlas/*.glb", { query: "?url", import: "default", eager: true })));
+const shippedFiles = new Set(Object.keys(import.meta.glob("/public/atlas/*.glb.gz", { query: "?url", import: "default", eager: true })));
 
 describe("the shipped atlas", () => {
   it.skipIf(!shippedIndex)("lists every system's file and only structures with names", () => {

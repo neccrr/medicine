@@ -8,7 +8,7 @@ see where each muscle attaches. The models come from
 
 ## Licence
 
-The atlas files in `public/atlas/` (the `.glb` models, `atlas.json` and
+The atlas files in `public/atlas/` (the `.glb.gz` models, `atlas.json` and
 `descriptions.json`) are **not** under the app's MIT licence. They are a
 derivative of Z-Anatomy and are shared under **CC BY-SA 4.0**.
 
@@ -24,16 +24,16 @@ line that links to it. Keep both whenever the files change.
 
 | Layer | File | Size | Triangles | Structures |
 | --- | --- | ---: | ---: | ---: |
-| Skeleton | `skeletal.glb` | 2.0 MB | 328k | 159 |
-| Joints and ligaments | `joints.glb` | 1.2 MB | 168k | 236 |
-| Muscles (with fasciae, tendons, bursae) | `muscular.glb` | 5.5 MB | 959k | 344 |
-| Heart and vessels | `cardiovascular.glb` | 3.8 MB | 692k | 420 |
-| Nervous system | `nervous.glb` | 4.3 MB | 832k | 317 |
-| Organs | `visceral.glb` | 2.0 MB | 410k | 101 |
-| Lymphatic system | `lymphatic.glb` | 0.4 MB | 89k | 110 |
-| Skin and regions | `regions.glb` | 0.8 MB | 73k | 129 |
-| Planes and directions | `references.glb` | 0.06 MB | 3k | 39 |
-| Muscle attachment areas | `attachments.glb` | 2.0 MB | 314k | 705 areas |
+| Skeleton | `skeletal.glb.gz` | 1.4 MB | 328k | 159 |
+| Joints and ligaments | `joints.glb.gz` | 0.7 MB | 168k | 236 |
+| Muscles (with fasciae, tendons, bursae) | `muscular.glb.gz` | 4.0 MB | 959k | 344 |
+| Heart and vessels | `cardiovascular.glb.gz` | 2.6 MB | 692k | 420 |
+| Nervous system | `nervous.glb.gz` | 2.9 MB | 832k | 317 |
+| Organs | `visceral.glb.gz` | 1.4 MB | 410k | 101 |
+| Lymphatic system | `lymphatic.glb.gz` | 0.2 MB | 89k | 110 |
+| Skin and regions | `regions.glb.gz` | 0.4 MB | 73k | 129 |
+| Planes and directions | `references.glb.gz` | 0.02 MB | 3k | 39 |
+| Muscle attachment areas | `attachments.glb.gz` | 1.3 MB | 314k | 705 areas |
 
 The structure counts treat left and right as one structure. On top of the
 models:
@@ -45,19 +45,48 @@ models:
 It covers gross anatomy only. There is no histology and no embryology.
 
 Each layer loads only when it is first switched on. The page opens with the
-skeleton alone (2 MB). The service worker keeps each model once it has been
-downloaded (cache-first, versioned by file size), so the atlas works offline
-after that.
+skeleton alone (1.4 MB); all of it is about 15 MB. The service worker keeps
+each model once it has been downloaded (cache-first, versioned by file size),
+so the atlas works offline after that.
+
+### Download size
+
+The models are gzipped files (`.glb.gz`). Vercel compresses only some file
+types, and `.glb` isn't one of them, but meshopt's output shrinks by about a
+third more with gzip. So the files are stored gzipped, and the viewer unzips
+them with the browser's `DecompressionStream`. If a server unzips the file on
+the way (as `vite preview` does, by sending `Content-Encoding: gzip`), the
+viewer sees a plain glTF and uses it as it is. `vercel.json` gives the files a
+year-long `immutable` cache, since their URLs change with every new model.
+
+### Drawing
+
+Each system is drawn as a few `THREE.BatchedMesh`es, one per colour, instead
+of one mesh per structure. With everything on, that is roughly 150 draw calls
+instead of about 5,000, so turning the body stays smooth on phones.
+
+- A structure can be several pieces: a bone and its cartilage, for example,
+  each with its own material. Hiding, isolating, the group chips and the
+  highlight all act on every piece of a structure.
+- The left side is the right side mirrored (a negative scale). three.js only
+  corrects the lighting of mirrored objects, not of mirrored instances in a
+  batch, so mirrored pieces go in batches of their own, with the mirror on the
+  batch itself.
+- The selected and hovered structures are drawn on their own, with a green
+  glow, over a gap left in their batch. These overlays draw straight from the
+  batch's buffers, so nothing is copied.
+- The models are unpacked in Web Workers (`MeshoptDecoder.useWorkers`), so
+  the page doesn't stall while a system loads.
 
 ## Files
 
 | Path | What it is |
 | --- | --- |
-| `public/atlas/*.glb` | One model per layer: glTF with meshopt compression. The node names are the structure names. |
+| `public/atlas/*.glb.gz` | One model per layer: glTF with meshopt compression, gzipped. The node names are the structure names. |
 | `public/atlas/atlas.json` | The index: layers, the group path of every structure, landmarks and attachments |
 | `public/atlas/descriptions.json` | Short descriptions by structure name, loaded when the first structure is opened |
 | `src/lib/atlas/model.ts` | The index types, name parsing, search, tissue colours, groups and attachments; tested in `model.test.ts` |
-| `src/components/atlas/viewer.ts` | `AtlasViewer`: three.js scene, loading, picking, highlighting, camera tweening, hiding and isolating, landmark markers |
+| `src/components/atlas/viewer.ts` | `AtlasViewer`: three.js scene, downloading and unzipping, batching, picking, highlighting and hover, camera tweening, hiding and isolating, landmark markers |
 | `src/pages/Atlas.tsx` | The page: layers, search, the info panel, and the URL state |
 | `src/styles/atlas.css` | Its styles |
 | `scripts/atlas/` | The conversion (below) |
@@ -103,8 +132,8 @@ neighbouring muscles can be told apart.
 | `layers` | The layers on show, comma-separated (default `skeletal`) |
 | `s` | The selected structure, as `layer/node name` |
 
-A link to `/atlas?s=muscular/Deltoid%20muscle.r` opens that muscle with the
-muscles shown.
+A link to `/atlas?s=muscular/Deltoid%20muscle.r` opens on that muscle, with
+the muscles shown.
 
 ## Rebuilding the models
 
@@ -139,9 +168,10 @@ The steps:
    - prunes;
    - quantizes positions to 14 bits and normals to 8;
    - compresses with `EXT_meshopt_compression`.
-4. **Index** (`index.mjs`): writes `web/atlas.json` from the metadata and the
-   packed files. It lists the layers, their sizes and triangle counts. Group
-   paths are stored once and referred to by number.
+4. **Index** (`index.mjs`): gzips each packed model to `web/<layer>.glb.gz`
+   and writes `web/atlas.json` from the metadata and the packed files. It
+   lists the layers, their sizes and triangle counts. Group paths are stored
+   once and referred to by number.
 5. **Describe** (`descs.py`): writes `web/descriptions.json`, which holds the
    first paragraphs of each structure's description, cleaned of leftovers
    from Wikipedia.

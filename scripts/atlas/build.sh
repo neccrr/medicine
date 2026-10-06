@@ -34,5 +34,5 @@ for f in raw/*.glb; do node "$here/pack.mjs" "$f" "web/$(basename "$f")" 0.5 0.0
 node "$here/index.mjs"
 python3 "$here/descs.py"
 
-cp web/*.glb web/atlas.json web/descriptions.json "$here/../../public/atlas/"
+cp web/*.glb.gz web/atlas.json web/descriptions.json "$here/../../public/atlas/"
 echo "public/atlas/ updated"

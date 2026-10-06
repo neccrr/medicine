@@ -179,7 +179,7 @@ export default defineConfig(async (): Promise<UserConfig> => ({
           {
             // The 3D atlas's models (several MB each): kept once loaded. Their URLs carry a
             // version, so a changed model is fetched again.
-            urlPattern: ({ url }) => url.pathname.startsWith('/atlas/') && url.pathname.endsWith('.glb'),
+            urlPattern: ({ url }) => url.pathname.startsWith('/atlas/') && /\.glb(\.gz)?$/.test(url.pathname),
             handler: 'CacheFirst',
             options: {
               cacheName: 'atlas-models',

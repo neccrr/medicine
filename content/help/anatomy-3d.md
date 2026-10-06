@@ -20,7 +20,7 @@ The list on the left switches each body system on or off. The page opens
 with the skeleton only.
 
 - Each system downloads the first time you switch it on. Its size is shown
-  next to it; the muscles are the biggest at about 5.5 MB. After that it is
+  next to it; the muscles are the biggest at about 4 MB. After that it is
   saved on your device, and it works offline.
 - The slider under a system makes it see-through, so you can see what lies
   underneath. Skin starts half see-through.
@@ -33,13 +33,19 @@ with the skeleton only.
 ## Naming a structure
 
 **Hover** over a part to see its name, and **click** it to open it on the
-right. You can also type a name into **Find a structure**: "femur",
-"deltoid", "vagus" or a group such as "cranial nerves".
+right. **Double-click** it to fly to it. You can also type a name into **Find
+a structure**: "femur", "deltoid", "vagus" or a group such as "cranial
+nerves". <kbd>Enter</kbd> opens the first match, and the arrow keys move
+through the list.
+
+On a phone, tap a part. Its name shows at the top of the model; tap the name
+to jump to the panel about it.
 
 The panel for a structure shows:
 
 - its name, its side, and where it belongs ("Bones of lower limb ›
-  Bones of free part of lower limb");
+  Bones of free part of lower limb"). Click a group to list everything in
+  it;
 - a short description, when there is one;
 - its **landmarks**: the named points on a bone, such as the greater
   trochanter. Click one to show where it is.
@@ -51,9 +57,25 @@ Below it are these buttons:
 | **Focus** | Zooms in on the structure |
 | **Only this** | Hides everything else, until you press **Show the rest** |
 | **Hide** | Hides the structure. **Show all** under the model brings back everything you hid |
+| **Left side** / **Right side** | Opens the same structure on the other side |
 | **Where it attaches** | For a muscle: shows the skeleton with the muscle's origin and insertion on it, and makes the other muscles see-through |
 | **Ask Alfond** | Asks Alfond to explain the structure, briefly and for the exam |
 | **Find in your notes** | Searches the flashcards, quizzes and chapters for its name |
+
+## Keys
+
+| Key | Does |
+| --- | --- |
+| <kbd>/</kbd> | Find a structure |
+| <kbd>F</kbd> | Focus on the open structure |
+| <kbd>H</kbd> | Hide it |
+| <kbd>O</kbd> | Only this (again to show the rest) |
+| <kbd>A</kbd> | Show everything you hid |
+| <kbd>1</kbd> to <kbd>5</kbd> | Front, back, left, right and top views |
+| <kbd>0</kbd> | Whole body |
+| <kbd>Esc</kbd> | Close the open structure |
+
+## Sharing
 
 The address in your browser changes as you choose. Copy it to share or
 bookmark the same structure with the same systems on.
