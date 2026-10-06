@@ -117,9 +117,16 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     if (chosen) {
       ctx.globalAlpha = 1;
       ctx.beginPath();
+      ctx.arc(sx(chosen.x), sy(chosen.y), radius(chosen) + 10, 0, Math.PI * 2);
+      ctx.lineWidth = 7;
+      ctx.strokeStyle = accent;
+      ctx.globalAlpha = 0.14;
+      ctx.stroke();
+      ctx.beginPath();
       ctx.arc(sx(chosen.x), sy(chosen.y), radius(chosen) + 6, 0, Math.PI * 2);
       ctx.lineWidth = 2.5;
       ctx.strokeStyle = accent;
+      ctx.globalAlpha = 1;
       ctx.stroke();
     }
 
