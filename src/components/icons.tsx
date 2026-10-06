@@ -455,3 +455,13 @@ export function DriveIcon() {
     </svg>
   );
 }
+
+export function HelpIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M9.6 9.6a2.5 2.5 0 0 1 4.85.85c0 1.7-2.45 2.1-2.45 3.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="16.9" r="1" fill="currentColor" />
+    </svg>
+  );
+}

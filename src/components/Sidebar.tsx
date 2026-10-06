@@ -15,6 +15,7 @@ import {
   CardsIcon,
   FlaskIcon,
   GridIcon,
+  HelpIcon,
   HomeIcon,
   MapIcon,
   OcclusionIcon,
@@ -78,6 +79,7 @@ const groups: NavGroup[] = [
       { to: "/progress", label: "Progress", icon: <ProgressIcon /> },
       { to: "/leaderboard", label: "Leaderboard", icon: <TrophyIcon /> },
       { to: "/account", label: "Account", icon: <UserIcon /> },
+      { to: "/docs", label: "Help", icon: <HelpIcon /> },
     ],
   },
 ];

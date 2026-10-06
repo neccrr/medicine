@@ -20,6 +20,7 @@ import {
   summaries,
   summarySubjects,
 } from "./content";
+import { helpPage, helpPages } from "./help";
 import { findLabActivity, labExercises } from "./labActivities";
 import { HOME_DESCRIPTION, HOME_TITLE, SITE_NAME } from "./site";
 import { markdownToPlainText, truncate } from "./textExtract";
@@ -183,6 +184,16 @@ const SECTIONS = new Map<string, { name: string; meta: PageMeta }>(Object.entrie
   },
   plan: { name: "Exam plan", meta: { title: titled("Exam Plan"), description: HOME_DESCRIPTION, indexable: false } },
   alfond: { name: "Alfond", meta: { title: titled("Alfond, Your Study Assistant"), description: HOME_DESCRIPTION, indexable: false } },
+  docs: {
+    name: "Help",
+    meta: {
+      title: titled("Help: How to Use Every Part of the App"),
+      description: describe(
+        "How to use flashcards, image occlusion, quizzes, timed exams, the Virtual Lab, the exam plan, the knowledge map, Alfond and your account, with shortcuts and fixes.",
+      ),
+      indexable: true,
+    },
+  },
   // Signed-in students only, and never in search results: it lists the class's exam papers.
   drive: { name: "Class Drive", meta: { title: titled("Class Drive"), description: HOME_DESCRIPTION, indexable: false } },
 }));
@@ -202,6 +213,10 @@ export function pageMeta(pathname: string): PageMeta {
   const sectionInfo = SECTIONS.get(section);
   if (!sectionInfo) return NOT_FOUND;
   if (parts.length === 1) return sectionInfo.meta;
+  if (section === "docs") {
+    const page = parts.length === 2 ? helpPage(blockId) : undefined;
+    return page ? { title: titled(`${page.title} · Help`), description: describe(page.description), indexable: true } : NOT_FOUND;
+  }
   if (section === "plan") return parts.length === 2 ? { ...sectionInfo.meta, title: titled(`Exam Plan: ${blockShort(blockId)}`) } : NOT_FOUND;
 
   if (section === "exam") {
@@ -325,6 +340,11 @@ export function breadcrumbs(pathname: string): Crumb[] {
   const sectionInfo = section ? SECTIONS.get(section) : undefined;
   if (!sectionInfo) return crumbs;
   crumbs.push({ name: sectionInfo.name, path: `/${section}` });
+  if (section === "docs" && blockId) {
+    const page = helpPage(blockId);
+    if (page) crumbs.push({ name: page.title, path: `/docs/${page.id}` });
+    return crumbs;
+  }
   if (section === "exam" && blockId) {
     crumbs.push({ name: `${blockShort(blockId)} exam`, path: `/exam/${blockId}` });
   }
@@ -345,7 +365,8 @@ export function breadcrumbs(pathname: string): Crumb[] {
 
 /** Every page that should be in search results, in a stable order. */
 export function indexablePaths(): string[] {
-  const paths = ["/", "/subjects", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab", "/map"];
+  const paths = ["/", "/subjects", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab", "/map", "/docs"];
+  for (const page of helpPages) paths.push(`/docs/${page.id}`);
   for (const e of labExercises) for (const a of e.activities) paths.push(`/lab/${e.id}/${a.slug}`);
   for (const s of flashcardSubjects) paths.push(`/flashcards/${keyOf(s)}`);
   for (const key of occlusionKeys) paths.push(`/occlusion/${key}`);

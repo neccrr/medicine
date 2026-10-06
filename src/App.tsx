@@ -63,6 +63,7 @@ const LabActivityPage = lazy(() =>
 const Account = lazy(() => import("./pages/Account").then((m) => ({ default: m.Account })));
 const KnowledgeMap = lazy(() => import("./pages/KnowledgeMap").then((m) => ({ default: m.KnowledgeMap })));
 const ExamPlan = lazy(() => import("./pages/ExamPlan").then((m) => ({ default: m.ExamPlan })));
+const Docs = lazy(() => import("./pages/Docs").then((m) => ({ default: m.Docs })));
 const AlfondPage = lazy(() => import("./pages/Alfond").then((m) => ({ default: m.AlfondPage })));
 
 /** Image occlusion briefly lived under the flashcards. */
@@ -123,6 +124,8 @@ function AppRoutes() {
           <Route path="/map" element={<KnowledgeMap />} />
           <Route path="/plan" element={<ExamPlan />} />
           <Route path="/plan/:blockId" element={<ExamPlan />} />
+          <Route path="/docs" element={<Docs />} />
+          <Route path="/docs/:pageId" element={<Docs />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

@@ -1,4 +1,5 @@
 import { allSubjects } from "./routeMeta";
+import { helpPages } from "./help";
 import { labExercises } from "./labActivities";
 import {
   ebookMeta,
@@ -60,6 +61,15 @@ const staticPages: SearchDoc[] = [
   { type: "page", id: "alfond", title: "Alfond", detail: "Ask the study assistant anything", to: "/alfond" },
   { type: "page", id: "leaderboard", title: "Leaderboard", detail: "Weekly, all-time and streak rankings", to: "/leaderboard" },
   { type: "page", id: "progress", title: "Progress", detail: "Streaks, export & import", to: "/progress" },
+  { type: "page", id: "docs", title: "Help", detail: "How every part of the app works", to: "/docs", keywords: "help docs guide how to faq documentation" },
+  ...helpPages.map((p) => ({
+    type: "page" as const,
+    id: `docs-${p.id}`,
+    title: `Help: ${p.title}`,
+    detail: p.description,
+    to: `/docs/${p.id}`,
+    keywords: `help how to ${p.keywords ?? ""}`,
+  })),
 ];
 
 function subjectDocs(): SearchDoc[] {

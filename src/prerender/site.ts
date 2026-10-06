@@ -29,6 +29,7 @@ import {
   summarySubjects,
 } from "../lib/content";
 import { allSubjects, blockHasExam, breadcrumbs, indexablePaths, pageMeta, PRIVATE_PATHS, subjectSections, type PageMeta } from "../lib/routeMeta";
+import { helpGroups, helpPages, loadHelpPage } from "../lib/help";
 import { findLabActivity, labExercises } from "../lib/labActivities";
 import { SITE_NAME } from "../lib/site";
 import type { Subject } from "../types/content";
@@ -46,6 +47,7 @@ const SECTION_LINKS: [string, string][] = [
   ["/ebooks", "Ebooks"],
   ["/summaries", "Summaries"],
   ["/lab", "Virtual Lab"],
+  ["/docs", "Help"],
 ];
 
 function subjectList(section: string, subjects: Subject[], detail: (s: Subject) => string): string {
@@ -85,6 +87,22 @@ async function content(path: string): Promise<string> {
   switch (parts.length === 1 ? section : `${section}/*`) {
     case "map":
       return mapContent();
+    case "docs":
+      return helpGroups()
+        .map((g) => `<h2>${esc(g.label)}</h2><ul>${g.pages.map((p) => `<li><a href="/docs/${p.id}">${esc(p.title)}</a>: ${esc(p.description)}</li>`).join("")}</ul>`)
+        .join("");
+    case "docs/*": {
+      const i = helpPages.findIndex((p) => p.id === blockId);
+      const prev = itemAt(helpPages, i - 1);
+      const next = itemAt(helpPages, i + 1);
+      const pager = [
+        prev && `<a href="/docs/${prev.id}" rel="prev">← ${esc(prev.title)}</a>`,
+        next && `<a href="/docs/${next.id}" rel="next">${esc(next.title)} →</a>`,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      return `<article>${renderMarkdown((await loadHelpPage(blockId)) ?? "")}</article><p>${pager}</p>`;
+    }
     case "flashcards":
       return subjectList("flashcards", flashcardSubjects, (s) => `(${flashcardDecks.get(keyOf(s))?.length ?? 0} cards)`);
     case "quizzes":

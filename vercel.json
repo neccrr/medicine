@@ -32,11 +32,11 @@
       "destination": "/legal/terms.html"
     },
     {
-      "source": "/:section(subjects|flashcards|occlusion|quizzes|exam|modules|ebooks|summaries|lab|search|progress|leaderboard|account|alfond|plan|map|drive)",
+      "source": "/:section(subjects|flashcards|occlusion|quizzes|exam|modules|ebooks|summaries|lab|search|progress|leaderboard|account|alfond|plan|map|drive|docs)",
       "destination": "/:section/index.html"
     },
     {
-      "source": "/:section(subjects|flashcards|occlusion|quizzes|exam|modules|ebooks|summaries|lab)/:rest+",
+      "source": "/:section(subjects|flashcards|occlusion|quizzes|exam|modules|ebooks|summaries|lab|docs)/:rest+",
       "destination": "/:section/:rest+/index.html"
     },
     {
