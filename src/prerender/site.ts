@@ -202,8 +202,11 @@ function setTag(html: string, pattern: RegExp, replacement: string): string {
   return html.replace(pattern, replacement);
 }
 
-function metaTag(attr: "name" | "property", key: string) {
-  return new RegExp(`<meta\\s+${attr}="${key.replace(":", "\\:")}"\\s+content="[^"]*"\\s*/?>`);
+function setMetaTag(html: string, attr: "name" | "property", key: string, replacement: string): string {
+  const tags = html.match(/<meta\s+(?:name|property)="[^"]+"\s+content="[^"]*"\s*\/?>/g) ?? [];
+  const tag = tags.find((candidate) => candidate.includes(`${attr}="${key}"`));
+  if (!tag) throw new Error(`Prerender: index.html is missing meta ${attr}="${key}"`);
+  return html.replace(tag, replacement);
 }
 
 export function renderPage(template: string, path: string, meta: PageMeta, body: string, origin: string): string {
@@ -212,13 +215,13 @@ export function renderPage(template: string, path: string, meta: PageMeta, body:
   const description = esc(meta.description);
   let html = template;
   html = setTag(html, /<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
-  html = setTag(html, metaTag("name", "description"), `<meta name="description" content="${description}" />`);
+  html = setMetaTag(html, "name", "description", `<meta name="description" content="${description}" />`);
   html = setTag(html, /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/, `<link rel="canonical" href="${esc(url)}" />`);
-  html = setTag(html, metaTag("property", "og:url"), `<meta property="og:url" content="${esc(url)}" />`);
-  html = setTag(html, metaTag("property", "og:title"), `<meta property="og:title" content="${title}" />`);
-  html = setTag(html, metaTag("property", "og:description"), `<meta property="og:description" content="${description}" />`);
-  html = setTag(html, metaTag("name", "twitter:title"), `<meta name="twitter:title" content="${title}" />`);
-  html = setTag(html, metaTag("name", "twitter:description"), `<meta name="twitter:description" content="${description}" />`);
+  html = setMetaTag(html, "property", "og:url", `<meta property="og:url" content="${esc(url)}" />`);
+  html = setMetaTag(html, "property", "og:title", `<meta property="og:title" content="${title}" />`);
+  html = setMetaTag(html, "property", "og:description", `<meta property="og:description" content="${description}" />`);
+  html = setMetaTag(html, "name", "twitter:title", `<meta name="twitter:title" content="${title}" />`);
+  html = setMetaTag(html, "name", "twitter:description", `<meta name="twitter:description" content="${description}" />`);
   const extraHead = [meta.indexable ? "" : `<meta name="robots" content="noindex" />`, breadcrumbJsonLd(path, origin)].join("");
   html = html.replace("</head>", `${extraHead}</head>`);
   // The home page's no-JavaScript description; this page has its own content.
