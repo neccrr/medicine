@@ -120,10 +120,13 @@ account environment variables it runs as a plain static site.
 - Grouped as **Lecture**, then **Practicum** (Reports, Assistance), with empty
   sections marked "To be added"
 - **Class Drive** (signed-in students): the class's Google Drive folder, live.
-  Every slide deck, recording, tutorial and exam file, folder by folder, with
-  a file search and Google's own viewer. Each subject's module page lists its
+  Every slide deck, recording, tutorial and exam file, folder by folder, in
+  Google's own viewer (← and → step through a folder, Esc closes). "New this
+  week" and per-folder counts show what was just added until it's opened; `/`
+  searches every file and folder name. Each subject's module page lists its
   Drive files above the cleaned PDFs. Files added to or removed from the Drive
-  show up within a few minutes
+  show up within a few minutes, and the listing opens instantly from the
+  device's last copy
 
 **Virtual Lab**
 

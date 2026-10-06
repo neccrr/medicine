@@ -52,6 +52,8 @@ export const KEY_TYPES = {
   alfond: { id: null, sync: "latest", about: "Alfond settings: whether its floating button shows on every page" },
   alfondchat: { id: null, sync: false, about: "Alfond's recent conversation (device-only)" },
   lastexport: { id: null, sync: false, about: "When progress was last exported (backup nudge)" },
+  driveseen: { id: null, sync: "set", about: "Class Drive file ids the student has opened" },
+  drivecache: { id: null, sync: false, about: "The class Drive listing as last loaded, for one account (removed on sign-out)" },
   sync: { id: "name", sync: false, about: "Sync bookkeeping: medicine:sync:state and medicine:sync:dirty" },
 } as const satisfies Record<string, KeyType>;
 

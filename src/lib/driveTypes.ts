@@ -10,8 +10,10 @@ export interface DriveFile {
   kind: DriveFileKind;
   /** Bytes; null for Google Docs/Slides, which have no file size. */
   size: number | null;
-  /** ISO time of the last change. */
+  /** ISO time of the last change (an uploaded file can keep its older, local one). */
   modifiedTime: string;
+  /** ISO time it was put in the Drive; missing from listings saved before it was kept. */
+  createdTime?: string;
 }
 
 export interface DriveFolder {

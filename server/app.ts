@@ -283,7 +283,13 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }
         if (!drive) return error(503, "The class Drive isn't connected.");
         const refresh = new URL(request.url).searchParams.get("refresh") === "1";
         try {
-          return json(await drive.tree({ refresh }));
+          const tree = await drive.tree({ refresh });
+          // The listing changes only when Drive is read again: a browser that has this one
+          // gets a 304 instead of the whole tree.
+          const etag = `"drive-${tree.updatedAt}-${tree.complete ? 1 : 0}"`;
+          const headers = { etag, "cache-control": "private, no-cache" };
+          if (request.headers.get("if-none-match") === etag) return new Response(null, { status: 304, headers });
+          return new Response(JSON.stringify(tree), { headers: { ...headers, "content-type": "application/json" } });
         } catch {
           return error(502, "Couldn't reach Google Drive. Try again in a minute.");
         }

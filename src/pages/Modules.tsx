@@ -5,14 +5,16 @@ import { SubjectBadge } from "../components/SubjectBadge";
 import { SubjectCover } from "../components/SubjectCover";
 import { UpcomingSubjectCard } from "../components/UpcomingSubjectCard";
 import { DriveKind } from "../components/drive/DriveParts";
-import { useDrive } from "../hooks/useDrive";
-import { countFiles, folderAt, subjectFolderPath, updatedAgo } from "../lib/drive";
+import { useDrive, useDriveOpened } from "../hooks/useDrive";
+import { countFiles, filesUnder, folderAt, isNew, subjectFolderPath, updatedAgo } from "../lib/drive";
 
 /** The class Google Drive, for signed-in students: a way in, and how much is there. */
 function DriveCard() {
   const drive = useDrive();
+  const { opened } = useDriveOpened();
   if (drive.status === "off") return null;
   const total = drive.status === "ready" ? countFiles(drive.tree.root) : null;
+  const fresh = drive.status === "ready" ? filesUnder(drive.tree.root).filter((f) => isNew(f, opened)).length : 0;
   return (
     <Link to="/drive" className="drive-card">
       <DriveKind kind="folder" />
@@ -22,7 +24,7 @@ function DriveCard() {
           {drive.status === "signed-out"
             ? "Sign in to open every slide, recording, tutorial and exam from the class's Google Drive."
             : total !== null && drive.status === "ready"
-              ? `${total} files: slides, recordings, tutorials and exams, live from Google Drive (updated ${updatedAgo(drive.tree.updatedAt)}).`
+              ? `${total} files: slides, recordings, tutorials and exams, live from Google Drive (updated ${updatedAgo(drive.tree.updatedAt)}).${fresh > 0 ? ` ${fresh} new this week.` : ""}`
               : "Slides, recordings, tutorials and exams, live from the class's Google Drive."}
         </small>
       </span>

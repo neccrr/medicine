@@ -16,19 +16,23 @@ interface Item {
 /** A Drive API that answers files.list from a list of items, two per page. */
 function fakeDrive(items: Item[], { fail = new Set<string>() } = {}) {
   const calls: string[] = [];
+  const requests: string[][] = [];
   const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
     const url = new URL(String(input));
-    const parent = /^'([^']+)' in parents/.exec(url.searchParams.get("q") ?? "")?.[1] ?? "";
-    calls.push(parent);
+    const parents = [...(url.searchParams.get("q") ?? "").matchAll(/'([^']+)' in parents/g)].map((m) => m[1]);
+    calls.push(...parents);
+    requests.push(parents);
     if (url.searchParams.get("key") !== "test-key") return new Response("{}", { status: 403 });
-    if (fail.has(parent)) return new Response("{}", { status: 500 });
-    const children = items.filter((i) => i.parent === parent);
+    if (parents.some((p) => fail.has(p))) return new Response("{}", { status: 500 });
+    const children = items.filter((i) => parents.includes(i.parent));
     const start = Number(url.searchParams.get("pageToken") || 0);
-    const page = children.slice(start, start + 2).map(({ parent: _p, ...rest }) => ({ ...rest, modifiedTime: "2026-10-01T00:00:00Z" }));
+    const page = children
+      .slice(start, start + 2)
+      .map(({ parent, ...rest }) => ({ ...rest, parents: [parent], createdTime: "2026-10-02T00:00:00Z", modifiedTime: "2026-10-01T00:00:00Z" }));
     const next = start + 2 < children.length ? String(start + 2) : undefined;
     return Response.json({ files: page, nextPageToken: next });
   });
-  return { fetchImpl: fetchImpl as unknown as typeof fetch, calls };
+  return { fetchImpl: fetchImpl as unknown as typeof fetch, calls, requests };
 }
 
 const config: DriveConfig = { apiKey: "test-key", folderId: ROOT, apiBase: "https://drive.test/v3", ttlMs: 5 * 60_000 };
@@ -83,7 +87,14 @@ describe("walking the Drive", () => {
     expect(block.folders.map((f) => f.name)).toEqual(["ANATOMY", "UB"]);
     const anatomy = block.folders[0];
     expect(anatomy.files.map((f) => f.name)).toEqual(["L2 - Introduction.pptx", "L13 - Kinesiologi.pptx", "Lecture 1.mp4", "Notes", "TATIB 1.2 .pdf"]);
-    expect(anatomy.files[0]).toEqual({ id: "lecture02file", name: "L2 - Introduction.pptx", kind: "slides", size: 26836841, modifiedTime: "2026-10-01T00:00:00Z" });
+    expect(anatomy.files[0]).toEqual({
+      id: "lecture02file",
+      name: "L2 - Introduction.pptx",
+      kind: "slides",
+      size: 26836841,
+      modifiedTime: "2026-10-01T00:00:00Z",
+      createdTime: "2026-10-02T00:00:00Z",
+    });
     expect(anatomy.files.find((f) => f.name === "Notes")?.size).toBeNull();
   });
 
@@ -94,6 +105,19 @@ describe("walking the Drive", () => {
     expect(ub.files).toEqual([expect.objectContaining({ id: "paperelsewhere", name: "UB 2025 paper", kind: "pdf" })]);
     expect(ub.folders).toEqual([]);
     expect(calls.filter((c) => c === "semester0001")).toHaveLength(1);
+  });
+
+  it("lists many folders in one request", async () => {
+    // A level of 60 folders: three requests of up to 25, not 60.
+    const folders: Item[] = Array.from({ length: 60 }, (_, i) => ({ id: `subfolder${String(i).padStart(5, "0")}`, name: `F${i}`, mimeType: FOLDER, parent: ROOT }));
+    const wide = [...folders, ...folders.map((f) => ({ id: `${f.id}file`, name: `${f.name}.pdf`, mimeType: "application/pdf", parent: f.id }))];
+    const { fetchImpl, requests } = fakeDrive(wide);
+    const tree = await crawlDrive(config, fetchImpl);
+    expect(tree.root.folders).toHaveLength(60);
+    expect(tree.root.folders.every((f) => f.files.length === 1)).toBe(true);
+    expect(tree.root.folders.map((f) => f.name).slice(0, 3)).toEqual(["F0", "F1", "F2"]);
+    expect(new Set(requests.map((r) => r.join())).size).toBe(4);
+    expect(Math.max(...requests.map((r) => r.length))).toBe(25);
   });
 
   it("keeps going when one folder fails, and says the listing is incomplete", async () => {

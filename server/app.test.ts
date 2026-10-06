@@ -268,14 +268,21 @@ describe("class Drive", () => {
     expect(await res.text()).not.toContain("L1.pptx");
   });
 
-  it("lists the folder for a signed-in student, never for the search engines' cache", async () => {
+  it("lists the folder for a signed-in student, privately, and says when it hasn't changed", async () => {
     withDrive();
     const cookie = await signUp();
     const res = await req("/api/drive", { cookie });
     expect(res.status).toBe(200);
-    expect(res.headers.get("cache-control")).toBe("no-store");
+    expect(res.headers.get("cache-control")).toBe("private, no-cache");
     const tree = (await res.json()) as { root: { files: { name: string; kind: string }[] } };
     expect(tree.root.files).toEqual([expect.objectContaining({ name: "L1.pptx", kind: "slides" })]);
+
+    // Asking again with the same listing's tag: nothing to send.
+    const etag = res.headers.get("etag") ?? "";
+    expect(etag).toMatch(/^"drive-\d+-1"$/);
+    const again = await app(new Request(ORIGIN + "/api/drive", { headers: { origin: ORIGIN, cookie, "if-none-match": etag } }));
+    expect(again.status).toBe(304);
+    expect(await again.text()).toBe("");
   });
 
   it("says so when the Drive isn't connected", async () => {

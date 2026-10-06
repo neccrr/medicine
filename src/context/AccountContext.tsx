@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { AccountContext, type AccountContextValue, type AccountStatus, type SyncStatus } from "./accountContextValue";
 import { getAccountConfig, loadAuthClient, type AccountConfig, type AccountUser } from "../lib/account";
 import { clearLocalProgress, clearSyncState, pendingChangeCount, readSyncState, syncNow } from "../lib/sync";
+import { forgetDriveCache } from "../lib/drive";
 import { DIRTY_EVENT } from "../lib/syncDirty";
 
 const SYNC_INTERVAL_MS = 5 * 60 * 1000;
@@ -173,6 +174,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         const client = await loadAuthClient();
         await client.signOut();
         clearSyncState();
+        forgetDriveCache();
         if (clearDevice) clearLocalProgress();
         setUser(null);
         setStatus("guest");
@@ -191,6 +193,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
         const { error } = await client.deleteUser(password ? { password } : {});
         if (error) return { ok: false, message: errorMessage(error, "Couldn't delete the account.") };
         clearSyncState();
+        forgetDriveCache();
         setUser(null);
         setStatus("guest");
         setSync({ phase: "idle", pending: 0 });

@@ -63,20 +63,25 @@ interface ApiFile {
   name?: string;
   mimeType?: string;
   size?: string;
+  createdTime?: string;
   modifiedTime?: string;
+  parents?: string[];
   shortcutDetails?: { targetId?: string; targetMimeType?: string };
 }
 
 const byName = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
 
-/** Every item directly inside a folder, page by page. */
-async function listChildren(config: DriveConfig, folderId: string, fetchImpl: typeof fetch): Promise<ApiFile[]> {
+/** Folders listed in one request: their ids go into one query, joined with "or". */
+const FOLDERS_PER_REQUEST = 25;
+
+/** Every item directly inside any of these folders, page by page. */
+async function listChildren(config: DriveConfig, folderIds: readonly string[], fetchImpl: typeof fetch): Promise<ApiFile[]> {
   const out: ApiFile[] = [];
   let pageToken = "";
   do {
     const params = new URLSearchParams({
-      q: `'${folderId}' in parents and trashed = false`,
-      fields: "nextPageToken,files(id,name,mimeType,size,modifiedTime,shortcutDetails(targetId,targetMimeType))",
+      q: `(${folderIds.map((id) => `'${id}' in parents`).join(" or ")}) and trashed = false`,
+      fields: "nextPageToken,files(id,name,mimeType,size,createdTime,modifiedTime,parents,shortcutDetails(targetId,targetMimeType))",
       pageSize: "1000",
       supportsAllDrives: "true",
       includeItemsFromAllDrives: "true",
@@ -92,26 +97,41 @@ async function listChildren(config: DriveConfig, folderId: string, fetchImpl: ty
   return out;
 }
 
-/** Walks the whole folder tree. Only the top folder failing to list is an error. */
+/** Runs the tasks, at most `limit` at a time. */
+async function inPool<T>(tasks: (() => Promise<T>)[], limit: number): Promise<T[]> {
+  const results: (T | undefined)[] = Array.from({ length: tasks.length }, () => undefined);
+  let next = 0;
+  const worker = async () => {
+    while (next < tasks.length) {
+      const i = next++;
+      const task = tasks.at(i);
+      if (task) results.splice(i, 1, await task());
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, tasks.length) }, worker));
+  return results.filter((r): r is T => r !== undefined);
+}
+
+type Pending = { id: string; folder: DriveFolder; depth: number };
+
+/**
+ * Walks the whole folder tree, level by level, listing many folders per request (a semester
+ * of about 150 folders takes around ten requests instead of 150). Only the top folder failing
+ * to list is an error.
+ */
 export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = fetch, now: () => number = Date.now): Promise<DriveTree> {
   const root: DriveFolder = { name: "", folders: [], files: [] };
   const seen = new Set([config.folderId]);
   let complete = true;
-  let queue: { id: string; folder: DriveFolder; depth: number }[] = [{ id: config.folderId, folder: root, depth: 0 }];
 
-  const visit = async ({ id, folder, depth }: (typeof queue)[number]) => {
-    let items: ApiFile[];
-    try {
-      items = await listChildren(config, id, fetchImpl);
-    } catch (err) {
-      if (folder === root) throw err;
-      complete = false;
-      return [];
-    }
-    const next: typeof queue = [];
+  /** Files the items into their folders, and returns the subfolders to list next. */
+  const place = (items: ApiFile[], byId: Map<string, Pending>, fallback?: Pending): Pending[] => {
+    const next: Pending[] = [];
     for (const item of items) {
       const name = item.name?.trim();
       if (!item.id || !name) continue;
+      const parent = fallback ?? item.parents?.map((p) => byId.get(p)).find((p) => p !== undefined);
+      if (!parent) continue;
       const isShortcut = item.mimeType === SHORTCUT;
       const targetId = isShortcut ? item.shortcutDetails?.targetId : item.id;
       const mimeType = (isShortcut ? item.shortcutDetails?.targetMimeType : item.mimeType) ?? "";
@@ -119,14 +139,14 @@ export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = 
       if (mimeType === FOLDER) {
         // A shortcut can point back up the tree: each folder is walked once.
         if (seen.has(targetId)) continue;
-        if (depth + 1 > MAX_DEPTH || seen.size >= MAX_FOLDERS) {
+        if (parent.depth + 1 > MAX_DEPTH || seen.size >= MAX_FOLDERS) {
           complete = false;
           continue;
         }
         seen.add(targetId);
         const child: DriveFolder = { name, folders: [], files: [] };
-        folder.folders.push(child);
-        next.push({ id: targetId, folder: child, depth: depth + 1 });
+        parent.folder.folders.push(child);
+        next.push({ id: targetId, folder: child, depth: parent.depth + 1 });
       } else {
         const size = Number(item.size);
         const file: DriveFile = {
@@ -136,23 +156,42 @@ export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = 
           size: item.size !== undefined && Number.isFinite(size) ? size : null,
           modifiedTime: item.modifiedTime ?? "",
         };
-        folder.files.push(file);
+        if (item.createdTime) file.createdTime = item.createdTime;
+        parent.folder.files.push(file);
       }
     }
-    folder.folders.sort((a, b) => byName.compare(a.name, b.name));
-    folder.files.sort((a, b) => byName.compare(a.name, b.name));
     return next;
   };
 
-  // A few folders at a time, level by level.
-  while (queue.length > 0) {
-    const level = queue;
-    queue = [];
-    for (let i = 0; i < level.length; i += CONCURRENCY) {
-      const found = await Promise.all(level.slice(i, i + CONCURRENCY).map(visit));
-      queue.push(...found.flat());
+  /** One request for a batch; if it fails, each folder on its own, so one bad folder stays one. */
+  const listBatch = async (batch: Pending[]): Promise<Pending[]> => {
+    const byId = new Map(batch.map((p) => [p.id, p]));
+    try {
+      return place(await listChildren(config, batch.map((p) => p.id), fetchImpl), byId, batch.length === 1 ? batch.at(0) : undefined);
+    } catch (err) {
+      if (batch.length === 1) {
+        if (batch.at(0)?.folder === root) throw err;
+        complete = false;
+        return [];
+      }
+      const each = await inPool(batch.map((p) => () => listBatch([p])), CONCURRENCY);
+      return each.flat();
     }
+  };
+
+  let level: Pending[] = [{ id: config.folderId, folder: root, depth: 0 }];
+  while (level.length > 0) {
+    const batches: Pending[][] = [];
+    for (let i = 0; i < level.length; i += FOLDERS_PER_REQUEST) batches.push(level.slice(i, i + FOLDERS_PER_REQUEST));
+    level = (await inPool(batches.map((b) => () => listBatch(b)), CONCURRENCY)).flat();
   }
+
+  const sortAll = (folder: DriveFolder) => {
+    folder.folders.sort((a, b) => byName.compare(a.name, b.name));
+    folder.files.sort((a, b) => byName.compare(a.name, b.name));
+    folder.folders.forEach(sortAll);
+  };
+  sortAll(root);
   return { root, updatedAt: now(), complete };
 }
 

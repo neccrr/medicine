@@ -1,10 +1,10 @@
 import { useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
-import { DriveFileView, DriveKind } from "../components/drive/DriveParts";
-import { useDrive } from "../hooks/useDrive";
+import { DriveFileView, DriveKind, NewPill, OpenedMark } from "../components/drive/DriveParts";
+import { useDrive, useDriveOpened } from "../hooks/useDrive";
 import { modulesByBlockSubject, moduleSubjects, type ModulePdf } from "../lib/content";
 import { blockById } from "../lib/blocks";
-import { driveHref, fileGroups, fileTitle, folderAt, niceName, subjectFolderPath } from "../lib/drive";
+import { driveHref, fileGroups, fileTitle, folderAt, isNew, niceName, subjectFolderPath } from "../lib/drive";
 import type { DriveFile } from "../lib/driveTypes";
 import { groupModules } from "../lib/moduleSections";
 import { subjectHueStyle } from "../lib/subjectStyle";
@@ -42,6 +42,7 @@ export function ModuleViewer() {
   const [selectedKey, setSelectedKey] = useState<string>();
 
   const drive = useDrive();
+  const { opened, markOpened } = useDriveOpened();
   const drivePath = drive.status === "ready" ? subjectFolderPath(drive.tree.root, blockId, subjectId) : null;
   const driveFolder = drive.status === "ready" && drivePath ? folderAt(drive.tree.root, drivePath) : null;
   const driveGroups = driveFolder ? fileGroups(driveFolder) : [];
@@ -63,6 +64,13 @@ export function ModuleViewer() {
   const fallbackPdf = !currentPdf && !currentDrive ? ordered.at(0) : undefined;
   const shownPdf = currentPdf ?? fallbackPdf;
   const shownDrive = currentDrive ?? (!shownPdf ? driveFiles.at(0) : undefined);
+
+  /** Opens the Drive file before or after the one shown, if there is one. */
+  const stepDrive = (dir: -1 | 1) => {
+    const i = shownDrive ? driveFiles.indexOf(shownDrive) : -1;
+    const target = i >= 0 ? driveFiles.at(i + dir) : undefined;
+    return target && i + dir >= 0 ? () => { setSelectedKey(`drive:${target.id}`); } : undefined;
+  };
 
   const pdfList = (list: ModulePdf[]) => (
     <ol>
@@ -96,7 +104,8 @@ export function ModuleViewer() {
             }}
           >
             <DriveKind kind={file.kind} />
-            {fileTitle(file.name)}
+            <span className="drive-toc-name">{fileTitle(file.name)}</span>
+            {isNew(file, opened) ? <NewPill /> : opened.has(file.id) && <OpenedMark />}
           </button>
         </li>
       ))}
@@ -107,7 +116,7 @@ export function ModuleViewer() {
     drive.status === "off" ? null : (
       <div className="ebook-toc-section drive-toc">
         <p className="ebook-toc-group">
-          Class Drive <span className="drive-live">live</span>
+          Class Drive <span className="drive-live-tag">live</span>
         </p>
         {drive.status === "loading" && <p className="ebook-toc-empty">Loading…</p>}
         {drive.status === "signed-out" && (
@@ -171,7 +180,14 @@ export function ModuleViewer() {
 
           <div className="ebook-content">
             {shownDrive ? (
-              <DriveFileView file={shownDrive} />
+              <DriveFileView
+                key={shownDrive.id}
+                file={shownDrive}
+                position={driveFiles.length > 1 ? `${driveFiles.indexOf(shownDrive) + 1} of ${driveFiles.length}` : undefined}
+                onPrev={stepDrive(-1)}
+                onNext={stepDrive(1)}
+                onShown={(f) => { markOpened(f.id); }}
+              />
             ) : shownPdf ? (
               <div className="pdf-viewer" id="module-viewer">
                 <div className="pdf-viewer-bar">
