@@ -284,7 +284,8 @@ account environment variables it runs as a plain static site.
 - **Adding study material:** the [content guide](docs/content-guide.md).
 - **Developers:** [architecture](docs/architecture.md),
   [development](docs/development.md), [storage and
-  sync](docs/storage-and-sync.md), the [database](docs/database.md), the
+  sync](docs/storage-and-sync.md), the [database](docs/database.md) and its
+  [Atlas cluster](docs/atlas.md), the
   [API](docs/api.md), and [how the numbers
   are worked out](docs/calculations.md), every formula from the Virtual Lab
   to leaderboard points.

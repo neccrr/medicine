@@ -26,6 +26,8 @@ are written in [`content/help/`](../content/help/).
 - [Database](database.md): the MongoDB connection, every collection's
   documents and indexes, what each request reads and writes, sizes, privacy,
   testing and operations.
+- [MongoDB Atlas cluster](atlas.md): the cluster's tier, region, replica set
+  and network access, its limits, and how to scale it.
 - [API reference](api.md): every `/api` route with its requests and
   responses.
 - [How the numbers are worked out](calculations.md): every formula and

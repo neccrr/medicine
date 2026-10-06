@@ -2,9 +2,10 @@
 
 Accounts, synced progress, the leaderboard, the AI allowance and the Class
 Drive's cached listing live in one MongoDB database (MongoDB Atlas in
-production). Everything else (content, the knowledge map, search) is static
-and never touches it. Without `MONGODB_URI` the site still works, as guest
-only.
+production; the cluster itself, its limits and how to scale it are in the
+[MongoDB Atlas cluster](atlas.md) page). Everything else (content, the
+knowledge map, search) is static and never touches it. Without `MONGODB_URI`
+the site still works, as guest only.
 
 ## Connection
 
@@ -218,8 +219,10 @@ can't make it grow without bound.
 - **Backups:** the free tier has no automatic backups. Students' progress
   also lives in their browsers and their own exports, but for a copy of the
   server's, run `mongodump --uri "$MONGODB_URI"` from a trusted machine.
-- **Monitoring:** Atlas → Metrics shows connections, operations and slow
-  queries; the Performance Advisor suggests missing indexes.
+- **Monitoring:** Atlas → Metrics shows connections, operations and
+  storage; the Performance Advisor (missing indexes) needs a dedicated tier.
+  The cluster's limits and how to scale it are in
+  [MongoDB Atlas cluster](atlas.md).
 - **Rotating the password:** change the database user's password in Atlas,
   update `MONGODB_URI` in Vercel and redeploy. Old function instances drop
   their connections within a minute of going idle.
