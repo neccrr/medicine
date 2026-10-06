@@ -172,6 +172,7 @@ export function GraphControls({ settings, onSettings, filters, onFilters, blocks
       </Section>
 
       <Section title="Display" open={sections.has("Display")} onToggle={() => { toggleSection("Display"); }}>
+        <Toggle label="3D effect" hint="Lit spheres with depth; off is lighter" on={settings.depthEffect} onChange={(v) => { set({ depthEffect: v }); }} />
         <Slider label="Text fade threshold" value={settings.textFade} range={RANGES.textFade} onChange={(v) => { set({ textFade: v }); }} />
         <Slider label="Node size" value={settings.nodeSize} range={RANGES.nodeSize} onChange={(v) => { set({ nodeSize: v }); }} />
         <Slider label="Link thickness" value={settings.linkThickness} range={RANGES.linkThickness} onChange={(v) => { set({ linkThickness: v }); }} />

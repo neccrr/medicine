@@ -341,6 +341,39 @@ Built once at deploy time by `src/lib/knowledgeGraph/build.ts`.
   0.35, 0, 1)`, so bigger concepts' labels appear first, and labels never
   overlap. Hovering fades everything outside the concept and its neighbours to
   18% over 160 ms.
+- **What it is** (the note's description and the hover card) comes from
+  `content/graph/glossary.json` when it has the concept. Otherwise the build
+  takes the best place the course defines it: a definition-list item
+  ("**Term**: …") scores 3, a flashcard whose front is the term 2.8, a
+  sentence starting "**Term** is …" 2.5 (2.2 a little further in), a table row
+  2 and a passing mention 1, plus 0.4 in the concept's main subject. Only 2.2
+  or more is shown, cut at a sentence end to at most 260 characters, and a
+  definition from a section links back to it.
+- **3D layout** (`src/lib/knowledgeGraph/layout3d.ts`) runs the same forces in
+  x, y and z, with d3-force's velocity Verlet step written out for three
+  dimensions: velocity kept at 0.6 per tick, alpha decaying from 1 to 0.001
+  over 300 ticks. The subjects' anchors are spread over a sphere of radius 420
+  (a Fibonacci lattice, shifted so they centre on the origin), and the
+  concepts start from the 2D map's x and y as x and z. Repulsion is computed
+  for every pair within 380, which for 700 concepts is fast enough without a
+  tree. With reduced motion it settles in one go (up to 400 ticks).
+- **3D camera** (`src/lib/knowledgeGraph/camera3d.ts`) orbits a target point
+  with Y up: yaw around the vertical, pitch just short of ±90°, and a
+  distance. Perspective has a 52° vertical field of view, so a point at depth
+  `d` is drawn `(h / 2) / tan(26°) / d` pixels per unit; orthographic uses the
+  target distance for every point. Framing a sphere of radius `r` puts the
+  camera `1.15 r / sin(26°)` away; a concept is framed with its neighbours (at
+  most 260). Camera moves ease over 600 ms (`1 − (1 − t)³`, yaw the short way
+  round). Flying moves `0.8 × distance` per second (×3 with Shift); arrow keys
+  orbit 1.6 rad/s across and 1.2 up and down; auto-rotate turns 0.18 rad/s.
+- **3D drawing:** concepts are drawn far to near so nearer ones cover farther
+  ones, at `size × nodeSize × 0.9` times the pixels per unit at their depth
+  (at least 1.2 and at most 26 pixels). With the 3D effect on, farther
+  concepts fade by up to 60% and links fall into three depth bands at 85%,
+  50% and 26% opacity. Concepts nearer than 45% of the target distance thin
+  out (to 15% at the camera) unless they're open or lit, so they don't hide
+  what you're looking at. The floor is a grid every 100 units, 620 below the
+  origin.
 - **Mastery** (Groups → Mastery) is the average over the concept's studied
   cards and labels of `min(1, interval / 21)`, and over its quiz questions: 1,
   or 0 if missed in the last 3 attempts. Questions only count once that

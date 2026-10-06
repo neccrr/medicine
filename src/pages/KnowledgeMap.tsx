@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { GraphCanvas, type GraphCanvasHandle, type NodeStyle } from "../components/map/GraphCanvas";
+import { Graph3D } from "../components/map/Graph3D";
 import { GraphControls, type FilterState } from "../components/map/GraphControls";
 import {
   ChevronIcon,
@@ -55,7 +56,8 @@ function masteryColor(m: number, accent: string, background: string): string {
   const a = hexToRgb(accent);
   const s = hexToRgb(background);
   if (!a || !s) return accent;
-  const t = 0.3 + 0.7 * m;
+  // In 20 steps, so the 3D effect's sphere sprites are drawn once per step, not per concept.
+  const t = 0.3 + 0.7 * Math.round(m * 20) / 20;
   const c = a.map((v, i) => {
     const from = s.at(i) ?? v;
     return Math.round(from + (v - from) * t);
@@ -129,6 +131,7 @@ function Workspace({ graph }: { graph: KnowledgeGraph }) {
   const [storedSettings, setStoredSettings] = useLocalStorage<unknown>(STORAGE_KEYS.mapSettings, null);
   const settings = useMemo(() => sanitizeSettings(storedSettings), [storedSettings]);
   const setSettings = (next: GraphSettings) => { setStoredSettings(next); };
+  const patchSettings = (patch: Partial<GraphSettings>) => { setStoredSettings({ ...settings, ...patch }); };
   const [filters, setFilters] = useState<FilterState>({ text: "", block: null, subject: null });
   const [localGraph, setLocalGraph] = useState(false);
   const [explorerOpen, setExplorerOpen] = useState(() => window.matchMedia("(min-width: 1800px)").matches);
@@ -198,7 +201,8 @@ function Workspace({ graph }: { graph: KnowledgeGraph }) {
     });
   }, [graph, filters, settings.bridgesOnly, settings.orphans, shared, neighbours, selected, localGraph]);
 
-  const styleOf = useMemo(() => {
+  // One style per concept, worked out when the colors change rather than every frame.
+  const styles = useMemo<NodeStyle[]>(() => {
     const el = frame.current ?? document.documentElement;
     const style = getComputedStyle(el);
     const v = (name: string, fallback: string) => style.getPropertyValue(name).trim() || fallback;
@@ -207,15 +211,15 @@ function Workspace({ graph }: { graph: KnowledgeGraph }) {
     const background = v("--obs-bg", "#1e1e1e");
     const unstudied = v("--map-unstudied", "#999999");
     const plain = v("--obs-graph-node", "#9a9a9a");
-    return (i: number): NodeStyle => {
+    return graph.nodes.map((node, i): NodeStyle => {
       if (settings.colorBy === "mastery") {
         const m = mastery.at(i) ?? null;
         return { fill: m === null ? unstudied : masteryColor(m, accent, background), weak: m !== null && m < 0.5 };
       }
       if (settings.colorBy === "none") return { fill: plain };
-      const slot = names.indexOf(subjectName(graph.nodes.at(i)?.subjects[0] ?? ""));
+      const slot = names.indexOf(subjectName(node.subjects[0] ?? ""));
       return { fill: colors.at(Math.max(0, slot) % SLOTS) ?? plain };
-    };
+    });
     // themeKey: re-read the colors when the theme changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graph, settings.colorBy, mastery, names, themeKey]);
@@ -334,23 +338,45 @@ function Workspace({ graph }: { graph: KnowledgeGraph }) {
           <div className="obs-tabbar">
             <span className="obs-tab is-active">
               {localGraph ? <LocalGraphIcon /> : <GraphIcon />}
-              {localGraph && selectedNode ? `Local graph of ${selectedNode.label}` : "Graph view"}
+              <span className="obs-tab-title">{localGraph && selectedNode ? `Local graph of ${selectedNode.label}` : "Graph view"}</span>
             </span>
+            <div className="obs-view-switch" role="radiogroup" aria-label="Graph view">
+              {(["2d", "3d"] as const).map((v) => (
+                <button key={v} type="button" role="radio" aria-checked={settings.view === v} className={settings.view === v ? "is-on" : undefined} onClick={() => { patchSettings({ view: v }); }}>
+                  {v.toUpperCase()}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="obs-graph">
-            <GraphCanvas
-              ref={canvas}
-              graph={graph}
-              visible={visible}
-              styleOf={styleOf}
-              selected={selected}
-              settings={settings}
-              onSelect={(i) => {
-                if (i === null) return;
-                select(i);
-              }}
-              paintKey={`${themeKey}|${settings.colorBy}|${version}`}
-            />
+            {settings.view === "3d" ? (
+              <Graph3D
+                ref={canvas}
+                graph={graph}
+                visible={visible}
+                styles={styles}
+                selected={selected}
+                settings={settings}
+                onSelect={(i) => {
+                  if (i !== null) select(i);
+                }}
+                onSettings={patchSettings}
+                paintKey={`${themeKey}|${settings.colorBy}|${version}`}
+              />
+            ) : (
+              <GraphCanvas
+                ref={canvas}
+                graph={graph}
+                visible={visible}
+                styles={styles}
+                selected={selected}
+                settings={settings}
+                onSelect={(i) => {
+                  if (i !== null) select(i);
+                }}
+                paintKey={`${themeKey}|${settings.colorBy}|${version}`}
+              />
+            )}
             <GraphControls
               settings={settings}
               onSettings={setSettings}
@@ -698,6 +724,17 @@ function Note({
 
       <article className="obs-note-body">
         <h2 className="obs-inline-title">{node.label}</h2>
+        {node.d && (
+          <div className="obs-callout">
+            <p className="obs-callout-title">What it is</p>
+            <p>{node.d}</p>
+            {node.da && (
+              <Link to={sectionLink(node.da)} className="obs-callout-more">
+                Read more in {fileTitle(node.da.c)} →
+              </Link>
+            )}
+          </div>
+        )}
 
         <div className="obs-properties" aria-label="Properties">
           <div className="obs-prop">

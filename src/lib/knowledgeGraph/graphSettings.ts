@@ -5,8 +5,18 @@ import { DEFAULT_FORCES, type ForceScale } from "./layout";
 // (forces). Saved on the device; read back through sanitize, since storage can hold anything.
 
 export type ColorBy = "subject" | "mastery" | "none";
+export type ViewMode = "2d" | "3d";
+export type Projection = "perspective" | "orthographic";
 
 export interface GraphSettings {
+  /** The flat graph, or a real 3D one you can fly around. */
+  view: ViewMode;
+  /** Concepts drawn as lit spheres with depth (fog in 3D); off draws flat dots, which is lighter. */
+  depthEffect: boolean;
+  /** 3D: perspective (things shrink with distance) or orthographic (they don't). */
+  projection: Projection;
+  /** 3D: turn slowly around the graph. */
+  autoRotate: boolean;
   colorBy: ColorBy;
   /** Only concepts taught in more than one subject or block. */
   bridgesOnly: boolean;
@@ -20,6 +30,10 @@ export interface GraphSettings {
 }
 
 export const DEFAULT_SETTINGS: GraphSettings = {
+  view: "2d",
+  depthEffect: true,
+  projection: "perspective",
+  autoRotate: false,
   colorBy: "subject",
   bridgesOnly: false,
   orphans: true,
@@ -50,6 +64,10 @@ export function sanitizeSettings(raw: unknown): GraphSettings {
   const f = (typeof s.forces === "object" && s.forces !== null ? s.forces : {}) as Record<string, unknown>;
   const d = DEFAULT_SETTINGS;
   return {
+    view: s.view === "3d" ? "3d" : "2d",
+    depthEffect: typeof s.depthEffect === "boolean" ? s.depthEffect : d.depthEffect,
+    projection: s.projection === "orthographic" ? "orthographic" : "perspective",
+    autoRotate: typeof s.autoRotate === "boolean" ? s.autoRotate : d.autoRotate,
     colorBy: s.colorBy === "mastery" || s.colorBy === "none" ? s.colorBy : "subject",
     bridgesOnly: typeof s.bridgesOnly === "boolean" ? s.bridgesOnly : d.bridgesOnly,
     orphans: typeof s.orphans === "boolean" ? s.orphans : d.orphans,

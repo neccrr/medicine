@@ -27,6 +27,10 @@ export interface GraphNode {
   cards: Record<string, string[]>;
   questions: Record<string, string[]>;
   labels: Record<string, string[]>;
+  /** A short description from the notes or flashcards, when one was found. */
+  d?: string;
+  /** The section the description comes from. */
+  da?: SectionRef;
 }
 
 export interface GraphEdge {

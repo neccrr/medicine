@@ -182,13 +182,22 @@ account environment variables it runs as a plain static site.
   blocks and subjects as folders, the graph view, and the open concept as a
   note (properties and tags, links as wikilinks, practice, and "linked
   mentions" for every section that teaches it)
-- A live graph: hover to light a concept's neighbourhood, drag a concept and
-  its links pull the others after it, labels fade in with zoom, and a local
-  graph of one concept and its neighbours
+- A live graph: hover to light a concept's neighbourhood (with a card saying
+  what it is), drag a concept and its links pull the others after it, labels
+  fade in with zoom, and a local graph of one concept and its neighbours
+- A real 3D view: subjects spread out in space over a floor grid, an orbit
+  camera like Blender or Unity (drag to orbit, right-drag to pan, scroll to
+  zoom, W A S D Q E to fly, numpad-style 1 3 7 views, perspective or
+  orthographic, auto-rotate) and an axis gizmo; drawn on a plain canvas
+- Every concept has a short "What it is" line, from
+  `content/graph/glossary.json` or else the clearest definition in the notes
+- In the app's own colours, light and dark; a 3D effect toggle (lit spheres
+  and depth) for lighter drawing on slow devices; the map rests when nothing
+  moves, so it costs nothing idle
 - Obsidian-style graph settings, kept per device and synced: filters (text,
   block, subject, bridges only, orphans), groups (color by subject or by your
-  own mastery, weak concepts ringed), display (text fade, node size, link
-  thickness) and forces (center, repel, link force, link distance)
+  own mastery, weak concepts ringed), display (3D effect, text fade, node
+  size, link thickness) and forces (center, repel, link force, link distance)
 - "Ask Alfond" how a concept connects
 - Optional AI relationship labels ("innervates", "part of"…): `AI_BASE_URL=…
   AI_API_KEY=… AI_MODEL=… npm run graph:relations`, then commit

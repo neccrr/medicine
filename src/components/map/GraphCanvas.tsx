@@ -3,12 +3,13 @@ import { forceSimulation, type Simulation } from "d3-force";
 import { labelAlpha, type GraphSettings } from "../../lib/knowledgeGraph/graphSettings";
 import { anchors, applyForces, layoutLinks, type LayoutLink, type LayoutNode } from "../../lib/knowledgeGraph/layout";
 import type { KnowledgeGraph } from "../../lib/knowledgeGraph/types";
+import { LabelGrid, pixelRatio, placeHoverCard, readPalette, reducedMotion, SphereSprites, type Palette } from "./render";
 
-// The knowledge map as an Obsidian-style graph view, drawn on a canvas. The layout is live:
-// it starts from the build's resting positions and keeps its physics, so a concept can be
-// dragged and the others follow, and filtering or tuning the forces lets the map resettle.
-// Hovering a concept lights it and its links and fades the rest; labels fade in with zoom,
-// bigger concepts first.
+// The knowledge map's 2D graph view, drawn on a canvas. The layout is live: it starts from the
+// build's resting positions and keeps its physics, so a concept can be dragged and the others
+// follow, and filtering or tuning the forces lets the map resettle. Hovering a concept lights
+// it and its links and fades the rest; labels fade in with zoom, bigger concepts first. With
+// the 3D effect on, concepts are drawn as lit spheres.
 
 export interface NodeStyle {
   fill: string;
@@ -22,10 +23,11 @@ export interface GraphCanvasHandle {
   zoom: (factor: number) => void;
 }
 
-interface Props {
+export interface GraphViewProps {
   graph: KnowledgeGraph;
   visible: boolean[];
-  styleOf: (index: number) => NodeStyle;
+  /** One style per concept, worked out once per color change rather than per frame. */
+  styles: NodeStyle[];
   /** The open concept. */
   selected: number | null;
   settings: GraphSettings;
@@ -40,46 +42,23 @@ interface View {
   k: number;
 }
 
-interface Palette {
-  line: string;
-  accent: string;
-  text: string;
-  muted: string;
-  bg: string;
-  weak: string;
-  font: string;
-}
-
 const MIN_K = 0.08;
 const MAX_K = 6;
 const FADE_MS = 160;
 const LABEL_FONT_PX = 12;
 
-const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function readPalette(el: Element): Palette {
-  const style = getComputedStyle(el);
-  const v = (name: string, fallback: string) => style.getPropertyValue(name).trim() || fallback;
-  return {
-    line: v("--obs-graph-line", "#4a4a4a"),
-    accent: v("--obs-accent", "#a68af9"),
-    text: v("--obs-text", "#dadada"),
-    muted: v("--obs-text-muted", "#a3a3a3"),
-    bg: v("--obs-bg", "#1e1e1e"),
-    weak: v("--obs-weak", "#fb464c"),
-    font: v("--obs-font", "system-ui, sans-serif"),
-  };
-}
-
-export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCanvas(
-  { graph, visible, styleOf, selected, settings, onSelect, paintKey },
+export const GraphCanvas = forwardRef<GraphCanvasHandle, GraphViewProps>(function GraphCanvas(
+  { graph, visible, styles, selected, settings, onSelect, paintKey },
   ref,
 ) {
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const card = useRef<HTMLDivElement>(null);
   const view = useRef<View>({ x: 0, y: 0, k: 1 });
   const size = useRef({ w: 0, h: 0 });
   const palette = useRef<Palette | null>(null);
+  const sprites = useRef(new SphereSprites());
+  const labels = useRef(new LabelGrid());
   const frame = useRef(0);
   const animation = useRef(0);
   const hover = useRef<number | null>(null);
@@ -119,14 +98,15 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
       .map((r) => r.i);
   }, [graph]);
 
-  const radius = useCallback((i: number, k: number) => Math.max(1.4, (graph.nodes[i]?.r ?? 3) * settings.nodeSize * 0.6 * Math.pow(k, 0.5)), [graph, settings.nodeSize]);
+  const { nodeSize, linkThickness, textFade, depthEffect } = settings;
+  const radius = useCallback((i: number, k: number) => Math.max(1.4, (graph.nodes[i]?.r ?? 3) * nodeSize * 0.6 * Math.sqrt(k)), [graph, nodeSize]);
 
   const draw = useCallback(() => {
     const c = canvas.current;
     const ctx = c?.getContext("2d");
     if (!c || !ctx) return;
     const p = (palette.current ??= readPalette(c));
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = pixelRatio();
     const { w, h } = size.current;
     const { x: vx, y: vy, k } = view.current;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -152,16 +132,18 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     const anchor = hovered ?? (selected !== null && visible[selected] ? selected : null);
 
     // Links: one batched path for the ordinary ones, then the hovered or open concept's.
-    const thick = settings.linkThickness * Math.max(0.5, Math.min(1.3, k));
+    const thick = linkThickness * Math.max(0.5, Math.min(1.3, k));
     ctx.lineWidth = thick;
     ctx.strokeStyle = p.line;
-    ctx.globalAlpha = 0.55 * (lit.size ? dim : 1);
+    ctx.globalAlpha = 0.7 * (lit.size ? dim : 1);
     ctx.beginPath();
-    const own: [number, number][] = [];
+    let ownCount = 0;
+    const own: number[] = [];
     for (const e of graph.edges) {
       if (!visible[e.s] || !visible[e.t]) continue;
       if (anchor !== null && (e.s === anchor || e.t === anchor)) {
-        own.push([e.s, e.t]);
+        own.push(e.s, e.t);
+        ownCount++;
         continue;
       }
       const a = nodes[e.s];
@@ -170,43 +152,70 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
       ctx.lineTo(sx(b.x ?? 0), sy(b.y ?? 0));
     }
     ctx.stroke();
-    if (own.length) {
-      ctx.globalAlpha = 0.9;
+    if (ownCount) {
+      ctx.globalAlpha = 0.95;
       ctx.strokeStyle = p.accent;
-      ctx.lineWidth = thick + 0.6;
+      ctx.lineWidth = thick + 0.7;
       ctx.beginPath();
-      for (const [s, t] of own) {
-        ctx.moveTo(sx(nodes[s].x ?? 0), sy(nodes[s].y ?? 0));
-        ctx.lineTo(sx(nodes[t].x ?? 0), sy(nodes[t].y ?? 0));
+      for (let j = 0; j < own.length; j += 2) {
+        ctx.moveTo(sx(nodes[own[j]].x ?? 0), sy(nodes[own[j]].y ?? 0));
+        ctx.lineTo(sx(nodes[own[j + 1]].x ?? 0), sy(nodes[own[j + 1]].y ?? 0));
       }
       ctx.stroke();
     }
 
-    // Concepts: flat dots, the hovered one in the accent, the open one ringed.
+    // Concepts. Flat dots are batched into one path per color (and per faded or lit), so a
+    // frame fills a handful of paths instead of 700; with the 3D effect each is a sprite.
+    const flat = new Map<string, Path2D>();
+    const flatDim = new Map<string, Path2D>();
+    const rings: { x: number; y: number; r: number; weak: boolean; chosen: boolean }[] = [];
     for (const n of nodes) {
       const i = n.i;
       if (!visible[i]) continue;
-      const style = styleOf(i);
       const r = radius(i, k);
       const x = sx(n.x ?? 0);
       const y = sy(n.y ?? 0);
-      if (x < -r - 2 || x > w + r + 2 || y < -r - 2 || y > h + r + 2) continue;
-      ctx.globalAlpha = isLit(i) ? 1 : dim;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = i === hovered ? p.accent : style.fill;
-      ctx.fill();
-      if (style.weak) {
+      if (x < -r - 4 || x > w + r + 4 || y < -r - 4 || y > h + r + 4) continue;
+      const style = styles[i];
+      const fill = i === hovered ? p.accent : (style?.fill ?? p.muted);
+      const on = isLit(i);
+      if (depthEffect) {
+        ctx.globalAlpha = on ? 1 : dim;
+        sprites.current.draw(ctx, fill, x, y, r);
+      } else {
+        const bucket = on || dim === 1 ? flat : flatDim;
+        let path = bucket.get(fill);
+        if (!path) {
+          path = new Path2D();
+          bucket.set(fill, path);
+        }
+        path.moveTo(x + r, y);
+        path.arc(x, y, r, 0, Math.PI * 2);
+      }
+      if (style?.weak || i === selected) rings.push({ x, y, r, weak: Boolean(style?.weak), chosen: i === selected });
+    }
+    for (const [fill, path] of flatDim) {
+      ctx.globalAlpha = dim;
+      ctx.fillStyle = fill;
+      ctx.fill(path);
+    }
+    for (const [fill, path] of flat) {
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = fill;
+      ctx.fill(path);
+    }
+    ctx.globalAlpha = 1;
+    for (const ring of rings) {
+      if (ring.weak) {
         ctx.beginPath();
-        ctx.arc(x, y, r + 2.5, 0, Math.PI * 2);
+        ctx.arc(ring.x, ring.y, ring.r + 2.5, 0, Math.PI * 2);
         ctx.lineWidth = 1.5;
         ctx.strokeStyle = p.weak;
         ctx.stroke();
       }
-      if (i === selected) {
-        ctx.globalAlpha = 1;
+      if (ring.chosen) {
         ctx.beginPath();
-        ctx.arc(x, y, r + 4, 0, Math.PI * 2);
+        ctx.arc(ring.x, ring.y, ring.r + 4, 0, Math.PI * 2);
         ctx.lineWidth = 2;
         ctx.strokeStyle = p.accent;
         ctx.stroke();
@@ -219,17 +228,21 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     ctx.lineJoin = "round";
-    const taken: { x: number; y: number; w: number }[] = [];
-    const forced = [...(selected !== null ? [selected] : []), ...(hovered !== null ? [hovered] : []), ...lit];
+    labels.current.clear();
+    const forced = new Set<number>([...(selected !== null ? [selected] : []), ...(hovered !== null ? [hovered] : []), ...lit]);
     const done = new Set<number>();
     for (const i of [...forced, ...rank]) {
       if (done.has(i) || !visible[i]) continue;
       done.add(i);
-      const must = forced.includes(i);
+      const must = forced.has(i);
       const node = graph.nodes[i];
-      let alpha = must ? 1 : labelAlpha(k, node.r * settings.nodeSize, settings.textFade);
+      let alpha = must ? 1 : labelAlpha(k, node.r * nodeSize, textFade);
       if (!must && lit.size) alpha *= dim;
-      if (alpha < 0.03) continue;
+      // Ranked biggest first: once the labels have faded out, the rest are smaller still.
+      if (alpha < 0.03) {
+        if (!must && !lit.size) break;
+        continue;
+      }
       const n = nodes[i];
       const x = sx(n.x ?? 0);
       const y = sy(n.y ?? 0) + radius(i, k) + 4;
@@ -239,8 +252,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
         tw = ctx.measureText(node.label).width;
         labelWidth.current.set(i, tw);
       }
-      if (!must && taken.some((t) => Math.abs(t.x - x) < (t.w + tw) / 2 + 6 && Math.abs(t.y - y) < LABEL_FONT_PX + 3)) continue;
-      taken.push({ x, y, w: tw });
+      if (!labels.current.claim(x, y, tw, LABEL_FONT_PX, must)) continue;
       ctx.globalAlpha = alpha;
       ctx.lineWidth = 3;
       ctx.strokeStyle = p.bg;
@@ -249,7 +261,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
       ctx.fillText(node.label, x, y);
     }
     ctx.globalAlpha = 1;
-  }, [graph, nodes, neighbours, rank, visible, styleOf, selected, settings.linkThickness, settings.nodeSize, settings.textFade, radius]);
+  }, [graph, nodes, neighbours, rank, visible, styles, selected, linkThickness, nodeSize, textFade, depthEffect, radius]);
 
   const schedule = useCallback(() => {
     cancelAnimationFrame(frame.current);
@@ -262,13 +274,15 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
   // Colors and fonts are read once per theme or color change, not every frame.
   useEffect(() => {
     palette.current = null;
+    sprites.current.clear();
     labelWidth.current.clear();
     schedule();
   }, [paintKey, schedule]);
 
-  // The simulation: created once, redrawn on every tick.
+  // The simulation: created once, at rest (a new d3 simulation starts at alpha 1, which would
+  // re-run the whole layout), redrawn on every tick.
   useEffect(() => {
-    const sim = forceSimulation<LayoutNode, LayoutLink>([]).stop();
+    const sim = forceSimulation<LayoutNode, LayoutLink>([]).alpha(0).stop();
     sim.on("tick", () => { scheduleRef.current(); });
     simulation.current = sim;
     return () => {
@@ -277,7 +291,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     };
   }, [nodes]);
 
-  /** Lets the layout move: gently at first, harder when filters or forces change. */
+  /** Lets the layout move by at least this much (filters and forces changed). */
   const reheat = useCallback((alpha: number) => {
     const sim = simulation.current;
     if (!sim) return;
@@ -291,22 +305,21 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     sim.alpha(Math.max(sim.alpha(), alpha)).restart();
   }, []);
 
-  // Only the shown concepts take part, so filtering lets the rest close up.
+  // Only the shown concepts take part, so filtering lets the rest close up. The first run
+  // starts from the build's layout, already at rest: nothing to move.
   const firstRun = useRef(true);
   const { center, repel, link, distance } = settings.forces;
   useEffect(() => {
     const sim = simulation.current;
     if (!sim) return;
-    const shown = nodes.filter((n) => visible[n.i]);
-    sim.nodes(shown);
-    applyForces(
-      sim,
-      layoutLinks(graph.edges.filter((e) => visible[e.s] && visible[e.t])),
-      { center, repel, link, distance },
-    );
-    // The first run starts from the build's layout, already at rest.
-    reheat(firstRun.current ? 0.02 : 0.35);
-    firstRun.current = false;
+    sim.nodes(nodes.filter((n) => visible[n.i]));
+    applyForces(sim, layoutLinks(graph.edges.filter((e) => visible[e.s] && visible[e.t])), { center, repel, link, distance });
+    if (firstRun.current) {
+      firstRun.current = false;
+      scheduleRef.current();
+      return;
+    }
+    reheat(0.35);
   }, [graph, nodes, visible, center, repel, link, distance, reheat]);
 
   const bounds = useCallback(
@@ -369,7 +382,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     const c = canvas.current;
     if (!el || !c) return;
     const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = pixelRatio();
       size.current = { w: el.clientWidth, h: el.clientHeight };
       c.width = Math.round(el.clientWidth * dpr);
       c.height = Math.round(el.clientHeight * dpr);
@@ -402,18 +415,21 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
       const wx = (px - w / 2) / v.k + v.x;
       const wy = (py - h / 2) / v.k + v.y;
       view.current = { k, x: wx - (px - w / 2) / k, y: wy - (py - h / 2) / k };
-      schedule();
+      scheduleRef.current();
     };
     c.addEventListener("wheel", onWheel, { passive: false });
     return () => { c.removeEventListener("wheel", onWheel); };
-  }, [schedule]);
+  }, []);
 
-  const setHover = (i: number | null) => {
-    if (hover.current === i) return;
-    hover.current = i;
-    fade.current.target = i === null ? 0 : 1;
-    fade.current.at = performance.now();
-    schedule();
+  const setHover = (i: number | null, at?: { x: number; y: number }) => {
+    if (hover.current !== i) {
+      hover.current = i;
+      fade.current.target = i === null ? 0 : 1;
+      fade.current.at = performance.now();
+      scheduleRef.current();
+    }
+    const node = i === null ? undefined : graph.nodes[i];
+    placeHoverCard(card.current, node && at ? { label: node.label, text: node.d, ...at } : null, size.current);
   };
 
   // Pointer: drag empty space to pan, drag a concept to move it, pinch to zoom, tap to open.
@@ -435,8 +451,12 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
     let bestD = Infinity;
     for (const n of nodes) {
       if (!visible[n.i]) continue;
-      const d = Math.hypot(((n.x ?? 0) - vx) * k + w / 2 - px, ((n.y ?? 0) - vy) * k + h / 2 - py);
-      if (d < radius(n.i, k) + 7 && d < bestD) {
+      const dx = ((n.x ?? 0) - vx) * k + w / 2 - px;
+      const dy = ((n.y ?? 0) - vy) * k + h / 2 - py;
+      const reach = radius(n.i, k) + 7;
+      if (Math.abs(dx) > reach || Math.abs(dy) > reach) continue;
+      const d = Math.hypot(dx, dy);
+      if (d < reach && d < bestD) {
         best = n.i;
         bestD = d;
       }
@@ -483,8 +503,8 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
           const p = local(e);
           const prev = pointers.current.get(e.pointerId);
           if (!prev) {
-            const i = hit(p.x, p.y);
-            setHover(i);
+            const i = e.pointerType === "mouse" ? hit(p.x, p.y) : null;
+            setHover(i, p);
             e.currentTarget.style.cursor = i === null ? "grab" : "pointer";
             return;
           }
@@ -493,7 +513,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
             const [a, b] = [...pointers.current.values()];
             view.current.k = Math.min(MAX_K, Math.max(MIN_K, pinch.current.k * (Math.hypot(a.x - b.x, a.y - b.y) / pinch.current.d)));
             moved.current += 10;
-            schedule();
+            scheduleRef.current();
             return;
           }
           const dx = p.x - prev.x;
@@ -519,7 +539,7 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
           view.current.x -= dx / view.current.k;
           view.current.y -= dy / view.current.k;
           setHover(null);
-          schedule();
+          scheduleRef.current();
         }}
         onPointerUp={(e) => {
           const p = local(e);
@@ -535,6 +555,10 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
         }}
         onPointerLeave={() => { setHover(null); }}
       />
+      <div className="map-hover-card" ref={card} hidden aria-hidden="true">
+        <strong />
+        <span />
+      </div>
     </div>
   );
 });

@@ -24,38 +24,38 @@
   --map-unstudied: #c9c4b6;
 }
 
+/* The map's workspace uses the app's own palette (dark green-black surfaces, teal accent,
+   Fraunces and Archivo), as solid colors: no glass blur over a canvas that redraws often. */
 .map-page {
-  --obs-bg: #1e1e1e;
-  --obs-bg-alt: #262626;
-  --obs-bg-hover: rgb(255 255 255 / 0.075);
-  --obs-bg-active: rgb(255 255 255 / 0.11);
-  --obs-border: #363636;
-  --obs-text: #dadada;
-  --obs-text-muted: #a3a3a3;
-  --obs-text-faint: #939393;
-  --obs-accent: #a68af9;
-  --obs-accent-soft: rgb(166 138 249 / 0.16);
-  --obs-graph-line: #4f4f4f;
-  --obs-graph-node: #9a9a9a;
-  --obs-weak: #fb464c;
-  --obs-font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --obs-radius: 6px;
+  --obs-bg: var(--surface-solid);
+  --obs-bg-alt: var(--surface-2-solid);
+  --obs-bg-hover: rgb(45 212 167 / 0.07);
+  --obs-bg-active: var(--accent-soft);
+  --obs-border: var(--border);
+  --obs-text: var(--text);
+  --obs-text-muted: var(--text-muted);
+  --obs-text-faint: #839b93;
+  --obs-accent: var(--accent);
+  --obs-link: var(--accent);
+  --obs-accent-soft: var(--accent-soft);
+  --obs-graph-line: #2b3d35;
+  --obs-graph-grid: #22322b;
+  --obs-graph-node: #6f8780;
+  --obs-weak: var(--red);
+  --obs-weak-text: var(--red);
+  --obs-font: var(--font-body);
+  --obs-radius: 8px;
 }
 
 :root[data-theme="light"] .map-page {
-  --obs-bg: #fff;
-  --obs-bg-alt: #f6f6f6;
-  --obs-bg-hover: rgb(0 0 0 / 0.05);
-  --obs-bg-active: rgb(0 0 0 / 0.08);
-  --obs-border: #e0e0e0;
-  --obs-text: #222;
-  --obs-text-muted: #5c5c5c;
-  --obs-text-faint: #6d6d6d;
-  --obs-accent: #7151dc;
-  --obs-accent-soft: rgb(113 81 220 / 0.1);
-  --obs-graph-line: #cfcfcf;
-  --obs-graph-node: #8a8a8a;
-  --obs-weak: #d42a35;
+  --obs-bg-alt: #f7f3e9;
+  --obs-bg-hover: rgb(15 143 112 / 0.07);
+  --obs-text-faint: #66706a;
+  --obs-link: var(--accent-dim);
+  --obs-graph-line: #d9cfb6;
+  --obs-graph-grid: #e6dec9;
+  --obs-graph-node: #8d978f;
+  --obs-weak-text: #b23a32;
 }
 
 .map-loading {
@@ -86,7 +86,7 @@
   color: var(--obs-text);
   font-family: var(--obs-font);
   font-size: 14px;
-  box-shadow: 0 10px 40px rgb(0 0 0 / 0.18);
+  box-shadow: var(--glass-shadow);
 }
 
 .obs button {
@@ -118,7 +118,7 @@
 }
 
 .obs-icon-btn.is-on {
-  color: var(--obs-accent);
+  color: var(--obs-link);
 }
 
 .obs button:focus-visible,
@@ -159,7 +159,7 @@
 }
 
 .obs-ribbon-btn.is-on {
-  color: var(--obs-accent);
+  color: var(--obs-link);
   background: var(--obs-accent-soft);
 }
 
@@ -721,19 +721,19 @@
 }
 
 .obs-inline-title {
-  margin: 0.4rem 0 0.9rem;
+  margin: 0.4rem 0 0.8rem;
   color: var(--obs-text);
-  font-family: var(--obs-font);
-  font-size: 1.65rem;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
 .obs-note-body h3 {
   margin: 1.3rem 0 0.45rem;
   color: var(--obs-text);
-  font-family: var(--obs-font);
+  font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 600;
 }
@@ -775,7 +775,7 @@
 }
 
 .obs-prop-value.is-weak {
-  color: var(--obs-weak);
+  color: var(--obs-weak-text);
 }
 
 .obs-faint {
@@ -786,19 +786,20 @@
   padding: 0.05rem 0.55rem;
   border-radius: 999px;
   background: var(--obs-accent-soft);
-  color: var(--obs-accent);
-  font-size: 0.8rem;
+  color: var(--obs-link);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
 }
 
 .obs-internal-link {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--obs-accent);
+  color: var(--obs-link);
   font: inherit;
   text-align: left;
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--obs-accent) 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--obs-link) 45%, transparent);
   text-underline-offset: 2px;
   cursor: pointer;
 }
@@ -944,7 +945,8 @@
 .obs-empty-title {
   margin: 0 0 1rem;
   color: var(--obs-text-muted);
-  font-size: 1.15rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
   font-weight: 600;
 }
 
@@ -955,7 +957,7 @@
   padding: 0.2rem 0;
   border: 0;
   background: none;
-  color: var(--obs-accent);
+  color: var(--obs-link);
   font-size: 0.92rem;
   cursor: pointer;
 }
@@ -994,6 +996,170 @@
   background: var(--obs-bg-alt);
   color: var(--obs-text-muted);
   font-size: 0.74rem;
+}
+
+/* ---- 2D / 3D switch in the graph's tab bar ---- */
+.obs-tabbar {
+  gap: 0.5rem;
+}
+
+.obs-view-switch {
+  display: inline-flex;
+  margin: 0 0 0.3rem auto;
+  padding: 0.15rem;
+  border: 1px solid var(--obs-border);
+  border-radius: 999px;
+  background: var(--obs-bg);
+}
+
+.obs-view-switch button {
+  min-width: 2.4rem;
+  padding: 0.15rem 0.55rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--obs-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.obs-view-switch button.is-on {
+  background: var(--obs-accent);
+  color: var(--accent-ink);
+}
+
+/* ---- Hover card: a concept's name and description by the pointer ---- */
+.map-hover-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 17rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--obs-border);
+  border-radius: var(--obs-radius);
+  background: var(--obs-bg-alt);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+  color: var(--obs-text);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.map-hover-card[hidden] {
+  display: none;
+}
+
+.map-hover-card strong {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.map-hover-card span {
+  color: var(--obs-text-muted);
+}
+
+/* ---- "What it is": the concept's description, as a callout ---- */
+.obs-callout {
+  margin: 0 0 0.9rem;
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid var(--obs-accent);
+  border-radius: 0 var(--obs-radius) var(--obs-radius) 0;
+  background: var(--obs-accent-soft);
+}
+
+.obs-note-body .obs-callout p {
+  margin: 0;
+}
+
+.obs-note-body .obs-callout .obs-callout-title {
+  margin-bottom: 0.2rem;
+  color: var(--obs-link);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.obs-callout-more {
+  display: inline-block;
+  margin-top: 0.35rem;
+  color: var(--obs-link);
+  font-size: 0.82rem;
+}
+
+/* ---- 3D view ---- */
+.map-canvas-wrap.is-3d {
+  background: radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--obs-accent) 7%, var(--obs-bg)), var(--obs-bg) 70%);
+}
+
+.map-canvas:focus-visible {
+  outline: 2px solid var(--obs-accent);
+  outline-offset: -2px;
+}
+
+.map-3d-tools {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  max-width: calc(100% - 4rem);
+}
+
+.map-gizmo {
+  cursor: pointer;
+}
+
+.map-3d-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.map-3d-buttons .obs-chip {
+  background: var(--obs-bg-alt);
+}
+
+.map-3d-views {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.map-3d-help {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 0.9rem;
+  max-width: min(26rem, 100%);
+  margin: 0;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--obs-border);
+  border-radius: var(--obs-radius);
+  background: var(--obs-bg-alt);
+  font-size: 0.78rem;
+}
+
+.map-3d-help dt {
+  color: var(--obs-text);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.map-3d-help dd {
+  margin: 0;
+  color: var(--obs-text-muted);
 }
 
 /* ---- Narrower: the explorer slides over the graph ---- */
@@ -1056,6 +1222,15 @@
 
   .obs-legend {
     max-width: calc(100% - 8rem);
+  }
+
+  .map-3d-views,
+  .map-3d-buttons .obs-chip:not(:first-child, :last-child) {
+    display: none;
+  }
+
+  .map-3d-help {
+    max-width: calc(100vw - 4rem);
   }
 }
 

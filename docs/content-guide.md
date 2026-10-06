@@ -24,6 +24,7 @@ content/
                                   practicum/assistance/*.pdf
   help/meta.json + {page}.md      the in-app help (/docs)
   tips/tips.json                  the tip of the day
+  graph/glossary.json             knowledge-map "What it is" lines
   graph/relations.json            generated: knowledge-map link labels
 public/
   ebook-figures/{subject}/…       figures used by chapters, quizzes, occlusion
@@ -260,6 +261,28 @@ The in-app help at `/docs` is `content/help/`:
 
 `content/tips/tips.json` is a list of strings. Everyone sees the same tip on
 the same day.
+
+## Knowledge-map descriptions
+
+Each concept on the map has a short **What it is** line, shown at the top of
+its note and on the hover card. They come from `content/graph/glossary.json`,
+one entry per concept, keyed by the concept's id (the term in lower case,
+singular, with dashes for spaces, as in the map's `?c=` links):
+
+```json
+{
+  "epimysium": "The outermost layer of … surrounding the entire muscle.",
+  "fascicle": "A bundle of muscle fibres (or nerve fibres) wrapped in …"
+}
+```
+
+Keep each to one or two plain sentences (at most 260 characters), saying what
+the thing is rather than everything about it, and end with a full stop. A
+concept missing from the file falls back to a definition found in the ebooks
+and summaries (a "**Term**: …" list item, a flashcard, or a sentence that
+starts "**Term** is …"), and shows nothing when there isn't a clear one. When
+new content adds concepts, add their lines here; the content tests check the
+ids and lengths.
 
 ## Knowledge-map link labels
 

@@ -95,3 +95,18 @@ describe("exam packages", () => {
     for (const p of packages) expect((await p.load()).length, p.id).toBe(p.questionCount);
   });
 });
+
+describe("knowledge map glossary", () => {
+  it("has one short, finished sentence or two per concept id", () => {
+    const files = import.meta.glob<Record<string, string>>("../../content/graph/glossary.json", { eager: true, import: "default" });
+    const glossary = Object.values(files).at(0) ?? {};
+    const entries = Object.entries(glossary);
+    expect(entries.length).toBeGreaterThan(0);
+    for (const [id, text] of entries) {
+      expect(id, id).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+      expect(text.trim().length, id).toBeGreaterThan(20);
+      expect(text.length, id).toBeLessThanOrEqual(260);
+      expect(text, id).toMatch(/[.)]$/);
+    }
+  });
+});

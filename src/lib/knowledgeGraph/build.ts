@@ -3,6 +3,7 @@ import { ebookMeta, flashcardDecks, loadEbookChapters, loadOcclusionNotes, occlu
 import { headingSlugger } from "../markdownHtml";
 import { occlusionCards } from "../occlusion";
 import type { Flashcard, OcclusionNote, QuizQuestion } from "../../types/content";
+import { DEFINITION_SCORE, describeConcepts, type DescribeSource } from "./describe";
 import { anchors, applyForces, layoutLinks, type LayoutNode } from "./layout";
 import type { GraphEdge, GraphNode, KnowledgeGraph, SectionRef } from "./types";
 import { own, setOwn } from "../records";
@@ -154,6 +155,8 @@ export interface GraphInput {
   minMentions?: number;
   /** AI-labelled relations, by "termA|termB" (keys sorted). */
   relations?: ReadonlyMap<string, string>;
+  /** Written descriptions, by concept id (content/graph/glossary.json); they win over the notes. */
+  glossary?: ReadonlyMap<string, string>;
 }
 
 export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
@@ -261,6 +264,27 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
     .sort((a, b) => b[1].mentions - a[1].mentions || a[0].localeCompare(b[0]))
     .slice(0, MAX_NODES);
   const index = new Map(kept.map(([key], i) => [key, i]));
+
+  // A short description for each, from the notes (or a flashcard that asks for it).
+  const sources: DescribeSource = { sections: [], decks: input.decks ?? new Map() };
+  for (const [c, md] of input.chapters) {
+    const [blockId, subjectId] = c.split("/");
+    for (const s of splitSections(md)) sources.sections.push({ ref: { c, h: s.heading, a: s.anchor }, subject: `${blockId}/${subjectId}`, body: s.body });
+  }
+  for (const [key, md] of input.summaries) {
+    for (const s of splitSections(md)) sources.sections.push({ ref: { c: `summary:${key}`, h: s.heading, a: s.anchor }, subject: key, body: s.body });
+  }
+  const primary = new Map(kept.map(([key, a]) => [key, [...a.bySubject.entries()].sort((x, y) => y[1] - x[1])[0]?.[0] ?? ""]));
+  const descriptions = describeConcepts(new Set(index.keys()), primary, sources, (bold) => cleanTerm(bold)?.key ?? null);
+  // The glossary's wording first; otherwise a definition from the notes or a flashcard (never a
+  // sentence that only mentions the term). "da" points at the notes' own definition, if any.
+  const describe = (key: string): Pick<GraphNode, "d" | "da"> => {
+    const found = descriptions.get(key);
+    const defined = found && found.score >= DEFINITION_SCORE ? found : undefined;
+    const text = input.glossary?.get(key.replace(/ /g, "-")) ?? defined?.text;
+    if (!text) return {};
+    return defined?.from ? { d: text, da: defined.from } : { d: text };
+  };
   const nodes: GraphNode[] = kept.map(([key, a]) => {
     const forms = [...(surfaces.get(key) ?? new Map()).entries()].sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]));
     const best = forms[0]?.[0] ?? key;
@@ -276,6 +300,7 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
       cards: a.cards,
       questions: a.questions,
       labels: a.labels,
+      ...describe(key),
     };
   });
 
@@ -329,6 +354,9 @@ function layout(nodes: GraphNode[], edges: GraphEdge[]) {
   }
 }
 
+const glossaryFiles = import.meta.glob<Record<string, string>>("/content/graph/glossary.json", { eager: true, import: "default" });
+const glossary = new Map(Object.entries(Object.values(glossaryFiles).at(0) ?? {}));
+
 const relationFiles = import.meta.glob<Record<string, string>>("/content/graph/relations.json", { eager: true, import: "default" });
 const relations = new Map(Object.entries(Object.values(relationFiles).at(0) ?? {}));
 
@@ -339,5 +367,5 @@ export async function buildFromContent(): Promise<KnowledgeGraph> {
   for (const key of occlusionKeys) occlusion.set(key, (await loadOcclusionNotes(key)) ?? []);
   // Chapters only of books listed in a meta.json (drafts without one stay out).
   const listed = new Map([...chapters].filter(([k]) => ebookMeta.has(k.split("/").slice(0, 2).join("/"))));
-  return buildKnowledgeGraph({ chapters: listed, summaries, occlusion, decks: flashcardDecks, banks: quizBanks, relations });
+  return buildKnowledgeGraph({ chapters: listed, summaries, occlusion, decks: flashcardDecks, banks: quizBanks, relations, glossary });
 }
