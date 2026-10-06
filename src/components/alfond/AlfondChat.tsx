@@ -33,7 +33,9 @@ export function AlfondChat({ variant, onNavigate, autoFocus }: Props) {
   const stick = useRef(true);
 
   const readsPage = variant === "overlay" && usePage;
-  const pageTitle = pageMeta(pathname).title.replace(new RegExp(`\\s*·\\s*${SITE_NAME}$`), "");
+  const rawPageTitle = pageMeta(pathname).title;
+  const titleSuffix = ` · ${SITE_NAME}`;
+  const pageTitle = rawPageTitle.endsWith(titleSuffix) ? rawPageTitle.slice(0, -titleSuffix.length) : rawPageTitle;
   const last = messages.at(-1);
   const waiting = busy && last?.role === "assistant" && !last.content;
 

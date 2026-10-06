@@ -74,7 +74,12 @@ export class MemoryProgressStore implements ProgressStore {
 
   async get(userId: string, keys: string[]) {
     const m = this.user(userId);
-    return new Map(keys.filter((k) => m.has(k)).map((k) => [k, structuredClone(m.get(k)!)]));
+    return new Map(
+      keys.flatMap((k) => {
+        const entry = m.get(k);
+        return entry ? [[k, structuredClone(entry)] as const] : [];
+      }),
+    );
   }
 
   async put(userId: string, entries: StoredEntry[]) {

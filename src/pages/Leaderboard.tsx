@@ -21,7 +21,7 @@ function initials(name: string): string {
       .split(/\s+/)
       .filter(Boolean)
       .slice(0, 2)
-      .map((p) => p[0]!.toUpperCase())
+      .map((p) => p[0]?.toUpperCase() ?? "")
       .join("") || "?"
   );
 }
@@ -29,7 +29,7 @@ function initials(name: string): string {
 /** A stable hue per name, so each student keeps the same avatar colour. */
 function hueOf(name: string): number {
   let h = 0;
-  for (const ch of name) h = (h * 31 + ch.codePointAt(0)!) % 360;
+  for (const ch of name) h = (h * 31 + (ch.codePointAt(0) ?? 0)) % 360;
   return h;
 }
 

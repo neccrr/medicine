@@ -219,7 +219,9 @@ export function readPageContext(): PageContext | null {
   if (!main) return null;
   const text = pageText(main);
   if (!text) return null;
-  return { title: document.title.replace(new RegExp(`\\s*·\\s*${SITE_NAME}$`), ""), path: window.location.pathname, text };
+  const suffix = ` · ${SITE_NAME}`;
+  const title = document.title.endsWith(suffix) ? document.title.slice(0, -suffix.length) : document.title;
+  return { title, path: window.location.pathname, text };
 }
 
 // ---------------------------------------------------------------------------------------------

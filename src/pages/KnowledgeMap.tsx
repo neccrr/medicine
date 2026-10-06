@@ -140,8 +140,12 @@ function MapView({ graph }: { graph: KnowledgeGraph }) {
   const neighbours = useMemo(() => {
     const out: Map<number, { i: number; w: number; rel?: string }[]> = new Map();
     for (const e of graph.edges) {
-      (out.get(e.s) ?? out.set(e.s, []).get(e.s)!).push({ i: e.t, w: e.w, rel: e.rel });
-      (out.get(e.t) ?? out.set(e.t, []).get(e.t)!).push({ i: e.s, w: e.w, rel: e.rel });
+      const sourceEdges = out.get(e.s) ?? [];
+      sourceEdges.push({ i: e.t, w: e.w, rel: e.rel });
+      out.set(e.s, sourceEdges);
+      const targetEdges = out.get(e.t) ?? [];
+      targetEdges.push({ i: e.s, w: e.w, rel: e.rel });
+      out.set(e.t, targetEdges);
     }
     for (const list of out.values()) list.sort((a, b) => b.w - a.w);
     return out;

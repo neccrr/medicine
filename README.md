@@ -499,6 +499,7 @@ npm run build        # type-check (tsc -b), build to dist/ and generate the
                      # service worker
 npm run preview      # serve the production build locally
 npm run lint         # oxlint
+npm run lint:css     # Stylelint
 npm run test         # vitest, single run
 npm run test:watch   # vitest, watch mode
 ```

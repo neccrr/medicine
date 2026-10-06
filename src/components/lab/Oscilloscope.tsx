@@ -59,8 +59,8 @@ function tracePath(points: [number, number][], xMax: number, yMax: number): stri
       lo = p;
       hi = p;
     } else {
-      if (p[1] < lo![1]) lo = p;
-      if (p[1] > hi![1]) hi = p;
+      if (lo && p[1] < lo[1]) lo = p;
+      if (hi && p[1] > hi[1]) hi = p;
     }
   }
   flush();

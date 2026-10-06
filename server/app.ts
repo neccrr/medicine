@@ -92,7 +92,9 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }
       const displayName = cleanDisplayName(user.name) ?? "Student";
       await leaderboard.create(newDoc({ userId: user.id, displayName, cohort: user.cohort }, entries));
     }
-    return (await leaderboard.get(user.id))!;
+    const updated = await leaderboard.get(user.id);
+    if (!updated) throw new Error("Leaderboard record was not created");
+    return updated;
   }
 
   /** Rescores just the keys a sync wrote (store.put has already saved them). */
@@ -236,7 +238,11 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }
     const day = utcDay(Date.now());
     const { ok, used } = await ai.usage.take(user.id, day, limit);
     if (!ok) return error(429, `You've used today's ${limit} AI answers. They reset at 07:00 WIB (midnight UTC).`);
-    const response = explainRequest ? await streamExplanation(ai.config, explainRequest, ai.fetch) : await streamChat(ai.config, chatRequest!, ai.fetch);
+    const response = explainRequest
+      ? await streamExplanation(ai.config, explainRequest, ai.fetch)
+      : chatRequest
+        ? await streamChat(ai.config, chatRequest, ai.fetch)
+        : error(400, "A message is needed.");
     // A failed answer doesn't use up one of the student's daily allowance.
     if (!response.ok) {
       await ai.usage.refund(user.id, day);

@@ -136,7 +136,7 @@ export function MobileTabBar() {
           // Subject pages sit under Home: they're reached from its subject cards.
           const active = tab.to
             ? inSection(pathname, tab.to) || (tab.id === "home" && inSection(pathname, "/subjects"))
-            : tab.items!.some((i) => inSection(pathname, i.to));
+            : (tab.items ?? []).some((i) => inSection(pathname, i.to));
           const cls = `tabbar-item${active ? " active" : ""}${open === tab.id ? " open" : ""}`;
           return tab.to ? (
             <NavLink key={tab.id} to={tab.to} end={tab.to === "/"} className={cls} aria-current={active ? "page" : undefined}>
