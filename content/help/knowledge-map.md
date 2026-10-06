@@ -14,7 +14,9 @@ in two subjects is one dot that joins them.
   folders, each concept is a note. Search it, or press <kbd>/</kbd> anywhere
   on the page.
 - The **graph view** is in the middle, and the **open concept** is on the
-  right, as a note. The **2D / 3D** switch above the graph changes the view.
+  right, as a note. The **2D / 3D** switch above the graph changes the view,
+  and the button beside it shows the map **full screen** (<kbd>Esc</kbd> or
+  the same button leaves it).
 - The bar at the bottom counts the concepts and links on show.
 
 ## Moving around the graph
@@ -55,9 +57,11 @@ buttons under it do the same as the keys, and **Controls** lists them.
 
 ## The open concept
 
-The note on the right starts with **What it is**: a sentence or two saying
-what the concept is, with a link to read more in the ebook. Below that it
-shows:
+The note on the right starts with **Ask Alfond about** the concept (when
+the AI is on): it opens Alfond with a question about how the concept connects
+to its neighbours, kept short and exam-focused. Next is **What it is**: a
+sentence or two saying what the concept is, with a link to read more in the
+ebook. Below that it shows:
 
 - **Properties:** its subjects and blocks as tags (a `#bridge` tag means it
   connects subjects), your mastery, how often it's mentioned and how many links
@@ -69,9 +73,8 @@ shows:
 - **Linked mentions:** every ebook and summary section about it, grouped by
   chapter, like Obsidian's backlinks.
 
-The buttons at the top of the note show its **local graph** (only the concept
-and its neighbours) and **Ask Alfond** how it connects to the rest (signed
-in).
+The button at the top of the note shows its **local graph** (only the
+concept and its neighbours).
 
 ## Graph settings
 

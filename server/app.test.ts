@@ -279,10 +279,18 @@ describe("class Drive", () => {
 
     // Asking again with the same listing's tag: nothing to send.
     const etag = res.headers.get("etag") ?? "";
-    expect(etag).toMatch(/^"drive-\d+-1"$/);
+    expect(etag).toMatch(/^"drive-tree-\d+-1"$/);
     const again = await app(new Request(ORIGIN + "/api/drive", { headers: { origin: ORIGIN, cookie, "if-none-match": etag } }));
     expect(again.status).toBe(304);
     expect(await again.text()).toBe("");
+  });
+
+  it("asks for an archive folder by key, and says when there's no such folder", async () => {
+    withDrive();
+    const cookie = await signUp();
+    expect((await req("/api/drive/folder?key=bad", { cookie })).status).toBe(400);
+    expect((await req("/api/drive/folder?key=unknownKey000000", { cookie })).status).toBe(404);
+    expect((await req("/api/drive/folder?key=unknownKey000000")).status).toBe(401);
   });
 
   it("says so when the Drive isn't connected", async () => {

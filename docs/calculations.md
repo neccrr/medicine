@@ -356,7 +356,14 @@ Built once at deploy time by `src/lib/knowledgeGraph/build.ts`.
   (a Fibonacci lattice, shifted so they centre on the origin), and the
   concepts start from the 2D map's x and y as x and z. Repulsion is computed
   for every pair within 380, which for 700 concepts is fast enough without a
-  tree. With reduced motion it settles in one go (up to 400 ticks).
+  tree. The build settles it once (400 ticks) and saves each concept's
+  position (`p3`, to 0.1), so the 3D view opens at rest and framed; the
+  physics only runs again when filters or forces change (from alpha 0.3, or
+  in one go with reduced motion).
+- **The map's file** (`src/lib/knowledgeGraph/wire.ts`) lists each cited
+  section once (as `[file, heading, anchor]`, with chapter paths listed once
+  too) and concepts cite them by number; the app expands them on load. That
+  took the file from 633 KB (120 KB gzipped) to about 400 KB (100 KB).
 - **3D camera** (`src/lib/knowledgeGraph/camera3d.ts`) orbits a target point
   with Y up: yaw around the vertical, pitch just short of ±90°, and a
   distance. Perspective has a 52° vertical field of view, so a point at depth
@@ -424,6 +431,11 @@ Built once at deploy time by `src/lib/knowledgeGraph/build.ts`.
     retried for 30 s.
   - A read lists up to 25 folders per request, 8 requests at a time, up to 600
     folders and 10 levels deep.
+  - An archive's cohort folders aren't walked with the rest. Each is walked
+    when first opened, with its own 600-folder budget, and kept like the main
+    listing (5 minutes, saved in MongoDB, at most 40 in a server's memory).
+    The browser keeps the 4 most recently opened and checks a kept one once a
+    visit.
   - The browser checks again after 5 minutes away.
   - A file is **new** for 7 days after it was added or changed (whichever is
     later) until the student opens it.

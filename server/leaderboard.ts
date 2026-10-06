@@ -272,8 +272,11 @@ export interface LeaderboardStore {
   /** Replaces every part at once (repairing a record from before parts existed). */
   replaceParts(userId: string, parts: Record<string, ScorePart>, now: number): Promise<void>;
   setProfile(userId: string, patch: Partial<Profile>): Promise<void>;
-  /** Every student who joined the board. */
-  joined(): Promise<LeaderboardDoc[]>;
+  /**
+   * The students who joined the board (in one cohort, if given), with what ranking them by
+   * `period` needs: the weekly board reads only the per-day points, the others the parts.
+   */
+  joined(period?: Period, cohort?: string | null): Promise<LeaderboardDoc[]>;
   delete(userId: string): Promise<void>;
   setReadiness(userId: string, blockId: string, value: number): Promise<void>;
   /** The average readiness for a block, among one cohort (or everyone), and how many it covers. */
@@ -316,8 +319,15 @@ export class MongoLeaderboardStore implements LeaderboardStore {
     await this.col.updateOne({ userId }, { $set: patch });
   }
 
-  async joined() {
-    return this.col.find({ joined: true }, { projection: { _id: 0 } }).limit(MAX_BOARD).toArray();
+  async joined(period?: Period, cohort?: string | null) {
+    const scoring = period === "week" ? { daily: 1 } : period ? { parts: 1 } : { parts: 1, daily: 1 };
+    return this.col
+      .find<LeaderboardDoc>(
+        { joined: true, ...(cohort ? { cohort } : {}) },
+        { projection: { _id: 0, userId: 1, joined: 1, displayName: 1, cohort: 1, updatedAt: 1, ...scoring } },
+      )
+      .limit(MAX_BOARD)
+      .toArray();
   }
 
   async delete(userId: string) {
@@ -373,8 +383,8 @@ export class MemoryLeaderboardStore implements LeaderboardStore {
     if (d) Object.assign(d, patch);
   }
 
-  async joined() {
-    return [...this.docs.values()].filter((d) => d.joined).map((d) => structuredClone(d));
+  async joined(_period?: Period, cohort?: string | null) {
+    return [...this.docs.values()].filter((d) => d.joined && (!cohort || d.cohort === cohort)).map((d) => structuredClone(d));
   }
 
   async delete(userId: string) {

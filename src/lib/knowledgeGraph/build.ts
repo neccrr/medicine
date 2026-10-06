@@ -5,6 +5,7 @@ import { occlusionCards } from "../occlusion";
 import type { Flashcard, OcclusionNote, QuizQuestion } from "../../types/content";
 import { DEFINITION_SCORE, describeConcepts, type DescribeSource } from "./describe";
 import { anchors, applyForces, layoutLinks, type LayoutNode } from "./layout";
+import { createLayout3D, settle3D } from "./layout3d";
 import type { GraphEdge, GraphNode, KnowledgeGraph, SectionRef } from "./types";
 import { own, setOwn } from "../records";
 
@@ -336,7 +337,18 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
     });
 
   layout(nodes, edges);
+  layout3D(nodes, edges);
   return { version: 1, nodes, edges };
+}
+
+/** The 3D view's positions, settled once here so the view opens at rest instead of unfolding. */
+function layout3D(nodes: GraphNode[], edges: GraphEdge[]) {
+  const L = createLayout3D({ version: 1, nodes, edges });
+  settle3D(L, nodes.map(() => true));
+  const round = (v: number) => Math.round(v * 10) / 10;
+  nodes.forEach((node, i) => {
+    node.p3 = [round(L.x[i]), round(L.y[i]), round(L.z[i])];
+  });
 }
 
 /** Positions the nodes once, at build time: subjects pull their concepts into regions. */

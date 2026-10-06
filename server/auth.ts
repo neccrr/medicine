@@ -70,6 +70,10 @@ export function createAuth(config: AuthConfig) {
     session: {
       expiresIn: 60 * 60 * 24 * 60, // 60 days: a study app should not keep asking students to sign in
       updateAge: 60 * 60 * 24,
+      // The session and user are kept in a signed cookie for five minutes, so routes that only
+      // read (the Drive, the class average) don't look up two documents in MongoDB each time.
+      // Everything else skips the cache (see sessionUser in app.ts).
+      cookieCache: { enabled: true, maxAge: 5 * 60 },
     },
     rateLimit: config.rateLimit ? { enabled: true, storage: config.rateLimit } : { enabled: false },
   });

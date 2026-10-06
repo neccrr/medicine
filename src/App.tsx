@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { MobileTabBar, Sidebar } from "./components/Sidebar";
 import { ScrollManager } from "./components/ScrollManager";
+import { SiteFooter } from "./components/SiteFooter";
 import { AlfondOverlay } from "./components/alfond/AlfondOverlay";
 import { CommandPalette } from "./components/CommandPalette";
 import { PulseLine } from "./components/PulseLine";
@@ -152,13 +153,7 @@ export default function App() {
               <main className="main" id="main-content">
                 <AppRoutes />
               </main>
-              <footer className="site-footer">
-                <a href="/privacy">Privacy</a>
-                <a href="/terms">Terms</a>
-                <a href="https://github.com/neccrr/medicine" target="_blank" rel="noopener noreferrer">
-                  Source
-                </a>
-              </footer>
+              <SiteFooter />
             </div>
             <MobileTabBar />
             <AlfondOverlay />

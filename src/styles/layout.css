@@ -477,10 +477,30 @@
 
 .site-footer {
   display: flex;
-  justify-content: center;
-  gap: 1.25rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
   padding: 0 1.5rem 1.75rem;
   font-size: 0.8rem;
+  text-align: center;
+}
+
+.site-footer-links,
+.site-footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.1rem 1.25rem;
+  margin: 0;
+}
+
+.site-footer-meta {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.site-footer-dim {
+  opacity: 0.75;
 }
 
 .site-footer a {
@@ -756,6 +776,10 @@
   .block-exam-link,
   .topic-filter-toggle {
     min-height: 2.25rem;
+  }
+
+  .site-footer a {
+    gap: 0.3em;
   }
 
   .back-link,

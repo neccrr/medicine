@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { crawlDrive, DriveIndex, driveConfigFromEnv, kindOf, MemoryDriveSnapshotStore, type DriveConfig } from "./drive.js";
+import { crawlDrive, DriveIndex, driveConfigFromEnv, folderKey, kindOf, MemoryDriveSnapshotStore, publicTree, type DriveConfig } from "./drive.js";
 
 const FOLDER = "application/vnd.google-apps.folder";
 const ROOT = "rootFolder0001";
@@ -19,6 +19,14 @@ function fakeDrive(items: Item[], { fail = new Set<string>() } = {}) {
   const requests: string[][] = [];
   const fetchImpl = vi.fn(async (input: RequestInfo | URL) => {
     const url = new URL(String(input));
+    // files.get for a folder's name.
+    const one = /\/files\/([^/?]+)$/.exec(url.pathname)?.[1];
+    if (one) {
+      calls.push(`get:${one}`);
+      const item = items.find((i) => i.id === one);
+      if (url.searchParams.get("key") !== "test-key" || fail.has(one) || !item) return new Response("{}", { status: 404 });
+      return Response.json({ name: item.name, mimeType: item.mimeType });
+    }
     const parents = [...(url.searchParams.get("q") ?? "").matchAll(/'([^']+)' in parents/g)].map((m) => m[1]);
     calls.push(...parents);
     requests.push(parents);
@@ -63,6 +71,16 @@ describe("Drive settings", () => {
     expect(fromLink?.folderId).toBe("1AbCdEfGhIjKlMnOpQrStUvWxYz012345");
     expect(fromLink?.ttlMs).toBe(5 * 60_000);
     expect(driveConfigFromEnv({ GOOGLE_DRIVE_API_KEY: "k", GOOGLE_DRIVE_FOLDER_ID: "x' or '1'='1" })).toBeUndefined();
+  });
+
+  it("takes archive folders as ids or links, dropping bad ones and the class folder", () => {
+    const c = driveConfigFromEnv({
+      GOOGLE_DRIVE_API_KEY: "k",
+      GOOGLE_DRIVE_FOLDER_ID: "classFolder0001",
+      GOOGLE_DRIVE_ON_DEMAND_FOLDERS: "https://drive.google.com/drive/folders/archiveFolder01?usp=share_link, archiveFolder02\nx' or 1, classFolder0001",
+    });
+    expect(c?.onDemand).toEqual(["archiveFolder01", "archiveFolder02"]);
+    expect(driveConfigFromEnv({ GOOGLE_DRIVE_API_KEY: "k", GOOGLE_DRIVE_FOLDER_ID: "classFolder0001" })?.onDemand).toEqual([]);
   });
 });
 
@@ -136,6 +154,62 @@ describe("walking the Drive", () => {
     const { fetchImpl } = fakeDrive(classDrive);
     const json = JSON.stringify(await crawlDrive(config, fetchImpl));
     for (const id of [ROOT, "semester0001", "block12folder", "anatomyfolder", "ubfolder00001"]) expect(json).not.toContain(id);
+  });
+});
+
+describe("archives (folders opened on demand)", () => {
+  const ARCHIVE = "archiveFolder01";
+  const archive: Item[] = [
+    { id: ARCHIVE, name: "PENDPRODUKTIF", mimeType: FOLDER, parent: "elsewhere00001" },
+    { id: "readmefile0001", name: "Read me.pdf", mimeType: "application/pdf", parent: ARCHIVE },
+    { id: "cohort2019abcd", name: "2019", mimeType: FOLDER, parent: ARCHIVE },
+    { id: "cohort2020abcd", name: "2020", mimeType: FOLDER, parent: ARCHIVE },
+    { id: "deepfolder0001", name: "BLOCK 1.1", mimeType: FOLDER, parent: "cohort2019abcd" },
+    { id: "oldpaper00001", name: "UB 1.1.pdf", mimeType: "application/pdf", parent: "deepfolder0001" },
+  ];
+  const withArchive: DriveConfig = { ...config, onDemand: [ARCHIVE] };
+
+  it("lists the archive at the top with its cohorts, without walking into them", async () => {
+    const { fetchImpl, calls } = fakeDrive([...classDrive, ...archive]);
+    const tree = await crawlDrive(withArchive, fetchImpl);
+    expect(tree.complete).toBe(true);
+    expect(tree.root.folders.map((f) => f.name)).toEqual(["PENDPRODUKTIF", "SEMESTER 1"]);
+    const top = tree.root.folders[0];
+    expect(top.archive).toBe(true);
+    expect(top.files.map((f) => f.name)).toEqual(["Read me.pdf"]);
+    expect(top.folders).toEqual([
+      { name: "2019", folders: [], files: [], deferred: folderKey("cohort2019abcd") },
+      { name: "2020", folders: [], files: [], deferred: folderKey("cohort2020abcd") },
+    ]);
+    expect(calls).not.toContain("cohort2019abcd");
+    expect(tree.deferred?.[folderKey("cohort2019abcd")]).toBe("cohort2019abcd");
+    // The browser's copy has keys, never the ids.
+    const sent = JSON.stringify(publicTree(tree));
+    for (const id of [ARCHIVE, "cohort2019abcd", "cohort2020abcd"]) expect(sent).not.toContain(id);
+  });
+
+  it("walks a cohort when it's opened, keeps it, and refuses unknown keys", async () => {
+    let now = 0;
+    const { fetchImpl, calls } = fakeDrive([...classDrive, ...archive]);
+    const snapshots = new MemoryDriveSnapshotStore();
+    const index = new DriveIndex(withArchive, snapshots, fetchImpl, () => now);
+    expect(await index.folder("unknownKey000000")).toBeNull();
+    const key = folderKey("cohort2019abcd");
+    const cohort = await index.folder(key);
+    expect(cohort?.root.folders[0]?.name).toBe("BLOCK 1.1");
+    expect(cohort?.root.folders[0]?.files.map((f) => f.name)).toEqual(["UB 1.1.pdf"]);
+    expect((await snapshots.load(`folder:${key}`))?.updatedAt).toBe(0);
+    const walks = calls.filter((c) => c === "cohort2019abcd").length;
+    now = 60_000;
+    expect(await index.folder(key)).toBe(cohort);
+    expect(calls.filter((c) => c === "cohort2019abcd")).toHaveLength(walks);
+  });
+
+  it("still lists the class Drive when an archive can't be read", async () => {
+    const { fetchImpl } = fakeDrive(classDrive);
+    const tree = await crawlDrive(withArchive, fetchImpl);
+    expect(tree.complete).toBe(false);
+    expect(tree.root.folders.map((f) => f.name)).toEqual(["SEMESTER 1"]);
   });
 });
 

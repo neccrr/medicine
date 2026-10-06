@@ -128,6 +128,9 @@ account environment variables it runs as a plain static site.
   Drive files above the cleaned PDFs. Files added to or removed from the Drive
   show up within a few minutes, and the listing opens instantly from the
   device's last copy
+- Past cohorts' archives (such as Pendproduktif) at the top of the Class
+  Drive: their cohort folders are listed, and each is read from Drive only
+  when it's opened, so the archive never crowds out this year's files
 
 ### Virtual Lab
 
@@ -176,8 +179,9 @@ account environment variables it runs as a plain static site.
   the terms the ebooks and summaries put in bold, linked where they come up
   together in a paragraph, flashcard or quiz question; a concept taught in two
   subjects or blocks is one dot that joins them
-- Built at deploy time into `/knowledge-graph.json` (layout included, so it
-  opens instantly); past-paper exam questions are never read
+- Built at deploy time into `/knowledge-graph.json` (2D and 3D layouts
+  included, so both views open at rest; sections listed once and cited by
+  number, about 100 KB gzipped); past-paper exam questions are never read
 - Laid out like an Obsidian vault: a ribbon of tools, a concept explorer with
   blocks and subjects as folders, the graph view, and the open concept as a
   note (properties and tags, links as wikilinks, practice, and "linked
@@ -198,7 +202,10 @@ account environment variables it runs as a plain static site.
   block, subject, bridges only, orphans), groups (color by subject or by your
   own mastery, weak concepts ringed), display (3D effect, text fade, node
   size, link thickness) and forces (center, repel, link force, link distance)
-- "Ask Alfond" how a concept connects
+- **Ask Alfond about** a concept, at the top of its note: how it connects to
+  its neighbours, short and exam-focused
+- Full screen, with the browser's own full screen or (on iPhone) the map
+  covering the page
 - Optional AI relationship labels ("innervates", "part of"…): `AI_BASE_URL=…
   AI_API_KEY=… AI_MODEL=… npm run graph:relations`, then commit
   `content/graph/relations.json`
@@ -265,6 +272,10 @@ account environment variables it runs as a plain static site.
 - Blocks with no content yet appear as "coming soon" placeholders
 - A recovery screen instead of a blank page if saved progress from an older
   version breaks something
+- Every page's footer shows the current block and the version and build
+  (`v0.1.49 · build fb0fd76`: the version counts commits, the build links to
+  the commit; see [Version and
+  build](docs/deploying.md#version-and-build))
 
 ## Documentation
 
@@ -272,7 +283,8 @@ account environment variables it runs as a plain static site.
 - **Adding study material:** the [content guide](docs/content-guide.md).
 - **Developers:** [architecture](docs/architecture.md),
   [development](docs/development.md), [storage and
-  sync](docs/storage-and-sync.md), the [API](docs/api.md), and [how the numbers
+  sync](docs/storage-and-sync.md), the [database](docs/database.md), the
+  [API](docs/api.md), and [how the numbers
   are worked out](docs/calculations.md), every formula from the Virtual Lab
   to leaderboard points.
 - **Running your own copy:** [deploying](docs/deploying.md).

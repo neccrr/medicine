@@ -1,8 +1,9 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import react from '@vitejs/plugin-react'
-import { defineConfig, type Plugin } from 'vite'
+import { defineConfig, type Plugin, type UserConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { SITE_ORIGIN } from './src/lib/site.ts'
+import { buildInfo } from './scripts/build-info.mjs'
 
 // Serves the real API (server/app.ts) from the Vite dev server when MEDICINE_API=memory or
 // MONGODB_URI is set (`npm run dev:api`). Plain `npm run dev` stays a static, guest-only app.
@@ -81,7 +82,10 @@ function knowledgeGraphDev(): Plugin {
       server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
         if (req.url?.split('?')[0] !== '/knowledge-graph.json') return next()
         try {
-          cached ??= JSON.stringify(await (await server.ssrLoadModule('/src/lib/knowledgeGraph/build.ts')).buildFromContent())
+          if (cached === null) {
+            const graph = await (await server.ssrLoadModule('/src/lib/knowledgeGraph/build.ts')).buildFromContent()
+            cached = JSON.stringify((await server.ssrLoadModule('/src/lib/knowledgeGraph/wire.ts')).encodeGraph(graph))
+          }
           res.setHeader('content-type', 'application/json')
           res.end(cached)
         } catch (err) {
@@ -113,7 +117,9 @@ function siteUrl(): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(async (): Promise<UserConfig> => ({
+  // The version and build shown in the footer (src/lib/buildInfo.ts).
+  define: { __BUILD_INFO__: JSON.stringify(await buildInfo()) },
   plugins: [
     react(),
     devApi(),
@@ -229,4 +235,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

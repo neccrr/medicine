@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { GraphCanvas, type GraphCanvasHandle, type NodeStyle } from "../components/map/GraphCanvas";
 import { Graph3D } from "../components/map/Graph3D";
@@ -19,6 +19,8 @@ import {
   PlusIcon,
   PulseIcon,
   SearchIcon,
+  ShrinkIcon,
+  ExpandIcon,
   TagIcon,
 } from "../components/map/ObsIcons";
 import { AlfondIcon } from "../components/icons";
@@ -28,6 +30,7 @@ import { askAlfondAbout } from "../lib/alfond";
 import { ebookMeta, flashcardDecks, quizBanks } from "../lib/content";
 import { sanitizeSettings, type GraphSettings } from "../lib/knowledgeGraph/graphSettings";
 import { nodeMastery, readStudyState } from "../lib/knowledgeGraph/mastery";
+import { decodeGraph } from "../lib/knowledgeGraph/wire";
 import { GRAPH_URL, type GraphNode, type KnowledgeGraph, type SectionRef } from "../lib/knowledgeGraph/types";
 import { allSubjects } from "../lib/routeMeta";
 import { STORAGE_KEYS } from "../lib/storage";
@@ -88,9 +91,9 @@ export function KnowledgeMap() {
   useEffect(() => {
     let live = true;
     fetch(GRAPH_URL)
-      .then((r) => (r.ok ? (r.json() as Promise<KnowledgeGraph>) : Promise.reject(new Error(String(r.status)))))
-      .then((g) => {
-        if (live) setGraph(g);
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((data: unknown) => {
+        if (live) setGraph(decodeGraph(data));
       })
       .catch(() => {
         if (live) setFailed(true);
@@ -119,6 +122,44 @@ function Workspace({ graph }: { graph: KnowledgeGraph }) {
   const canvas = useRef<GraphCanvasHandle>(null);
   const frame = useRef<HTMLDivElement>(null);
   const search = useRef<HTMLInputElement>(null);
+
+  // Full screen: the browser's own where it has one for an element, else (iPhone) the
+  // workspace covering the page.
+  const [nativeFull, setNativeFull] = useState(false);
+  const [pageFull, setPageFull] = useState(false);
+  const fullScreen = nativeFull || pageFull;
+  useEffect(() => {
+    const onChange = () => { setNativeFull(document.fullscreenElement !== null && document.fullscreenElement === frame.current); };
+    document.addEventListener("fullscreenchange", onChange);
+    return () => { document.removeEventListener("fullscreenchange", onChange); };
+  }, []);
+  useEffect(() => {
+    if (!pageFull) return;
+    document.documentElement.classList.add("map-page-full");
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPageFull(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.documentElement.classList.remove("map-page-full");
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [pageFull]);
+  const toggleFullScreen = useCallback(() => {
+    const el = frame.current;
+    if (!el) return;
+    if (document.fullscreenElement) {
+      void document.exitFullscreen();
+      return;
+    }
+    if (pageFull) {
+      setPageFull(false);
+      return;
+    }
+    if (typeof el.requestFullscreen === "function" && document.fullscreenEnabled) {
+      el.requestFullscreen().catch(() => { setPageFull(true); });
+    } else setPageFull(true);
+  }, [pageFull]);
   const themeKey = useThemeKey();
   const subjects = useMemo(() => allSubjects(), []);
   const subjectLabel = (key: string) => subjects.find((s) => s.key === key)?.label ?? subjectName(key);
@@ -292,7 +333,7 @@ function Workspace({ graph }: { graph: KnowledgeGraph }) {
   const subjectSlots = names.map((name, i) => ({ id: name, label: nameLabel(name), slot: (i % SLOTS) + 1 }));
 
   return (
-    <div className="obs-frame" ref={frame}>
+    <div className={pageFull ? "obs-frame is-page-full" : "obs-frame"} ref={frame}>
       <div className={explorerOpen ? "obs explorer-open" : "obs"}>
         <nav className="obs-ribbon" aria-label="Map tools">
           <button type="button" className={explorerOpen ? "obs-ribbon-btn is-on" : "obs-ribbon-btn"} aria-pressed={explorerOpen} onClick={() => { setExplorerOpen((o) => !o); }} title="Concepts" aria-label="Show the concept list">
@@ -347,6 +388,16 @@ function Workspace({ graph }: { graph: KnowledgeGraph }) {
                 </button>
               ))}
             </div>
+            <button
+              type="button"
+              className={fullScreen ? "obs-icon-btn obs-full-btn is-on" : "obs-icon-btn obs-full-btn"}
+              aria-pressed={fullScreen}
+              onClick={toggleFullScreen}
+              title={fullScreen ? "Exit full screen (Esc)" : "Full screen"}
+              aria-label={fullScreen ? "Exit full screen" : "Show the map full screen"}
+            >
+              {fullScreen ? <ShrinkIcon /> : <ExpandIcon />}
+            </button>
           </div>
           <div className="obs-graph">
             {settings.view === "3d" ? (
@@ -708,22 +759,29 @@ function Note({
           <button type="button" className={localGraph ? "obs-icon-btn is-on" : "obs-icon-btn"} aria-pressed={localGraph} onClick={onLocalGraph} title="Local graph" aria-label="Show only this concept and its links">
             <LocalGraphIcon />
           </button>
-          {aiOn && (
-            <button
-              type="button"
-              className="obs-icon-btn"
-              title="Ask Alfond"
-              aria-label="Ask Alfond about this concept"
-              onClick={() => { onAsk(`Explain "${node.label}" and how it connects to ${neighbourNames.join(", ")} across my subjects. Keep it short and exam-focused.`); }}
-            >
-              <AlfondIcon />
-            </button>
-          )}
         </div>
       </div>
 
       <article className="obs-note-body">
         <h2 className="obs-inline-title">{node.label}</h2>
+        {aiOn && (
+          <button
+            type="button"
+            className="obs-ask"
+            onClick={() => { onAsk(`Explain "${node.label}" and how it connects to ${neighbourNames.join(", ")} across my subjects. Keep it short and exam-focused.`); }}
+          >
+            <span className="obs-ask-icon" aria-hidden="true">
+              <AlfondIcon />
+            </span>
+            <span className="obs-ask-text">
+              <strong>Ask Alfond about {node.label}</strong>
+              <small>{neighbourNames.length > 0 ? `How it connects to ${neighbourNames.slice(0, 3).join(", ")}` : "Explained short and exam-focused"}</small>
+            </span>
+            <span className="obs-ask-go" aria-hidden="true">
+              →
+            </span>
+          </button>
+        )}
         {node.d && (
           <div className="obs-callout">
             <p className="obs-callout-title">What it is</p>

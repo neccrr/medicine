@@ -5,6 +5,7 @@ import { MongoClient, type Db } from "mongodb";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { MongoLeaderboardStore, newDoc, scoreFor, scoreUpdate } from "./leaderboard.js";
 import { MongoProgressStore } from "./progressStore.js";
+import { MongoDriveSnapshotStore } from "./drive.js";
 import { ensureIndexes, INDEXES } from "./schema.js";
 
 const uri = process.env.MONGODB_TEST_URI;
@@ -70,11 +71,32 @@ describe.skipIf(!uri)("MongoDB stores", () => {
     expect(scoreFor(doc, "all", NOW)).toBe(28);
     expect(doc.daily).toEqual({ "2026-09-26": 20 });
     expect((await lb.joined()).map((d) => d.userId)).toEqual(["s1"]);
+    // Each board reads only what ranking it needs.
+    const [week] = await lb.joined("week");
+    expect(week.daily).toEqual({ "2026-09-26": 20 });
+    expect(week.parts).toBeUndefined();
+    const [all] = await lb.joined("all", "2025");
+    expect(scoreFor(all, "all", NOW)).toBe(28);
+    expect(all.daily).toBeUndefined();
+    expect(await lb.joined("all", "2024")).toEqual([]);
 
     // Old days are dropped as new ones are credited.
     const later = NOW + 20 * 86_400_000;
     await lb.applyScore("s1", scoreUpdate(doc, [{ key: quizKey, value: attempts(8, 10, 10) }], later));
     expect((await lb.get("s1"))!.daily).toEqual({ "2026-10-16": 10 });
+  });
+
+  it("keeps the Drive listing and each opened archive folder, dated for expiry", async () => {
+    const snapshots = new MongoDriveSnapshotStore(db);
+    const tree = { root: { name: "", folders: [], files: [] }, updatedAt: 5, complete: true, deferred: { abc: "folderId0001" } };
+    await snapshots.save(tree);
+    await snapshots.save({ ...tree, updatedAt: 6 }, "folder:abc");
+    expect(await snapshots.load()).toEqual(tree);
+    expect((await snapshots.load("folder:abc"))?.updatedAt).toBe(6);
+    const doc = await db.collection("driveSnapshot").findOne({ _id: "folder:abc" as never });
+    expect(doc?.savedAt).toBeInstanceOf(Date);
+    const ttl = (await db.collection("driveSnapshot").indexes()).find((i) => i.name === "expiry");
+    expect(ttl?.expireAfterSeconds).toBe(30 * 86_400);
   });
 
   it("repairs a record from before per-key parts", async () => {

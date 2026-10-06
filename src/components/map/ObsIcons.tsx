@@ -141,3 +141,15 @@ export const CollapseIcon = () => (
     <path d="m7 20 5-5 5 5M7 4l5 5 5-5" />
   </Icon>
 );
+
+export const ExpandIcon = () => (
+  <Icon>
+    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+  </Icon>
+);
+
+export const ShrinkIcon = () => (
+  <Icon>
+    <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
+  </Icon>
+);

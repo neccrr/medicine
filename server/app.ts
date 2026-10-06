@@ -16,7 +16,7 @@ import {
 } from "./leaderboard.js";
 import type { ProgressStore, StoredEntry } from "./progressStore.js";
 import { parseChatRequest, parseExplainRequest, streamChat, streamExplanation, utcDay, type AiConfig, type AiUsageStore } from "./ai.js";
-import type { DriveIndex } from "./drive.js";
+import { publicTree, type DriveIndex } from "./drive.js";
 
 const MAX_BODY_BYTES = 2_000_000;
 const MAX_CHANGES = 1000;
@@ -71,8 +71,22 @@ function isChange(c: unknown, now: number): c is SyncEntry {
 
 /** The whole API as one fetch-style handler: auth, config, sync and account export. */
 export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }: AppDeps) {
-  async function sessionUser(request: Request): Promise<SessionUser | null> {
-    const session = await auth.api.getSession({ headers: request.headers });
+  /** Cookies to send back with a request's response (a renewed session cache). */
+  const renewed = new WeakMap<Request, string[]>();
+
+  /**
+   * The signed-in student. `cached`: the route only reads, so the session cookie cache may answer
+   * (see auth.ts). Everything that can save something checks the database, so nothing is written
+   * for an account that was just signed out or deleted elsewhere.
+   */
+  async function sessionUser(request: Request, { cached = false } = {}): Promise<SessionUser | null> {
+    const { headers, response: session } = await auth.api.getSession({
+      headers: request.headers,
+      query: { disableCookieCache: !cached },
+      returnHeaders: true,
+    });
+    const cookies = headers.getSetCookie();
+    if (cookies.length > 0) renewed.set(request, cookies);
     if (!session) return null;
     const user = session.user as { id: string; name?: string; cohort?: string | null };
     return { id: user.id, name: user.name ?? "", cohort: user.cohort?.trim() || null };
@@ -115,7 +129,7 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }
       await leaderboard.setProfile(user.id, { cohort: user.cohort });
       me.cohort = user.cohort;
     }
-    const rows = rankBoard(await leaderboard.joined(), { period, cohort, userId: user.id });
+    const rows = rankBoard(await leaderboard.joined(period, cohort), { period, cohort, userId: user.id });
     const myRow = rows.find((r) => r.me);
     return json({
       period,
@@ -269,27 +283,37 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }
     });
   }
 
-  return async function handle(request: Request): Promise<Response> {
+  async function handle(request: Request): Promise<Response> {
+    const response = await route(request);
+    for (const cookie of renewed.get(request) ?? []) response.headers.append("set-cookie", cookie);
+    return response;
+  }
+
+  async function route(request: Request): Promise<Response> {
     const { pathname } = new URL(request.url);
     try {
       if (pathname.startsWith("/api/auth/")) return await auth.handler(request);
       if (pathname === "/api/config" && request.method === "GET") {
         return json({ accounts: true, google: googleEnabled, ai: Boolean(ai), drive: Boolean(drive) });
       }
-      if (pathname === "/api/drive") {
+      if (pathname === "/api/drive" || pathname === "/api/drive/folder") {
         if (request.method !== "GET") return error(405, "Method not allowed.");
-        const user = await sessionUser(request);
+        const user = await sessionUser(request, { cached: true });
         if (!user) return error(401, "Sign in to see the class Drive.");
         if (!drive) return error(503, "The class Drive isn't connected.");
-        const refresh = new URL(request.url).searchParams.get("refresh") === "1";
+        const params = new URL(request.url).searchParams;
+        const refresh = params.get("refresh") === "1";
+        const key = params.get("key") ?? "";
+        if (pathname === "/api/drive/folder" && !/^[A-Za-z0-9_-]{16}$/.test(key)) return error(400, "Which folder?");
         try {
-          const tree = await drive.tree({ refresh });
+          const tree = pathname === "/api/drive" ? await drive.tree({ refresh }) : await drive.folder(key, { refresh });
+          if (!tree) return error(404, "That folder isn't in the class Drive any more.");
           // The listing changes only when Drive is read again: a browser that has this one
           // gets a 304 instead of the whole tree.
-          const etag = `"drive-${tree.updatedAt}-${tree.complete ? 1 : 0}"`;
+          const etag = `"drive-${key || "tree"}-${tree.updatedAt}-${tree.complete ? 1 : 0}"`;
           const headers = { etag, "cache-control": "private, no-cache" };
           if (request.headers.get("if-none-match") === etag) return new Response(null, { status: 304, headers });
-          return new Response(JSON.stringify(tree), { headers: { ...headers, "content-type": "application/json" } });
+          return new Response(JSON.stringify(publicTree(tree)), { headers: { ...headers, "content-type": "application/json" } });
         } catch {
           return error(502, "Couldn't reach Google Drive. Try again in a minute.");
         }
@@ -302,7 +326,7 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }
       }
       if (pathname === "/api/readiness") {
         if (request.method !== "GET" && request.method !== "PUT") return error(405, "Method not allowed.");
-        const user = await sessionUser(request);
+        const user = await sessionUser(request, { cached: request.method === "GET" });
         if (!user) return error(401, "Sign in to compare with your class.");
         return await readiness(request, user);
       }
@@ -320,7 +344,9 @@ export function createApp({ auth, store, leaderboard, googleEnabled, ai, drive }
       console.error(err);
       return error(500, "Something went wrong on the server.");
     }
-  };
+  }
+
+  return handle;
 }
 
 export type App = ReturnType<typeof createApp>;

@@ -23,6 +23,9 @@ are written in [`content/help/`](../content/help/).
   conventions, and recipes for common changes.
 - [Storage and sync](storage-and-sync.md): the `localStorage` key registry,
   merge rules, the sync round and the database.
+- [Database](database.md): the MongoDB connection, every collection's
+  documents and indexes, what each request reads and writes, sizes, privacy,
+  testing and operations.
 - [API reference](api.md): every `/api` route with its requests and
   responses.
 - [How the numbers are worked out](calculations.md): every formula and

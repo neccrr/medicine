@@ -10,9 +10,13 @@ export type DriveResult =
   | { ok: true; notModified: true }
   | { ok: false; status: number; message: string };
 
-export async function fetchDrive({ refresh = false, etag }: { refresh?: boolean; etag?: string | null } = {}): Promise<DriveResult> {
+export async function fetchDrive({ refresh = false, etag, key }: { refresh?: boolean; etag?: string | null; key?: string } = {}): Promise<DriveResult> {
+  const params = new URLSearchParams();
+  if (key) params.set("key", key);
+  if (refresh) params.set("refresh", "1");
+  const qs = params.toString();
   try {
-    const res = await fetch(`/api/drive${refresh ? "?refresh=1" : ""}`, {
+    const res = await fetch(`/api/drive${key ? "/folder" : ""}${qs ? `?${qs}` : ""}`, {
       credentials: "same-origin",
       // The device keeps its own copy (see useDrive), so the browser's cache would only double it.
       cache: "no-store",
@@ -35,6 +39,47 @@ export interface DriveCache {
   userId: string;
   etag: string | null;
   tree: DriveTree;
+  /** Archive folders opened lately, by key, with when they were last opened. */
+  folders?: Record<string, { etag: string | null; tree: DriveTree; openedAt: number }>;
+}
+
+/** Archive folders kept on the device: the most recently opened. */
+export const CACHED_FOLDERS = 4;
+
+/** The cache with an archive folder added, keeping only the most recently opened few. */
+export function withFolder(cache: DriveCache, key: string, entry: { etag: string | null; tree: DriveTree; openedAt: number }): DriveCache {
+  const folders = Object.entries({ ...cache.folders, [key]: entry })
+    .sort(([, a], [, b]) => b.openedAt - a.openedAt)
+    .slice(0, CACHED_FOLDERS);
+  return { ...cache, folders: Object.fromEntries(folders) };
+}
+
+/** The tree with the loaded archive folders' contents put in their places. */
+export function graftFolders(root: DriveFolder, loaded: Readonly<Record<string, { tree: DriveTree }>>): DriveFolder {
+  const graft = (folder: DriveFolder): DriveFolder => {
+    const content = folder.deferred ? loaded[folder.deferred]?.tree.root : undefined;
+    if (content) return { ...content, name: folder.name, deferred: folder.deferred, loaded: true };
+    if (folder.folders.length === 0) return folder;
+    const folders = folder.folders.map(graft);
+    return folders.every((f, i) => f === folder.folders[i]) ? folder : { ...folder, folders };
+  };
+  return Object.keys(loaded).length > 0 ? graft(root) : root;
+}
+
+/** Archive folders not opened yet: their files aren't in the listing (or search) until they are. */
+export function waitingFolders(root: DriveFolder): { folder: DriveFolder; path: string[] }[] {
+  return allFolders(root).filter(({ folder }) => folder.deferred && !folder.loaded);
+}
+
+/** Along a path, the first archive folder that hasn't been loaded (whose contents the path needs). */
+export function waitingOnPath(root: DriveFolder, path: readonly string[]): { key: string; depth: number } | null {
+  let folder: DriveFolder | undefined = root;
+  for (const [i, name] of path.entries()) {
+    folder = folder.folders.find((f) => f.name === name);
+    if (!folder) return null;
+    if (folder.deferred && !folder.loaded) return { key: folder.deferred, depth: i + 1 };
+  }
+  return null;
 }
 
 export function readDriveCache(userId: string): DriveCache | null {
@@ -76,12 +121,15 @@ export function folderAt(root: DriveFolder, path: readonly string[]): DriveFolde
 /** The path (folder names) to the first folder, depth first, that matches. */
 export function findFolderPath(root: DriveFolder, matches: (folder: DriveFolder) => boolean, maxDepth = 4): string[] | null {
   const walk = (folder: DriveFolder, path: string[]): string[] | null => {
+    // Past cohorts' archives aren't where this year's blocks are.
     for (const child of folder.folders) {
+      if (child.archive) continue;
       const childPath = [...path, child.name];
       if (matches(child)) return childPath;
     }
     if (path.length >= maxDepth) return null;
     for (const child of folder.folders) {
+      if (child.archive) continue;
       const found = walk(child, [...path, child.name]);
       if (found) return found;
     }

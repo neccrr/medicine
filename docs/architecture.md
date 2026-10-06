@@ -48,7 +48,8 @@ src/
   context/      AccountContext: session, sync scheduling, sign-in actions
   prerender/    site.ts: the static page for every public route
 content/        the study material and help pages (see content-guide.md)
-scripts/        prerender.mjs (after vite build), graph-relations.mjs
+scripts/        prerender.mjs (after vite build), graph-relations.mjs,
+                build-info.mjs (version and build for the footer), wiki.mjs
 api/
   index.ts      the Vercel Function; vercel.json rewrites /api/* here
 server/         the API behind it:
@@ -60,9 +61,10 @@ server/         the API behind it:
                     (MongoDB and in-memory)
   leaderboard.ts  scoring and ranking, one document per user (MongoDB and in-memory)
   ai.ts           "Explain this" and Alfond through the AI gateway, daily allowance
-  drive.ts        the Class Drive: walks the Drive folder, caches the listing
-  mongo.ts        the shared client; devApi.ts serves the API from the Vite
-                  dev server
+  drive.ts        the Class Drive: walks the Drive folder, caches the listing,
+                  and reads archive folders when they're opened
+  mongo.ts        the shared client (see database.md); devApi.ts serves the
+                  API from the Vite dev server
 ```
 
 ## How content gets into the app
@@ -173,7 +175,8 @@ pure function with a `*.test.ts` beside it. The formulas are written out in
 | `labTraces.ts` | Oscilloscope tracing colours and reading a value off a trace |
 | `occlusion.ts` | Image-occlusion cards, figure navigation and the zoom window |
 | `explain.ts` | Finds the note passages that match a question, asks the AI to explain |
-| `knowledgeGraph/` | Builds the knowledge map (concepts, links, layout, each concept's "What it is" from `describe.ts` and the glossary), its shared physics (`layout.ts`), the 3D physics (`layout3d.ts`) and orbit camera (`camera3d.ts`), the graph settings and each concept's mastery |
+| `knowledgeGraph/` | Builds the knowledge map (concepts, links, layout, each concept's "What it is" from `describe.ts` and the glossary), its shared physics (`layout.ts`), the 3D physics (`layout3d.ts`) and orbit camera (`camera3d.ts`), the compact file format (`wire.ts`), the graph settings and each concept's mastery |
+| `buildInfo.ts` | The version and build the footer shows, put in at build time |
 | `drive.ts` | The Class Drive listing: device cache, folder lookup, search, new files |
 | `help.ts` | The in-app help pages: the list from `content/help/meta.json`, each page loaded on demand |
 | `markdownHtml.ts` | Markdown to HTML with heading anchors (chapters, summaries, help) |

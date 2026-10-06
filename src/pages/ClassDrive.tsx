@@ -20,6 +20,8 @@ import {
   searchDrive,
   sortFiles,
   updatedAgo,
+  waitingFolders,
+  waitingOnPath,
   type DriveSort,
 } from "../lib/drive";
 import type { DriveFile, DriveFolder } from "../lib/driveTypes";
@@ -125,6 +127,32 @@ export function ClassDrive() {
   }, [tree]);
 
   const folder = tree ? folderAt(tree.root, path) : null;
+  // An archive's cohort folder on the way to here: read when it's first opened, then checked
+  // once a visit. Until then the path below it can't be followed.
+  const waiting = tree ? waitingOnPath(tree.root, path) : null;
+  const pathKey = path.join("\u0000");
+  const archiveAt = useMemo(() => {
+    let at = tree?.root;
+    let archive: string | null = null;
+    let key: string | null = null;
+    for (const name of path) {
+      at = at?.folders.find((f) => f.name === name);
+      if (!at) break;
+      if (at.archive) archive = at.name;
+      if (at.deferred) {
+        key = at.deferred;
+        break;
+      }
+    }
+    return { archive, key };
+    // path is a fresh array each render; its contents are what matter.
+  }, [tree, pathKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const loadFolder = drive.status === "ready" ? drive.loadFolder : null;
+  useEffect(() => {
+    if (archiveAt.key && loadFolder) loadFolder(archiveAt.key);
+  }, [archiveAt.key, loadFolder]);
+  const cohortState = archiveAt.key && drive.status === "ready" ? drive.folderState(archiveAt.key) : null;
+  const unopened = useMemo(() => (tree ? waitingFolders(tree.root).length : 0), [tree]);
   const selected = fileId && index ? index.byId.get(fileId) : undefined;
   const searching = deferredQuery.trim().length >= 2;
   const results = useMemo(() => (index && searching ? searchDrive(index.searchable, deferredQuery) : null), [index, searching, deferredQuery]);
@@ -207,9 +235,12 @@ export function ClassDrive() {
           </span>
           <button
             type="button"
-            className={drive.refreshing ? "icon-btn drive-refresh spinning" : "icon-btn drive-refresh"}
-            onClick={drive.refresh}
-            disabled={drive.refreshing}
+            className={drive.refreshing || cohortState?.loading ? "icon-btn drive-refresh spinning" : "icon-btn drive-refresh"}
+            onClick={() => {
+              drive.refresh();
+              if (archiveAt.key) drive.loadFolder(archiveAt.key, true);
+            }}
+            disabled={drive.refreshing || cohortState?.loading}
             aria-label="Check the Drive for new files"
             title="Check for new files"
           >
@@ -294,7 +325,13 @@ export function ClassDrive() {
             </span>
             <span className="drive-row-sub">
               {showPath && `${placeLabel(folderPath.slice(0, -1))} · `}
-              {files.length === 0 ? "Empty" : `${files.length} file${files.length === 1 ? "" : "s"}`}
+              {f.deferred && !f.loaded
+                ? "Loads when opened"
+                : f.archive
+                  ? `Past cohorts · ${f.folders.length} folder${f.folders.length === 1 ? "" : "s"}`
+                  : files.length === 0
+                    ? "Empty"
+                    : `${files.length} file${files.length === 1 ? "" : "s"}`}
             </span>
           </span>
           {fresh > 0 && <NewPill count={fresh} />}
@@ -361,6 +398,12 @@ export function ClassDrive() {
 
       {drive.problem && <p className="drive-note">Showing the files as of {updatedAgo(drive.tree.updatedAt, now)}: {drive.problem}</p>}
       {!drive.tree.complete && <p className="drive-note">Part of the Drive couldn't be read this time, so a few files may be missing.</p>}
+      {!results && archiveAt.archive && (
+        <p className="drive-note drive-note-info">
+          <strong>{niceName(archiveAt.archive)}</strong> is an archive from past cohorts. Each cohort's folder is read from Google Drive when you open it, so
+          the whole archive never has to load at once and nothing in it gets cut off. Search covers the cohorts you've opened.
+        </p>
+      )}
 
       {!results && atHome && newFiles.length > 0 && (
         <section className="drive-fresh" aria-labelledby="drive-fresh-title">
@@ -388,6 +431,11 @@ export function ClassDrive() {
         <div className="drive-list">
           {results ? (
             <>
+              {unopened > 0 && (
+                <p className="drive-note drive-note-info">
+                  {unopened} archive folder{unopened === 1 ? " isn't" : "s aren't"} searched until you open {unopened === 1 ? "it" : "them"}.
+                </p>
+              )}
               <p className="drive-count" aria-live="polite">
                 {results.total === 0
                   ? `Nothing in the Drive matches “${deferredQuery.trim()}”.`
@@ -401,6 +449,22 @@ export function ClassDrive() {
                 </ul>
               )}
             </>
+          ) : waiting ? (
+            cohortState?.problem && !cohortState.loading ? (
+              <div className="drive-empty">
+                <p>Couldn't open this folder: {cohortState.problem}</p>
+                <button type="button" className="btn btn-secondary btn-small" onClick={() => { drive.loadFolder(waiting.key, true); }}>
+                  Try again
+                </button>
+              </div>
+            ) : (
+              <div aria-busy="true">
+                <p className="drive-count" role="status">
+                  Reading this folder from Google Drive…
+                </p>
+                <RowSkeleton />
+              </div>
+            )
           ) : !folder ? (
             <p className="drive-empty">
               That folder isn't in the Drive any more. <Link to="/drive">Back to the top</Link>

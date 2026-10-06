@@ -7,6 +7,7 @@
 import { renderMarkdown } from "../lib/markdownHtml";
 import { itemAt } from "../lib/arrays";
 import { buildFromContent } from "../lib/knowledgeGraph/build";
+import { encodeGraph } from "../lib/knowledgeGraph/wire";
 import type { KnowledgeGraph } from "../lib/knowledgeGraph/types";
 import { groupByBlock, studyBlocks } from "../lib/blocks";
 import {
@@ -272,7 +273,7 @@ export async function renderSite(template: string, origin: string): Promise<Rend
   const files = new Map<string, string>();
   const indexed = indexablePaths();
   mapGraph = await buildFromContent();
-  files.set("knowledge-graph.json", JSON.stringify(mapGraph));
+  files.set("knowledge-graph.json", JSON.stringify(encodeGraph(mapGraph)));
   for (const path of [...indexed, ...PRIVATE_PATHS]) {
     // The root index.html stays the app shell (the service worker caches it); every other
     // route gets its own page.

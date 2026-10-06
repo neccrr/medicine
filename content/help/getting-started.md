@@ -59,6 +59,11 @@ When a new version is out, a small **A new version is ready** bar appears.
 Press **Refresh** when it suits you. The app never reloads on its own, so a
 quiz or exam in progress is never lost.
 
+The bottom of every page shows the block you're studying (your block from
+**Account**, or the one with the next exam) and the app's version and build,
+for example **v0.1.49 · build fb0fd76**. Mention the version when you report a
+problem.
+
 ## Light or dark
 
 The app follows your device's light or dark setting. Use the sun/moon button in

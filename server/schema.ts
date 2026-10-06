@@ -33,8 +33,10 @@ export const INDEXES: Record<string, IndexDescription[]> = {
     { key: { userId: 1 }, unique: true, name: "user" },
     { key: { joined: 1 }, name: "joined" },
   ],
-  // One document: the latest listing of the class Drive (see drive.ts). No indexes.
-  driveSnapshot: [],
+  // The latest Drive listings (see drive.ts): { _id: "tree" } for the class Drive and
+  // { _id: "folder:<key>" } per opened archive folder, each with savedAt. A listing nobody has
+  // asked for in 30 days is deleted (the next request reads Drive again).
+  driveSnapshot: [{ key: { savedAt: 1 }, expireAfterSeconds: 30 * 86_400, name: "expiry" }],
 };
 
 /** Creates any missing index; a no-op round trip per collection when they all exist. */

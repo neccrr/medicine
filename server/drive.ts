@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { Db } from "mongodb";
 import type { DriveFile, DriveFileKind, DriveFolder, DriveTree } from "../src/lib/driveTypes.js";
 
@@ -5,6 +6,11 @@ import type { DriveFile, DriveFileKind, DriveFolder, DriveTree } from "../src/li
 // folder is shared by link, so no Google sign-in is needed). The whole tree is walked and kept
 // for a few minutes, so files added to or removed from Drive show up on the next refresh. The
 // latest listing is also saved to the database, so a cold start doesn't have to walk it first.
+//
+// Big archives (a past cohorts' folder with years of material) would use up the walk's folder
+// budget and push other files out, so they're "on demand": the archive's own folders (one per
+// cohort) are listed, and each is walked, with a budget of its own, only when a student opens
+// it. The browser asks for one by an opaque key; folder ids stay on the server.
 
 export interface DriveConfig {
   apiKey: string;
@@ -13,6 +19,29 @@ export interface DriveConfig {
   apiBase: string;
   /** How long a listing is used before Drive is asked again. */
   ttlMs: number;
+  /** Archive folders: listed at the top, their subfolders walked only when opened. */
+  onDemand?: string[];
+}
+
+/** A folder id or share link from the settings, as an id (or null). */
+function folderIdOf(raw: string): string | null {
+  const id = /\/folders\/([A-Za-z0-9_-]+)/.exec(raw)?.[1] ?? raw.trim();
+  return ID_RE.test(id) ? id : null;
+}
+
+/** The key the browser uses for an on-demand folder: not the id, which grants edit access. */
+export function folderKey(id: string): string {
+  return createHash("sha256").update(`drive-folder:${id}`).digest("base64url").slice(0, 16);
+}
+
+/** A tree as the server keeps it: with the ids behind its on-demand folders' keys. */
+export interface ServerDriveTree extends DriveTree {
+  deferred?: Record<string, string>;
+}
+
+/** What the browser gets: the ids left out. */
+export function publicTree({ root, updatedAt, complete }: DriveTree): DriveTree {
+  return { root, updatedAt, complete };
 }
 
 const ID_RE = /^[A-Za-z0-9_-]{10,100}$/;
@@ -34,15 +63,17 @@ const MIN_FORCED_AGE_MS = 30_000;
 export function driveConfigFromEnv(env: Record<string, string | undefined>): DriveConfig | undefined {
   const apiKey = env.GOOGLE_DRIVE_API_KEY?.trim();
   // Either the folder id or its share link.
-  const raw = env.GOOGLE_DRIVE_FOLDER_ID?.trim() ?? "";
-  const folderId = /\/folders\/([A-Za-z0-9_-]+)/.exec(raw)?.[1] ?? raw;
-  if (!apiKey || !ID_RE.test(folderId)) return undefined;
+  const folderId = folderIdOf(env.GOOGLE_DRIVE_FOLDER_ID ?? "");
+  if (!apiKey || !folderId) return undefined;
   const minutes = Number(env.GOOGLE_DRIVE_REFRESH_MINUTES);
+  // Archive folders, separated by commas, spaces or new lines.
+  const onDemand = [...new Set((env.GOOGLE_DRIVE_ON_DEMAND_FOLDERS ?? "").split(/[\s,]+/).map(folderIdOf).filter((id): id is string => id !== null && id !== folderId))];
   return {
     apiKey,
     folderId,
     apiBase: env.GOOGLE_DRIVE_API_URL?.replace(/\/$/, "") || "https://www.googleapis.com/drive/v3",
     ttlMs: (Number.isFinite(minutes) && minutes >= 1 ? minutes : 5) * 60_000,
+    onDemand,
   };
 }
 
@@ -112,16 +143,30 @@ async function inPool<T>(tasks: (() => Promise<T>)[], limit: number): Promise<T[
   return results.filter((r): r is T => r !== undefined);
 }
 
-type Pending = { id: string; folder: DriveFolder; depth: number };
+/** An archive folder's name, from Drive. */
+async function folderName(config: DriveConfig, id: string, fetchImpl: typeof fetch): Promise<string> {
+  const params = new URLSearchParams({ fields: "name,mimeType", supportsAllDrives: "true", key: config.apiKey });
+  const res = await fetchImpl(`${config.apiBase}/files/${encodeURIComponent(id)}?${params}`, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
+  if (!res.ok) throw new Error(`Drive answered ${res.status} for a folder`);
+  const body = (await res.json()) as ApiFile;
+  const name = body.name?.trim();
+  if (body.mimeType !== FOLDER || !name) throw new Error("Not a folder");
+  return name;
+}
+
+/** A folder to list; an archive's subfolders are listed but not walked. */
+type Pending = { id: string; folder: DriveFolder; depth: number; onDemand?: boolean };
 
 /**
  * Walks the whole folder tree, level by level, listing many folders per request (a semester
  * of about 150 folders takes around ten requests instead of 150). Only the top folder failing
  * to list is an error.
  */
-export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = fetch, now: () => number = Date.now): Promise<DriveTree> {
+export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = fetch, now: () => number = Date.now): Promise<ServerDriveTree> {
   const root: DriveFolder = { name: "", folders: [], files: [] };
-  const seen = new Set([config.folderId]);
+  const onDemand = config.onDemand ?? [];
+  const seen = new Set([config.folderId, ...onDemand]);
+  const deferred: Record<string, string> = {};
   let complete = true;
 
   /** Files the items into their folders, and returns the subfolders to list next. */
@@ -136,7 +181,13 @@ export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = 
       const targetId = isShortcut ? item.shortcutDetails?.targetId : item.id;
       const mimeType = (isShortcut ? item.shortcutDetails?.targetMimeType : item.mimeType) ?? "";
       if (!targetId || !ID_RE.test(targetId)) continue;
-      if (mimeType === FOLDER) {
+      if (mimeType === FOLDER && parent.onDemand) {
+        // A cohort in an archive: listed by name, walked when it's opened.
+        const key = folderKey(targetId);
+        if (deferred[key]) continue;
+        deferred[key] = targetId;
+        parent.folder.folders.push({ name, folders: [], files: [], deferred: key });
+      } else if (mimeType === FOLDER) {
         // A shortcut can point back up the tree: each folder is walked once.
         if (seen.has(targetId)) continue;
         if (parent.depth + 1 > MAX_DEPTH || seen.size >= MAX_FOLDERS) {
@@ -180,6 +231,24 @@ export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = 
   };
 
   let level: Pending[] = [{ id: config.folderId, folder: root, depth: 0 }];
+  // Archives go at the top, next to the class's own folders.
+  const archives = await Promise.all(
+    onDemand.map((id) =>
+      folderName(config, id, fetchImpl).then(
+        (name) => ({ id, name }),
+        () => {
+          complete = false;
+          return null;
+        },
+      ),
+    ),
+  );
+  for (const archive of archives) {
+    if (!archive) continue;
+    const folder: DriveFolder = { name: archive.name, folders: [], files: [], archive: true };
+    root.folders.push(folder);
+    level.push({ id: archive.id, folder, depth: 1, onDemand: true });
+  }
   while (level.length > 0) {
     const batches: Pending[][] = [];
     for (let i = 0; i < level.length; i += FOLDERS_PER_REQUEST) batches.push(level.slice(i, i + FOLDERS_PER_REQUEST));
@@ -192,48 +261,112 @@ export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = 
     folder.folders.forEach(sortAll);
   };
   sortAll(root);
-  return { root, updatedAt: now(), complete };
+  return { root, updatedAt: now(), complete, ...(Object.keys(deferred).length > 0 ? { deferred } : {}) };
 }
 
-/** Where the latest listing is kept between cold starts. */
+/** Where the latest listings are kept between cold starts: the tree, and each opened archive folder. */
 export interface DriveSnapshotStore {
-  load(): Promise<DriveTree | null>;
-  save(tree: DriveTree): Promise<void>;
+  load(id?: string): Promise<ServerDriveTree | null>;
+  save(tree: ServerDriveTree, id?: string): Promise<void>;
 }
 
 export class MemoryDriveSnapshotStore implements DriveSnapshotStore {
-  private tree: DriveTree | null = null;
-  async load() {
-    return this.tree;
+  private trees = new Map<string, ServerDriveTree>();
+  async load(id = "tree") {
+    return this.trees.get(id) ?? null;
   }
-  async save(tree: DriveTree) {
-    this.tree = tree;
+  async save(tree: ServerDriveTree, id = "tree") {
+    this.trees.set(id, tree);
   }
 }
 
-/** One document in the driveSnapshot collection. */
+/**
+ * The driveSnapshot collection: { _id: "tree", tree, savedAt } for the class Drive, and
+ * { _id: "folder:<key>", tree, savedAt } for each archive folder someone has opened (removed
+ * after 30 days unopened by a TTL index, see schema.ts).
+ */
 export class MongoDriveSnapshotStore implements DriveSnapshotStore {
   private db: Db;
   constructor(db: Db) {
     this.db = db;
   }
   private get col() {
-    return this.db.collection<{ _id: string; tree: DriveTree }>("driveSnapshot");
+    return this.db.collection<{ _id: string; tree: ServerDriveTree; savedAt: Date }>("driveSnapshot");
   }
-  async load() {
-    return (await this.col.findOne({ _id: "tree" }))?.tree ?? null;
+  async load(id = "tree") {
+    return (await this.col.findOne({ _id: id }, { projection: { tree: 1 } }))?.tree ?? null;
   }
-  async save(tree: DriveTree) {
-    await this.col.replaceOne({ _id: "tree" }, { tree }, { upsert: true });
+  async save(tree: ServerDriveTree, id = "tree") {
+    await this.col.replaceOne({ _id: id }, { tree, savedAt: new Date() }, { upsert: true });
   }
 }
 
-/** The listing the API serves: fresh enough, walked at most once at a time. */
-export class DriveIndex {
-  private current: DriveTree | null = null;
+/** One listing (the tree, or an archive folder): fresh enough, walked at most once at a time. */
+class Listing {
+  private current: ServerDriveTree | null = null;
   private loaded = false;
-  private walking: Promise<DriveTree> | null = null;
+  private walking: Promise<ServerDriveTree> | null = null;
   private failedAt = -Infinity;
+
+  private readonly crawl: () => Promise<ServerDriveTree>;
+  private readonly snapshots: DriveSnapshotStore;
+  private readonly snapshotId: string;
+  private readonly ttlMs: number;
+  private readonly now: () => number;
+
+  constructor(crawl: () => Promise<ServerDriveTree>, snapshots: DriveSnapshotStore, snapshotId: string, ttlMs: number, now: () => number) {
+    this.crawl = crawl;
+    this.snapshots = snapshots;
+    this.snapshotId = snapshotId;
+    this.ttlMs = ttlMs;
+    this.now = now;
+  }
+
+  async get(refresh: boolean): Promise<ServerDriveTree> {
+    if (!this.loaded) {
+      this.loaded = true;
+      this.current = await this.snapshots.load(this.snapshotId).catch(() => null);
+    }
+    const current = this.current;
+    const age = current ? this.now() - current.updatedAt : Infinity;
+    const wanted = refresh ? age >= MIN_FORCED_AGE_MS : age >= this.ttlMs;
+    const failedRecently = this.now() - this.failedAt < RETRY_AFTER_MS;
+    if (current && (!wanted || failedRecently)) return current;
+    if (!current) {
+      if (failedRecently && !this.walking) throw new Error("The class Drive failed to list a moment ago");
+      return this.walk();
+    }
+    // A stale listing is served if Drive is slow; the walk carries on for the next request.
+    const timeout = new Promise<ServerDriveTree>((resolve) => setTimeout(() => { resolve(current); }, STALE_WAIT_MS));
+    return Promise.race([this.walk().catch(() => current), timeout]);
+  }
+
+  private walk(): Promise<ServerDriveTree> {
+    this.walking ??= this.crawl()
+      .then((tree) => {
+        this.current = tree;
+        this.snapshots.save(tree, this.snapshotId).catch((err: unknown) => { console.error("Saving the Drive listing failed", err); });
+        return tree;
+      })
+      .catch((err: unknown) => {
+        this.failedAt = this.now();
+        console.error("Listing the class Drive failed", err);
+        throw err;
+      })
+      .finally(() => {
+        this.walking = null;
+      });
+    return this.walking;
+  }
+}
+
+/** At most this many archive folders are kept in memory at once (the least recently opened go). */
+const MAX_OPEN_FOLDERS = 40;
+
+/** The listings the API serves: the class Drive's tree, and archive folders as they're opened. */
+export class DriveIndex {
+  private main: Listing;
+  private folders = new Map<string, Listing>();
   private config: DriveConfig;
   private snapshots: DriveSnapshotStore;
   private fetchImpl: typeof fetch;
@@ -249,43 +382,32 @@ export class DriveIndex {
     this.snapshots = snapshots;
     this.fetchImpl = fetchImpl;
     this.now = now;
+    this.main = new Listing(() => crawlDrive(config, fetchImpl, now), snapshots, "tree", config.ttlMs, now);
   }
 
   /** The folder tree. `refresh` asks Drive again unless the listing is very recent. */
-  async tree({ refresh = false } = {}): Promise<DriveTree> {
-    if (!this.loaded) {
-      this.loaded = true;
-      this.current = await this.snapshots.load().catch(() => null);
-    }
-    const current = this.current;
-    const age = current ? this.now() - current.updatedAt : Infinity;
-    const wanted = refresh ? age >= MIN_FORCED_AGE_MS : age >= this.config.ttlMs;
-    const failedRecently = this.now() - this.failedAt < RETRY_AFTER_MS;
-    if (current && (!wanted || failedRecently)) return current;
-    if (!current) {
-      if (failedRecently && !this.walking) throw new Error("The class Drive failed to list a moment ago");
-      return this.walk();
-    }
-    // A stale listing is served if Drive is slow; the walk carries on for the next request.
-    const timeout = new Promise<DriveTree>((resolve) => setTimeout(() => { resolve(current); }, STALE_WAIT_MS));
-    return Promise.race([this.walk().catch(() => current), timeout]);
+  async tree({ refresh = false } = {}): Promise<ServerDriveTree> {
+    return this.main.get(refresh);
   }
 
-  private walk(): Promise<DriveTree> {
-    this.walking ??= crawlDrive(this.config, this.fetchImpl, this.now)
-      .then((tree) => {
-        this.current = tree;
-        this.snapshots.save(tree).catch((err: unknown) => { console.error("Saving the Drive listing failed", err); });
-        return tree;
-      })
-      .catch((err: unknown) => {
-        this.failedAt = this.now();
-        console.error("Listing the class Drive failed", err);
-        throw err;
-      })
-      .finally(() => {
-        this.walking = null;
-      });
-    return this.walking;
+  /**
+   * An archive folder's contents, by its key, walked on first use and kept like the tree.
+   * Null when no such folder is in the tree.
+   */
+  async folder(key: string, { refresh = false } = {}): Promise<DriveTree | null> {
+    let listing = this.folders.get(key);
+    if (!listing) {
+      const id = (await this.main.get(false)).deferred?.[key];
+      if (!id) return null;
+      const config = { ...this.config, folderId: id, onDemand: [] };
+      listing = new Listing(() => crawlDrive(config, this.fetchImpl, this.now), this.snapshots, `folder:${key}`, this.config.ttlMs, this.now);
+      if (this.folders.size >= MAX_OPEN_FOLDERS) {
+        const oldest = this.folders.keys().next();
+        if (!oldest.done) this.folders.delete(oldest.value);
+      }
+    } else this.folders.delete(key);
+    // Most recently opened last.
+    this.folders.set(key, listing);
+    return listing.get(refresh);
   }
 }

@@ -35,6 +35,7 @@ and the app runs as a guest-only static site.
 | POST | `/api/ai/explain` | yes | stream an explanation of a quiz question or flashcard |
 | POST | `/api/ai/chat` | yes | stream Alfond's reply |
 | GET | `/api/drive` | yes | the Class Drive listing |
+| GET | `/api/drive/folder?key=` | yes | one archive folder's contents, read when it's opened |
 
 ### GET /api/config
 
@@ -200,7 +201,32 @@ early (too many folders, or a folder failed to list).
 The response carries an `ETag` and `cache-control: private, no-cache`; a
 request with a matching `If-None-Match` gets `304` with no body. Without a
 configured Drive it answers `503`, and `502` if Google can't be reached and
-there's no saved copy. The crawl and cache are described in
+there's no saved copy.
+
+Archive folders (`GOOGLE_DRIVE_ON_DEMAND_FOLDERS`, see
+[deploying](deploying.md#class-drive-optional)) appear at the top of the
+listing with `"archive": true`. Their own folders (one per cohort) come with
+no contents and a `"deferred"` key instead:
+
+```json
+{
+  "name": "ANGKATAN 2020",
+  "folders": [],
+  "files": [],
+  "deferred": "r8_axc-74j3ZJjTh"
+}
+```
+
+### GET /api/drive/folder
+
+Query: `key` (16 characters, from a `deferred` folder) and optionally
+`refresh=1`. Answers with that folder's own listing, in the same shape as
+`/api/drive` (its `root` is the folder), walked on first request with a folder
+budget of its own and then kept like the main listing. The key is a hash of
+the folder's id, which never leaves the server. `400` for a malformed key,
+`404` for a key that isn't in the current listing; ETags work the same way.
+
+The crawl and cache are described in
 [calculations](calculations.md#sync-and-the-class-drive) and
 [deploying](deploying.md#class-drive-optional).
 

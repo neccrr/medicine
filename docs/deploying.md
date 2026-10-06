@@ -99,12 +99,29 @@ pages, the search index or the knowledge map.
 3. In Vercel → Environment Variables, set `GOOGLE_DRIVE_API_KEY` and
    `GOOGLE_DRIVE_FOLDER_ID` (the folder's id, or its whole share link).
    `GOOGLE_DRIVE_REFRESH_MINUTES` (optional) changes the five minutes.
-4. Redeploy. `/api/config` then answers `"drive":true`.
+4. Optional: archives. A big folder of past cohorts' material (such as
+   PENDPRODUKTIF) would use up the walk's budget of 600 folders and push
+   other files out. Put its id or share link in
+   `GOOGLE_DRIVE_ON_DEMAND_FOLDERS` (several separated by commas). Each
+   appears at the top of the Class Drive with its cohort folders listed, and
+   a cohort is read from Drive, with a budget of its own, only when a student
+   opens it. The archive must be shared by link too.
+5. Redeploy. `/api/config` then answers `"drive":true`.
 
 Students open files in Google's viewer, so they get the folder's own sharing
 rights: if the folder is shared as "Anyone with the link can **edit**", any
 student can rename, change or remove the class's files from there. Share it as
 **Viewer** and keep editing for the people who upload.
+
+## Version and build
+
+The footer of every page shows the app's version and build, worked out by
+`scripts/build-info.mjs` when the site is built: the version counts the
+repository's commits (149 commits is `v0.1.49`: hundreds are the minor
+version, the rest the patch), and the build is the commit's short hash,
+linking to it on GitHub with its subject as the tooltip. Vercel clones only
+the latest commits, so the script fetches the rest of the history first (or,
+failing that, asks GitHub's API for the count). Without git it shows `dev`.
 
 ## Search engines
 

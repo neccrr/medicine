@@ -18,6 +18,8 @@ export interface GraphNode {
   x: number;
   y: number;
   r: number;
+  /** Where the 3D view puts it, also laid out at build time (missing from older builds). */
+  p3?: [number, number, number];
   /** Subject keys ("1.2/anatomy"), most-mentioning first. */
   subjects: string[];
   /** Sections, cards, questions and labels that mention it. */

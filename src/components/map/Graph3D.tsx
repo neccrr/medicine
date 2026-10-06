@@ -460,6 +460,16 @@ export const Graph3D = forwardRef<GraphCanvasHandle, Props>(function Graph3D(
   }, []);
   useEffect(() => () => { cancelAnimationFrame(raf.current); }, []);
 
+  // A layout already at rest (laid out at build time) is framed as soon as the view opens.
+  useEffect(() => {
+    if (simActive.current || interacted.current) return;
+    const s = sphereOf();
+    cam.current = frameSphere(cam.current, s.x, s.y, s.z, s.r);
+    kickRef.current();
+    // Once, when the view opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Props that change the picture.
   useEffect(() => {
     kickRef.current();

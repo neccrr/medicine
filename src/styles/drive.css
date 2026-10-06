@@ -64,6 +64,14 @@
   background: var(--surface-2);
 }
 
+.drive-note-info {
+  border-left: 3px solid var(--accent);
+}
+
+.drive-note-info strong {
+  color: var(--text);
+}
+
 .drive-empty,
 .drive-count {
   color: var(--text-muted);

@@ -96,7 +96,10 @@ per cold start:
 | `progress` | sync | one document per user per key |
 | `leaderboard` | leaderboard | membership, display name, score parts, readiness per block |
 | `aiUsage` | AI | answers used per user per day (expires after two days) |
-| `driveSnapshot` | Class Drive | the latest Drive listing, for cold starts |
+| `driveSnapshot` | Class Drive | the latest Drive listing and each opened archive folder, for cold starts (30-day TTL) |
+
+Each collection's documents, indexes and queries, the connection settings
+and how to test against a real database are in [Database](database.md).
 
 ## Legacy keys
 

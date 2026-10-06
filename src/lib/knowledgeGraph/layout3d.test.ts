@@ -87,3 +87,16 @@ describe("3D layout", () => {
     expect([a.x[0], a.y[0], a.z[0]]).toEqual([1, 2, 3]);
   });
 });
+
+describe("3D layout from the build", () => {
+  it("starts at rest where the build put each concept", () => {
+    const graph = graphOf(3, [[0, 1]]);
+    graph.nodes.forEach((node, i) => {
+      node.p3 = [i * 10, i * 20, i * 30];
+    });
+    const L = createLayout3D(graph);
+    expect(L.alpha).toBe(0);
+    expect([L.x[2], L.y[2], L.z[2]]).toEqual([20, 40, 60]);
+    expect(tick3D(L, [true, true, true])).toBe(false);
+  });
+});

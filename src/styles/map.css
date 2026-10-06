@@ -1065,6 +1065,117 @@
   color: var(--obs-text-muted);
 }
 
+/* ---- Ask Alfond: a labelled action under the title, so it can't be missed ---- */
+.obs-ask {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  margin: 0 0 0.9rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--obs-accent) 45%, var(--obs-border));
+  border-radius: var(--obs-radius);
+  background: color-mix(in srgb, var(--obs-accent) 10%, var(--obs-bg));
+  color: var(--obs-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.15s;
+}
+
+.obs-ask:hover {
+  border-color: var(--obs-accent);
+  background: color-mix(in srgb, var(--obs-accent) 16%, var(--obs-bg));
+}
+
+.obs-ask:active {
+  transform: translateY(1px);
+}
+
+.obs-ask:focus-visible {
+  outline: 2px solid var(--obs-accent);
+  outline-offset: 2px;
+}
+
+.obs-ask-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--obs-accent);
+  color: var(--obs-bg);
+}
+
+.obs-ask-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.obs-ask-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.obs-ask-text strong {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.obs-ask-text small {
+  overflow: hidden;
+  color: var(--obs-text-muted);
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.obs-ask-go {
+  flex: none;
+  color: var(--obs-accent);
+  font-size: 1.1rem;
+}
+
+/* ---- Full screen: the browser's, or the workspace covering the page (iPhone) ---- */
+.obs-full-btn {
+  flex: none;
+  margin: 0 0 0.3rem;
+}
+
+.obs-frame:fullscreen,
+.obs-frame.is-page-full {
+  margin: 0;
+  padding: 0;
+  background: var(--obs-bg);
+}
+
+.obs-frame.is-page-full {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.obs-frame:fullscreen .obs,
+.obs-frame.is-page-full .obs {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+:root.map-page-full,
+:root.map-page-full body {
+  overflow: hidden;
+}
+
 /* ---- "What it is": the concept's description, as a callout ---- */
 .obs-callout {
   margin: 0 0 0.9rem;

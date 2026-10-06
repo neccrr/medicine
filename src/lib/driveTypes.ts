@@ -20,6 +20,12 @@ export interface DriveFolder {
   name: string;
   folders: DriveFolder[];
   files: DriveFile[];
+  /** A folder of an archive, listed but not walked: its contents load from /api/drive/folder?key=. */
+  deferred?: string;
+  /** An archive (a past cohorts' folder): its subfolders load when they're opened. */
+  archive?: true;
+  /** In the browser: a deferred folder whose contents have been loaded into it. */
+  loaded?: true;
 }
 
 export interface DriveTree {

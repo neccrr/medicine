@@ -98,6 +98,16 @@ export function createLayout3D(graph: KnowledgeGraph): Layout3D {
     L.degree[e.s]++;
     L.degree[e.t]++;
   }
+  // Positions settled at build time: start there, at rest.
+  if (n > 0 && graph.nodes.every((node) => node.p3)) {
+    graph.nodes.forEach((node, i) => {
+      const [x, y, z] = node.p3 ?? [0, 0, 0];
+      L.x[i] = x;
+      L.y[i] = y;
+      L.z[i] = z;
+    });
+    L.alpha = 0;
+  }
   return L;
 }
 
