@@ -8,9 +8,10 @@ see where each muscle attaches. The models come from
 
 ## Licence
 
-The atlas files in `public/atlas/` (the `.glb.gz` models, `atlas.json` and
-`descriptions.json`) are **not** under the app's MIT licence. They are a
-derivative of Z-Anatomy and are shared under **CC BY-SA 4.0**.
+The atlas files in `public/atlas/` (the `.glb.gz` models, `atlas.json`,
+`latin.json` and `descriptions.json`) are **not** under the app's MIT
+licence. They are a derivative of Z-Anatomy and are shared under
+**CC BY-SA 4.0**.
 
 - Z-Anatomy is built on BodyParts3D (CC BY-SA 2.1 Japan).
 - Its descriptions follow Wikipedia (CC BY-SA).
@@ -92,6 +93,7 @@ instead of about 5,000, so turning the body stays smooth on phones.
 | --- | --- |
 | `public/atlas/*.glb.gz` | One model per layer: glTF with meshopt compression, gzipped. The node names are the structure names. |
 | `public/atlas/atlas.json` | The index: layers, the group path of every structure, landmarks and attachments |
+| `public/atlas/latin.json` | The Latin name of each structure, group and landmark (about 2,900 of 3,000), loaded with the index |
 | `public/atlas/descriptions.json` | Short descriptions by structure name, loaded when the first structure is opened |
 | `src/lib/atlas/model.ts` | The index types, name parsing, search, tissue colours, groups and attachments; tested in `model.test.ts` |
 | `src/components/atlas/viewer.ts` | `AtlasViewer`: three.js scene, downloading and unzipping, batching, picking, highlighting and hover, camera tweening, hiding and isolating, landmark markers |
@@ -115,6 +117,30 @@ The models' node names follow Z-Anatomy's own naming:
 
 `parseNode` turns a node name into a display name and a side.
 `descriptionKey` gives the key a structure's description is filed under.
+
+### Anatomical names
+
+The page writes names the way anatomy is taught, adding to the English and
+never replacing it:
+
+- **Sides** are *dextra* and *sinistra* (`sideLabel`), with the English in a
+  tooltip; the short form in lists is "dx" or "sin".
+- **Latin names** come from Z-Anatomy's translation table, built into
+  `latin.json` by `scripts/atlas/latin.mjs`. Under a structure's English name
+  the page shows its Latin name with the side agreeing with the head noun
+  (`latinWithSide`): *ren dexter*, *scapula dextra*, *os femoris dextrum*,
+  *musculi rotatores sinistri*. The gender comes from the noun's ending, with
+  a list of exceptions (*ren*, *pulmo* and *tendo* are masculine; *cartilago*
+  and *manus* feminine; *femur*, *caput* and *chiasma* neuter). Names that
+  already carry a side, such as *atrium dextrum*, are left alone.
+- **Greek roots** (`greekRoot`) follow the Latin for the organs and tissues
+  whose clinical terms come from Greek: kidney *nephros* (nephritis), lung
+  *pneumon*, heart *kardia*, joint *arthron*, vertebra *spondylos*, vein
+  *phleps*, gland *aden*, and so on.
+- **Views** are anterior, posterior, sinistra, dextra and superior, and the
+  label on the model names the side facing you in the same terms.
+- **Search** matches the Latin as well: "os femoris" or "ren" finds the femur
+  or the kidney.
 
 three.js changes some characters in node names when it loads a file. The
 viewer therefore reads the original names from the glTF JSON (through
@@ -180,7 +206,10 @@ The steps:
    and writes `web/atlas.json` from the metadata and the packed files. It
    lists the layers, their sizes and triangle counts. Group paths are stored
    once and referred to by number.
-5. **Describe** (`descs.py`): writes `web/descriptions.json`, which holds the
+5. **Latin** (`latin.mjs`): writes `web/latin.json`, the Latin name of every
+   structure, group and landmark the index lists, from Z-Anatomy's
+   `Translations.txt`.
+6. **Describe** (`descs.py`): writes `web/descriptions.json`, which holds the
    first paragraphs of each structure's description, cleaned of leftovers
    from Wikipedia.
 

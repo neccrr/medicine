@@ -483,6 +483,28 @@
   line-height: 1.2;
 }
 
+.atlas-latin {
+  margin: -0.2rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.atlas-latin em {
+  color: var(--text);
+}
+
+.atlas-greek {
+  font-size: 0.85rem;
+}
+
+.atlas-latin-small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 400;
+}
+
 .atlas-info h3 {
   margin: 0.4rem 0 0;
   font-size: 0.9rem;

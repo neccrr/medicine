@@ -32,7 +32,8 @@ done
 # 4. Simplify and compress, then the index and descriptions.
 for f in raw/*.glb; do node "$here/pack.mjs" "$f" "web/$(basename "$f")" 0.5 0.0005; done
 node "$here/index.mjs"
+node "$here/latin.mjs"
 python3 "$here/descs.py"
 
-cp web/*.glb.gz web/atlas.json web/descriptions.json "$here/../../public/atlas/"
+cp web/*.glb.gz web/atlas.json web/latin.json web/descriptions.json "$here/../../public/atlas/"
 echo "public/atlas/ updated"

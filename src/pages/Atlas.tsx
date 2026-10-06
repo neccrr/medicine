@@ -31,6 +31,12 @@ import {
   parseNode,
   searchAtlas,
   sideLabel,
+  sideEnglish,
+  sideShort,
+  latinOf,
+  latinWithSide,
+  greekRoot,
+  type LatinNames,
   atlasFiles,
   DEFAULT_HIDDEN_GROUPS,
   nodesOutside,
@@ -54,6 +60,15 @@ function isTyping(target: EventTarget | null): boolean {
 
 /** The same structure on the other side ("Femur.r" → "Femur.l"), if it has one. */
 const otherSide = (node: string) => (/\.r$/.test(node) ? node.replace(/\.r$/, ".l") : /\.l$/.test(node) ? node.replace(/\.l$/, ".r") : null);
+
+/** The views, named as anatomists name them: [view, label, plain English]. */
+const VIEW_BUTTONS: [ViewName, string, string][] = [
+  ["front", "Anterior", "Front"],
+  ["back", "Posterior", "Back"],
+  ["left", "Sinistra", "Left side"],
+  ["right", "Dextra", "Right side"],
+  ["top", "Superior", "Top"],
+];
 
 const VIEW_KEYS: Record<string, ViewName> = { "1": "front", "2": "back", "3": "left", "4": "right", "5": "top" };
 /** One press of a turn button or arrow key: 20°. */
@@ -93,6 +108,7 @@ export function Atlas() {
   const resultsList = useRef<HTMLUListElement>(null);
   const viewer = useRef<AtlasViewer | null>(null);
   const [index, setIndex] = useState<AtlasIndex | null>(null);
+  const [latin, setLatin] = useState<LatinNames | null>(null);
   const [failed, setFailed] = useState(false);
   const [webgl] = useState(hasWebGL);
   const [descriptions, setDescriptions] = useState<Record<string, string> | null>(null);
@@ -155,6 +171,13 @@ export function Atlas() {
       .catch(() => {
         if (live) setFailed(true);
       });
+    // The Latin names come alongside; the atlas works without them.
+    fetch(`${ATLAS_BASE}latin.json`)
+      .then((r) => (r.ok ? (r.json() as Promise<LatinNames>) : Promise.reject(new Error(String(r.status)))))
+      .then((data) => {
+        if (live) setLatin(data);
+      })
+      .catch(() => {});
     return () => {
       live = false;
     };
@@ -328,7 +351,7 @@ export function Atlas() {
     }
   };
 
-  const all = useMemo(() => (index ? allStructures(index) : []), [index]);
+  const all = useMemo(() => (index ? allStructures(index, latin) : []), [index, latin]);
   const recent = useMemo(
     () => prefs.recent.flatMap((k) => {
       const p = fromKey(k);
@@ -342,6 +365,11 @@ export function Atlas() {
   const labelOf = (system: string) => (system === ATTACHMENTS ? "Muscle attachments" : (index?.systems.find((s) => s.id === system)?.label ?? system));
 
   const sel = selected ? parseNode(selected.node) : null;
+  // The Latin name with its side ("Ren dexter"), and the Greek root where clinical terms use it.
+  const selName = selected ? (selected.system === ATTACHMENTS ? null : sel?.name ?? null) : null;
+  const selLatinBase = selName ? latinOf(latin, selName) : null;
+  const selLatin = selLatinBase && sel ? latinWithSide(selLatinBase, sel.side) : null;
+  const selGreek = selName ? greekRoot(selName) : null;
   const selPath = selected && index ? (index.nodes[selected.system]?.find(([n]) => n === selected.node)?.[1] ?? -1) : -1;
   const attachment = selected?.system === ATTACHMENTS ? index?.attachments.find(([n]) => n === selected.node) : undefined;
   const muscleAttachments = selected && index && selected.system === "muscular" ? attachmentsFor(index, selected.node) : [];
@@ -583,6 +611,7 @@ export function Atlas() {
                 <li key={`${r.system}/${r.node}`}>
                   <button type="button" onClick={() => { setQuery(""); select({ system: r.system, node: r.node }, true); }}>
                     <strong>{r.name}</strong>
+                    {r.latin && r.latin.toLowerCase() !== r.name.toLowerCase() && <em className="atlas-latin-small">{r.latin}</em>}
                     <small>
                       {labelOf(r.system)}
                       {r.path.length ? ` · ${r.path.at(-1)}` : ""}
@@ -603,7 +632,7 @@ export function Atlas() {
             {hover && (
               <div className="atlas-hover" style={{ transform: `translate(${hover.x + 14}px, ${hover.y + 10}px)` }} aria-hidden="true">
                 {parseNode(hover.node).name}
-                {parseNode(hover.node).side && <small> {sideLabel(parseNode(hover.node).side)}</small>}
+                {parseNode(hover.node).side && <small> {sideLabel(parseNode(hover.node).side).toLowerCase()}</small>}
               </div>
             )}
             {Object.keys(progress).length > 0 && (
@@ -623,7 +652,7 @@ export function Atlas() {
           )}
           <div className="atlas-corner">
             <span className="atlas-side-label" aria-live="polite">
-              {side} view
+              {side === "Sinistra" || side === "Dextra" ? `Lateralis ${side.toLowerCase()}` : side}
             </span>
             <button
               type="button"
@@ -672,9 +701,9 @@ export function Atlas() {
             </button>
           </div>
           <div className="atlas-tools" role="toolbar" aria-label="View">
-            {(["front", "back", "left", "right", "top"] as const).map((v) => (
-              <button key={v} type="button" className="atlas-chip" onClick={() => { view(v); }}>
-                {v[0].toUpperCase() + v.slice(1)}
+            {VIEW_BUTTONS.map(([v, label, english]) => (
+              <button key={v} type="button" className="atlas-chip" title={`${english} view`} onClick={() => { view(v); }}>
+                {label}
               </button>
             ))}
             {(isolating || hiddenCount > 0) && (
@@ -691,7 +720,12 @@ export function Atlas() {
               <div className="atlas-info-head">
                 <p className="atlas-kicker">
                   {labelOf(selected.system)}
-                  {sel.side && ` · ${sideLabel(sel.side)}`}
+                  {sel.side && (
+                    <>
+                      {" · "}
+                      <span title={sideEnglish(sel.side)}>{sideLabel(sel.side)}</span>
+                    </>
+                  )}
                 </p>
                 {(backTo || forwardTo) && (
                   <div className="atlas-steps">
@@ -705,12 +739,27 @@ export function Atlas() {
                 )}
               </div>
               <h2>{attachment ? `${attachment[2] === "o" ? "Origin" : "Insertion"} of ${parseNode(attachment[1]).name}` : sel.name}</h2>
+              {(selLatin || selGreek) && (
+                <p className="atlas-latin" lang="la">
+                  {selLatin && <em>{selLatin}</em>}
+                  {selGreek && (
+                    <span className="atlas-greek" lang="grc-Latn" title="The Greek root behind the clinical terms">
+                      {selLatin ? " · " : ""}Gr. {selGreek}
+                    </span>
+                  )}
+                </p>
+              )}
               {selPath >= 0 && index && (index.paths[selPath]?.length ?? 0) > 0 && (
                 <p className="atlas-path">
                   {index.paths[selPath]?.map((g, i) => (
                     <span key={g}>
                       {i > 0 && " › "}
-                      <button type="button" className="atlas-path-link" title={`Everything in ${g}`} onClick={() => { setQuery(g); searchBox.current?.focus(); }}>
+                      <button
+                        type="button"
+                        className="atlas-path-link"
+                        title={`${latinOf(latin, g) ? `${latinOf(latin, g)}: ` : ""}everything in ${g}`}
+                        onClick={() => { setQuery(g); searchBox.current?.focus(); }}
+                      >
                         {g}
                       </button>
                     </span>
@@ -729,7 +778,7 @@ export function Atlas() {
                 </button>
                 {otherPicked && (
                   <button type="button" className="atlas-chip" onClick={() => { select(otherPicked, true); }}>
-                    {sel.side === "r" ? "Left" : "Right"} side
+                    {sel.side === "r" ? "Sinistra" : "Dextra"}
                   </button>
                 )}
                 {muscleAttachments.length > 0 && (
@@ -743,7 +792,7 @@ export function Atlas() {
                   type="button"
                   className="atlas-ask"
                   onClick={() => {
-                    askAlfondAbout(`Explain the ${sel.name.toLowerCase()}: what it is, where it is, what it does and what it relates to. Keep it short and exam-focused.`, () => {
+                    askAlfondAbout(`Explain the ${sel.name.toLowerCase()}${selLatin ? ` (${selLatin})` : ""}: what it is, where it is, what it does and what it relates to. Keep it short and exam-focused.`, () => {
                       navigate("/alfond");
                     });
                   }}
@@ -782,6 +831,11 @@ export function Atlas() {
                           }}
                         >
                           {name}
+                          {latinOf(latin, parseNode(name).name) && latinOf(latin, parseNode(name).name)?.toLowerCase() !== parseNode(name).name.toLowerCase() && (
+                            <em className="atlas-latin-small" lang="la">
+                              {latinOf(latin, parseNode(name).name)}
+                            </em>
+                          )}
                         </button>
                       </li>
                     ))}
@@ -813,7 +867,7 @@ export function Atlas() {
                     {recent.map((p) => (
                       <button key={toKey(p)} type="button" className="atlas-chip" onClick={() => { select(p, true); }}>
                         {parseNode(p.node).name}
-                        {p.node.endsWith(".r") ? " (R)" : p.node.endsWith(".l") ? " (L)" : ""}
+                        {parseNode(p.node).side ? ` (${sideShort(parseNode(p.node).side)})` : ""}
                       </button>
                     ))}
                   </div>

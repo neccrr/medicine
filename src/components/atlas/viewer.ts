@@ -22,11 +22,11 @@ export interface ViewerEvents {
   onError: (system: string) => void;
   /** A structure was double-clicked (to fly to it). */
   onFocus?: (picked: Picked) => void;
-  /** Which side of the body is facing you now ("Anterior", "Left"…), when it changes. */
+  /** Which side of the body is facing you now ("Anterior", "Sinistra"…), when it changes. */
   onView?: (side: ViewSide) => void;
 }
 
-export type ViewSide = "Anterior" | "Posterior" | "Left" | "Right" | "Superior" | "Inferior";
+export type ViewSide = "Anterior" | "Posterior" | "Sinistra" | "Dextra" | "Superior" | "Inferior";
 
 /** The side of the body seen from a direction (from the body to the camera; the body faces +Z). */
 export function sideFacing(dir: { x: number; y: number; z: number }): ViewSide {
@@ -36,7 +36,7 @@ export function sideFacing(dir: { x: number; y: number; z: number }): ViewSide {
   if (y < -0.75) return "Inferior";
   if (Math.abs(dir.z) >= Math.abs(dir.x)) return dir.z >= 0 ? "Anterior" : "Posterior";
   // Seen from +X is the body's left side.
-  return dir.x > 0 ? "Left" : "Right";
+  return dir.x > 0 ? "Sinistra" : "Dextra";
 }
 
 export type ViewName = "front" | "back" | "left" | "right" | "top";

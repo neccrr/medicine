@@ -10,8 +10,9 @@ skin and body regions: about 1,800 named structures.
 - **Drag** to turn the body.
 - **Right-drag**, or drag with two fingers, to move it.
 - **Scroll** or pinch to zoom.
-- The buttons under the model turn it to face you from the **front**,
-  **back**, **left**, **right** or **top**.
+- The buttons under the model turn it to face you from the front
+  (**Anterior**), back (**Posterior**), left (**Sinistra**), right
+  (**Dextra**) or top (**Superior**).
 - The buttons on the right of the model zoom in and out, turn the body left
   and right, look from higher or lower, and bring the **whole body** back
   into view. On a phone, the higher and lower buttons are left out: turn the
@@ -20,7 +21,7 @@ skin and body regions: about 1,800 named structures.
   view slides to the part you click, so turning the body turns it around
   that part. Switch it off to keep the view still when you click.
 - The label at the top says which side of the body faces you: anterior,
-  posterior, left, right, superior or inferior.
+  posterior, lateralis sinistra or dextra, superior or inferior.
 - The button at the top right shows the atlas **full screen**. <kbd>Esc</kbd>
   or the same button leaves it.
 
@@ -44,18 +45,22 @@ with the skeleton only.
 
 **Hover** over a part to see its name, and **click** it to open it on the
 right. **Double-click** it to fly to it. You can also type a name into **Find
-a structure**: "femur", "deltoid", "vagus" or a group such as "cranial
-nerves". <kbd>Enter</kbd> opens the first match, and the arrow keys move
-through the list.
+a structure**, in English or Latin: "femur" or "os femoris", "deltoid",
+"vagus", or a group such as "cranial nerves". <kbd>Enter</kbd> opens the
+first match, and the arrow keys move through the list.
 
 On a phone, tap a part. Its name shows at the top of the model; tap the name
 to jump to the panel about it.
 
 The panel for a structure shows:
 
-- its name, its side, and where it belongs ("Bones of lower limb ›
-  Bones of free part of lower limb"). Click a group to list everything in
-  it;
+- its English name, and under it the Latin name with its side, as in
+  *ren dexter* or *os femoris dextrum*. For organs whose clinical words come
+  from Greek, the Greek root follows: the kidney shows *Gr. nephros*
+  (nephritis, nephrology), the lung *pneumon*, a joint *arthron*;
+- its side, written *dextra* (right) or *sinistra* (left), and where it
+  belongs ("Bones of lower limb › Bones of free part of lower limb"). Click
+  a group to list everything in it;
 - a short description, when there is one;
 - its **landmarks**: the named points on a bone, such as the greater
   trochanter. Click one to show where it is.
@@ -71,7 +76,7 @@ Below it are these buttons:
 | **Focus** | Zooms in on the structure |
 | **Only this** | Hides everything else, until you press **Show the rest** |
 | **Hide** | Hides the structure. **Show all** under the model brings back everything you hid |
-| **Left side** / **Right side** | Opens the same structure on the other side |
+| **Sinistra** / **Dextra** | Opens the same structure on the other side |
 | **Where it attaches** | For a muscle: shows the skeleton with the muscle's origin and insertion on it, and makes the other muscles see-through |
 | **Ask Alfond** | Asks Alfond to explain the structure, briefly and for the exam |
 | **Find in your notes** | Searches the flashcards, quizzes and chapters for its name |

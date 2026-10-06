@@ -1,5 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { allStructures, attachmentsFor, describeStructure, nodesOutside, parseNode, searchAtlas, tissueColor, topGroupOf, topGroups, type AtlasIndex } from "./model";
+import {
+  allStructures,
+  attachmentsFor,
+  describeStructure,
+  greekRoot,
+  latinWithSide,
+  nodesOutside,
+  parseNode,
+  searchAtlas,
+  sideLabel,
+  tissueColor,
+  topGroupOf,
+  topGroups,
+  type AtlasIndex,
+} from "./model";
 
 describe("structure names", () => {
   it("reads the side and drops Blender's duplicate numbers and the brackets", () => {
@@ -41,12 +55,48 @@ const index: AtlasIndex = {
   ],
 };
 
+describe("anatomical names", () => {
+  it("writes the side as dextra or sinistra", () => {
+    expect(sideLabel("r")).toBe("Dextra");
+    expect(sideLabel("l")).toBe("Sinistra");
+    expect(sideLabel(null)).toBe("");
+  });
+
+  it("makes the side agree with the Latin head noun", () => {
+    expect(latinWithSide("Ren", "r")).toBe("Ren dexter");
+    expect(latinWithSide("Scapula", "l")).toBe("Scapula sinistra");
+    expect(latinWithSide("Os femoris", "r")).toBe("Os femoris dextrum");
+    expect(latinWithSide("Musculus deltoideus", "l")).toBe("Musculus deltoideus sinister");
+    expect(latinWithSide("Caput longum musculi bicipitis brachii", "r")).toBe("Caput longum musculi bicipitis brachii dextrum");
+    expect(latinWithSide("Arteria femoralis", "r")).toBe("Arteria femoralis dextra");
+    expect(latinWithSide("Ligamentum patellae", "l")).toBe("Ligamentum patellae sinistrum");
+    expect(latinWithSide("Pulmo dexter", "r")).toBe("Pulmo dexter");
+    expect(latinWithSide("Cor", null)).toBe("Cor");
+    expect(latinWithSide("Chiasma opticum", "r")).toBe("Chiasma opticum dextrum");
+    expect(latinWithSide("Musculi rotatores", "l")).toBe("Musculi rotatores sinistri");
+    expect(latinWithSide("Partes", "r")).toBe("Partes dextrae");
+  });
+
+  it("adds the Greek root behind clinical terms", () => {
+    expect(greekRoot("Kidney")).toBe("nephros");
+    expect(greekRoot("Suprarenal gland")).toBe("epinephros");
+    expect(greekRoot("Right lung")).toBe("pneumon");
+    expect(greekRoot("Femur")).toBeNull();
+  });
+});
+
 describe("searching the atlas", () => {
   const all = allStructures(index);
   it("finds by name or group, once per side, names that start with it first", () => {
     expect(searchAtlas(all, "femur").map((h) => h.name)).toEqual(["Femur", "Body of femur"]);
     expect(searchAtlas(all, "upper limb").map((h) => h.name)).toEqual(["Deltoid muscle"]);
     expect(searchAtlas(all, "  ")).toEqual([]);
+  });
+
+  it("finds by the Latin name too", () => {
+    const withLatin = allStructures(index, { Femur: "Os femoris", "Deltoid muscle": "Musculus deltoideus" });
+    expect(searchAtlas(withLatin, "os femoris").map((h) => h.name)).toEqual(["Femur"]);
+    expect(searchAtlas(withLatin, "deltoideus")[0]?.latin).toBe("Musculus deltoideus");
   });
 
   it("finds a muscle's attachments, and the whole muscle's for one of its parts", () => {
@@ -71,6 +121,7 @@ describe("searching the atlas", () => {
 });
 
 const shippedIndex = Object.values(import.meta.glob<AtlasIndex>("/public/atlas/atlas.json", { eager: true, import: "default" })).at(0);
+const shippedLatin = Object.values(import.meta.glob<Record<string, string>>("/public/atlas/latin.json", { eager: true, import: "default" })).at(0);
 const shippedFiles = new Set(Object.keys(import.meta.glob("/public/atlas/*.glb.gz", { query: "?url", import: "default", eager: true })));
 
 describe("the shipped atlas", () => {
@@ -85,5 +136,6 @@ describe("the shipped atlas", () => {
       }
     }
     expect(searchAtlas(allStructures(shipped), "femur")[0]?.name).toBe("Femur");
+    if (shippedLatin) expect(searchAtlas(allStructures(shipped, shippedLatin), "ren")[0]?.name).toBe("Kidney");
   });
 });

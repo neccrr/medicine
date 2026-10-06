@@ -41,7 +41,90 @@ export function parseNode(node: string): { name: string; side: Side } {
   return { name, side: m ? (m[2] as "r" | "l") : null };
 }
 
-export const sideLabel = (side: Side) => (side === "r" ? "Right" : side === "l" ? "Left" : "");
+/** The side as anatomists write it on its own: dextra (right) or sinistra (left). */
+export const sideLabel = (side: Side) => (side === "r" ? "Dextra" : side === "l" ? "Sinistra" : "");
+/** The side in plain English, for screen readers and tooltips. */
+export const sideEnglish = (side: Side) => (side === "r" ? "Right" : side === "l" ? "Left" : "");
+/** The short form, as in "Femur (dx)". */
+export const sideShort = (side: Side) => (side === "r" ? "dx" : side === "l" ? "sin" : "");
+
+/** Latin (Terminologia Anatomica) names by English name, from Z-Anatomy's translation table. */
+export type LatinNames = Readonly<Record<string, string>>;
+
+export const latinOf = (latin: LatinNames | null, name: string): string | null => latin?.[name] ?? null;
+
+// The gender of a Latin head noun, so the side agrees with it: ren dexter, scapula dextra,
+// os femoris dextrum. Most follow their ending; these are the exceptions the atlas meets.
+const MASCULINE = new Set(["ren", "lien", "pulmo", "tendo", "margo", "dens", "pons", "mons", "pes", "paries", "venter", "testis", "canalis", "unguis", "cortex", "apex", "thorax", "pharynx", "larynx", "index", "hallux", "pollex", "funiculus", "sanguis", "orbis", "axis", "vertex", "meatus", "porus", "humerus", "fornix"]);
+const FEMININE = new Set(["manus", "auris", "naris", "cutis", "pelvis", "basis", "radix", "cervix", "calx", "frons", "cartilago", "regio", "articulatio", "pars", "facies", "glandula", "cavitas", "tunica", "lamina", "incisura", "fossa", "valva", "vena", "arteria", "spina", "crista", "linea", "tuberositas", "fovea", "papilla", "membrana", "vesica", "tuba", "ampulla", "insula", "fissura", "commissura", "capsula", "vagina", "bursa", "trochlea", "patella", "scapula", "clavicula", "costa", "ulna", "tibia", "fibula", "phalanx", "mandibula", "maxilla", "vertebra", "mamma", "lingua", "tonsilla", "pleura", "aorta", "glans", "lens", "cornea", "retina", "sclera", "chorda", "ansa", "rima", "plica", "lingula", "uvula", "concha", "mamma", "squama", "epididymis"]);
+const NEUTER = new Set(["os", "cor", "corpus", "pectus", "latus", "tempus", "caput", "femur", "hepar", "abdomen", "foramen", "rete", "calcar", "pancreas", "ganglion", "ligamentum", "septum", "labium", "atrium", "cerebrum", "cerebellum", "mesenterium", "omentum", "ovarium", "rectum", "duodenum", "jejunum", "ileum", "colon", "sternum", "sacrum", "occiput", "ilium", "ischium", "acetabulum", "olecranon", "acromion", "tegmen", "velum", "frenulum", "retinaculum", "crus", "genu", "cornu", "tuberculum", "encephalon", "diaphragma", "systema", "stroma", "infundibulum", "vas", "manubrium", "chiasma", "platysma"]);
+type Gender = "m" | "f" | "n" | "mp" | "fp";
+function genderOf(latinName: string): Gender {
+  const head = latinName.trim().replace(/^\(/, "").split(/\s+/)[0]?.toLowerCase() ?? "";
+  if (NEUTER.has(head)) return "n";
+  if (FEMININE.has(head)) return "f";
+  if (MASCULINE.has(head)) return "m";
+  if (/ae$/.test(head)) return "fp";
+  // Third-declension plurals: partes, radices (feminine); rotatores, levatores (masculine).
+  if (/es$/.test(head) && head !== "pes" && head !== "stapes" && head !== "facies") return /^(partes|radices|regiones|articulationes)$/.test(head) ? "fp" : "mp";
+  if (/i$/.test(head)) return "mp";
+  if (/ma$/.test(head)) return "n"; // Greek neuters: chiasma, stroma, platysma
+  if (/a$/.test(head)) return "f"; // feminine singular, or a neuter plural: both take "dextra"
+  if (/(um|on|ur|ut|e|ar|en)$/.test(head)) return "n";
+  if (/(io|go|do|tas|is|x)$/.test(head)) return "f";
+  return "m";
+}
+const SIDE_FORMS: Record<Gender, [string, string]> = {
+  m: ["dexter", "sinister"],
+  f: ["dextra", "sinistra"],
+  n: ["dextrum", "sinistrum"],
+  mp: ["dextri", "sinistri"],
+  fp: ["dextrae", "sinistrae"],
+};
+
+/** A Latin name with its side, the adjective agreeing with the head noun: "Ren dexter". */
+export function latinWithSide(latinName: string, side: Side): string {
+  if (!side) return latinName;
+  // Names that already carry a side ("Atrium dextrum") keep it.
+  if (/\b(dext|sinist)/i.test(latinName)) return latinName;
+  const [right, left] = SIDE_FORMS[genderOf(latinName)];
+  return `${latinName} ${side === "r" ? right : left}`;
+}
+
+// Greek roots behind the clinical words (nephritis, pneumonia, arthritis…), shown beside the
+// Latin, never instead of it. The first match wins.
+const GREEK: [RegExp, string][] = [
+  [/\b(suprarenal|adrenal) gland\b/i, "epinephros"],
+  [/^kidney$/i, "nephros"],
+  [/\blung\b/i, "pneumon"],
+  [/^heart$/i, "kardia"],
+  [/^(uterus|body of uterus)$/i, "hystera, metra"],
+  [/^ovary$/i, "oophoron"],
+  [/^testis$/i, "orchis"],
+  [/\b(mammary gland|breast)\b/i, "mastos"],
+  [/^eyeball$/i, "ophthalmos"],
+  [/^tongue$/i, "glossa"],
+  [/^gallbladder$/i, "cholecystis"],
+  [/^urinary bladder$/i, "kystis"],
+  [/^spleen$/i, "splen"],
+  [/^rectum$/i, "proktos"],
+  [/^small intestine$/i, "enteron"],
+  [/^spinal cord$/i, "myelos"],
+  [/^(skin|integument)$/i, "derma"],
+  [/^(oral cavity|mouth)$/i, "stoma"],
+  [/^(external )?nose$/i, "rhis"],
+  [/\bvertebra\b/i, "spondylos"],
+  [/\bjoint\b/i, "arthron"],
+  [/\bvein\b/i, "phleps"],
+  [/\bcartilage\b/i, "chondros"],
+  [/\bgland\b/i, "aden"],
+];
+
+/** The Greek root of an English structure name, where clinical terms come from it. */
+export function greekRoot(name: string): string | null {
+  for (const [re, root] of GREEK) if (re.test(name)) return root;
+  return null;
+}
 
 /** The name a structure's description is filed under (as the models write it). */
 export const descriptionKey = (node: string) => node.replace(/\.\d{3}$/, "").replace(/\.[rl]$/, "");
@@ -112,20 +195,27 @@ export interface AtlasHit {
   name: string;
   side: Side;
   path: string[];
+  /** The Latin name, when the atlas has one. */
+  latin?: string;
 }
 
 /** Every structure, once per side, for search and lookups. */
-export function allStructures(index: AtlasIndex): AtlasHit[] {
+export function allStructures(index: AtlasIndex, latin: LatinNames | null = null): AtlasHit[] {
   return index.systems.flatMap((s) =>
-    (index.nodes[s.id] ?? []).map(([node, p]) => ({ system: s.id, node, ...parseNode(node), path: index.paths[p] ?? [] })),
+    (index.nodes[s.id] ?? []).map(([node, p]) => {
+      const parsed = parseNode(node);
+      const la = latinOf(latin, parsed.name);
+      return { system: s.id, node, ...parsed, path: index.paths[p] ?? [], ...(la ? { latin: la } : {}) };
+    }),
   );
 }
 
 const fold = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 
 /**
- * Structures whose name contains every word typed, or whose group does ("femur", "deltoid",
- * "cranial nerve"). Left and right count as one result; names starting with the query first.
+ * Structures whose English or Latin name contains every word typed, or whose group does
+ * ("femur", "os femoris", "deltoid", "cranial nerve"). Left and right count as one result;
+ * names starting with the query first.
  */
 export function searchAtlas(all: readonly AtlasHit[], query: string, limit = 40): AtlasHit[] {
   const words = fold(query).split(/\s+/).filter(Boolean);
@@ -136,11 +226,14 @@ export function searchAtlas(all: readonly AtlasHit[], query: string, limit = 40)
     const key = `${hit.system}|${hit.name}`;
     if (seen.has(key)) continue;
     const name = fold(hit.name);
+    const latin = fold(hit.latin ?? "");
     const where = fold(hit.path.join(" "));
-    if (!words.every((w) => name.includes(w) || where.includes(w))) continue;
+    if (!words.every((w) => name.includes(w) || latin.includes(w) || where.includes(w))) continue;
     seen.add(key);
-    const inName = words.filter((w) => name.includes(w)).length;
-    scored.push({ hit, score: (name.startsWith(words[0] ?? "") ? 100 : 0) + inName * 10 - name.length / 100 });
+    const inName = words.filter((w) => name.includes(w) || latin.includes(w)).length;
+    const first = words[0] ?? "";
+    const starts = name.startsWith(first) || (latin !== "" && latin.startsWith(first));
+    scored.push({ hit, score: (starts ? 100 : 0) + inName * 10 - name.length / 100 });
   }
   return scored
     .sort((a, b) => b.score - a.score || a.hit.name.localeCompare(b.hit.name))
