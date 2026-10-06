@@ -99,13 +99,16 @@ pages, the search index or the knowledge map.
 3. In Vercel → Environment Variables, set `GOOGLE_DRIVE_API_KEY` and
    `GOOGLE_DRIVE_FOLDER_ID` (the folder's id, or its whole share link).
    `GOOGLE_DRIVE_REFRESH_MINUTES` (optional) changes the five minutes.
-4. Optional: archives. A big folder of past cohorts' material (such as
-   PENDPRODUKTIF) would use up the walk's budget of 600 folders and push
-   other files out. Put its id or share link in
-   `GOOGLE_DRIVE_ON_DEMAND_FOLDERS` (several separated by commas). Each
-   appears at the top of the Class Drive with its cohort folders listed, and
-   a cohort is read from Drive, with a budget of its own, only when a student
-   opens it. The archive must be shared by link too.
+4. Linked folders. A big folder from elsewhere, such as past cohorts'
+   PENDPRODUKTIF, would use up the walk's budget of 600 folders and push
+   other files out. Add a **shortcut** to it anywhere in the class folder
+   (in Drive: right-click → Organize → Add shortcut): every folder shortcut
+   is loaded on demand. Its own files and folder names are listed, and each
+   of its folders is read from Drive, with a budget of its own, only when a
+   student opens it. The linked folder must be shared by link too. A folder
+   you'd rather not add a shortcut for can be put in
+   `GOOGLE_DRIVE_ON_DEMAND_FOLDERS` instead (ids or share links, separated by
+   commas); it then appears at the top of the Class Drive the same way.
 5. Redeploy. `/api/config` then answers `"drive":true`.
 
 Students open files in Google's viewer, so they get the folder's own sharing

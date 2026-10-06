@@ -203,10 +203,11 @@ request with a matching `If-None-Match` gets `304` with no body. Without a
 configured Drive it answers `503`, and `502` if Google can't be reached and
 there's no saved copy.
 
-Archive folders (`GOOGLE_DRIVE_ON_DEMAND_FOLDERS`, see
-[deploying](deploying.md#class-drive-optional)) appear at the top of the
-listing with `"archive": true`. Their own folders (one per cohort) come with
-no contents and a `"deferred"` key instead:
+Linked folders (every folder shortcut in the class folder, and any folder in
+`GOOGLE_DRIVE_ON_DEMAND_FOLDERS`, see
+[deploying](deploying.md#class-drive-optional)) come with `"archive": true`.
+Their own folders (one per cohort, say) come with no contents and a
+`"deferred"` key instead:
 
 ```json
 {

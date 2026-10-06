@@ -1,10 +1,13 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link, useParams } from "react-router-dom";
 import { DriveFileView, DriveKind, NewPill, OpenedMark } from "../components/drive/DriveParts";
 import { useDrive, useDriveOpened } from "../hooks/useDrive";
 import { modulesByBlockSubject, moduleSubjects, type ModulePdf } from "../lib/content";
 import { blockById } from "../lib/blocks";
-import { driveHref, fileGroups, fileTitle, folderAt, isNew, niceName, subjectFolderPath } from "../lib/drive";
+import { driveHref, fileGroups, fileTitle, folderAt, isNew, niceName, subjectFolderPath, waitingFolders } from "../lib/drive";
+
+/** Linked folders under a subject's folder read at once when its page opens. */
+const MAX_LINKED_LOADS = 6;
 import type { DriveFile } from "../lib/driveTypes";
 import { groupModules } from "../lib/moduleSections";
 import { subjectHueStyle } from "../lib/subjectStyle";
@@ -46,6 +49,15 @@ export function ModuleViewer() {
   const drivePath = drive.status === "ready" ? subjectFolderPath(drive.tree.root, blockId, subjectId) : null;
   const driveFolder = drive.status === "ready" && drivePath ? folderAt(drive.tree.root, drivePath) : null;
   const driveGroups = driveFolder ? fileGroups(driveFolder) : [];
+  // Linked folders (shortcuts) inside the subject's folder load on demand: read the first few
+  // here, so the subject's Drive files are all listed.
+  const loadFolder = drive.status === "ready" ? drive.loadFolder : null;
+  const waitingKeys = driveFolder ? waitingFolders(driveFolder).slice(0, MAX_LINKED_LOADS).map(({ folder }) => folder.deferred ?? "") : [];
+  const waitingKey = waitingKeys.join(",");
+  useEffect(() => {
+    if (!loadFolder || !waitingKey) return;
+    for (const key of waitingKey.split(",")) loadFolder(key);
+  }, [loadFolder, waitingKey]);
   const driveFiles = driveGroups.flatMap((g) => g.files);
 
   const label = subject?.label ?? (driveFolder ? niceName(driveFolder.name) : null);

@@ -431,7 +431,9 @@ Built once at deploy time by `src/lib/knowledgeGraph/build.ts`.
     retried for 30 s.
   - A read lists up to 25 folders per request, 8 requests at a time, up to 600
     folders and 10 levels deep.
-  - An archive's cohort folders aren't walked with the rest. Each is walked
+  - A linked folder's (a folder shortcut's, or one in
+    `GOOGLE_DRIVE_ON_DEMAND_FOLDERS`) own folders aren't walked with the
+    rest. Each is walked
     when first opened, with its own 600-folder budget, and kept like the main
     listing (5 minutes, saved in MongoDB, at most 40 in a server's memory).
     The browser keeps the 4 most recently opened and checks a kept one once a

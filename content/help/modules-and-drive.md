@@ -40,17 +40,17 @@ within a few minutes. The listing opens instantly from your device's last
 copy, then checks for changes. The status at the top says when it was last
 updated; the refresh button beside it checks now.
 
-### Past cohorts' archive
+### Linked folders
 
-An archive of past cohorts' material (such as **Pendproduktif**) sits at the
-top of the Class Drive, with one folder per cohort. It's large, so a cohort's
-folder is read from Google Drive only when you open it: you'll see "Loads when
-opened" under it, then a moment of "Reading this folder from Google Drive…"
-the first time. After that it opens straight away on this device, and the
-refresh button checks it for changes while you're inside it.
+Some folders are linked from elsewhere in Google Drive, such as past cohorts'
+**Pendproduktif**, and are marked "Linked folder". They can be large, so each
+folder inside is read from Google Drive only when you open it: you'll see
+"Loads when opened" under it, then a moment of "Reading this folder from
+Google Drive…" the first time. After that it opens straight away on this
+device, and the refresh button checks it for changes while you're inside it.
 
-Search covers the cohorts you've opened so far; the search results say how
-many archive folders haven't been opened yet.
+Search covers the folders you've opened so far; the search results say how
+many linked folders haven't been opened yet.
 
 ### In the module pages
 

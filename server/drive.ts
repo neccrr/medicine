@@ -10,7 +10,9 @@ import type { DriveFile, DriveFileKind, DriveFolder, DriveTree } from "../src/li
 // Big archives (a past cohorts' folder with years of material) would use up the walk's folder
 // budget and push other files out, so they're "on demand": the archive's own folders (one per
 // cohort) are listed, and each is walked, with a budget of its own, only when a student opens
-// it. The browser asks for one by an opaque key; folder ids stay on the server.
+// it. Every shortcut to a folder is treated this way, and so is any folder named in
+// GOOGLE_DRIVE_ON_DEMAND_FOLDERS. The browser asks for one by an opaque key; folder ids stay
+// on the server.
 
 export interface DriveConfig {
   apiKey: string;
@@ -195,9 +197,12 @@ export async function crawlDrive(config: DriveConfig, fetchImpl: typeof fetch = 
           continue;
         }
         seen.add(targetId);
-        const child: DriveFolder = { name, folders: [], files: [] };
+        // A shortcut to a folder elsewhere (another cohort's archive, a shared drive) is treated
+        // as an archive: its own files and folders are listed, and each of those folders is
+        // walked only when it's opened, so a big linked tree can't use up this walk's budget.
+        const child: DriveFolder = isShortcut ? { name, folders: [], files: [], archive: true } : { name, folders: [], files: [] };
         parent.folder.folders.push(child);
-        next.push({ id: targetId, folder: child, depth: parent.depth + 1 });
+        next.push({ id: targetId, folder: child, depth: parent.depth + 1, ...(isShortcut ? { onDemand: true } : {}) });
       } else {
         const size = Number(item.size);
         const file: DriveFile = {

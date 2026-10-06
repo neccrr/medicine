@@ -205,6 +205,28 @@ describe("archives (folders opened on demand)", () => {
     expect(calls.filter((c) => c === "cohort2019abcd")).toHaveLength(walks);
   });
 
+  it("treats a shortcut to a folder as an archive: listed one level down, its folders on demand", async () => {
+    const linked: Item[] = [
+      ...classDrive,
+      ...archive,
+      { id: "shortcutArch01", name: "PENDPRODUKTIF", mimeType: "application/vnd.google-apps.shortcut", parent: "semester0001", shortcutDetails: { targetId: ARCHIVE, targetMimeType: FOLDER } },
+    ];
+    const { fetchImpl, calls } = fakeDrive(linked);
+    const tree = await crawlDrive(config, fetchImpl);
+    const top = tree.root.folders[0].folders.find((f) => f.name === "PENDPRODUKTIF");
+    expect(top?.archive).toBe(true);
+    expect(top?.files.map((f) => f.name)).toEqual(["Read me.pdf"]);
+    expect(top?.folders.map((f) => [f.name, f.deferred])).toEqual([
+      ["2019", folderKey("cohort2019abcd")],
+      ["2020", folderKey("cohort2020abcd")],
+    ]);
+    expect(calls).toContain(ARCHIVE);
+    expect(calls).not.toContain("cohort2019abcd");
+    // Opening a cohort walks it, as for an archive from the settings.
+    const index = new DriveIndex(config, new MemoryDriveSnapshotStore(), fetchImpl);
+    expect((await index.folder(folderKey("cohort2019abcd")))?.root.folders[0]?.files.map((f) => f.name)).toEqual(["UB 1.1.pdf"]);
+  });
+
   it("still lists the class Drive when an archive can't be read", async () => {
     const { fetchImpl } = fakeDrive(classDrive);
     const tree = await crawlDrive(withArchive, fetchImpl);

@@ -328,7 +328,7 @@ export function ClassDrive() {
               {f.deferred && !f.loaded
                 ? "Loads when opened"
                 : f.archive
-                  ? `Past cohorts · ${f.folders.length} folder${f.folders.length === 1 ? "" : "s"}`
+                  ? `Linked folder · ${f.folders.length} folder${f.folders.length === 1 ? "" : "s"}${f.files.length ? `, ${f.files.length} file${f.files.length === 1 ? "" : "s"}` : ""}`
                   : files.length === 0
                     ? "Empty"
                     : `${files.length} file${files.length === 1 ? "" : "s"}`}
@@ -400,8 +400,8 @@ export function ClassDrive() {
       {!drive.tree.complete && <p className="drive-note">Part of the Drive couldn't be read this time, so a few files may be missing.</p>}
       {!results && archiveAt.archive && (
         <p className="drive-note drive-note-info">
-          <strong>{niceName(archiveAt.archive)}</strong> is an archive from past cohorts. Each cohort's folder is read from Google Drive when you open it, so
-          the whole archive never has to load at once and nothing in it gets cut off. Search covers the cohorts you've opened.
+          <strong>{niceName(archiveAt.archive)}</strong> is linked from elsewhere in Google Drive. Each folder in it is read when you open it, so it never
+          has to load all at once and nothing in it gets cut off. Search covers the folders you've opened.
         </p>
       )}
 
@@ -433,7 +433,7 @@ export function ClassDrive() {
             <>
               {unopened > 0 && (
                 <p className="drive-note drive-note-info">
-                  {unopened} archive folder{unopened === 1 ? " isn't" : "s aren't"} searched until you open {unopened === 1 ? "it" : "them"}.
+                  {unopened} linked folder{unopened === 1 ? " isn't" : "s aren't"} searched until you open {unopened === 1 ? "it" : "them"}.
                 </p>
               )}
               <p className="drive-count" aria-live="polite">

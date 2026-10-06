@@ -128,9 +128,10 @@ account environment variables it runs as a plain static site.
   Drive files above the cleaned PDFs. Files added to or removed from the Drive
   show up within a few minutes, and the listing opens instantly from the
   device's last copy
-- Past cohorts' archives (such as Pendproduktif) at the top of the Class
-  Drive: their cohort folders are listed, and each is read from Drive only
-  when it's opened, so the archive never crowds out this year's files
+- Linked folders (any folder shortcut in the class Drive, such as past
+  cohorts' Pendproduktif): their folders are listed, and each is read from
+  Drive only when it's opened, so a big linked tree never crowds out this
+  year's files
 
 ### Virtual Lab
 
