@@ -331,11 +331,21 @@ Built once at deploy time by `src/lib/knowledgeGraph/build.ts`.
   concept starts between its subjects. A d3-force simulation then runs 400
   ticks: link distance 46 with strength `min(0.7, weight / 10)`, repulsion −42
   out to 380, no overlap (radius + 3) and a 0.045 pull towards the subject.
-- **Mastery** (colour by my mastery) is the average over the concept's studied
+- **On the page** the same forces keep running from those positions
+  (`src/lib/knowledgeGraph/layout.ts`), each scaled by its slider in the graph
+  settings (center 0–3, repel 0–3, link 0–2, distance 0.3–3; 1 is the build's
+  value). Filtering or moving a slider reheats the simulation to alpha 0.35;
+  dragging a concept holds it at alpha 0.25 until it's let go.
+- **Drawing:** a dot's radius is `max(1.4, size × nodeSize × 0.6 × √zoom)`. A
+  label's opacity is `clamp((zoom × √(size / 6) − (1.1 − 0.3 × textFade)) /
+  0.35, 0, 1)`, so bigger concepts' labels appear first, and labels never
+  overlap. Hovering fades everything outside the concept and its neighbours to
+  18% over 160 ms.
+- **Mastery** (Groups → Mastery) is the average over the concept's studied
   cards and labels of `min(1, interval / 21)`, and over its quiz questions: 1,
   or 0 if missed in the last 3 attempts. Questions only count once that
   subject's quiz has been taken. A concept with nothing studied stays grey.
-  Below 0.5 it's ringed as weak, and its colour is mixed from the surface
+  Below 0.5 it's ringed as weak, and its colour is mixed from the background
   towards the accent at `0.3 + 0.7 × mastery`.
 
 ## "Explain this" and search

@@ -67,7 +67,7 @@
     "title": "Knowledge map",
     "group": "Read",
     "description": "One map of every concept in the course: what links to what, where to read about it, and how well you know it.",
-    "keywords": "knowledge map concepts graph links mastery connections subjects"
+    "keywords": "knowledge map concepts graph links mastery connections subjects obsidian local graph forces"
   },
   {
     "id": "exam-plan",

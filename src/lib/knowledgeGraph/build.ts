@@ -1,8 +1,9 @@
-import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force";
+import { forceSimulation } from "d3-force";
 import { ebookMeta, flashcardDecks, loadEbookChapters, loadOcclusionNotes, occlusionKeys, quizBanks, summaries } from "../content";
 import { headingSlugger } from "../markdownHtml";
 import { occlusionCards } from "../occlusion";
 import type { Flashcard, OcclusionNote, QuizQuestion } from "../../types/content";
+import { anchors, applyForces, layoutLinks, type LayoutNode } from "./layout";
 import type { GraphEdge, GraphNode, KnowledgeGraph, SectionRef } from "./types";
 import { own, setOwn } from "../records";
 
@@ -315,28 +316,12 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
 
 /** Positions the nodes once, at build time: subjects pull their concepts into regions. */
 function layout(nodes: GraphNode[], edges: GraphEdge[]) {
-  const names = [...new Set(nodes.map((n) => n.subjects[0]?.split("/")[1] ?? ""))].sort();
-  const center = new Map(names.map((name, i) => {
-    const angle = (i / Math.max(1, names.length)) * Math.PI * 2;
-    return [name, { x: Math.cos(angle) * 420, y: Math.sin(angle) * 420 }];
-  }));
-  type SimNode = SimulationNodeDatum & { i: number; cx: number; cy: number; r: number };
-  const sim: SimNode[] = nodes.map((n, i) => {
-    // A concept shared by subjects starts between them.
-    const centres = n.subjects.slice(0, 3).map((s) => center.get(s.split("/")[1]) ?? { x: 0, y: 0 });
-    const cx = centres.reduce((a, c) => a + c.x, 0) / Math.max(1, centres.length);
-    const cy = centres.reduce((a, c) => a + c.y, 0) / Math.max(1, centres.length);
+  const sim: LayoutNode[] = anchors(nodes).map(({ cx, cy }, i) => {
     const jitter = ((i * 2654435761) % 1000) / 1000 - 0.5;
-    return { i, cx, cy, r: n.r, x: cx + jitter * 80, y: cy + (((i * 40503) % 1000) / 1000 - 0.5) * 80 };
+    return { i, cx, cy, r: nodes[i].r, x: cx + jitter * 80, y: cy + (((i * 40503) % 1000) / 1000 - 0.5) * 80 };
   });
-  const links: SimulationLinkDatum<SimNode>[] = edges.map((e) => ({ source: e.s, target: e.t, w: e.w }) as SimulationLinkDatum<SimNode> & { w: number });
-  const simulation = forceSimulation(sim)
-    .force("link", forceLink(links).distance(46).strength((l) => Math.min(0.7, ((l as unknown as { w?: number }).w ?? 1) / 10)))
-    .force("charge", forceManyBody().strength(-42).distanceMax(380))
-    .force("collide", forceCollide<SimNode>((d) => d.r + 3))
-    .force("x", forceX<SimNode>((d) => d.cx).strength(0.045))
-    .force("y", forceY<SimNode>((d) => d.cy).strength(0.045))
-    .stop();
+  const simulation = forceSimulation(sim).stop();
+  applyForces(simulation, layoutLinks(edges));
   for (let t = 0; t < 400; t++) simulation.tick();
   for (const s of sim) {
     nodes[s.i].x = Math.round((s.x ?? 0) * 10) / 10;

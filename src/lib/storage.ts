@@ -56,6 +56,7 @@ export const STORAGE_KEYS = {
   todayPlan: storageKey("todayplan"),
   readingPrefs: storageKey("readingprefs"),
   sidebarCollapsed: storageKey("sidebarcollapsed"),
+  mapSettings: storageKey("mapsettings"),
   /** Alfond's settings, e.g. { overlay: false } to hide its floating button. */
   alfondPrefs: storageKey("alfond"),
   alfondChat: storageKey("alfondchat"),

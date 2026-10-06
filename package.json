@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "better-auth": "^1.7.6",
+    "d3-force": "^3.0.0",
     "fuse.js": "^7.5.0",
     "marked": "^18.0.13",
     "mongodb": "^7.6.0",
@@ -37,7 +38,6 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/ui": "^5.0.1",
-    "d3-force": "^3.0.0",
     "oxlint": "^1.81.0",
     "stylelint": "^16.25.0",
     "typescript": "~6.0.2",

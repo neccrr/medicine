@@ -178,12 +178,18 @@ account environment variables it runs as a plain static site.
   subjects or blocks is one dot that joins them
 - Built at deploy time into `/knowledge-graph.json` (layout included, so it
   opens instantly); past-paper exam questions are never read
-- Tap a concept: what it links to, the exact ebook and summary sections about
-  it, its flashcards (opened as just those cards), quiz questions (as a drill)
-  and labelled figures, and "Ask Alfond" how it connects
-- Color by subject or by your own mastery (weak concepts ringed), search, block
-  and subject filters, "only links between subjects", focus on one concept's
-  links, and a list view
+- Laid out like an Obsidian vault: a ribbon of tools, a concept explorer with
+  blocks and subjects as folders, the graph view, and the open concept as a
+  note (properties and tags, links as wikilinks, practice, and "linked
+  mentions" for every section that teaches it)
+- A live graph: hover to light a concept's neighbourhood, drag a concept and
+  its links pull the others after it, labels fade in with zoom, and a local
+  graph of one concept and its neighbours
+- Obsidian-style graph settings, kept per device and synced: filters (text,
+  block, subject, bridges only, orphans), groups (color by subject or by your
+  own mastery, weak concepts ringed), display (text fade, node size, link
+  thickness) and forces (center, repel, link force, link distance)
+- "Ask Alfond" how a concept connects
 - Optional AI relationship labels ("innervates", "part of"…): `AI_BASE_URL=…
   AI_API_KEY=… AI_MODEL=… npm run graph:relations`, then commit
   `content/graph/relations.json`

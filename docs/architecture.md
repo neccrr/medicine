@@ -27,7 +27,7 @@ content/*.json, *.md, *.pdf ──► Vite bundle ──► browser (React SPA, 
 - **Vitest** for tests, **oxlint** and **Stylelint** for linting,
   **markdownlint** for Markdown.
 - Fuse.js for search, marked for Markdown, d3-force for the knowledge map's
-  layout.
+  layout (once at build time, then live on the map page).
 
 ## Project layout
 
@@ -169,7 +169,7 @@ pure function with a `*.test.ts` beside it. The formulas are written out in
 | `labTraces.ts` | Oscilloscope tracing colours and reading a value off a trace |
 | `occlusion.ts` | Image-occlusion cards, figure navigation and the zoom window |
 | `explain.ts` | Finds the note passages that match a question, asks the AI to explain |
-| `knowledgeGraph/` | Builds the knowledge map (concepts, links, layout) and each concept's mastery |
+| `knowledgeGraph/` | Builds the knowledge map (concepts, links, layout), its shared physics (`layout.ts`), the graph settings and each concept's mastery |
 | `drive.ts` | The Class Drive listing: device cache, folder lookup, search, new files |
 | `help.ts` | The in-app help pages: the list from `content/help/meta.json`, each page loaded on demand |
 | `markdownHtml.ts` | Markdown to HTML with heading anchors (chapters, summaries, help) |

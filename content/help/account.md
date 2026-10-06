@@ -45,7 +45,7 @@ online. The **Sync** section of the Account page shows when it last synced.
 What syncs: card and label reviews, quiz and exam history, reading progress and
 finished chapters, study days and your study log, exam plan settings, Virtual
 Lab data, Drive files you've opened, and settings such as your current block,
-reading settings and exam mode.
+reading settings, exam mode and the knowledge map's graph settings.
 
 What stays on each device: the light or dark theme, the sidebar state, a quiz
 you haven't finished, today's plan as drawn up that morning, and Alfond's
