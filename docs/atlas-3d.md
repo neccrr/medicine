@@ -75,6 +75,14 @@ instead of about 5,000, so turning the body stays smooth on phones.
 - The selected and hovered structures are drawn on their own, with a green
   glow, over a gap left in their batch. These overlays draw straight from the
   batch's buffers, so nothing is copied.
+- Turning with the buttons, the arrow keys or the views swings the camera
+  around the point it looks at (a slerp of its direction), so a turn to the
+  back goes around the side rather than through the body. Taking hold of the
+  model (a drag or the wheel) stops a glide under way.
+- With **Turn around the part you click** on (the default; kept in the
+  `medicine:atlas` setting with the recently opened structures), a click
+  slides the view so the part becomes the point the camera turns around,
+  without zooming.
 - The models are unpacked in Web Workers (`MeshoptDecoder.useWorkers`), so
   the page doesn't stall while a system loads.
 

@@ -185,6 +185,10 @@ account environment variables it runs as a plain static site.
 - Drawn in batches (a few draw calls per system), so even the whole body
   turns smoothly on a phone; hover lights a part, double-click flies to it,
   and keyboard shortcuts for search, focus, hide, only this and the views
+- Easy to move around: zoom and turn buttons, arrow keys, the view turns
+  around the part you click, a label for the side facing you (anterior,
+  left…), full screen, back and forward through what you opened, and a
+  recently opened list
 - Click or search any structure: its name, side and group, a short
   description, focus, only this, hide, and Ask Alfond
 - 786 bony landmarks, and "Where it attaches" shows a muscle's origin and

@@ -22,6 +22,21 @@ export interface ViewerEvents {
   onError: (system: string) => void;
   /** A structure was double-clicked (to fly to it). */
   onFocus?: (picked: Picked) => void;
+  /** Which side of the body is facing you now ("Anterior", "Left"…), when it changes. */
+  onView?: (side: ViewSide) => void;
+}
+
+export type ViewSide = "Anterior" | "Posterior" | "Left" | "Right" | "Superior" | "Inferior";
+
+/** The side of the body seen from a direction (from the body to the camera; the body faces +Z). */
+export function sideFacing(dir: { x: number; y: number; z: number }): ViewSide {
+  const len = Math.hypot(dir.x, dir.y, dir.z) || 1;
+  const y = dir.y / len;
+  if (y > 0.75) return "Superior";
+  if (y < -0.75) return "Inferior";
+  if (Math.abs(dir.z) >= Math.abs(dir.x)) return dir.z >= 0 ? "Anterior" : "Posterior";
+  // Seen from +X is the body's left side.
+  return dir.x > 0 ? "Left" : "Right";
 }
 
 export type ViewName = "front" | "back" | "left" | "right" | "top";
@@ -110,7 +125,8 @@ export class AtlasViewer {
   private readonly views = new Map<string, THREE.BufferGeometry>();
   private markers = new THREE.Group();
   private markerLabels: { el: HTMLDivElement; at: THREE.Vector3 }[] = [];
-  private tween: { from: [THREE.Vector3, THREE.Vector3]; to: [THREE.Vector3, THREE.Vector3]; start: number } | null = null;
+  private tween: { from: [THREE.Vector3, THREE.Vector3]; to: [THREE.Vector3, THREE.Vector3]; start: number; ms: number } | null = null;
+  private side: ViewSide | null = null;
   private frame = 0;
   private running = false;
   private hoverTimer = 0;
@@ -167,6 +183,7 @@ export class AtlasViewer {
     el.addEventListener("pointerup", this.onUp);
     el.addEventListener("pointermove", this.onMove);
     el.addEventListener("pointerleave", this.onLeave);
+    el.addEventListener("wheel", this.onWheel, { passive: true });
     this.resize = new ResizeObserver(() => { this.fit(); });
     this.resize.observe(host);
     this.fit();
@@ -440,7 +457,7 @@ export class AtlasViewer {
     this.flyTo(t, t.clone().add(dirs[name].normalize().multiplyScalar(d)));
   }
 
-  private flyTo(target: THREE.Vector3, position: THREE.Vector3) {
+  private flyTo(target: THREE.Vector3, position: THREE.Vector3, ms = 550) {
     if (reducedMotion()) {
       this.controls.target.copy(target);
       this.camera.position.copy(position);
@@ -448,8 +465,53 @@ export class AtlasViewer {
       this.request();
       return;
     }
-    this.tween = { from: [this.controls.target.clone(), this.camera.position.clone()], to: [target, position], start: performance.now() };
+    this.tween = { from: [this.controls.target.clone(), this.camera.position.clone()], to: [target, position], start: performance.now(), ms };
     this.request();
+  }
+
+  /** Where the camera is headed: the end of the glide under way, or where it is. */
+  private goal(): [THREE.Vector3, THREE.Vector3] {
+    return this.tween ? [this.tween.to[0].clone(), this.tween.to[1].clone()] : [this.controls.target.clone(), this.camera.position.clone()];
+  }
+
+  /**
+   * Turns the body around the point looked at, in radians: across > 0 turns it to the left (as
+   * dragging left does), up > 0 raises the camera to look from higher.
+   */
+  orbit(across: number, up = 0): void {
+    const [target, position] = this.goal();
+    const s = new THREE.Spherical().setFromVector3(position.clone().sub(target));
+    s.theta += across;
+    s.phi = THREE.MathUtils.clamp(s.phi - up, 0.05, Math.PI - 0.05);
+    this.flyTo(target, target.clone().add(new THREE.Vector3().setFromSpherical(s)), 320);
+  }
+
+  /** Moves closer (factor below 1) or further away. */
+  zoom(factor: number): void {
+    const [target, position] = this.goal();
+    const offset = position.clone().sub(target);
+    const d = THREE.MathUtils.clamp(offset.length() * factor, this.controls.minDistance, this.controls.maxDistance);
+    this.flyTo(target, target.clone().add(offset.setLength(d)), 260);
+  }
+
+  /** Slides the view sideways and up or down, by a share of the view's width. */
+  pan(across: number, up: number): void {
+    const [target, position] = this.goal();
+    const d = position.distanceTo(target);
+    const right = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 0);
+    const upward = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 1);
+    const step = right.multiplyScalar(across * d).add(upward.multiplyScalar(up * d));
+    this.flyTo(target.add(step), position.add(step), 260);
+  }
+
+  /** Turns around a structure from now on: the view slides to it, without zooming. */
+  centreOn(picked: Picked): void {
+    const part = this.parts.get(keyOf(picked.system, picked.node));
+    if (!part) return;
+    const centre = this.boxOf(part.instances).getCenter(new THREE.Vector3());
+    const [target, position] = this.goal();
+    const step = centre.sub(target);
+    this.flyTo(target.add(step), position.add(step), 450);
   }
 
   hide(picked: Picked): void {
@@ -578,6 +640,7 @@ export class AtlasViewer {
 
   private onDown = (e: PointerEvent) => {
     this.down = { x: e.clientX, y: e.clientY };
+    this.tween = null;
     window.clearTimeout(this.hoverTimer);
   };
 
@@ -588,13 +651,14 @@ export class AtlasViewer {
     const hit = this.pick(e.clientX, e.clientY);
     const key = hit ? keyOf(hit.system, hit.node) : "";
     const now = performance.now();
+    const double = hit !== null && key === this.lastClick.key && now - this.lastClick.at < 350;
+    this.lastClick = { at: now, key };
+    this.events.onSelect(hit);
     // A second click on the same part flies to it.
-    if (hit && key === this.lastClick.key && now - this.lastClick.at < 350) {
+    if (double) {
       this.focus(hit);
       this.events.onFocus?.(hit);
     }
-    this.lastClick = { at: now, key };
-    this.events.onSelect(hit);
   };
 
   private onMove = (e: PointerEvent) => {
@@ -611,6 +675,10 @@ export class AtlasViewer {
       this.setHovered(hit ? keyOf(hit.system, hit.node) : null);
       this.events.onHover(hit ? { ...hit, x: e.clientX - rect.left, y: e.clientY - rect.top } : null);
     }, 120);
+  };
+
+  private onWheel = () => {
+    this.tween = null;
   };
 
   private onLeave = () => {
@@ -641,10 +709,20 @@ export class AtlasViewer {
     let busy = false;
     const tw = this.tween;
     if (tw) {
-      const t = Math.min(1, (now - tw.start) / 550);
+      const t = Math.min(1, (now - tw.start) / tw.ms);
       const e = 1 - (1 - t) ** 3;
       this.controls.target.lerpVectors(tw.from[0], tw.to[0], e);
-      this.camera.position.lerpVectors(tw.from[1], tw.to[1], e);
+      // The camera swings around what it looks at (a turn to the back goes round the side,
+      // not through the body), and moves closer or further on the way.
+      const a = tw.from[1].clone().sub(tw.from[0]);
+      const b = tw.to[1].clone().sub(tw.to[0]);
+      const ua = a.clone().normalize();
+      const ub = b.clone().normalize();
+      const turn = ua.dot(ub) < -0.999
+        ? new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI)
+        : new THREE.Quaternion().setFromUnitVectors(ua, ub);
+      const dir = ua.applyQuaternion(new THREE.Quaternion().slerp(turn, e));
+      this.camera.position.copy(this.controls.target).add(dir.multiplyScalar(THREE.MathUtils.lerp(a.length(), b.length(), e)));
       if (t >= 1) this.tween = null;
       busy = true;
     }
@@ -652,6 +730,11 @@ export class AtlasViewer {
     if (this.controls.update()) busy = true;
     this.renderer.render(this.scene, this.camera);
     this.placeLabels();
+    const side = sideFacing(this.camera.position.clone().sub(this.controls.target));
+    if (side !== this.side) {
+      this.side = side;
+      this.events.onView?.(side);
+    }
     if (busy) this.frame = requestAnimationFrame(this.tick);
     else this.running = false;
   };

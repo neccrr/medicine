@@ -11,8 +11,18 @@ skin and body regions: about 1,800 named structures.
 - **Right-drag**, or drag with two fingers, to move it.
 - **Scroll** or pinch to zoom.
 - The buttons under the model turn it to face you from the **front**,
-  **back**, **left**, **right** or **top**. **Whole body** brings all of it
-  back into view.
+  **back**, **left**, **right** or **top**.
+- The buttons on the right of the model zoom in and out, turn the body left
+  and right, look from higher or lower, and bring the **whole body** back
+  into view. On a phone, the higher and lower buttons are left out: turn the
+  body with your fingers instead.
+- **Turn around the part you click** (the last button, on at first): the
+  view slides to the part you click, so turning the body turns it around
+  that part. Switch it off to keep the view still when you click.
+- The label at the top says which side of the body faces you: anterior,
+  posterior, left, right, superior or inferior.
+- The button at the top right shows the atlas **full screen**. <kbd>Esc</kbd>
+  or the same button leaves it.
 
 ## Body systems
 
@@ -50,6 +60,10 @@ The panel for a structure shows:
 - its **landmarks**: the named points on a bone, such as the greater
   trochanter. Click one to show where it is.
 
+The arrows at the top of the panel go **back** and **forward** through the
+structures you have opened. When nothing is open, the panel lists the ones
+you opened recently.
+
 Below it are these buttons:
 
 | Button | What it does |
@@ -73,6 +87,11 @@ Below it are these buttons:
 | <kbd>A</kbd> | Show everything you hid |
 | <kbd>1</kbd> to <kbd>5</kbd> | Front, back, left, right and top views |
 | <kbd>0</kbd> | Whole body |
+| <kbd>←</kbd> <kbd>→</kbd> | Turn the body left or right |
+| <kbd>↑</kbd> <kbd>↓</kbd> | Look from higher or lower |
+| <kbd>Shift</kbd> + arrows | Slide the view |
+| <kbd>+</kbd> <kbd>−</kbd> | Zoom in or out |
+| <kbd>Backspace</kbd> | Back to the structure you opened before (<kbd>Shift</kbd> + <kbd>Backspace</kbd>: forward) |
 | <kbd>Esc</kbd> | Close the open structure |
 
 ## Sharing

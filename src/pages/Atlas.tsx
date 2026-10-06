@@ -1,8 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AlfondIcon, SearchIcon } from "../components/icons";
-import { AtlasViewer, type Picked, type ViewName } from "../components/atlas/viewer";
+import { AtlasViewer, type Picked, type ViewName, type ViewSide } from "../components/atlas/viewer";
+import {
+  BackIcon,
+  ExpandIcon,
+  FitIcon,
+  ForwardIcon,
+  PivotIcon,
+  ShrinkIcon,
+  TiltDownIcon,
+  TiltUpIcon,
+  TurnLeftIcon,
+  TurnRightIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+} from "../components/atlas/AtlasIcons";
 import { useAccount } from "../hooks/useAccount";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { STORAGE_KEYS } from "../lib/storage";
 import { askAlfondAbout } from "../lib/alfond";
 import {
   allStructures,
@@ -40,6 +56,22 @@ function isTyping(target: EventTarget | null): boolean {
 const otherSide = (node: string) => (/\.r$/.test(node) ? node.replace(/\.r$/, ".l") : /\.l$/.test(node) ? node.replace(/\.l$/, ".r") : null);
 
 const VIEW_KEYS: Record<string, ViewName> = { "1": "front", "2": "back", "3": "left", "4": "right", "5": "top" };
+/** One press of a turn button or arrow key: 20°. */
+const TURN = Math.PI / 9;
+
+interface AtlasPrefs {
+  /** A clicked structure becomes what the view turns around. */
+  follow: boolean;
+  /** Recently opened structures, newest first, as "system/node". */
+  recent: string[];
+}
+const DEFAULT_PREFS: AtlasPrefs = { follow: true, recent: [] };
+
+const toKey = (p: Picked) => `${p.system}/${p.node}`;
+const fromKey = (key: string): Picked | null => {
+  const at = key.indexOf("/");
+  return at > 0 ? { system: key.slice(0, at), node: key.slice(at + 1) } : null;
+};
 
 function hasWebGL(): boolean {
   try {
@@ -55,6 +87,7 @@ export function Atlas() {
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const host = useRef<HTMLDivElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
   const infoPanel = useRef<HTMLElement>(null);
   const searchBox = useRef<HTMLInputElement>(null);
   const resultsList = useRef<HTMLUListElement>(null);
@@ -79,10 +112,20 @@ export function Atlas() {
   const layers = useMemo(() => (rawLayers === null ? DEFAULT_LAYERS : rawLayers.split(",").filter(Boolean)), [rawLayers]);
   // Kept by its text, so changing other parts of the URL (layers) doesn't count as a new selection.
   const rawSelected = params.get("s");
-  const selected = useMemo((): Picked | null => {
-    const at = rawSelected?.indexOf("/") ?? -1;
-    return rawSelected && at > 0 ? { system: rawSelected.slice(0, at), node: rawSelected.slice(at + 1) } : null;
-  }, [rawSelected]);
+  const selected = useMemo((): Picked | null => (rawSelected ? fromKey(rawSelected) : null), [rawSelected]);
+  const selectedKey = selected ? toKey(selected) : "";
+
+  const [storedPrefs, setPrefs] = useLocalStorage<AtlasPrefs>(STORAGE_KEYS.atlasPrefs, DEFAULT_PREFS);
+  const prefs: AtlasPrefs = { ...DEFAULT_PREFS, ...storedPrefs };
+  const followRef = useRef(prefs.follow);
+  useEffect(() => {
+    followRef.current = prefs.follow;
+  }, [prefs.follow]);
+  const [side, setSide] = useState<ViewSide>("Anterior");
+
+  // The structures opened on this visit, to step back and forward through.
+  const [trail, setTrail] = useState<{ keys: string[]; at: number }>({ keys: [], at: -1 });
+  const stepping = useRef(false);
 
   const setUrl = useCallback(
     (change: { layers?: string[]; selected?: Picked | null }) => {
@@ -133,6 +176,7 @@ export function Atlas() {
         });
       },
       onError: (system) => { setErrors((prev) => [...new Set([...prev, system])]); },
+      onView: setSide,
     });
     viewer.current = v;
     return () => {
@@ -210,7 +254,6 @@ export function Atlas() {
   }, [selected, index, landmark]);
 
   // A new selection starts with no landmark picked.
-  const selectedKey = selected ? `${selected.system}/${selected.node}` : "";
   useEffect(() => {
     setLandmark(null);
   }, [selectedKey]);
@@ -237,8 +280,44 @@ export function Atlas() {
     [setUrl],
   );
   useEffect(() => {
-    selectRef.current = (p) => { select(p); };
+    selectRef.current = (p) => {
+      select(p);
+      // A clicked part becomes what the view turns around (the view slides to it, no zoom).
+      if (p && followRef.current) viewer.current?.centreOn(p);
+    };
   }, [select]);
+
+  // Each newly opened structure joins the trail (unless it was reached by stepping along it)
+  // and the recent list.
+  useEffect(() => {
+    if (!selectedKey) return;
+    const key = selectedKey;
+    if (stepping.current) {
+      stepping.current = false;
+      return;
+    }
+    setTrail((t) => {
+      if (t.keys[t.at] === key) return t;
+      const keys = [...t.keys.slice(0, t.at + 1), key].slice(-30);
+      return { keys, at: keys.length - 1 };
+    });
+    setPrefs((prev) => {
+      const p = { ...DEFAULT_PREFS, ...prev };
+      return { ...p, recent: [key, ...p.recent.filter((k) => k !== key)].slice(0, 8) };
+    });
+  }, [selectedKey, setPrefs]);
+  const step = (by: number) => {
+    const at = trail.at + by;
+    const key = trail.keys[at];
+    const p = key ? fromKey(key) : null;
+    if (!p) return;
+    stepping.current = true;
+    setTrail((t) => ({ ...t, at }));
+    select(p, true);
+  };
+  const backTo = trail.keys[trail.at - 1];
+  const forwardTo = trail.keys[trail.at + 1];
+  const nameOf = (key: string | undefined) => (key ? parseNode(fromKey(key)?.node ?? "").name : "");
 
   const toggleLayer = (id: string) => {
     const on = layers.includes(id);
@@ -250,6 +329,13 @@ export function Atlas() {
   };
 
   const all = useMemo(() => (index ? allStructures(index) : []), [index]);
+  const recent = useMemo(
+    () => prefs.recent.flatMap((k) => {
+      const p = fromKey(k);
+      return p && index?.nodes[p.system]?.some(([n]) => n === p.node) ? [p] : [];
+    }),
+    [prefs.recent, index],
+  );
   const quick = useMemo(() => QUICK.flatMap((name) => searchAtlas(all, name, 1).slice(0, 1)), [all]);
   const structureCount = useMemo(() => new Set(all.map((h) => h.name)).size, [all]);
   const results = useMemo(() => (query.trim().length >= 2 ? searchAtlas(all, query) : []), [all, query]);
@@ -279,6 +365,43 @@ export function Atlas() {
   const refreshCounts = () => {
     setIsolating(viewer.current?.isolating ?? false);
     setHiddenCount(viewer.current?.hiddenCount ?? 0);
+  };
+
+  // Full screen: the browser's own where it has one for an element, else (iPhone) the atlas
+  // covering the page.
+  const [nativeFull, setNativeFull] = useState(false);
+  const [pageFull, setPageFull] = useState(false);
+  const fullScreen = nativeFull || pageFull;
+  useEffect(() => {
+    const onChange = () => { setNativeFull(document.fullscreenElement !== null && document.fullscreenElement === frame.current); };
+    document.addEventListener("fullscreenchange", onChange);
+    return () => { document.removeEventListener("fullscreenchange", onChange); };
+  }, []);
+  useEffect(() => {
+    if (!pageFull) return;
+    document.documentElement.classList.add("atlas-page-full");
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPageFull(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.documentElement.classList.remove("atlas-page-full");
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [pageFull]);
+  const toggleFullScreen = () => {
+    const el = frame.current;
+    if (!el) return;
+    if (document.fullscreenElement) {
+      void document.exitFullscreen();
+      return;
+    }
+    if (pageFull) {
+      setPageFull(false);
+      return;
+    }
+    if (typeof el.requestFullscreen === "function" && document.fullscreenEnabled) el.requestFullscreen().catch(() => { setPageFull(true); });
+    else setPageFull(true);
   };
 
   const toggleIsolate = () => {
@@ -313,6 +436,15 @@ export function Atlas() {
       else if (k === "a") showEverything();
       else if (k === "0") viewer.current?.frameAll();
       else if (VIEW_KEYS[k]) view(VIEW_KEYS[k]);
+      else if (k === "arrowleft" || k === "arrowright" || k === "arrowup" || k === "arrowdown") {
+        const x = k === "arrowleft" ? 1 : k === "arrowright" ? -1 : 0;
+        const y = k === "arrowup" ? 1 : k === "arrowdown" ? -1 : 0;
+        // Shift slides the view instead of turning it.
+        if (e.shiftKey) viewer.current?.pan(-x * 0.12, y * 0.12);
+        else viewer.current?.orbit(x * TURN, y * TURN);
+      } else if (k === "+" || k === "=") viewer.current?.zoom(0.75);
+      else if (k === "-" || k === "_") viewer.current?.zoom(1 / 0.75);
+      else if (k === "backspace") step(e.shiftKey ? 1 : -1);
       else return;
       e.preventDefault();
     };
@@ -404,7 +536,7 @@ export function Atlas() {
         <p className="atlas-note">The atlas couldn't be loaded. Check your connection and reload.</p>
       ) : null}
 
-      <div className="atlas">
+      <div className={pageFull ? "atlas is-page-full" : "atlas"} ref={frame}>
         <aside className="atlas-side" aria-label="Find and choose">
           <label className="atlas-search">
             <SearchIcon />
@@ -419,6 +551,8 @@ export function Atlas() {
                 const first = results[0];
                 if (e.key === "Enter" && first) {
                   setQuery("");
+                  // Back to the model, so its keys (arrows, Backspace…) work straight away.
+                  e.currentTarget.blur();
                   select({ system: first.system, node: first.node }, true);
                 } else if (e.key === "ArrowDown") {
                   e.preventDefault();
@@ -487,15 +621,62 @@ export function Atlas() {
               <span aria-hidden="true"> ↓</span>
             </button>
           )}
+          <div className="atlas-corner">
+            <span className="atlas-side-label" aria-live="polite">
+              {side} view
+            </span>
+            <button
+              type="button"
+              className="atlas-icon-btn"
+              aria-pressed={fullScreen}
+              onClick={toggleFullScreen}
+              title={fullScreen ? "Exit full screen (Esc)" : "Full screen"}
+              aria-label={fullScreen ? "Exit full screen" : "Show the atlas full screen"}
+            >
+              {fullScreen ? <ShrinkIcon /> : <ExpandIcon />}
+            </button>
+          </div>
+          <div className="atlas-pad" role="group" aria-label="Move the view">
+            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.zoom(0.75)} title="Zoom in (+)" aria-label="Zoom in">
+              <ZoomInIcon />
+            </button>
+            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.zoom(1 / 0.75)} title="Zoom out (−)" aria-label="Zoom out">
+              <ZoomOutIcon />
+            </button>
+            <span className="atlas-pad-gap" />
+            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.orbit(TURN)} title="Turn left (←)" aria-label="Turn left">
+              <TurnLeftIcon />
+            </button>
+            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.orbit(-TURN)} title="Turn right (→)" aria-label="Turn right">
+              <TurnRightIcon />
+            </button>
+            <button type="button" className="atlas-icon-btn atlas-tilt" onClick={() => viewer.current?.orbit(0, TURN)} title="Look from higher (↑)" aria-label="Look from higher">
+              <TiltUpIcon />
+            </button>
+            <button type="button" className="atlas-icon-btn atlas-tilt" onClick={() => viewer.current?.orbit(0, -TURN)} title="Look from lower (↓)" aria-label="Look from lower">
+              <TiltDownIcon />
+            </button>
+            <span className="atlas-pad-gap" />
+            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.frameAll()} title="Whole body (0)" aria-label="Whole body">
+              <FitIcon />
+            </button>
+            <button
+              type="button"
+              className={prefs.follow ? "atlas-icon-btn is-on" : "atlas-icon-btn"}
+              aria-pressed={prefs.follow}
+              onClick={() => { setPrefs((prev) => ({ ...DEFAULT_PREFS, ...prev, follow: !prefs.follow })); }}
+              title={prefs.follow ? "Turning around the part you click (click to stop)" : "Turn around the part you click"}
+              aria-label="Turn around the part you click"
+            >
+              <PivotIcon />
+            </button>
+          </div>
           <div className="atlas-tools" role="toolbar" aria-label="View">
             {(["front", "back", "left", "right", "top"] as const).map((v) => (
               <button key={v} type="button" className="atlas-chip" onClick={() => { view(v); }}>
                 {v[0].toUpperCase() + v.slice(1)}
               </button>
             ))}
-            <button type="button" className="atlas-chip" onClick={() => viewer.current?.frameAll()}>
-              Whole body
-            </button>
             {(isolating || hiddenCount > 0) && (
               <button type="button" className="atlas-chip is-on" onClick={showEverything}>
                 Show all{hiddenCount > 0 ? ` (${hiddenCount} hidden)` : ""}
@@ -507,10 +688,22 @@ export function Atlas() {
         <aside className="atlas-info" aria-live="polite" ref={infoPanel}>
           {selected && sel ? (
             <>
-              <p className="atlas-kicker">
-                {labelOf(selected.system)}
-                {sel.side && ` · ${sideLabel(sel.side)}`}
-              </p>
+              <div className="atlas-info-head">
+                <p className="atlas-kicker">
+                  {labelOf(selected.system)}
+                  {sel.side && ` · ${sideLabel(sel.side)}`}
+                </p>
+                {(backTo || forwardTo) && (
+                  <div className="atlas-steps">
+                    <button type="button" className="atlas-icon-btn" disabled={!backTo} onClick={() => { step(-1); }} title={backTo ? `Back to ${nameOf(backTo)} (Backspace)` : "Back"} aria-label={backTo ? `Back to ${nameOf(backTo)}` : "Back"}>
+                      <BackIcon />
+                    </button>
+                    <button type="button" className="atlas-icon-btn" disabled={!forwardTo} onClick={() => { step(1); }} title={forwardTo ? `Forward to ${nameOf(forwardTo)}` : "Forward"} aria-label={forwardTo ? `Forward to ${nameOf(forwardTo)}` : "Forward"}>
+                      <ForwardIcon />
+                    </button>
+                  </div>
+                )}
+              </div>
               <h2>{attachment ? `${attachment[2] === "o" ? "Origin" : "Insertion"} of ${parseNode(attachment[1]).name}` : sel.name}</h2>
               {selPath >= 0 && index && (index.paths[selPath]?.length ?? 0) > 0 && (
                 <p className="atlas-path">
@@ -613,9 +806,23 @@ export function Atlas() {
                   );
                 })}
               </div>
+              {recent.length > 0 && (
+                <>
+                  <p className="atlas-recent-title">Recently opened</p>
+                  <div className="atlas-quick">
+                    {recent.map((p) => (
+                      <button key={toKey(p)} type="button" className="atlas-chip" onClick={() => { select(p, true); }}>
+                        {parseNode(p.node).name}
+                        {p.node.endsWith(".r") ? " (R)" : p.node.endsWith(".l") ? " (L)" : ""}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
               <p className="atlas-keys">
                 <kbd>/</kbd> search · <kbd>F</kbd> focus · <kbd>H</kbd> hide · <kbd>O</kbd> only this · <kbd>A</kbd> show all · <kbd>1</kbd>–<kbd>5</kbd> views ·{" "}
-                <kbd>0</kbd> whole body · <kbd>Esc</kbd> let go
+                <kbd>0</kbd> whole body · <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> turn · <kbd>Shift</kbd> + arrows move · <kbd>+</kbd> <kbd>−</kbd> zoom · <kbd>Backspace</kbd> back ·{" "}
+                <kbd>Esc</kbd> let go
               </p>
             </div>
           )}

@@ -143,6 +143,122 @@
   display: none;
 }
 
+/* ---- View controls on the model: which side faces you, full screen, the move pad ---- */
+.atlas-corner {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.atlas-side-label {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-solid) 80%, transparent);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+}
+
+.atlas-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-2-solid);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.atlas-icon-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.atlas-icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.atlas-icon-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.atlas-icon-btn.is-on {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-2-solid));
+  color: var(--accent);
+}
+
+.atlas-pad {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.atlas-pad-gap {
+  height: 0.3rem;
+}
+
+.atlas-info-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.atlas-steps {
+  display: flex;
+  flex: none;
+  gap: 0.25rem;
+}
+
+.atlas-steps .atlas-icon-btn {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.atlas-recent-title {
+  margin: 0.4rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ---- Full screen: the browser's, or the atlas covering the page (iPhone) ---- */
+.atlas:fullscreen,
+.atlas.is-page-full {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  padding: 0.6rem;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.atlas.is-page-full {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+:root.atlas-page-full,
+:root.atlas-page-full body {
+  overflow: hidden;
+}
+
 .atlas-chip {
   display: inline-flex;
   align-items: center;
@@ -575,12 +691,33 @@
     bottom: 3.2rem;
   }
 
+  /* Room for the name chip: the side label goes, the full-screen button stays. */
+  .atlas-side-label {
+    display: none;
+  }
+
+  /* Fingers tilt and turn the body easily; the pad keeps zoom, turn, whole body and follow. */
+  .atlas-pad .atlas-tilt {
+    display: none;
+  }
+
+  .atlas-pad-gap {
+    height: 0.15rem;
+  }
+
+  /* Full screen on a phone: the model takes most of the screen, the panels scroll under it. */
+  .atlas:fullscreen .atlas-stage,
+  .atlas.is-page-full .atlas-stage {
+    min-height: 82vh;
+    min-height: 82dvh;
+  }
+
   .atlas-picked {
     position: absolute;
     top: 0.6rem;
     left: 0.6rem;
     display: block;
-    max-width: calc(100% - 1.2rem);
+    max-width: calc(100% - 3.6rem);
     padding: 0.35rem 0.75rem;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--border));
