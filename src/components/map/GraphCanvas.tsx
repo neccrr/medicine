@@ -296,7 +296,9 @@ export const GraphCanvas = forwardRef<GraphCanvasHandle, Props>(function GraphCa
   };
 
   const local = (e: { clientX: number; clientY: number }) => {
-    const box = canvas.current!.getBoundingClientRect();
+    const element = canvas.current;
+    if (!element) return { x: e.clientX, y: e.clientY };
+    const box = element.getBoundingClientRect();
     return { x: e.clientX - box.left, y: e.clientY - box.top };
   };
 

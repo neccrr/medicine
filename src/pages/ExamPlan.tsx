@@ -83,17 +83,20 @@ function BlockPlan({ blockId }: { blockId: string }) {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => { downloadCalendar(
+            onClick={() => {
+              const examDate = p.exam.date;
+              if (!examDate) return;
+              downloadCalendar(
                 buildCalendar({
                   blockLabel: label,
-                  examDate: p.exam.date!,
+                  examDate,
                   time: p.settings.time ?? DEFAULT_TIME,
                   minutes: p.minutes,
                   url: `${window.location.origin}/plan/${blockId}`,
                 }),
                 `exam-plan-block-${blockId}.ics`,
-              ); }
-            }
+              );
+            }}
           >
             <CalendarIcon />
             Add to calendar

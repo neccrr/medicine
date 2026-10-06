@@ -96,5 +96,10 @@ export function milestones(m: MilestoneInput): Milestone[] {
 export function nextMilestone(list: Milestone[]): Milestone | null {
   const open = list.filter((m) => !m.earned && m.progress);
   if (open.length === 0) return null;
-  return open.reduce((best, m) => (m.progress!.have / m.progress!.need > best.progress!.have / best.progress!.need ? m : best));
+  return open.reduce((best, m) => {
+    const progress = m.progress;
+    const bestProgress = best.progress;
+    if (!progress || !bestProgress) return best;
+    return progress.have / progress.need > bestProgress.have / bestProgress.need ? m : best;
+  });
 }

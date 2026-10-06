@@ -289,7 +289,13 @@ export function buildKnowledgeGraph(input: GraphInput): KnowledgeGraph {
     candidates.push({ key: k, s, t, w });
   }
   const perNode = new Map<number, (typeof candidates)[number][]>();
-  for (const e of candidates) for (const n of [e.s, e.t]) (perNode.get(n) ?? perNode.set(n, []).get(n)!).push(e);
+  for (const e of candidates) {
+    for (const n of [e.s, e.t]) {
+      const edges = perNode.get(n) ?? [];
+      edges.push(e);
+      perNode.set(n, edges);
+    }
+  }
   const keep = new Set<string>();
   for (const list of perNode.values()) {
     list.sort((x, y) => y.w - x.w || x.key.localeCompare(y.key));

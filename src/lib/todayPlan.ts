@@ -134,20 +134,20 @@ function candidates(br: BlockReadiness, phase: Phase, daysLeft: number | null): 
   if (phase === "learn" || phase === "strengthen" || phase === "no-date") {
     for (const s of subjects) {
       const cardsNew = s.cards ? newQuota(s.cards.total - s.cards.seen, daysLeft, phase, NO_DATE_NEW_CARDS, NEW_CARDS_CAP) : 0;
-      if (cardsNew) out.push({ id: `new-cards:${s.key}`, kind: "cards", subject: s.key, title: `Learn ${cardsNew} new ${short(s)} cards`, detail: `${s.cards!.total - s.cards!.seen} not seen yet`, target: cardsNew, to: `/flashcards/${s.key}`, priority: phase === "learn" ? 2 : 3, min: 5 });
+      if (cardsNew && s.cards) out.push({ id: `new-cards:${s.key}`, kind: "cards", subject: s.key, title: `Learn ${cardsNew} new ${short(s)} cards`, detail: `${s.cards.total - s.cards.seen} not seen yet`, target: cardsNew, to: `/flashcards/${s.key}`, priority: phase === "learn" ? 2 : 3, min: 5 });
       const labelsNew = s.labels ? newQuota(s.labels.total - s.labels.seen, daysLeft, phase, NO_DATE_NEW_LABELS, NEW_LABELS_CAP) : 0;
       if (labelsNew) out.push({ id: `new-labels:${s.key}`, kind: "labels", subject: s.key, title: `Learn ${labelsNew} new ${short(s)} labels`, detail: "Image occlusion", target: labelsNew, to: `/occlusion/${s.key}`, priority: phase === "learn" ? 2.2 : 3.2, min: 5 });
     }
     // One unread chapter, from the subject with the least read.
-    const reader = subjects.filter((s) => s.reading && s.reading.done < s.reading.chapters).sort((a, b) => a.reading!.done / a.reading!.chapters - b.reading!.done / b.reading!.chapters).at(0);
+    const reader = subjects.filter((s) => s.reading && s.reading.done < s.reading.chapters).sort((a, b) => (a.reading?.done ?? 0) / (a.reading?.chapters || 1) - (b.reading?.done ?? 0) / (b.reading?.chapters || 1)).at(0);
     if (reader && phase !== "strengthen") {
       const done = new Set(readJSON<string[]>(STORAGE_KEYS.ebookCompleted(reader.key), []));
       const chapter = ebookMeta.get(reader.key)?.chapters.find((c) => !done.has(c.id));
       if (chapter) out.push({ id: `chapter:${reader.key}:${chapter.id}`, kind: "chapters", subject: reader.key, title: `Read "${chapter.title}"`, detail: `${short(reader)} ebook; mark it finished at the end`, target: 1, to: `/ebooks/${reader.key}/${chapter.id}`, priority: 2.5 });
     }
     // A quiz sitting in the subject whose quiz is least covered (or weakest).
-    const quizzer = subjects.filter((s) => s.quiz).sort((a, b) => (phase === "learn" ? a.quiz!.coverage - b.quiz!.coverage : (a.parts.quiz ?? 0) - (b.parts.quiz ?? 0))).at(0);
-    if (quizzer) out.push({ id: `quiz:${quizzer.key}`, kind: "questions", subject: quizzer.key, title: `Quiz: ${Math.min(QUIZ_SITTING, quizzer.quiz!.bank)} ${short(quizzer)} questions`, detail: phase === "learn" ? "A first pass through the bank" : "Weakest quiz subject", target: Math.min(QUIZ_SITTING, quizzer.quiz!.bank), to: `/quizzes/${quizzer.key}`, priority: 3, min: 10 });
+    const quizzer = subjects.filter((s) => s.quiz).sort((a, b) => (phase === "learn" ? (a.quiz?.coverage ?? 0) - (b.quiz?.coverage ?? 0) : (a.parts.quiz ?? 0) - (b.parts.quiz ?? 0))).at(0);
+    if (quizzer?.quiz) out.push({ id: `quiz:${quizzer.key}`, kind: "questions", subject: quizzer.key, title: `Quiz: ${Math.min(QUIZ_SITTING, quizzer.quiz.bank)} ${short(quizzer)} questions`, detail: phase === "learn" ? "A first pass through the bank" : "Weakest quiz subject", target: Math.min(QUIZ_SITTING, quizzer.quiz.bank), to: `/quizzes/${quizzer.key}`, priority: 3, min: 10 });
   }
   return out;
 }
@@ -216,7 +216,7 @@ export function planProgress(plan: TodayPlan, log: StudyLog = getStudyLog()): Re
     }
     const k = `${item.subject}|${item.kind}`;
     if (!pool.has(k)) pool.set(k, Number(day[item.subject]?.[item.kind]) || 0);
-    const have = pool.get(k)!;
+    const have = pool.get(k) ?? 0;
     const done = Math.min(item.target, have);
     pool.set(k, have - done);
     out[item.id] = done;

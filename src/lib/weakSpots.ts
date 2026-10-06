@@ -49,7 +49,7 @@ export function weakTopics(subject: string, states: CardStateMap = readJSON<Card
       const s = states[card.id];
       if (struggling(s)) {
         t.weak += 1;
-        t.lapses += s!.lapses;
+        t.lapses += s?.lapses ?? 0;
       }
       byTag.set(tag, t);
     }
@@ -62,7 +62,11 @@ export function missedQuestions(subject: string, attempts: QuizAttempt[] = readJ
   const counts = new Map<string, number>();
   for (const a of attempts) for (const id of a.missedIds) if (bank.has(id)) counts.set(id, (counts.get(id) ?? 0) + 1);
   return [...counts.entries()]
-    .map(([id, misses]) => ({ subject, id, question: bank.get(id)!, misses }))
+    .map(([id, misses]) => {
+      const question = bank.get(id);
+      return question ? { subject, id, question, misses } : null;
+    })
+    .filter((item): item is MissedQuestion => item !== null)
     .sort((a, b) => b.misses - a.misses);
 }
 
