@@ -28,6 +28,9 @@ are written in [`content/help/`](../content/help/).
   testing and operations.
 - [MongoDB Atlas cluster](atlas.md): the cluster's tier, region, replica set
   and network access, its limits, and how to scale it.
+- [3D anatomy atlas](atlas-3d.md): the `/atlas` page's models, where they
+  come from and their licence, the viewer, and how to rebuild them from
+  Z-Anatomy.
 - [API reference](api.md): every `/api` route with its requests and
   responses.
 - [How the numbers are worked out](calculations.md): every formula and

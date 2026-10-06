@@ -58,6 +58,7 @@ const Progress = lazy(() => import("./pages/Progress").then((m) => ({ default: m
 const NotFound = lazy(() => import("./pages/NotFound").then((m) => ({ default: m.NotFound })));
 const Leaderboard = lazy(() => import("./pages/Leaderboard").then((m) => ({ default: m.Leaderboard })));
 const Lab = lazy(() => import("./pages/Lab").then((m) => ({ default: m.Lab })));
+const Atlas = lazy(() => import("./pages/Atlas").then((m) => ({ default: m.Atlas })));
 const LabActivityPage = lazy(() =>
   import("./pages/LabActivity").then((m) => ({ default: m.LabActivityPage })),
 );
@@ -123,6 +124,7 @@ function AppRoutes() {
           <Route path="/account" element={<Account />} />
           <Route path="/alfond" element={<AlfondPage />} />
           <Route path="/map" element={<KnowledgeMap />} />
+          <Route path="/atlas" element={<Atlas />} />
           <Route path="/plan" element={<ExamPlan />} />
           <Route path="/plan/:blockId" element={<ExamPlan />} />
           <Route path="/docs" element={<Docs />} />

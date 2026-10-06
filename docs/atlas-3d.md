@@ -1,0 +1,162 @@
+# 3D anatomy atlas
+
+The `/atlas` page is a 3D model of the whole body. You can turn it, take it
+apart by body system, click any structure to name it and read about it, and
+see where each muscle attaches. The models come from
+[Z-Anatomy](https://www.z-anatomy.com/), converted for the web by
+`scripts/atlas/`.
+
+## Licence
+
+The atlas files in `public/atlas/` (the `.glb` models, `atlas.json` and
+`descriptions.json`) are **not** under the app's MIT licence. They are a
+derivative of Z-Anatomy and are shared under **CC BY-SA 4.0**.
+
+- Z-Anatomy is built on BodyParts3D (CC BY-SA 2.1 Japan).
+- Its descriptions follow Wikipedia (CC BY-SA).
+- A few parts it includes are non-commercial: the inner ear (CC BY-NC-SA 4.0)
+  and the kidney (CC BY-NC 4.0). So the atlas must not be used commercially.
+
+`public/atlas/LICENSE.txt` gives the full credits. The page shows a credit
+line that links to it. Keep both whenever the files change.
+
+## What's in it
+
+| Layer | File | Size | Triangles | Structures |
+| --- | --- | ---: | ---: | ---: |
+| Skeleton | `skeletal.glb` | 2.0 MB | 328k | 159 |
+| Joints and ligaments | `joints.glb` | 1.2 MB | 168k | 236 |
+| Muscles (with fasciae, tendons, bursae) | `muscular.glb` | 5.5 MB | 959k | 344 |
+| Heart and vessels | `cardiovascular.glb` | 3.8 MB | 692k | 420 |
+| Nervous system | `nervous.glb` | 4.3 MB | 832k | 317 |
+| Organs | `visceral.glb` | 2.0 MB | 410k | 101 |
+| Lymphatic system | `lymphatic.glb` | 0.4 MB | 89k | 110 |
+| Skin and regions | `regions.glb` | 0.8 MB | 73k | 129 |
+| Planes and directions | `references.glb` | 0.06 MB | 3k | 39 |
+| Muscle attachment areas | `attachments.glb` | 2.0 MB | 314k | 705 areas |
+
+The structure counts treat left and right as one structure. On top of the
+models:
+
+- 786 bony landmarks (points on the bones, such as the "Greater trochanter");
+- 705 muscle origin and insertion areas, drawn on the bones;
+- descriptions of about 1,340 structures (about 72%).
+
+It covers gross anatomy only. There is no histology and no embryology.
+
+Each layer loads only when it is first switched on. The page opens with the
+skeleton alone (2 MB). The service worker keeps each model once it has been
+downloaded (cache-first, versioned by file size), so the atlas works offline
+after that.
+
+## Files
+
+| Path | What it is |
+| --- | --- |
+| `public/atlas/*.glb` | One model per layer: glTF with meshopt compression. The node names are the structure names. |
+| `public/atlas/atlas.json` | The index: layers, the group path of every structure, landmarks and attachments |
+| `public/atlas/descriptions.json` | Short descriptions by structure name, loaded when the first structure is opened |
+| `src/lib/atlas/model.ts` | The index types, name parsing, search, tissue colours, groups and attachments; tested in `model.test.ts` |
+| `src/components/atlas/viewer.ts` | `AtlasViewer`: three.js scene, loading, picking, highlighting, camera tweening, hiding and isolating, landmark markers |
+| `src/pages/Atlas.tsx` | The page: layers, search, the info panel, and the URL state |
+| `src/styles/atlas.css` | Its styles |
+| `scripts/atlas/` | The conversion (below) |
+
+three.js is the page's only new dependency. Vite puts it in its own `three`
+chunk (about 166 KB gzipped), which only `/atlas` loads.
+
+### Names
+
+The models' node names follow Z-Anatomy's own naming:
+
+- `.r` and `.l` mark the right and left side: `Parietal bone.r`.
+- A name in brackets, such as `(Accessory pancreas)`, is an optional or
+  variant structure.
+- In the skeleton's source file, `.o…` and `.e…` mark a muscle's origin
+  ("origin") and insertion ("end") areas. The converter moves them to
+  `attachments.glb` and lists them in `atlas.json`.
+
+`parseNode` turns a node name into a display name and a side.
+`descriptionKey` gives the key a structure's description is filed under.
+
+three.js changes some characters in node names when it loads a file. The
+viewer therefore reads the original names from the glTF JSON (through
+`parser.associations`).
+
+### Colours
+
+The source files carry no colours of their own. The viewer colours each mesh
+from its material's name with `tissueColor`, for example:
+
+- bone, cartilage, ligament, tendon;
+- arteries red and veins blue, with the pulmonary vessels the other way round;
+- nerves yellow;
+- origin areas red and insertion areas blue.
+
+Muscles get a slightly different red for each material group, so that
+neighbouring muscles can be told apart.
+
+### The page's URL
+
+| Parameter | Meaning |
+| --- | --- |
+| `layers` | The layers on show, comma-separated (default `skeletal`) |
+| `s` | The selected structure, as `layer/node name` |
+
+A link to `/atlas?s=muscular/Deltoid%20muscle.r` opens that muscle with the
+muscles shown.
+
+## Rebuilding the models
+
+`scripts/atlas/build.sh` repeats the whole conversion. It needs git, Node and
+Python 3.11, downloads about 1 GB, and writes the results into
+`public/atlas/`. Its work folder is `scripts/atlas/work/`, which git ignores.
+
+```sh
+scripts/atlas/build.sh
+```
+
+The steps:
+
+1. **Fetch.** A blob-less, sparse clone of Z-Anatomy's `PC-Version` branch,
+   with only `Resources/Models/FBX` and
+   `Resources/Descriptions/OriginalDescriptions`.
+2. **Convert** (`convert.py`), run once per FBX file with Blender 4.2 as a
+   Python module (`bpy`). It sorts the objects into four kinds:
+   - structures, which are kept;
+   - label markers (`.j`, `.i`), which are dropped;
+   - landmark empties (`.t`), which become points;
+   - attachment areas (`.o…`, `.e…`), which go to their own file.
+
+   It then bakes every structure's world transform and writes
+   `raw/<layer>.glb` and `raw/<layer>.json`. The JSON holds the structures with
+   their group paths, the landmarks and the attachments.
+3. **Pack** (`pack.mjs`), with glTF-Transform and meshoptimizer:
+   - removes duplicate accessors and meshes (not materials: their names are
+     what the app colours by);
+   - welds vertices;
+   - simplifies to at most half the triangles (error 0.0005);
+   - prunes;
+   - quantizes positions to 14 bits and normals to 8;
+   - compresses with `EXT_meshopt_compression`.
+4. **Index** (`index.mjs`): writes `web/atlas.json` from the metadata and the
+   packed files. It lists the layers, their sizes and triangle counts. Group
+   paths are stored once and referred to by number.
+5. **Describe** (`descs.py`): writes `web/descriptions.json`, which holds the
+   first paragraphs of each structure's description, cleaned of leftovers
+   from Wikipedia.
+
+To change the level of detail, change `0.5` (the ratio of triangles to keep)
+in `build.sh`. A new model has a new size, so its URL (`?v=<bytes>`) changes
+and devices download it again.
+
+Afterwards, run `npx vitest run src/lib/atlas`. It checks that the shipped
+index has a model file for every layer.
+
+## Privacy and search
+
+The atlas holds no personal data and no course material.
+`src/prerender/site.ts` writes a static `/atlas` page listing the layers, and
+`/atlas` is in the sitemap. The structures themselves are not added to the
+app's search; the page has its own search. Its "Find in your notes" link opens
+the app's search for the structure's name.

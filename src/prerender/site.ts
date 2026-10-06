@@ -66,6 +66,15 @@ function subjectList(section: string, subjects: Subject[], detail: (s: Subject) 
 /** Built once per render: the knowledge map's data, also written out as /knowledge-graph.json. */
 let mapGraph: KnowledgeGraph | null = null;
 
+const atlasFiles = import.meta.glob<{ systems: { label: string; structures: number }[] }>("/public/atlas/atlas.json", { eager: true, import: "default" });
+
+/** The atlas's body systems, for search engines and readers without JavaScript. */
+function atlasContent(): string {
+  const atlas = Object.values(atlasFiles).at(0);
+  if (!atlas) return "";
+  return `<ul>${atlas.systems.map((s) => `<li>${esc(s.label)}: ${s.structures} structures</li>`).join("")}</ul><p>3D models from Z-Anatomy (CC BY-SA 4.0), based on BodyParts3D.</p>`;
+}
+
 /** The map's concepts as a plain list, for search engines and readers without JavaScript. */
 function mapContent(): string {
   if (!mapGraph) return "";
@@ -88,6 +97,8 @@ async function content(path: string): Promise<string> {
   switch (parts.length === 1 ? section : `${section}/*`) {
     case "map":
       return mapContent();
+    case "atlas":
+      return atlasContent();
     case "docs":
       return helpGroups()
         .map((g) => `<h2>${esc(g.label)}</h2><ul>${g.pages.map((p) => `<li><a href="/docs/${p.id}">${esc(p.title)}</a>: ${esc(p.description)}</li>`).join("")}</ul>`)

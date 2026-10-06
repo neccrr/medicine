@@ -177,6 +177,22 @@ export default defineConfig(async (): Promise<UserConfig> => ({
             options: { cacheName: 'knowledge-graph', cacheableResponse: { statuses: [200] } },
           },
           {
+            // The 3D atlas's models (several MB each): kept once loaded. Their URLs carry a
+            // version, so a changed model is fetched again.
+            urlPattern: ({ url }) => url.pathname.startsWith('/atlas/') && url.pathname.endsWith('.glb'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'atlas-models',
+              expiration: { maxEntries: 24, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [200] },
+            },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/atlas/') && url.pathname.endsWith('.json'),
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'atlas-index', cacheableResponse: { statuses: [200] } },
+          },
+          {
             urlPattern: ({ url }) => url.pathname.endsWith('.pdf'),
             handler: 'CacheFirst',
             options: {
@@ -218,6 +234,8 @@ export default defineConfig(async (): Promise<UserConfig> => ({
             // splitting them out keeps that chunk cacheable across deploys instead
             // of re-downloading it every time any page's code changes.
             { name: 'vendor', test: /node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/ },
+            // three.js is only for the 3D atlas, and changes far less often than the page.
+            { name: 'three', test: /node_modules[\\/]three[\\/]/ },
             // Study content (decks, quiz and exam banks, summaries) gets one chunk per kind, so
             // editing a quiz only invalidates that chunk, and no single chunk grows past the
             // size limit. Ebook chapters and past-exam banks are loaded on demand and stay one

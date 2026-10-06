@@ -465,3 +465,19 @@ export function HelpIcon() {
     </svg>
   );
 }
+
+export function BodyIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <circle cx="12" cy="4.6" r="2.2" stroke="currentColor" strokeWidth="1.6" fill="none" />
+      <path
+        d="M7 9.2c1.6-.9 3.3-1.3 5-1.3s3.4.4 5 1.3M9.6 8.4l-.6 6.1 1.2 7M14.4 8.4l.6 6.1-1.2 7M9.2 14.4h5.6M7 9.2l-1.2 5.3M17 9.2l1.2 5.3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}

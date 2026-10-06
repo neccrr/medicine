@@ -172,6 +172,16 @@ const SECTIONS = new Map<string, { name: string; meta: PageMeta }>(Object.entrie
   progress: { name: "Progress", meta: { title: titled("Your Progress"), description: HOME_DESCRIPTION, indexable: false } },
   leaderboard: { name: "Leaderboard", meta: { title: titled("Leaderboard"), description: HOME_DESCRIPTION, indexable: false } },
   account: { name: "Account", meta: { title: titled("Account"), description: HOME_DESCRIPTION, indexable: false } },
+  atlas: {
+    name: "3D anatomy",
+    meta: {
+      title: titled("3D Anatomy Atlas: Bones, Muscles, Vessels, Nerves and Organs"),
+      description: describe(
+        "A free interactive 3D atlas of the whole human body: about 1,850 bones, joints, muscles, vessels, nerves and organs, with their names, descriptions, landmarks and where each muscle attaches.",
+      ),
+      indexable: true,
+    },
+  },
   map: {
     name: "Knowledge map",
     meta: {
@@ -365,7 +375,7 @@ export function breadcrumbs(pathname: string): Crumb[] {
 
 /** Every page that should be in search results, in a stable order. */
 export function indexablePaths(): string[] {
-  const paths = ["/", "/subjects", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab", "/map", "/docs"];
+  const paths = ["/", "/subjects", "/flashcards", "/occlusion", "/quizzes", "/exam", "/modules", "/ebooks", "/summaries", "/lab", "/atlas", "/map", "/docs"];
   for (const page of helpPages) paths.push(`/docs/${page.id}`);
   for (const e of labExercises) for (const a of e.activities) paths.push(`/lab/${e.id}/${a.slug}`);
   for (const s of flashcardSubjects) paths.push(`/flashcards/${keyOf(s)}`);

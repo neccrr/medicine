@@ -27,3 +27,6 @@ wiki-out
 *.njsproj
 *.sln
 *.sw?
+
+# The 3D atlas build (scripts/atlas/build.sh)
+scripts/atlas/work

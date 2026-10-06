@@ -174,6 +174,23 @@ account environment variables it runs as a plain static site.
   troubleshooting), with search, contents and previous/next, written as
   Markdown in `content/help/`
 
+### 3D anatomy (`/atlas`)
+
+- The whole body in 3D from [Z-Anatomy](https://www.z-anatomy.com/): skeleton,
+  joints and ligaments, muscles, heart and vessels, nerves, organs, lymphatic
+  system, skin and regions, about 1,800 named structures
+- Each body system loads only when switched on (the skeleton alone is 2 MB,
+  everything about 22 MB) and is kept for offline use; per-system opacity and
+  groups (the fasciae start hidden)
+- Click or search any structure: its name, side and group, a short
+  description, focus, only this, hide, and Ask Alfond
+- 786 bony landmarks, and "Where it attaches" shows a muscle's origin and
+  insertion areas on the bones
+- Views from the front, back, sides and top; the page's address keeps the
+  systems and the selected structure
+- The models are CC BY-SA 4.0 (with non-commercial parts), not MIT: see
+  `public/atlas/LICENSE.txt` and [docs/atlas-3d.md](docs/atlas-3d.md)
+
 ### Knowledge map (`/map`)
 
 - One graph of every concept across all blocks and subjects (about 700), from
@@ -285,8 +302,8 @@ account environment variables it runs as a plain static site.
 - **Developers:** [architecture](docs/architecture.md),
   [development](docs/development.md), [storage and
   sync](docs/storage-and-sync.md), the [database](docs/database.md) and its
-  [Atlas cluster](docs/atlas.md), the
-  [API](docs/api.md), and [how the numbers
+  [Atlas cluster](docs/atlas.md), the [3D anatomy
+  atlas](docs/atlas-3d.md), the [API](docs/api.md), and [how the numbers
   are worked out](docs/calculations.md), every formula from the Virtual Lab
   to leaderboard points.
 - **Running your own copy:** [deploying](docs/deploying.md).
@@ -371,3 +388,10 @@ atlases and textbooks); each is captioned with its source deck and slide. The
 anatomy quiz figures in `public/ebook-figures/anatomy-quiz/` come from the same
 decks, some with labels covered by a "?" so the figure doesn't give the answer
 away. To have a file removed, open an issue.
+
+The 3D anatomy models and descriptions in `public/atlas/` are adapted from
+[Z-Anatomy](https://www.z-anatomy.com/) (itself based on BodyParts3D, © The
+Database Center for Life Science) and are under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), not MIT. Some
+parts are non-commercial, so the atlas may not be used commercially. See
+[`public/atlas/LICENSE.txt`](public/atlas/LICENSE.txt).

@@ -1,0 +1,467 @@
+/* ---- The 3D anatomy atlas (/atlas) ---- */
+.atlas {
+  display: grid;
+  grid-template-columns: 16.5rem minmax(0, 1fr) 20rem;
+  gap: 0.75rem;
+  height: min(78vh, 52rem);
+  height: min(78dvh, 52rem);
+  min-height: 32rem;
+  margin-top: 0.75rem;
+}
+
+.atlas-side,
+.atlas-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+}
+
+.atlas-stage {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(ellipse at 50% 30%, color-mix(in srgb, var(--accent) 9%, var(--surface-solid)), var(--surface-solid) 72%);
+}
+
+.atlas-viewport {
+  position: absolute;
+  inset: 0;
+}
+
+.atlas-canvas {
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+.atlas-canvas:active {
+  cursor: grabbing;
+}
+
+.atlas-canvas:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.atlas-labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.atlas-marker-label,
+.atlas-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 16rem;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--surface-solid) 92%, transparent);
+  color: var(--text);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.atlas-hover {
+  z-index: 2;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: var(--glass-shadow);
+}
+
+.atlas-hover small {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.atlas-loading {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface-2-solid);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.atlas-tools {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  max-width: calc(100% - 1.2rem);
+}
+
+.atlas-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2-solid);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.atlas-chip:hover {
+  border-color: var(--accent);
+}
+
+.atlas-chip.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.atlas-search {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2-solid);
+}
+
+.atlas-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.atlas-search:focus-within {
+  border-color: var(--accent);
+}
+
+.atlas-systems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.atlas-system {
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+}
+
+.atlas-system.is-on {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.atlas-system label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+
+.atlas-system input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.atlas-system-name {
+  flex: 1;
+}
+
+.atlas-system-meta {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.atlas-progress {
+  width: 100%;
+  height: 4px;
+  accent-color: var(--accent);
+}
+
+.atlas-opacity {
+  width: 100%;
+  margin: 0.2rem 0 0;
+  accent-color: var(--accent);
+}
+
+.atlas-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  margin-top: 0.35rem;
+}
+
+.atlas-group {
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.7rem;
+  text-decoration: line-through;
+  cursor: pointer;
+}
+
+.atlas-group.is-on {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+  color: var(--text);
+  text-decoration: none;
+}
+
+.atlas-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0.2rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+}
+
+.atlas-swatch {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 3px;
+}
+
+.atlas-swatch.origin {
+  background: #d64a4a;
+}
+
+.atlas-swatch.insertion {
+  background: #3f7fd6;
+}
+
+.atlas-results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atlas-results button {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.atlas-results button:hover,
+.atlas-results button:focus-visible {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.atlas-results strong {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.atlas-results small,
+.atlas-hint,
+.atlas-path,
+.atlas-kicker,
+.atlas-source {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.atlas-kicker {
+  margin: 0;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.atlas-info h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.atlas-info h3 {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+}
+
+.atlas-path {
+  margin: 0;
+}
+
+.atlas-actions,
+.atlas-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.atlas-ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.atlas-ask:hover {
+  border-color: var(--accent);
+}
+
+.atlas-ask svg {
+  flex: none;
+  color: var(--accent);
+}
+
+.atlas-description p {
+  margin: 0 0 0.55rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.atlas-landmarks-box summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.atlas-landmarks-box summary h3 {
+  display: inline;
+}
+
+.atlas-count {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.atlas-landmarks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atlas-landmarks button {
+  padding: 0.15rem 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.atlas-landmarks button.is-on {
+  font-weight: 700;
+}
+
+.atlas-landmarks button:hover {
+  text-decoration: underline;
+}
+
+.atlas-more {
+  color: var(--accent);
+  font-size: 0.82rem;
+}
+
+.atlas-empty-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.atlas-empty p {
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.atlas-note {
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font-size: 0.88rem;
+}
+
+.atlas-credit {
+  margin-top: 0.6rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.atlas-credit a {
+  color: inherit;
+}
+
+/* Narrower: the info panel goes under the model. */
+@media (max-width: 1180px) {
+  .atlas {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    grid-template-rows: minmax(26rem, 1fr) auto;
+    height: auto;
+  }
+
+  .atlas-stage {
+    min-height: 30rem;
+  }
+
+  .atlas-info {
+    grid-column: 1 / -1;
+    max-height: none;
+  }
+}
+
+/* Phones: the model first and tall, the systems and search under it. */
+@media (max-width: 720px) {
+  .atlas {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .atlas-stage {
+    order: -1;
+    min-height: 62vh;
+    min-height: 62dvh;
+  }
+
+  .atlas-side {
+    max-height: 24rem;
+  }
+}

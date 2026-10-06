@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Fuse from "fuse.js";
 import { buildContentDocs, loadContentDocs, type SearchDoc } from "../lib/searchIndex";
 import { ebookSubjects, flashcardSubjects, quizSubjects, summarySubjects } from "../lib/content";
@@ -42,7 +42,9 @@ interface RankedDoc {
 }
 
 export function Search() {
-  const [query, setQuery] = useState("");
+  // ?q= opens the page with a search already typed (the anatomy atlas links here).
+  const [params] = useSearchParams();
+  const [query, setQuery] = useState(() => params.get("q") ?? "");
   const [activeTypes, setActiveTypes] = useState<string[]>([]);
   const [activeSubjects, setActiveSubjects] = useState<string[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);

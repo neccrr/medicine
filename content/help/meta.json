@@ -63,6 +63,13 @@
     "keywords": "modules pdf slides lecture practicum class drive google drive ppt recordings tutorial ub new this week"
   },
   {
+    "id": "anatomy-3d",
+    "title": "3D anatomy",
+    "group": "Read",
+    "description": "The 3D body: turning it, switching body systems, naming any structure, landmarks and where each muscle attaches.",
+    "keywords": "3d anatomy atlas body model skeleton bones muscles nerves vessels organs origin insertion attachment landmarks z-anatomy"
+  },
+  {
     "id": "knowledge-map",
     "title": "Knowledge map",
     "group": "Read",

@@ -29,8 +29,8 @@ An account is optional. It adds:
   due next. It's the quickest way into a subject.
 - The **sidebar** groups the rest: _Study_ (exam plan, flashcards, image
   occlusion, quizzes, exams, Virtual Lab), _Read_ (ebooks, summaries, modules,
-  Class Drive, knowledge map) and _You_ (progress, leaderboard, account, this
-  help). On a phone the same groups are in the tab bar at the bottom.
+  Class Drive, 3D anatomy, knowledge map) and _You_ (progress, leaderboard,
+  account, this help). On a phone the same groups are in the tab bar at the bottom.
 - Press <kbd>Ctrl</kbd> + <kbd>K</kbd> (<kbd>⌘</kbd> + <kbd>K</kbd> on a Mac)
   anywhere to jump to any page or subject by typing its name.
 

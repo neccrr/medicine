@@ -30,6 +30,8 @@ content/*.json, *.md, *.pdf ──► Vite bundle ──► browser (React SPA, 
   layout (once at build time, then live on the map page). The map draws on a
   2D canvas in both views; its 3D view has its own small physics and camera,
   with no WebGL library.
+- three.js for the 3D anatomy atlas only (`/atlas`), in its own chunk that no
+  other page loads.
 
 ## Project layout
 
@@ -39,6 +41,7 @@ src/
   components/   sidebar, command palette, heatmap, badges, nudges, error boundary…
     map/        the knowledge map: GraphCanvas (2D), Graph3D, GraphControls,
                 render.ts (palette, sphere sprites, label placement, hover card)
+    atlas/      viewer.ts: the 3D anatomy atlas's three.js viewer
   hooks/        useSpacedRepetition, useQuizProgress, useExamHistory, useTheme,
                 useReadingPrefs, useServiceWorkerUpdate, useLocalStorage…
   lib/          pure logic (each piece has a *.test.ts beside it)
@@ -48,8 +51,10 @@ src/
   context/      AccountContext: session, sync scheduling, sign-in actions
   prerender/    site.ts: the static page for every public route
 content/        the study material and help pages (see content-guide.md)
+public/atlas/   the 3D anatomy models and index (CC BY-SA, see atlas-3d.md)
 scripts/        prerender.mjs (after vite build), graph-relations.mjs,
-                build-info.mjs (version and build for the footer), wiki.mjs
+                build-info.mjs (version and build for the footer), wiki.mjs,
+                atlas/ (converts Z-Anatomy into public/atlas/)
 api/
   index.ts      the Vercel Function; vercel.json rewrites /api/* here
 server/         the API behind it:
@@ -95,6 +100,7 @@ Every page is its own lazily loaded chunk (`src/App.tsx`). The pages:
 | `/lab` → `/lab/:exerciseId/:activity` | Virtual Lab activities → simulator bench, data table, plot and check questions |
 | `/search` | Fuzzy search with type and subject filters |
 | `/progress` | Readiness, subject meters, trends, heatmap, weak spots, milestones, export/import |
+| `/atlas` | 3D anatomy: the whole body by system, with search, descriptions, landmarks and muscle attachments (see [3D anatomy atlas](atlas-3d.md)) |
 | `/map` | Knowledge map of every concept across all blocks |
 | `/drive` | Class Drive: the class's Google Drive folder, live (signed-in only) |
 | `/alfond` | Alfond, the study assistant's own page |
@@ -134,6 +140,9 @@ questions and anything from the Class Drive are never written to these pages;
   first visit.
 - PDFs are cached the first time you open them, which keeps the first visit
   fast even though the modules add up to about 300 MB.
+- The 3D atlas's models are cached the same way, one body system at a time
+  (about 22 MB for all of them). Their URLs carry the file size, so a rebuilt
+  model replaces the cached one.
 - When a new version is deployed, the app checks for it on focus and every
   30 minutes, then shows a **"A new version is ready"** prompt. It never
   reloads on its own, so a quiz or exam in progress isn't lost.
