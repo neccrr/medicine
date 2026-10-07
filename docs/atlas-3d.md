@@ -84,18 +84,23 @@ instead of about 5,000, so turning the body stays smooth on phones.
   `medicine:atlas` setting with the recently opened structures), a click
   slides the view so the part becomes the point the camera turns around,
   without zooming.
-- **Navigation** follows Unreal Engine's viewport (`NavMode` "unreal", the
-  default; "orbit" is the plain OrbitControls camera, kept in the
-  `medicine:atlas` setting). The viewer keeps OrbitControls for touch and
-  takes the mouse itself: a capture-phase `pointerdown` on the host turns
-  OrbitControls off for mouse input. Right-drag turns the camera in place
-  (`turn`), and while the right button is held W A S D Q E fly at Unreal's
-  1–8 speed steps (`fly`, run each frame; the keys are caught in the capture
-  phase so the page's own shortcuts stay quiet). Left-drag turns and moves
-  along the ground, middle-drag or both buttons pan, Alt+left orbits the
-  clicked structure (`pivot`, set by `centreOn`) and Alt+right dollies. The
-  wheel zooms toward the pointer (OrbitControls), or sets the speed while
-  flying.
+- **Navigation** follows the knowledge map's 3D view (`Graph3D`), itself
+  modelled on a 3D editor's viewport. OrbitControls handles the pointer:
+  drag orbits, right-, middle- or Shift-drag pans, the wheel zooms toward
+  the pointer, and touch is as before. The viewer adds W A S D Q E flying
+  (`fly`, run each frame at 0.8 × the distance to the target per second,
+  three times that with Shift; ignored while typing), perspective or
+  orthographic drawing (`setOrthographic`: the perspective camera stays the
+  rig the controls move, and an `OrthographicCamera` copies it each frame
+  with a frustum as tall as the perspective view's at the target),
+  auto-rotate (`setAutoRotate`) and a floor grid (`setGrid`).
+- **The axis gizmo** (`attachGizmo`) is a 2D canvas the viewer draws each
+  frame from the camera's axes, like the knowledge map's, but its ends are
+  named anatomically instead of X, Y and Z: Anterior and Posterior (blue),
+  Superior and Inferior (green), Sinistra and Dextra (red). Clicking an end
+  calls `view()` with that side. An end pointing at the viewer shrinks to a
+  dot, and a gizmo under 120 px uses the short forms (Ant, Post, Sup, Inf,
+  Sin, Dx).
 - **Selecting**: each selected structure gets the tinted overlay, an outline
   (its back faces pushed out along their normals, a constant width on
   screen) and an x-ray copy drawn with `depthFunc = GreaterDepth`, so it
@@ -117,8 +122,8 @@ instead of about 5,000, so turning the body stays smooth on phones.
 | `public/atlas/descriptions.json` | Short descriptions by structure name, loaded when the first structure is opened |
 | `src/lib/atlas/model.ts` | The index types, name parsing, search, tissue colours, groups and attachments; tested in `model.test.ts` |
 | `src/components/atlas/viewer.ts` | `AtlasViewer`: three.js scene, downloading and unzipping, batching, picking, highlighting and hover, camera tweening, hiding and isolating, landmark markers |
-| `src/pages/Atlas.tsx` | The page: layers, search, the info panel, and the URL state |
-| `src/styles/atlas.css` | Its styles |
+| `src/pages/Atlas.tsx` | The page, in the knowledge map's workspace (ribbon, explorer, 3D pane, note pane, status bar): layers, search, the note, the URL state |
+| `src/styles/atlas.css` | Its styles, on top of the workspace's own in `map.css` |
 | `scripts/atlas/` | The conversion (below) |
 
 three.js is the page's only new dependency. Vite puts it in its own `three`

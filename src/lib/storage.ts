@@ -57,7 +57,7 @@ export const STORAGE_KEYS = {
   readingPrefs: storageKey("readingprefs"),
   sidebarCollapsed: storageKey("sidebarcollapsed"),
   mapSettings: storageKey("mapsettings"),
-  /** The 3D atlas's settings: { follow, recent: ["skeletal/Femur.r", …] }. */
+  /** The 3D atlas's settings: { follow, ortho, grid, recent: ["skeletal/Femur.r", …] }. */
   atlasPrefs: storageKey("atlas"),
   /** Alfond's settings, e.g. { overlay: false } to hide its floating button. */
   alfondPrefs: storageKey("alfond"),

@@ -4,9 +4,10 @@ import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { ATLAS_BASE, defaultOpacity, tissueColor } from "../../lib/atlas/model";
 
-// The 3D anatomy atlas's viewer: three.js with an Unreal Engine-style camera (or a plain orbit
-// camera), one glTF per body system loaded the first time it's shown, structures coloured by
-// tissue. Each system is drawn as a few
+// The 3D anatomy atlas's viewer: three.js, navigated like the knowledge map's 3D view and a 3D
+// editor's viewport (orbit, pan, dolly, fly with W A S D Q E, an axis gizmo named in anatomical
+// terms, perspective or orthographic, a floor grid). One glTF per body system is loaded the
+// first time it's shown, structures coloured by tissue. Each system is drawn as a few
 // BatchedMeshes (one per colour), so thousands of structures cost a handful of draw calls. It
 // draws only when something changes (a camera move, a selection, a load), so an idle atlas
 // costs nothing.
@@ -23,13 +24,6 @@ export interface SelectInfo {
   stack: Picked[];
 }
 
-/**
- * The mouse scheme. "unreal": left-drag turns and moves forward, right-drag looks around and
- * W A S D Q E fly, middle-drag pans, Alt+left orbits. "orbit": left-drag orbits, right-drag pans.
- * Touch is the same in both.
- */
-export type NavMode = "unreal" | "orbit";
-
 export interface ViewerEvents {
   onSelect: (picked: Picked | null, info: SelectInfo) => void;
   onHover: (hover: (Picked & { x: number; y: number }) | null) => void;
@@ -39,15 +33,17 @@ export interface ViewerEvents {
   onFocus?: (picked: Picked) => void;
   /** Which side of the body is facing you now ("Anterior", "Sinistra"…), when it changes. */
   onView?: (side: ViewSide) => void;
-  /** The right mouse button went down or up (Unreal: free look and W A S D flying). */
-  onFlying?: (flying: boolean) => void;
-  /** The flying speed changed (1–8, with the wheel while flying). */
-  onSpeed?: (speed: number) => void;
 }
 
+/** W A S D fly forward, left, back and right, Q E down and up. */
 const FLY_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "KeyQ", "KeyE"]);
-/** Metres per second at each speed step, as Unreal's 1–8 camera speed. */
-const flySpeed = (step: number) => 0.35 * 1.5 ** (step - 4);
+
+/** Typing in a text box (so single-key shortcuts stay out of the way). */
+export function isTyping(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.isContentEditable || target.tagName === "TEXTAREA" || target.tagName === "SELECT") return true;
+  return target instanceof HTMLInputElement && !["checkbox", "radio", "range", "button"].includes(target.type);
+}
 
 export type ViewSide = "Anterior" | "Posterior" | "Sinistra" | "Dextra" | "Superior" | "Inferior";
 
@@ -62,7 +58,34 @@ export function sideFacing(dir: { x: number; y: number; z: number }): ViewSide {
   return dir.x > 0 ? "Sinistra" : "Dextra";
 }
 
-export type ViewName = "front" | "back" | "left" | "right" | "top";
+export type ViewName = "front" | "back" | "left" | "right" | "top" | "bottom";
+
+/** Where the camera looks from for each view (the body faces +Z; its left side is +X). */
+const VIEW_DIRS: Record<ViewName, [number, number, number]> = {
+  front: [0, 0, 1],
+  back: [0, 0, -1],
+  left: [1, 0, 0],
+  right: [-1, 0, 0],
+  top: [0, 1, 0],
+  bottom: [0, -1, 0],
+};
+
+/** The view looking from the other side. */
+export const OPPOSITE: Record<ViewName, ViewName> = { front: "back", back: "front", left: "right", right: "left", top: "bottom", bottom: "top" };
+
+/**
+ * The axis gizmo's six ends, named as anatomists name the directions, coloured by axis as 3D
+ * editors colour X, Y and Z: lateral (sinistra, dextra) red, vertical (superior, inferior)
+ * green, sagittal (anterior, posterior) blue.
+ */
+const GIZMO_ENDS: { view: ViewName; label: string; short: string; color: string }[] = [
+  { view: "front", label: "Anterior", short: "Ant", color: "#3e7bf0" },
+  { view: "back", label: "Posterior", short: "Post", color: "#3e7bf0" },
+  { view: "top", label: "Superior", short: "Sup", color: "#46a758" },
+  { view: "bottom", label: "Inferior", short: "Inf", color: "#46a758" },
+  { view: "left", label: "Sinistra", short: "Sin", color: "#e5484d" },
+  { view: "right", label: "Dextra", short: "Dx", color: "#e5484d" },
+];
 
 /** One piece of a structure: an instance in one of its system's batches. */
 interface Instance {
@@ -178,16 +201,23 @@ export class AtlasViewer {
   private hoverTimer = 0;
   private down: { x: number; y: number } | null = null;
   private lastClick = { at: 0, key: "", x: 0, y: 0 };
-  private nav: NavMode = "unreal";
-  /** A mouse drag under way (Unreal scheme): the last position and how far it has gone. */
-  private drag: { x: number; y: number; moved: number } | null = null;
-  private flying = false;
+  /** The W A S D Q E keys held, and whether Shift is (to fly faster). */
   private readonly keys = new Set<string>();
   private boost = false;
-  private speed = 4;
   private lastFrame = 0;
-  /** What Alt+left-drag orbits around in the Unreal scheme: the clicked structure, or the view's centre. */
-  private pivot: THREE.Vector3 | null = null;
+  /**
+   * Orthographic drawing: the perspective camera stays the rig that the controls, tweens and
+   * flying move, and this camera copies it each frame, with a frustum as tall as the
+   * perspective view's at the point looked at.
+   */
+  private readonly orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 30);
+  private ortho = false;
+  /** The floor: a grid at the feet, with the lateral and sagittal axes. */
+  private readonly grid = new THREE.Group();
+  private gizmo: HTMLCanvasElement | null = null;
+  private gizmoHover: ViewName | null = null;
+  /** Where each gizmo end was drawn (CSS pixels), the nearest last. */
+  private gizmoHits: { view: ViewName; x: number; y: number; w: number; h: number }[] = [];
   private readonly resize: ResizeObserver;
   private disposed = false;
 
@@ -214,6 +244,7 @@ export class AtlasViewer {
     this.scene.add(this.camera);
     this.scene.add(new THREE.HemisphereLight(0xffffff, 0x3a3530, 1.4));
     this.scene.add(this.markers);
+    this.buildGrid();
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.copy(BODY_CENTRE);
@@ -223,6 +254,9 @@ export class AtlasViewer {
     this.controls.zoomToCursor = true;
     this.controls.minDistance = 0.05;
     this.controls.maxDistance = 8;
+    // As the knowledge map's 3D view: drag orbits, right- or middle-drag pans (Shift+drag too).
+    this.controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.PAN, RIGHT: THREE.MOUSE.PAN };
+    this.controls.autoRotateSpeed = 1.2;
     this.controls.addEventListener("change", () => { this.request(); });
 
     // Unpacking the models runs in workers, so the page stays responsive while a system loads.
@@ -241,11 +275,8 @@ export class AtlasViewer {
     el.addEventListener("pointerleave", this.onLeave);
     el.addEventListener("wheel", this.onWheel, { passive: true });
     el.addEventListener("contextmenu", this.onContextMenu);
-    // Before OrbitControls sees them: in the Unreal scheme the mouse is ours, touch stays its.
-    host.addEventListener("pointerdown", this.onCapture, true);
-    host.addEventListener("wheel", this.onWheelCapture, { capture: true, passive: false });
-    window.addEventListener("keydown", this.onKeyDown, true);
-    window.addEventListener("keyup", this.onKeyUp, true);
+    window.addEventListener("keydown", this.onKeyDown);
+    window.addEventListener("keyup", this.onKeyUp);
     window.addEventListener("blur", this.onBlur);
     this.resize = new ResizeObserver(() => { this.fit(); });
     this.resize.observe(host);
@@ -545,22 +576,31 @@ export class AtlasViewer {
     this.flyTo(centre, centre.clone().add(dir.multiplyScalar((r / Math.sin(THREE.MathUtils.degToRad(this.camera.fov / 2))) * 1.05)));
   }
 
-  /** Looks from the front, back, either side or above, at the same distance. */
+  /** Looks from the front, back, either side, above or below, at the same distance. */
   view(name: ViewName): void {
-    const t = this.controls.target.clone();
-    const d = this.camera.position.distanceTo(t);
-    const dirs: Record<ViewName, THREE.Vector3> = {
-      front: new THREE.Vector3(0, 0, 1),
-      back: new THREE.Vector3(0, 0, -1),
-      left: new THREE.Vector3(1, 0, 0),
-      right: new THREE.Vector3(-1, 0, 0),
-      top: new THREE.Vector3(0, 1, 0.0001),
-    };
-    this.flyTo(t, t.clone().add(dirs[name].normalize().multiplyScalar(d)));
+    const [t, position] = this.goal();
+    const d = position.distanceTo(t);
+    // Straight down or up, nudged so "up" on screen stays the body's front.
+    const dir = new THREE.Vector3(...VIEW_DIRS[name]).add(new THREE.Vector3(0, 0, name === "top" || name === "bottom" ? 0.0001 : 0)).normalize();
+    this.flyTo(t, t.clone().add(dir.multiplyScalar(d)));
+  }
+
+  /** The view the camera looks most nearly from (for "the opposite side"). */
+  nearestView(): ViewName {
+    const dir = this.camera.position.clone().sub(this.controls.target).normalize();
+    let best: ViewName = "front";
+    let bestDot = -Infinity;
+    for (const [name, v] of Object.entries(VIEW_DIRS) as [ViewName, [number, number, number]][]) {
+      const dot = dir.dot(new THREE.Vector3(...v));
+      if (dot > bestDot) {
+        best = name;
+        bestDot = dot;
+      }
+    }
+    return best;
   }
 
   private flyTo(target: THREE.Vector3, position: THREE.Vector3, ms = 550) {
-    this.pivot = null;
     if (reducedMotion()) {
       this.controls.target.copy(target);
       this.camera.position.copy(position);
@@ -607,18 +647,11 @@ export class AtlasViewer {
     this.flyTo(target.add(step), position.add(step), 260);
   }
 
-  /**
-   * Turns around a structure from now on. With the orbit camera the view slides to it, without
-   * zooming; with the Unreal camera it stays put and Alt+drag orbits around the structure.
-   */
+  /** Turns around a structure from now on: the view slides to it, without zooming. */
   centreOn(picked: Picked): void {
     const part = this.parts.get(keyOf(picked.system, picked.node));
     if (!part) return;
     const centre = this.boxOf(part.instances).getCenter(new THREE.Vector3());
-    if (this.nav === "unreal") {
-      this.pivot = centre;
-      return;
-    }
     const [target, position] = this.goal();
     const step = centre.sub(target);
     this.flyTo(target.add(step), position.add(step), 450);
@@ -714,7 +747,7 @@ export class AtlasViewer {
     const h = this.host.clientHeight;
     const v = new THREE.Vector3();
     for (const { el, at } of this.markerLabels) {
-      v.copy(at).project(this.camera);
+      v.copy(at).project(this.drawn());
       const visible = v.z < 1 && Math.abs(v.x) < 1.05 && Math.abs(v.y) < 1.05;
       el.style.display = visible ? "" : "none";
       if (visible) el.style.transform = `translate(${((v.x + 1) / 2) * w + 8}px, ${((1 - v.y) / 2) * h - 10}px)`;
@@ -734,7 +767,7 @@ export class AtlasViewer {
     const rect = this.renderer.domElement.getBoundingClientRect();
     const ndc = new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
     const ray = new THREE.Raycaster();
-    ray.setFromCamera(ndc, this.camera);
+    ray.setFromCamera(ndc, this.drawn());
     const targets: THREE.Object3D[] = [];
     for (const g of this.systems.values()) {
       if (!g.visible) continue;
@@ -762,23 +795,11 @@ export class AtlasViewer {
     this.down = { x: e.clientX, y: e.clientY };
     this.tween = null;
     window.clearTimeout(this.hoverTimer);
-    if (this.nav === "unreal" && e.pointerType === "mouse") {
-      this.drag = { x: e.clientX, y: e.clientY, moved: 0 };
-      this.renderer.domElement.setPointerCapture(e.pointerId);
-      this.setFlying((e.buttons & 2) !== 0 && !e.altKey);
-    }
   };
 
   private onUp = (e: PointerEvent) => {
-    if (this.drag && e.buttons === 0) {
-      this.drag = null;
-      if (this.renderer.domElement.hasPointerCapture(e.pointerId)) this.renderer.domElement.releasePointerCapture(e.pointerId);
-      this.setFlying(false);
-    } else if (this.drag) {
-      this.setFlying((e.buttons & 2) !== 0 && !e.altKey);
-    }
     const d = this.down;
-    if (e.buttons === 0) this.down = null;
+    this.down = null;
     if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5 || e.button !== 0) return;
     const stack = this.pickStack(e.clientX, e.clientY);
     let hit = stack[0] ?? null;
@@ -802,15 +823,6 @@ export class AtlasViewer {
 
   private onMove = (e: PointerEvent) => {
     window.clearTimeout(this.hoverTimer);
-    if (this.drag && e.pointerType === "mouse" && e.buttons) {
-      const dx = e.clientX - this.drag.x;
-      const dy = e.clientY - this.drag.y;
-      this.drag.x = e.clientX;
-      this.drag.y = e.clientY;
-      this.drag.moved += Math.abs(dx) + Math.abs(dy);
-      this.setFlying((e.buttons & 2) !== 0 && (e.buttons & 1) === 0 && !e.altKey);
-      this.unrealDrag(e.buttons, e.altKey, dx, dy);
-    }
     if (e.pointerType !== "mouse" || e.buttons) {
       this.setHovered(null);
       this.events.onHover(null);
@@ -833,38 +845,13 @@ export class AtlasViewer {
     e.preventDefault();
   };
 
-  /** In the Unreal scheme the mouse belongs to the viewer, touch to OrbitControls. */
-  private onCapture = (e: PointerEvent) => {
-    this.controls.enabled = !(this.nav === "unreal" && e.pointerType === "mouse");
-  };
-
-  /** The wheel zooms toward the pointer as usual, but while flying it sets the speed. */
-  private onWheelCapture = (e: WheelEvent) => {
-    if (this.nav !== "unreal") {
-      this.controls.enabled = true;
-      return;
-    }
-    if (this.flying) {
-      e.preventDefault();
-      this.controls.enabled = false;
-      const next = THREE.MathUtils.clamp(this.speed + (e.deltaY < 0 ? 1 : -1), 1, 8);
-      if (next !== this.speed) {
-        this.speed = next;
-        this.events.onSpeed?.(next);
-      }
-      return;
-    }
-    this.controls.enabled = true;
-  };
-
+  /** W A S D Q E fly, as in the knowledge map, wherever the page isn't taking typing. */
   private onKeyDown = (e: KeyboardEvent) => {
     this.boost = e.shiftKey;
-    if (!this.flying || !FLY_KEYS.has(e.code)) return;
-    // While flying, W A S D Q E steer the camera and nothing else on the page.
+    if (!FLY_KEYS.has(e.code) || e.ctrlKey || e.metaKey || e.altKey || isTyping(e.target)) return;
     e.preventDefault();
-    e.stopImmediatePropagation();
     this.keys.add(e.code);
-    this.lastFrame = 0;
+    this.tween = null;
     this.request();
   };
 
@@ -875,101 +862,186 @@ export class AtlasViewer {
 
   private onBlur = () => {
     this.keys.clear();
-    this.setFlying(false);
   };
 
-  private setFlying(on: boolean) {
-    if (on === this.flying) return;
-    this.flying = on;
-    if (!on) this.keys.clear();
-    this.renderer.domElement.classList.toggle("is-flying", on);
-    this.events.onFlying?.(on);
-  }
-
-  /** Whether the camera is flying (right button held): the page's own keys stay quiet. */
-  get isFlying(): boolean {
-    return this.flying;
-  }
-
-  /** The mouse scheme: Unreal Engine's viewport controls, or a plain orbit camera. */
-  setNavigation(mode: NavMode): void {
-    this.nav = mode;
-    this.controls.enabled = true;
-    this.drag = null;
-    this.setFlying(false);
-  }
-
-  get flyingSpeed(): number {
-    return this.speed;
-  }
-
-  /**
-   * One step of an Unreal-style mouse drag (dx, dy in pixels):
-   * left: turn and move forward or back; right: look around; left+right or middle: pan;
-   * Alt+left: orbit the point looked at; Alt+right: move toward or away from it.
-   */
-  private unrealDrag(buttons: number, alt: boolean, dx: number, dy: number) {
-    const target = this.controls.target;
-    const position = this.camera.position;
-    const distance = Math.max(0.05, position.distanceTo(target));
-    const forward = target.clone().sub(position).normalize();
-    const right = new THREE.Vector3().crossVectors(forward, this.camera.up).normalize();
-    const left = (buttons & 1) !== 0;
-    const rightButton = (buttons & 2) !== 0;
-    const middle = (buttons & 4) !== 0;
-    if (alt && left) {
-      // The whole camera swings around the pivot (the clicked structure, else the view's centre).
-      const pivot = this.pivot ?? target;
-      const yaw = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -dx * 0.006);
-      const pitch = new THREE.Quaternion().setFromAxisAngle(right, -dy * 0.006);
-      const turn = yaw.multiply(pitch);
-      const nextPosition = position.clone().sub(pivot).applyQuaternion(turn).add(pivot);
-      const nextTarget = target.clone().sub(pivot).applyQuaternion(turn).add(pivot);
-      // Stop short of looking straight up or down, where the view would flip.
-      if (Math.abs(nextTarget.clone().sub(nextPosition).normalize().y) < 0.985) {
-        position.copy(nextPosition);
-        target.copy(nextTarget);
-      } else {
-        position.copy(position.clone().sub(pivot).applyQuaternion(yaw).add(pivot));
-        target.copy(target.clone().sub(pivot).applyQuaternion(yaw).add(pivot));
-      }
-    } else if (alt && rightButton) {
-      const d = THREE.MathUtils.clamp(distance * Math.exp((dy - dx) * 0.005), this.controls.minDistance, this.controls.maxDistance);
-      position.copy(target).addScaledVector(forward, -d);
-    } else if (middle || (left && rightButton) || (alt && middle)) {
-      const up = new THREE.Vector3().crossVectors(right, forward).normalize();
-      const metres = distance * 0.0016;
-      const step = right.multiplyScalar(-dx * metres).add(up.multiplyScalar(dy * metres));
-      position.add(step);
-      target.add(step);
-    } else if (rightButton) {
-      this.turn(dx, dy, distance);
-    } else if (left) {
-      // Unreal: sideways turns, up and down move along the ground.
-      this.turn(dx, 0, distance);
-      const ground = new THREE.Vector3(forward.x, 0, forward.z);
-      if (ground.lengthSq() < 1e-6) ground.copy(this.camera.up).multiplyScalar(-Math.sign(forward.y));
-      const step = ground.normalize().multiplyScalar(-dy * Math.max(0.002, distance * 0.003));
-      position.add(step);
-      target.add(step);
-    }
+  /** Draws orthographically (true) or in perspective. */
+  setOrthographic(on: boolean): void {
+    this.ortho = on;
     this.request();
   }
 
-  /** Turns the camera where it stands (dx, dy in pixels), keeping the point looked at as far away. */
-  private turn(dx: number, dy: number, distance: number) {
-    const position = this.camera.position;
-    const look = new THREE.Spherical().setFromVector3(this.controls.target.clone().sub(position));
-    look.theta -= dx * 0.004;
-    look.phi = THREE.MathUtils.clamp(look.phi + dy * 0.004, 0.05, Math.PI - 0.05);
-    look.radius = distance;
-    this.controls.target.copy(position).add(new THREE.Vector3().setFromSpherical(look));
+  /** Turns slowly around the point looked at. */
+  setAutoRotate(on: boolean): void {
+    this.controls.autoRotate = on && !reducedMotion();
+    this.request();
   }
 
-  /** W A S D Q E while flying: along the view, sideways, and straight down or up. */
+  /** Shows the floor grid. */
+  setGrid(on: boolean): void {
+    this.grid.visible = on;
+    this.request();
+  }
+
+  /** The camera the scene is drawn with. */
+  private drawn(): THREE.Camera {
+    if (!this.ortho) return this.camera;
+    const o = this.orthoCamera;
+    const half = this.camera.position.distanceTo(this.controls.target) * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+    o.top = half;
+    o.bottom = -half;
+    o.left = -half * this.camera.aspect;
+    o.right = half * this.camera.aspect;
+    o.position.copy(this.camera.position);
+    o.quaternion.copy(this.camera.quaternion);
+    o.updateProjectionMatrix();
+    o.updateMatrixWorld();
+    return o;
+  }
+
+  /** A grid on the floor at the feet, 10 cm squares, with the lateral and sagittal axes drawn in. */
+  private buildGrid() {
+    const lines = new THREE.GridHelper(4, 40, 0x8a8f98, 0x8a8f98);
+    const material = lines.material as THREE.LineBasicMaterial;
+    material.transparent = true;
+    material.opacity = 0.18;
+    material.depthWrite = false;
+    this.grid.add(lines);
+    const axis = (color: string, from: [number, number, number], to: [number, number, number]) => {
+      const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...from), new THREE.Vector3(...to)]);
+      const m = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.55, depthWrite: false });
+      this.grid.add(new THREE.Line(g, m));
+    };
+    axis(GIZMO_ENDS[4].color, [-2, 0.001, 0], [2, 0.001, 0]);
+    axis(GIZMO_ENDS[0].color, [0, 0.001, -2], [0, 0.001, 2]);
+    this.grid.renderOrder = -1;
+    this.scene.add(this.grid);
+  }
+
+  /** The axis gizmo: a canvas the viewer draws the camera's axes on; click an end to look from it. */
+  attachGizmo(canvas: HTMLCanvasElement | null): void {
+    if (this.gizmo) {
+      this.gizmo.removeEventListener("pointerdown", this.onGizmoDown);
+      this.gizmo.removeEventListener("pointermove", this.onGizmoMove);
+      this.gizmo.removeEventListener("pointerleave", this.onGizmoLeave);
+    }
+    this.gizmo = canvas;
+    if (!canvas) return;
+    canvas.addEventListener("pointerdown", this.onGizmoDown);
+    canvas.addEventListener("pointermove", this.onGizmoMove);
+    canvas.addEventListener("pointerleave", this.onGizmoLeave);
+    this.drawGizmo();
+  }
+
+  private gizmoAt(e: PointerEvent): ViewName | null {
+    const box = (e.currentTarget as HTMLCanvasElement).getBoundingClientRect();
+    const x = e.clientX - box.left;
+    const y = e.clientY - box.top;
+    // The nearest end is drawn last, so it wins where two overlap.
+    for (let i = this.gizmoHits.length - 1; i >= 0; i--) {
+      const h = this.gizmoHits[i];
+      if (Math.abs(x - h.x) <= h.w / 2 + 2 && Math.abs(y - h.y) <= h.h / 2 + 2) return h.view;
+    }
+    return null;
+  }
+
+  private onGizmoDown = (e: PointerEvent) => {
+    const v = this.gizmoAt(e);
+    if (v) this.view(v);
+  };
+
+  private onGizmoMove = (e: PointerEvent) => {
+    const v = this.gizmoAt(e);
+    const canvas = e.currentTarget as HTMLCanvasElement;
+    canvas.style.cursor = v ? "pointer" : "default";
+    canvas.title = v ? `Look from ${GIZMO_ENDS.find((g) => g.view === v)?.label.toLowerCase() ?? v}` : "";
+    if (v !== this.gizmoHover) {
+      this.gizmoHover = v;
+      this.drawGizmo();
+    }
+  };
+
+  private onGizmoLeave = () => {
+    this.gizmoHover = null;
+    this.drawGizmo();
+  };
+
+  private drawGizmo() {
+    const canvas = this.gizmo;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    const size = canvas.clientWidth || 140;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (canvas.width !== Math.round(size * dpr)) {
+      canvas.width = Math.round(size * dpr);
+      canvas.height = Math.round(size * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size, size);
+    const css = getComputedStyle(canvas);
+    const bg = css.getPropertyValue("--gizmo-bg").trim() || "rgb(0 0 0 / 0.35)";
+    const ink = css.getPropertyValue("--gizmo-ink").trim() || "#fff";
+    const c = size / 2;
+    const reach = c - 30;
+    ctx.beginPath();
+    ctx.arc(c, c, c - 1, 0, Math.PI * 2);
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = bg;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    // The camera's right, up and toward-the-viewer directions.
+    const m = this.camera.matrixWorld.elements;
+    const right = [m[0], m[1], m[2]];
+    const up = [m[4], m[5], m[6]];
+    const back = [m[8], m[9], m[10]];
+    const dot = (a: number[], b: [number, number, number]) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    const ends = GIZMO_ENDS.map((g) => {
+      const v = VIEW_DIRS[g.view];
+      return { ...g, x: c + dot(right, v) * reach, y: c - dot(up, v) * reach, depth: dot(back, v) };
+    }).sort((p, q) => p.depth - q.depth);
+    ctx.font = "600 10px system-ui, -apple-system, Segoe UI, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    this.gizmoHits = [];
+    for (const e of ends) {
+      const front = e.depth > -0.05;
+      const hot = e.view === this.gizmoHover;
+      ctx.globalAlpha = front || hot ? 1 : 0.55;
+      ctx.beginPath();
+      ctx.moveTo(c, c);
+      ctx.lineTo(e.x, e.y);
+      ctx.lineWidth = front ? 2 : 1.25;
+      ctx.strokeStyle = e.color;
+      ctx.stroke();
+      // An end pointing at you or away sits near the middle: a dot there (the tab names the
+      // view), so it doesn't cover the others. A small gizmo uses the short names.
+      const near = Math.hypot(e.x - c, e.y - c) < reach * 0.55;
+      const text = near ? "" : size < 120 ? e.short : e.label;
+      const w = near ? 12 : ctx.measureText(text).width + 12;
+      const h = near ? 12 : 17;
+      ctx.beginPath();
+      ctx.roundRect(e.x - w / 2, e.y - h / 2, w, h, h / 2);
+      ctx.fillStyle = front || hot ? e.color : bg;
+      ctx.fill();
+      ctx.lineWidth = hot ? 2 : 1;
+      ctx.strokeStyle = hot ? ink : e.color;
+      ctx.stroke();
+      ctx.fillStyle = front || hot ? "#fff" : e.color;
+      ctx.fillText(text, e.x, e.y + 0.5);
+      this.gizmoHits.push({ view: e.view, x: e.x, y: e.y, w, h });
+    }
+    ctx.globalAlpha = 1;
+    ctx.beginPath();
+    ctx.arc(c, c, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = ink;
+    ctx.fill();
+  }
+
+  /** W A S D Q E: along the view, sideways, and straight down or up, faster further out. */
   private fly(seconds: number): boolean {
-    if (!this.flying || this.keys.size === 0) return false;
-    const forward = this.controls.target.clone().sub(this.camera.position).normalize();
+    if (this.keys.size === 0) return false;
+    const forward = this.controls.target.clone().sub(this.camera.position);
+    const distance = forward.length();
+    forward.normalize();
     const right = new THREE.Vector3().crossVectors(forward, this.camera.up).normalize();
     const has = (code: string) => (this.keys.has(code) ? 1 : 0);
     const move = forward
@@ -977,7 +1049,7 @@ export class AtlasViewer {
       .add(right.multiplyScalar(has("KeyD") - has("KeyA")))
       .add(new THREE.Vector3(0, has("KeyE") - has("KeyQ"), 0));
     if (move.lengthSq() === 0) return true;
-    move.normalize().multiplyScalar(flySpeed(this.speed) * (this.boost ? 3 : 1) * seconds);
+    move.normalize().multiplyScalar(Math.max(0.15, distance * 0.8) * (this.boost ? 3 : 1) * seconds);
     this.camera.position.add(move);
     this.controls.target.add(move);
     return true;
@@ -1033,8 +1105,9 @@ export class AtlasViewer {
     }
     // update() reports whether damping is still moving the camera.
     if (this.controls.update()) busy = true;
-    this.renderer.render(this.scene, this.camera);
+    this.renderer.render(this.scene, this.drawn());
     this.placeLabels();
+    this.drawGizmo();
     const side = sideFacing(this.camera.position.clone().sub(this.controls.target));
     if (side !== this.side) {
       this.side = side;
@@ -1053,16 +1126,19 @@ export class AtlasViewer {
     window.clearTimeout(this.hoverTimer);
     this.resize.disconnect();
     this.controls.dispose();
-    this.host.removeEventListener("pointerdown", this.onCapture, true);
-    this.host.removeEventListener("wheel", this.onWheelCapture, true);
-    window.removeEventListener("keydown", this.onKeyDown, true);
-    window.removeEventListener("keyup", this.onKeyUp, true);
+    this.attachGizmo(null);
+    window.removeEventListener("keydown", this.onKeyDown);
+    window.removeEventListener("keyup", this.onKeyUp);
     window.removeEventListener("blur", this.onBlur);
     for (const group of this.selection.values()) this.dropOverlay(group);
     this.dropOverlay(this.hoverOverlay);
     for (const g of this.systems.values()) for (const c of g.children) if ((c as THREE.BatchedMesh).isBatchedMesh) (c as THREE.BatchedMesh).dispose();
     for (const m of this.materials.values()) for (const x of [m.base, m.selected, m.hovered]) x.dispose();
     this.clearMarkers();
+    for (const line of this.grid.children as THREE.Line[]) {
+      line.geometry.dispose();
+      (line.material as THREE.Material).dispose();
+    }
     this.renderer.dispose();
     this.renderer.domElement.remove();
     this.labels.remove();

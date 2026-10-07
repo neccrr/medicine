@@ -33,7 +33,7 @@ nothing typed it lists the main pages. It also finds these help pages: try
 | Quiz | <kbd>A</kbd>–<kbd>E</kbd> or <kbd>1</kbd>–<kbd>5</kbd>: answer · <kbd>Enter</kbd>/<kbd>Space</kbd>: continue · <kbd>←</kbd> <kbd>→</kbd>: previous/next question |
 | Exam | <kbd>A</kbd>–<kbd>E</kbd> or <kbd>1</kbd>–<kbd>5</kbd>: answer · <kbd>←</kbd> <kbd>→</kbd>: previous/next question |
 | Class Drive | <kbd>/</kbd>: find a file · <kbd>←</kbd> <kbd>→</kbd>: previous/next file · <kbd>Esc</kbd>: close the viewer or clear the search |
-| 3D anatomy | Right button held + <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>Q</kbd> <kbd>E</kbd>: fly · <kbd>/</kbd>: find a structure · <kbd>F</kbd>: focus · <kbd>H</kbd>: hide · <kbd>O</kbd>: only this · <kbd>A</kbd>: show all · <kbd>1</kbd>–<kbd>5</kbd>: views · <kbd>0</kbd>: whole body · arrows: turn (<kbd>Shift</kbd>: slide) · <kbd>+</kbd> <kbd>−</kbd>: zoom · <kbd>Backspace</kbd>: back · <kbd>Esc</kbd>: close |
+| 3D anatomy | <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>Q</kbd> <kbd>E</kbd>: fly · <kbd>/</kbd>: find a structure · <kbd>1</kbd> <kbd>3</kbd> <kbd>7</kbd>: anterior, dextra, superior (<kbd>Ctrl</kbd>: the opposite side) · <kbd>9</kbd>: opposite side · <kbd>5</kbd>: orthographic · <kbd>R</kbd>: auto-rotate · <kbd>G</kbd>: grid · <kbd>F</kbd>: focus · <kbd>H</kbd>: hide (<kbd>Shift</kbd>: show all) · <kbd>O</kbd>: only this · <kbd>0</kbd>: whole body · arrows: orbit (<kbd>Shift</kbd>: slide) · <kbd>+</kbd> <kbd>−</kbd>: zoom · <kbd>Backspace</kbd>: back · <kbd>Esc</kbd>: close |
 
 On a phone, swipe left and right in image occlusion to move between labels.
 

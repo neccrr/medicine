@@ -1,23 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { AlfondIcon, SearchIcon } from "../components/icons";
-import { AtlasViewer, type NavMode, type Picked, type SelectInfo, type ViewName, type ViewSide } from "../components/atlas/viewer";
+import { AlfondIcon } from "../components/icons";
+import { AtlasViewer, isTyping, OPPOSITE, type Picked, type SelectInfo, type ViewName, type ViewSide } from "../components/atlas/viewer";
+import { BackIcon, BodyIcon, ForwardIcon, PivotIcon, TurnLeftIcon, TurnRightIcon } from "../components/atlas/AtlasIcons";
 import {
-  BackIcon,
+  CloseIcon,
+  DiceIcon,
   ExpandIcon,
-  HelpIcon,
-  MouseIcon,
+  FileIcon,
   FitIcon,
-  ForwardIcon,
-  PivotIcon,
+  FolderIcon,
+  HashIcon,
+  MinusIcon,
+  PlusIcon,
+  ResetIcon,
+  SearchIcon,
   ShrinkIcon,
-  TiltDownIcon,
-  TiltUpIcon,
-  TurnLeftIcon,
-  TurnRightIcon,
-  ZoomInIcon,
-  ZoomOutIcon,
-} from "../components/atlas/AtlasIcons";
+  TagIcon,
+} from "../components/map/ObsIcons";
 import { useAccount } from "../hooks/useAccount";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
@@ -53,57 +54,48 @@ import {
 const DEFAULT_LAYERS = ["skeletal"];
 const QUICK = ["Femur", "Heart", "Brain", "Deltoid muscle", "Kidney", "Scapula", "Liver", "Sciatic nerve"];
 
-/** Typing in a text box (so single-key shortcuts stay out of the way). */
-function isTyping(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
-  if (target.isContentEditable || target.tagName === "TEXTAREA" || target.tagName === "SELECT") return true;
-  return target instanceof HTMLInputElement && !["checkbox", "radio", "range", "button"].includes(target.type);
-}
-
 /** The same structure on the other side ("Femur.r" → "Femur.l"), if it has one. */
 const otherSide = (node: string) => (/\.r$/.test(node) ? node.replace(/\.r$/, ".l") : /\.l$/.test(node) ? node.replace(/\.l$/, ".r") : null);
 
-/** The controls card: [how, what], for each mouse scheme and for selecting. */
-const UNREAL_CONTROLS: [string, string][] = [
-  ["Right-drag", "Look around"],
-  ["Right + W A S D", "Fly; Q E down, up; Shift faster"],
-  ["Right + wheel", "Flying speed (1–8)"],
-  ["Left-drag", "Turn and move forward or back"],
-  ["Middle-drag, left + right", "Pan"],
-  ["Alt + left-drag", "Orbit the selected structure"],
-  ["Alt + right-drag", "Move in or out"],
-  ["Wheel", "Zoom toward the pointer"],
-  ["F", "Frame the selection"],
-];
-const ORBIT_CONTROLS: [string, string][] = [
-  ["Left-drag", "Turn the body"],
-  ["Right-drag", "Pan"],
-  ["Wheel", "Zoom toward the pointer"],
-  ["F", "Frame the selection"],
-];
-const SELECT_CONTROLS: [string, string][] = [
+/** The controls, as the knowledge map's 3D view lists them: [how, what]. */
+const CONTROLS: [string, string][] = [
+  ["Drag", "Orbit around the point looked at"],
+  ["Right- or Shift-drag", "Pan (two fingers on a touch screen)"],
+  ["Scroll, pinch", "Zoom toward the pointer"],
+  ["W A S D", "Fly forward, left, back, right"],
+  ["Q E", "Fly down, up (hold Shift to go faster)"],
+  ["Arrow keys", "Orbit (Shift: slide the view)"],
   ["Click", "Select; again in the same place for the one beneath"],
   ["Ctrl/⌘ + click", "Add to or take from the selection"],
   ["Double-click", "Fly to it"],
-  ["Esc", "Clear the selection"],
+  ["Axis gizmo", "Click an end to look from that side"],
+  ["1 3 7", "Anterior, dextra, superior (Ctrl: the opposite side)"],
+  ["9", "Look from the opposite side"],
+  ["5, R, G", "Perspective or orthographic, auto-rotate, grid"],
+  ["F, 0", "Frame the selection, the whole body"],
+  ["H, Shift + H, O", "Hide, show everything, only this"],
 ];
 
-/** The views, named as anatomists name them: [view, label, plain English]. */
-const VIEW_BUTTONS: [ViewName, string, string][] = [
-  ["front", "Anterior", "Front"],
-  ["back", "Posterior", "Back"],
-  ["left", "Sinistra", "Left side"],
-  ["right", "Dextra", "Right side"],
-  ["top", "Superior", "Top"],
+/** The views, named as anatomists name them: [view, label, plain English, key]. */
+const VIEW_BUTTONS: [ViewName, string, string, string][] = [
+  ["front", "Anterior", "Front", "1"],
+  ["back", "Posterior", "Back", "Ctrl+1"],
+  ["left", "Sinistra", "Left side", "Ctrl+3"],
+  ["right", "Dextra", "Right side", "3"],
+  ["top", "Superior", "Top", "7"],
+  ["bottom", "Inferior", "Bottom", "Ctrl+7"],
 ];
 
-const VIEW_KEYS: Record<string, ViewName> = { "1": "front", "2": "back", "3": "left", "4": "right", "5": "top" };
+/** Blender's (and the knowledge map's) view keys; with Ctrl, the opposite side. */
+const VIEW_KEYS: Record<string, ViewName> = { "1": "front", "3": "right", "7": "top" };
 /** One press of a turn button or arrow key: 20°. */
 const TURN = Math.PI / 9;
 
 interface AtlasPrefs {
-  /** The mouse scheme: Unreal Engine's viewport controls (the default) or a plain orbit. */
-  nav?: NavMode;
+  /** Drawn orthographically rather than in perspective. */
+  ortho?: boolean;
+  /** The floor grid shown (on unless switched off). */
+  grid?: boolean;
   /** A clicked structure becomes what the view turns around. */
   follow: boolean;
   /** Recently opened structures, newest first, as "system/node". */
@@ -167,11 +159,12 @@ export function Atlas() {
     followRef.current = prefs.follow;
   }, [prefs.follow]);
   const [side, setSide] = useState<ViewSide>("Anterior");
-  // Unreal-style navigation: whether the right button is held (flying), and the speed readout.
-  const [flying, setFlying] = useState(false);
-  const [speedShown, setSpeedShown] = useState<number | null>(null);
-  const speedTimer = useRef(0);
-  const nav: NavMode = storedPrefs.nav ?? "unreal";
+  const ortho = prefs.ortho === true;
+  const grid = prefs.grid !== false;
+  const [autoRotate, setAutoRotate] = useState(false);
+  const gizmo = useRef<HTMLCanvasElement>(null);
+  // The body systems and search, as the knowledge map's explorer: open on wider screens.
+  const [explorerOpen, setExplorerOpen] = useState(() => window.matchMedia("(min-width: 1080px)").matches);
   // Structures added to the selection with Ctrl/⌘+click, and everything under the last click.
   const [also, setAlso] = useState<Picked[]>([]);
   const [stack, setStack] = useState<Picked[]>([]);
@@ -229,12 +222,6 @@ export function Atlas() {
     if (!webgl || !host.current) return;
     const v = new AtlasViewer(host.current, {
       onSelect: (p, info) => { selectRef.current(p, info); },
-      onFlying: setFlying,
-      onSpeed: (speed) => {
-        setSpeedShown(speed);
-        window.clearTimeout(speedTimer.current);
-        speedTimer.current = window.setTimeout(() => { setSpeedShown(null); }, 1400);
-      },
       onHover: setHover,
       onProgress: (system, fraction) => {
         setProgress((prev) => {
@@ -248,6 +235,7 @@ export function Atlas() {
       onView: setSide,
     });
     viewer.current = v;
+    v.attachGizmo(gizmo.current);
     return () => {
       v.dispose();
       viewer.current = null;
@@ -350,7 +338,7 @@ export function Atlas() {
   );
   useEffect(() => {
     selectRef.current = (p, info) => {
-      // Ctrl/⌘/Shift+click adds to (or takes away from) the selection, as in Unreal.
+      // Ctrl/⌘/Shift+click adds to (or takes away from) the selection, as in 3D editors.
       // Ctrl/⌘+click on empty space leaves the selection alone.
       if (info?.additive && !p) return;
       if (info?.additive && p && selected) {
@@ -375,10 +363,17 @@ export function Atlas() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [also]);
 
-  // The navigation scheme follows the setting.
+  // The view settings follow the toolbar.
   useEffect(() => {
-    viewer.current?.setNavigation(nav);
-  }, [nav, webgl]);
+    viewer.current?.setOrthographic(ortho);
+  }, [ortho, webgl]);
+  useEffect(() => {
+    viewer.current?.setGrid(grid);
+  }, [grid, webgl]);
+  useEffect(() => {
+    viewer.current?.setAutoRotate(autoRotate);
+  }, [autoRotate, webgl]);
+  const patchPrefs = (patch: Partial<AtlasPrefs>) => { setPrefs((prev) => ({ ...DEFAULT_PREFS, ...prev, ...patch })); };
 
   // Each newly opened structure joins the trail (unless it was reached by stepping along it)
   // and the recent list.
@@ -518,24 +513,55 @@ export function Atlas() {
     viewer.current?.showAll();
     refreshCounts();
   };
+  // The explorer opens with its search box ready, at once, so the next keys type into it.
+  const findStructure = () => {
+    if (!searchBox.current) flushSync(() => { setExplorerOpen(true); });
+    searchBox.current?.focus();
+  };
+  const openRandom = () => {
+    const pool = all.filter((h) => h.system !== ATTACHMENTS);
+    const hit = pool[Math.floor(Math.random() * pool.length)];
+    if (hit) select({ system: hit.system, node: hit.node }, true);
+  };
+  // Choosing from the explorer closes it where it covers the model.
+  const openFromExplorer = (p: Picked) => {
+    setQuery("");
+    if (!window.matchMedia("(min-width: 1080px)").matches) setExplorerOpen(false);
+    select(p, true);
+  };
   const other = selected ? otherSide(selected.node) : null;
   const otherPicked = selected && other && index?.nodes[selected.system]?.some(([n]) => n === other) ? { system: selected.system, node: other } : null;
 
-  // Keys: / to search, Esc to let go, F focus, H hide, O only this, A show all, 1–5 views, 0 whole body.
+  // Keys, as the knowledge map's 3D view: / to search, Esc to let go, F focus, H hide, Shift+H
+  // show everything, O only this, 1 3 7 views (Ctrl: the opposite side), 9 the opposite side,
+  // 5 orthographic, R auto-rotate, G grid, 0 whole body. W A S D Q E fly (in the viewer).
   const keys = useRef<(e: KeyboardEvent) => void>(() => {});
   useEffect(() => {
     keys.current = (e) => {
-      if (e.ctrlKey || e.metaKey || e.altKey || isTyping(e.target) || viewer.current?.isFlying) return;
+      if (e.metaKey || e.altKey || isTyping(e.target)) return;
       const k = e.key.toLowerCase();
-      if (k === "/") searchBox.current?.focus();
+      // The number pad's keys, whether Num Lock is on or not.
+      const digit = e.code.startsWith("Numpad") && /^Numpad\d$/.test(e.code) ? e.code.slice(6) : k;
+      if (e.ctrlKey) {
+        const v = VIEW_KEYS[digit];
+        if (!v) return;
+        view(OPPOSITE[v]);
+        e.preventDefault();
+        return;
+      }
+      if (k === "/") findStructure();
       else if (k === "escape" && also.length > 0) setAlso([]);
       else if (k === "escape" && selected) select(null);
       else if (k === "f" && selected) viewer.current?.focus(selected);
+      else if (k === "h" && e.shiftKey) showEverything();
       else if (k === "h" && selected) hideSelected();
       else if (k === "o" && selected) toggleIsolate();
-      else if (k === "a") showEverything();
-      else if (k === "0") viewer.current?.frameAll();
-      else if (VIEW_KEYS[k]) view(VIEW_KEYS[k]);
+      else if (digit === "0" || k === "home") viewer.current?.frameAll();
+      else if (VIEW_KEYS[digit]) view(VIEW_KEYS[digit]);
+      else if (digit === "9" && viewer.current) view(OPPOSITE[viewer.current.nearestView()]);
+      else if (digit === "5") patchPrefs({ ortho: !ortho });
+      else if (k === "r") setAutoRotate((on) => !on);
+      else if (k === "g") patchPrefs({ grid: !grid });
       else if (k === "arrowleft" || k === "arrowright" || k === "arrowup" || k === "arrowdown") {
         const x = k === "arrowleft" ? 1 : k === "arrowright" ? -1 : 0;
         const y = k === "arrowup" ? 1 : k === "arrowdown" ? -1 : 0;
@@ -555,48 +581,57 @@ export function Atlas() {
     return () => { window.removeEventListener("keydown", onKey); };
   }, []);
 
+  const systems = index ? [...index.systems, ...(index.attachmentsFile ? [{ id: ATTACHMENTS, label: "Muscle attachments", bytes: index.attachmentsFile.bytes, structures: index.attachments.length }] : [])] : [];
+  const shownCount = systems.filter((s) => layers.includes(s.id) && s.id !== ATTACHMENTS).reduce((n, s) => n + s.structures, 0);
+  const sideText = side === "Sinistra" || side === "Dextra" ? `Lateralis ${side.toLowerCase()}` : side;
+
+  // The body systems, as the knowledge map's settings rows: a switch, its opacity, its parts.
   const systemsPanel = index && (
     <div className="atlas-systems" role="group" aria-label="Body systems">
-      {[...index.systems, ...(index.attachmentsFile ? [{ id: ATTACHMENTS, label: "Muscle attachments", bytes: index.attachmentsFile.bytes, structures: index.attachments.length }] : [])].map((s) => {
+      {systems.map((s) => {
         const on = layers.includes(s.id);
         const loading = progress[s.id];
         return (
           <div key={s.id} className={on ? "atlas-system is-on" : "atlas-system"}>
-            <label>
-              <input type="checkbox" checked={on} onChange={() => { toggleLayer(s.id); }} />
-              <span className="atlas-system-name">{s.label}</span>
-              <span className="atlas-system-meta">
-                {loading !== undefined ? `${Math.round(loading * 100)}%` : errors.includes(s.id) ? "failed" : formatMB(s.bytes)}
+            <div className="obs-control-row">
+              <span>
+                {s.label}
+                <small>
+                  {loading !== undefined ? `Loading ${Math.round(loading * 100)}%` : errors.includes(s.id) ? "Failed to load" : `${s.structures.toLocaleString()} · ${formatMB(s.bytes)}`}
+                </small>
               </span>
-            </label>
+              <button type="button" role="switch" aria-checked={on} aria-label={s.label} className={on ? "obs-toggle is-on" : "obs-toggle"} onClick={() => { toggleLayer(s.id); }} />
+            </div>
             {loading !== undefined && <progress className="atlas-progress" max={1} value={loading} aria-label={`Loading ${s.label}`} />}
             {on && s.id !== ATTACHMENTS && (
-              <input
-                type="range"
-                className="atlas-opacity"
-                min={0.1}
-                max={1}
-                step={0.05}
-                value={opacity[s.id] ?? defaultOpacity(s.id)}
-                aria-label={`${s.label} opacity`}
-                onChange={(e) => {
-                  const value = Number(e.target.value);
-                  setOpacity((prev) => ({ ...prev, [s.id]: value }));
-                  viewer.current?.setOpacity(s.id, value);
-                }}
-              />
+              <label className="obs-control-slider atlas-opacity">
+                <span>Opacity</span>
+                <input
+                  type="range"
+                  min={0.1}
+                  max={1}
+                  step={0.05}
+                  value={opacity[s.id] ?? defaultOpacity(s.id)}
+                  aria-label={`${s.label} opacity`}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setOpacity((prev) => ({ ...prev, [s.id]: value }));
+                    viewer.current?.setOpacity(s.id, value);
+                  }}
+                />
+              </label>
             )}
-            {on && s.id !== ATTACHMENTS && index && topGroups(index, s.id).length > 1 && (
-              <div className="atlas-groups" role="group" aria-label={`${s.label}: parts shown`}>
+            {on && s.id !== ATTACHMENTS && topGroups(index, s.id).length > 1 && (
+              <div className="obs-chip-row" role="group" aria-label={`${s.label}: parts shown`}>
                 {topGroups(index, s.id).map((g) => {
                   const off = hiddenGroups[s.id]?.includes(g.name) ?? false;
                   return (
                     <button
                       key={g.name}
                       type="button"
-                      className={off ? "atlas-group" : "atlas-group is-on"}
+                      className={off ? "obs-chip" : "obs-chip is-on"}
                       aria-pressed={!off}
-                      title={`${g.count} structures`}
+                      title={`${latinOf(latin, g.name) ? `${latinOf(latin, g.name)} · ` : ""}${g.count} structures`}
                       onClick={() => {
                         setHiddenGroups((prev) => {
                           const list = prev[s.id] ?? [];
@@ -609,25 +644,31 @@ export function Atlas() {
                   );
                 })}
                 {(hiddenGroups[s.id]?.length ?? 0) > 0 && (
-                  <button type="button" className="atlas-group-reset" onClick={() => { setHiddenGroups((prev) => ({ ...prev, [s.id]: [] })); }}>
+                  <button type="button" className="obs-chip atlas-group-reset" onClick={() => { setHiddenGroups((prev) => ({ ...prev, [s.id]: [] })); }}>
                     Show all parts
                   </button>
                 )}
               </div>
             )}
-            {s.id === ATTACHMENTS && on && <p className="atlas-legend"><span className="atlas-swatch origin" /> origin <span className="atlas-swatch insertion" /> insertion{attachFor ? ` · ${attachFor}` : ""}</p>}
+            {s.id === ATTACHMENTS && on && (
+              <p className="atlas-legend">
+                <span className="atlas-swatch origin" /> origin <span className="atlas-swatch insertion" /> insertion{attachFor ? ` · ${attachFor}` : ""}
+              </p>
+            )}
           </div>
         );
       })}
     </div>
   );
 
+  const selTitle = selected && sel ? (attachment ? `${attachment[2] === "o" ? "Origin" : "Insertion"} of ${parseNode(attachment[1]).name}` : sel.name) : "";
+
   return (
-    <section className="page atlas-page">
+    <section className="page map-page atlas-page">
       <h1>3D anatomy</h1>
       <p className="subtitle">
-        The whole body in 3D: bones, joints, muscles, vessels, nerves and organs. Turn systems on and off, click any part to name it, and drag to turn it
-        around.
+        The whole body in 3D: bones, joints, muscles, vessels, nerves and organs. Turn systems on and off, click any part to name it, and fly around it as in
+        the knowledge map.
       </p>
 
       {!webgl ? (
@@ -636,439 +677,526 @@ export function Atlas() {
         <p className="atlas-note">The atlas couldn't be loaded. Check your connection and reload.</p>
       ) : null}
 
-      <div className={pageFull ? "atlas is-page-full" : "atlas"} ref={frame}>
-        <aside className="atlas-side" aria-label="Find and choose">
-          <label className="atlas-search">
-            <SearchIcon />
-            <span className="sr-only">Find a structure</span>
-            <input
-              ref={searchBox}
-              type="search"
-              placeholder="Find a structure"
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); }}
-              onKeyDown={(e) => {
-                const first = results[0];
-                if (e.key === "Enter" && first) {
-                  setQuery("");
-                  // Back to the model, so its keys (arrows, Backspace…) work straight away.
-                  e.currentTarget.blur();
-                  select({ system: first.system, node: first.node }, true);
-                } else if (e.key === "ArrowDown") {
-                  e.preventDefault();
-                  resultsList.current?.querySelector("button")?.focus();
-                } else if (e.key === "Escape") {
-                  setQuery("");
-                }
-              }}
-            />
-            <kbd className="atlas-key" aria-hidden="true">/</kbd>
-          </label>
-          {results.length > 0 ? (
-            <ul
-              className="atlas-results"
-              aria-label="Matches"
-              ref={resultsList}
-              onKeyDown={(e) => {
-                // Up and down move between matches; up from the first goes back to the box.
-                if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
-                e.preventDefault();
-                const buttons = [...(resultsList.current?.querySelectorAll("button") ?? [])];
-                const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
-                const next = e.key === "ArrowDown" ? buttons[at + 1] : at <= 0 ? searchBox.current : buttons[at - 1];
-                next?.focus();
-              }}
-            >
-              {results.map((r) => (
-                <li key={`${r.system}/${r.node}`}>
-                  <button type="button" onClick={() => { setQuery(""); select({ system: r.system, node: r.node }, true); }}>
-                    <strong>{r.name}</strong>
-                    {r.latin && r.latin.toLowerCase() !== r.name.toLowerCase() && <em className="atlas-latin-small">{r.latin}</em>}
-                    <small>
-                      {labelOf(r.system)}
-                      {r.path.length ? ` · ${r.path.at(-1)}` : ""}
-                    </small>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : query.trim().length >= 2 ? (
-            <p className="atlas-hint">Nothing called “{query.trim()}”.</p>
-          ) : (
-            systemsPanel
-          )}
-        </aside>
-
-        <div className="atlas-stage">
-          <div className="atlas-viewport" ref={host}>
-            {hover && (
-              <div className="atlas-hover" style={{ transform: `translate(${hover.x + 14}px, ${hover.y + 10}px)` }} aria-hidden="true">
-                {parseNode(hover.node).name}
-                {parseNode(hover.node).side && <small> {sideLabel(parseNode(hover.node).side).toLowerCase()}</small>}
-                {latinOf(latin, parseNode(hover.node).name) && (
-                  <em className="atlas-hover-latin" lang="la">
-                    {latinWithSide(latinOf(latin, parseNode(hover.node).name) ?? "", parseNode(hover.node).side)}
-                  </em>
-                )}
-              </div>
-            )}
-            {Object.keys(progress).length > 0 && (
-              <div className="atlas-loading" role="status">
-                <span className="atlas-spinner" aria-hidden="true" />
-                Loading {Object.entries(progress).map(([id, f]) => `${labelOf(id).toLowerCase()} ${Math.round(f * 100)}%`).join(", ")}
-              </div>
-            )}
-          </div>
-          {selected && sel && (
-            // On a phone the panel is further down: the name shows on the model, and leads there.
-            <button type="button" className="atlas-picked" onClick={() => { infoPanel.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>
-              <strong>{attachment ? `${attachment[2] === "o" ? "Origin" : "Insertion"} of ${parseNode(attachment[1]).name}` : sel.name}</strong>
-              {sel.side && <small> {sideLabel(sel.side)}</small>}
-              <span aria-hidden="true"> ↓</span>
+      <div className={pageFull ? "obs-frame atlas-frame is-page-full" : "obs-frame atlas-frame"} ref={frame}>
+        <div className={explorerOpen ? "obs atlas-obs explorer-open" : "obs atlas-obs"}>
+          <nav className="obs-ribbon" aria-label="Atlas tools">
+            <button type="button" className={explorerOpen ? "obs-ribbon-btn is-on" : "obs-ribbon-btn"} aria-pressed={explorerOpen} onClick={() => { setExplorerOpen((o) => !o); }} title="Body systems" aria-label="Show the body systems">
+              <FolderIcon />
             </button>
-          )}
-          {flying && (
-            <div className="atlas-fly-hint" aria-live="polite">
-              <kbd>W</kbd>
-              <kbd>A</kbd>
-              <kbd>S</kbd>
-              <kbd>D</kbd> fly · <kbd>Q</kbd>
-              <kbd>E</kbd> down, up · <kbd>Shift</kbd> fast · speed {viewer.current?.flyingSpeed ?? 4}
-            </div>
-          )}
-          {speedShown !== null && (
-            <div className="atlas-speed" role="status">
-              Camera speed <strong>{speedShown}</strong>
-              <span className="atlas-speed-bar" aria-hidden="true">
-                {Array.from({ length: 8 }, (_, i) => (
-                  <span key={i} className={i < speedShown ? "is-on" : undefined} />
-                ))}
-              </span>
-            </div>
-          )}
-          <div className="atlas-corner">
-            <span className="atlas-side-label" aria-live="polite">
-              {side === "Sinistra" || side === "Dextra" ? `Lateralis ${side.toLowerCase()}` : side}
-            </span>
-            <button
-              type="button"
-              className="atlas-nav-mode"
-              onClick={() => { setPrefs((prev) => ({ ...DEFAULT_PREFS, ...prev, nav: nav === "unreal" ? "orbit" : "unreal" })); }}
-              title={nav === "unreal" ? "Unreal Engine controls (click for the orbit camera)" : "Orbit camera (click for Unreal Engine controls)"}
-              aria-label={`Mouse controls: ${nav === "unreal" ? "Unreal Engine" : "orbit"}. Switch.`}
-            >
-              <MouseIcon />
-              {nav === "unreal" ? "Unreal" : "Orbit"}
+            <button type="button" className="obs-ribbon-btn" onClick={findStructure} title="Find a structure (/)" aria-label="Find a structure">
+              <SearchIcon />
+            </button>
+            <button type="button" className="obs-ribbon-btn" onClick={() => viewer.current?.frameAll()} title="Whole body (0)" aria-label="Show the whole body">
+              <BodyIcon />
             </button>
             <button
               type="button"
-              className={showControls ? "atlas-icon-btn is-on" : "atlas-icon-btn"}
-              aria-pressed={showControls}
-              aria-expanded={showControls}
-              onClick={() => { setShowControls((x) => !x); }}
-              title="Controls"
-              aria-label="Show the controls"
-            >
-              <HelpIcon />
-            </button>
-            <button
-              type="button"
-              className="atlas-icon-btn"
-              aria-pressed={fullScreen}
-              onClick={toggleFullScreen}
-              title={fullScreen ? "Exit full screen (Esc)" : "Full screen"}
-              aria-label={fullScreen ? "Exit full screen" : "Show the atlas full screen"}
-            >
-              {fullScreen ? <ShrinkIcon /> : <ExpandIcon />}
-            </button>
-          </div>
-          {showControls && (
-            <div className="atlas-controls-card" role="dialog" aria-label="Controls">
-              <p className="atlas-controls-title">{nav === "unreal" ? "Unreal Engine controls" : "Orbit camera controls"}</p>
-              <dl>
-                {(nav === "unreal" ? UNREAL_CONTROLS : ORBIT_CONTROLS).map(([how, what]) => (
-                  <div key={how}>
-                    <dt>{how}</dt>
-                    <dd>{what}</dd>
-                  </div>
-                ))}
-                {SELECT_CONTROLS.map(([how, what]) => (
-                  <div key={how}>
-                    <dt>{how}</dt>
-                    <dd>{what}</dd>
-                  </div>
-                ))}
-              </dl>
-              <p className="atlas-controls-note">Touch: drag to turn, two fingers to move and zoom, tap to select.</p>
-            </div>
-          )}
-          <div className="atlas-pad" role="group" aria-label="Move the view">
-            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.zoom(0.75)} title="Zoom in (+)" aria-label="Zoom in">
-              <ZoomInIcon />
-            </button>
-            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.zoom(1 / 0.75)} title="Zoom out (−)" aria-label="Zoom out">
-              <ZoomOutIcon />
-            </button>
-            <span className="atlas-pad-gap" />
-            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.orbit(TURN)} title="Turn left (←)" aria-label="Turn left">
-              <TurnLeftIcon />
-            </button>
-            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.orbit(-TURN)} title="Turn right (→)" aria-label="Turn right">
-              <TurnRightIcon />
-            </button>
-            <button type="button" className="atlas-icon-btn atlas-tilt" onClick={() => viewer.current?.orbit(0, TURN)} title="Look from higher (↑)" aria-label="Look from higher">
-              <TiltUpIcon />
-            </button>
-            <button type="button" className="atlas-icon-btn atlas-tilt" onClick={() => viewer.current?.orbit(0, -TURN)} title="Look from lower (↓)" aria-label="Look from lower">
-              <TiltDownIcon />
-            </button>
-            <span className="atlas-pad-gap" />
-            <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.frameAll()} title="Whole body (0)" aria-label="Whole body">
-              <FitIcon />
-            </button>
-            <button
-              type="button"
-              className={prefs.follow ? "atlas-icon-btn is-on" : "atlas-icon-btn"}
+              className={prefs.follow ? "obs-ribbon-btn is-on" : "obs-ribbon-btn"}
               aria-pressed={prefs.follow}
-              onClick={() => { setPrefs((prev) => ({ ...DEFAULT_PREFS, ...prev, follow: !prefs.follow })); }}
+              onClick={() => { patchPrefs({ follow: !prefs.follow }); }}
               title={prefs.follow ? "Turning around the part you click (click to stop)" : "Turn around the part you click"}
               aria-label="Turn around the part you click"
             >
               <PivotIcon />
             </button>
-          </div>
-          <div className="atlas-tools" role="toolbar" aria-label="View">
-            {VIEW_BUTTONS.map(([v, label, english]) => (
-              <button key={v} type="button" className="atlas-chip" title={`${english} view`} onClick={() => { view(v); }}>
-                {label}
-              </button>
-            ))}
-            {(isolating || hiddenCount > 0) && (
-              <button type="button" className="atlas-chip is-on" onClick={showEverything}>
-                Show all{hiddenCount > 0 ? ` (${hiddenCount} hidden)` : ""}
-              </button>
-            )}
-          </div>
-        </div>
+            <button type="button" className="obs-ribbon-btn" disabled={!isolating && hiddenCount === 0} onClick={showEverything} title="Show everything you hid (Shift+H)" aria-label="Show everything you hid">
+              <ResetIcon />
+            </button>
+            <button type="button" className="obs-ribbon-btn" onClick={openRandom} disabled={all.length === 0} title="Open a random structure" aria-label="Open a random structure">
+              <DiceIcon />
+            </button>
+          </nav>
 
-        <aside className="atlas-info" aria-live="polite" ref={infoPanel}>
-          {selected && sel ? (
-            <>
-              <div className="atlas-info-head">
-                <p className="atlas-kicker">
-                  {labelOf(selected.system)}
-                  {sel.side && (
-                    <>
-                      {" · "}
-                      <span title={sideEnglish(sel.side)}>{sideLabel(sel.side)}</span>
-                    </>
-                  )}
-                </p>
-                {(backTo || forwardTo) && (
-                  <div className="atlas-steps">
-                    <button type="button" className="atlas-icon-btn" disabled={!backTo} onClick={() => { step(-1); }} title={backTo ? `Back to ${nameOf(backTo)} (Backspace)` : "Back"} aria-label={backTo ? `Back to ${nameOf(backTo)}` : "Back"}>
-                      <BackIcon />
-                    </button>
-                    <button type="button" className="atlas-icon-btn" disabled={!forwardTo} onClick={() => { step(1); }} title={forwardTo ? `Forward to ${nameOf(forwardTo)}` : "Forward"} aria-label={forwardTo ? `Forward to ${nameOf(forwardTo)}` : "Forward"}>
-                      <ForwardIcon />
-                    </button>
-                  </div>
-                )}
+          {explorerOpen && (
+            <aside className="obs-explorer atlas-explorer" aria-label="Body systems and search">
+              <div className="obs-explorer-head">
+                <span>{query.trim().length >= 2 ? "Search" : "Body systems"}</span>
+                <button type="button" className="obs-icon-btn obs-explorer-close" onClick={() => { setExplorerOpen(false); }} aria-label="Close" title="Close">
+                  <CloseIcon />
+                </button>
               </div>
-              <h2>{attachment ? `${attachment[2] === "o" ? "Origin" : "Insertion"} of ${parseNode(attachment[1]).name}` : sel.name}</h2>
-              {(selLatin || selGreek) && (
-                <p className="atlas-latin" lang="la">
-                  {selLatin && <em>{selLatin}</em>}
-                  {selGreek && (
-                    <span className="atlas-greek" lang="grc-Latn" title="The Greek root behind the clinical terms">
-                      {selLatin ? " · " : ""}Gr. {selGreek}
-                    </span>
-                  )}
-                </p>
-              )}
-              {selPath >= 0 && index && (index.paths[selPath]?.length ?? 0) > 0 && (
-                <p className="atlas-path">
-                  {index.paths[selPath]?.map((g, i) => (
-                    <span key={g}>
-                      {i > 0 && " › "}
-                      <button
-                        type="button"
-                        className="atlas-path-link"
-                        title={`${latinOf(latin, g) ? `${latinOf(latin, g)}: ` : ""}everything in ${g}`}
-                        onClick={() => { setQuery(g); searchBox.current?.focus(); }}
-                      >
-                        {g}
-                      </button>
-                    </span>
-                  ))}
-                </p>
-              )}
-              {stack.length > 1 && stack.some((p) => toKey(p) === toKey(selected)) && (
-                <div className="atlas-stack">
-                  <p className="atlas-stack-title">At this spot, front to back</p>
-                  <div className="atlas-stack-list">
-                    {stack.map((p) => {
-                      const parsed = parseNode(p.node);
-                      const on = toKey(p) === toKey(selected);
-                      return (
-                        <button
-                          key={toKey(p)}
-                          type="button"
-                          className={on ? "atlas-stack-item is-on" : "atlas-stack-item"}
-                          aria-pressed={on}
-                          title={latinOf(latin, parsed.name) ? latinWithSide(latinOf(latin, parsed.name) ?? "", parsed.side) : parsed.name}
-                          onClick={() => { setAlso([]); select(p); }}
-                        >
-                          {parsed.name}
-                          {parsed.side ? <small> {sideShort(parsed.side)}</small> : null}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-              {also.length > 0 && (
-                <div className="atlas-also">
-                  <p className="atlas-stack-title">Also selected ({also.length})</p>
-                  <div className="atlas-stack-list">
-                    {also.map((p) => {
-                      const parsed = parseNode(p.node);
-                      return (
-                        <span key={toKey(p)} className="atlas-also-item">
-                          <button type="button" className="atlas-also-name" onClick={() => { setAlso((prev) => [selected, ...prev.filter((x) => toKey(x) !== toKey(p))]); select(p); }}>
-                            {parsed.name}
-                            {parsed.side ? <small> {sideShort(parsed.side)}</small> : null}
-                          </button>
-                          <button type="button" className="atlas-also-remove" aria-label={`Take ${parsed.name} out of the selection`} onClick={() => { setAlso((prev) => prev.filter((x) => toKey(x) !== toKey(p))); }}>
-                            ×
-                          </button>
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-              <div className="atlas-actions">
-                <button type="button" className="atlas-chip" onClick={() => viewer.current?.focus(selected)} aria-keyshortcuts="F">
-                  Focus
-                </button>
-                <button type="button" className={isolating ? "atlas-chip is-on" : "atlas-chip"} onClick={toggleIsolate} aria-keyshortcuts="O">
-                  {isolating ? "Show the rest" : also.length > 0 ? "Only these" : "Only this"}
-                </button>
-                <button type="button" className="atlas-chip" onClick={hideSelected} aria-keyshortcuts="H">
-                  {also.length > 0 ? "Hide these" : "Hide"}
-                </button>
-                {otherPicked && (
-                  <button type="button" className="atlas-chip" onClick={() => { select(otherPicked, true); }}>
-                    {sel.side === "r" ? "Sinistra" : "Dextra"}
-                  </button>
-                )}
-                {muscleAttachments.length > 0 && (
-                  <button type="button" className="atlas-chip" onClick={showAttachments}>
-                    Where it attaches
-                  </button>
-                )}
-              </div>
-              {config?.ai === true && (
-                <button
-                  type="button"
-                  className="atlas-ask"
-                  onClick={() => {
-                    askAlfondAbout(`Explain the ${sel.name.toLowerCase()}${selLatin ? ` (${selLatin})` : ""}: what it is, where it is, what it does and what it relates to. Keep it short and exam-focused.`, () => {
-                      navigate("/alfond");
-                    });
+              <label className="obs-explorer-search">
+                <SearchIcon />
+                <span className="sr-only">Find a structure</span>
+                <input
+                  ref={searchBox}
+                  type="search"
+                  placeholder="Find a structure"
+                  value={query}
+                  onChange={(e) => { setQuery(e.target.value); }}
+                  onKeyDown={(e) => {
+                    const first = results[0];
+                    if (e.key === "Enter" && first) {
+                      // Back to the model, so its keys (arrows, Backspace…) work straight away.
+                      e.currentTarget.blur();
+                      openFromExplorer({ system: first.system, node: first.node });
+                    } else if (e.key === "ArrowDown") {
+                      e.preventDefault();
+                      resultsList.current?.querySelector("button")?.focus();
+                    } else if (e.key === "Escape") {
+                      setQuery("");
+                    }
                   }}
-                >
-                  <AlfondIcon />
-                  Ask Alfond about {sel.name}
-                </button>
-              )}
-              {description ? (
-                <div className="atlas-description">
-                  {description.split("\n\n").map((p, i) => (
-                    <p key={i}>{p}</p>
-                  ))}
-                  <p className="atlas-source">From Z-Anatomy, after Wikipedia (CC BY-SA).</p>
-                </div>
-              ) : descriptions ? (
-                <p className="atlas-hint">No description for this one yet.</p>
-              ) : (
-                <p className="atlas-hint">Loading the description…</p>
-              )}
-              {landmarks.length > 0 && (
-                <details className="atlas-landmarks-box" open={landmarks.length <= 8}>
-                  <summary>
-                    <h3>Landmarks</h3> <span className="atlas-count">{landmarks.length}</span>
-                  </summary>
-                  <ul className="atlas-landmarks">
-                    {landmarks.map(([name, x, y, z]) => (
-                      <li key={name}>
-                        <button
-                          type="button"
-                          aria-pressed={landmark === name}
-                          className={landmark === name ? "is-on" : undefined}
-                          onClick={() => {
-                            setLandmark(name);
-                            viewer.current?.focusPoint([x, y, z]);
-                          }}
-                        >
-                          {name}
-                          {latinOf(latin, parseNode(name).name) && latinOf(latin, parseNode(name).name)?.toLowerCase() !== parseNode(name).name.toLowerCase() && (
+                />
+                <kbd className="atlas-key" aria-hidden="true">/</kbd>
+              </label>
+              <div className="obs-explorer-body">
+                {results.length > 0 ? (
+                  <ul
+                    className="obs-tree"
+                    aria-label="Matches"
+                    ref={resultsList}
+                    onKeyDown={(e) => {
+                      // Up and down move between matches; up from the first goes back to the box.
+                      if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+                      e.preventDefault();
+                      const buttons = [...(resultsList.current?.querySelectorAll("button") ?? [])];
+                      const at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+                      const next = e.key === "ArrowDown" ? buttons[at + 1] : at <= 0 ? searchBox.current : buttons[at - 1];
+                      next?.focus();
+                    }}
+                  >
+                    {results.map((r) => (
+                      <li key={`${r.system}/${r.node}`}>
+                        <button type="button" className={selectedKey === `${r.system}/${r.node}` ? "obs-file is-active" : "obs-file"} onClick={() => { openFromExplorer({ system: r.system, node: r.node }); }}>
+                          <span className="obs-file-name">{r.name}</span>
+                          {r.latin && r.latin.toLowerCase() !== r.name.toLowerCase() && (
                             <em className="atlas-latin-small" lang="la">
-                              {latinOf(latin, parseNode(name).name)}
+                              {r.latin}
                             </em>
                           )}
+                          <small>
+                            {labelOf(r.system)}
+                            {r.path.length ? ` · ${r.path.at(-1)}` : ""}
+                          </small>
                         </button>
                       </li>
                     ))}
                   </ul>
-                </details>
-              )}
-              <Link to={`/search?q=${encodeURIComponent(sel.name)}`} className="atlas-more">
-                Find “{sel.name}” in your notes →
-              </Link>
-            </>
-          ) : (
-            <div className="atlas-empty">
-              <p className="atlas-empty-title">Click any part to name it</p>
-              <p>
-                {nav === "unreal"
-                  ? "Unreal Engine controls: right-drag to look around and W A S D to fly while you hold it, left-drag to move, Alt + left-drag to orbit, scroll to zoom. "
-                  : "Drag to turn the body, right-drag to move it, scroll to zoom. "}
-                On a touch screen, drag with one or two fingers and pinch. Click a part to name it, again for the one beneath; double-click to fly to it. Search finds any of the{" "}
-                {structureCount ? structureCount.toLocaleString() : "1,800"} structures, in English or Latin.
-              </p>
-              <div className="atlas-quick">
-                {quick.map((hit) => {
-                  const name = hit.name;
-                  return (
-                    <button key={name} type="button" className="atlas-chip" onClick={() => { select({ system: hit.system, node: hit.node }, true); }}>
-                      {name}
-                    </button>
-                  );
-                })}
+                ) : query.trim().length >= 2 ? (
+                  <p className="obs-explorer-empty">Nothing called “{query.trim()}”.</p>
+                ) : (
+                  systemsPanel
+                )}
               </div>
-              {recent.length > 0 && (
-                <>
-                  <p className="atlas-recent-title">Recently opened</p>
-                  <div className="atlas-quick">
-                    {recent.map((p) => (
-                      <button key={toKey(p)} type="button" className="atlas-chip" onClick={() => { select(p, true); }}>
-                        {parseNode(p.node).name}
-                        {parseNode(p.node).side ? ` (${sideShort(parseNode(p.node).side)})` : ""}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-              <p className="atlas-keys">
-                <kbd>/</kbd> search · <kbd>F</kbd> focus · <kbd>H</kbd> hide · <kbd>O</kbd> only this · <kbd>A</kbd> show all · <kbd>1</kbd>–<kbd>5</kbd> views ·{" "}
-                <kbd>0</kbd> whole body · <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> turn · <kbd>Shift</kbd> + arrows move · <kbd>+</kbd> <kbd>−</kbd> zoom · <kbd>Backspace</kbd> back ·{" "}
-                <kbd>Esc</kbd> let go
-              </p>
-            </div>
+            </aside>
           )}
-        </aside>
+
+          <div className="obs-graph-pane">
+            <div className="obs-tabbar">
+              <span className="obs-tab is-active">
+                <BodyIcon />
+                <span className="obs-tab-title">
+                  3D atlas · <span aria-live="polite">{sideText}</span>
+                </span>
+              </span>
+              <div className="obs-view-switch" role="radiogroup" aria-label="Projection">
+                {([false, true] as const).map((o) => (
+                  <button key={String(o)} type="button" role="radio" aria-checked={ortho === o} className={ortho === o ? "is-on" : undefined} onClick={() => { patchPrefs({ ortho: o }); }} title={o ? "Orthographic (5)" : "Perspective (5)"}>
+                    {o ? "Ortho" : "Persp"}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                className={fullScreen ? "obs-icon-btn obs-full-btn is-on" : "obs-icon-btn obs-full-btn"}
+                aria-pressed={fullScreen}
+                onClick={toggleFullScreen}
+                title={fullScreen ? "Exit full screen (Esc)" : "Full screen"}
+                aria-label={fullScreen ? "Exit full screen" : "Show the atlas full screen"}
+              >
+                {fullScreen ? <ShrinkIcon /> : <ExpandIcon />}
+              </button>
+            </div>
+            <div className="obs-graph atlas-stage">
+              <div className="atlas-viewport" ref={host}>
+                {hover && (
+                  <div className="map-hover-card atlas-hover" style={{ transform: `translate(${hover.x + 14}px, ${hover.y + 10}px)` }} aria-hidden="true">
+                    <strong>
+                      {parseNode(hover.node).name}
+                      {parseNode(hover.node).side && <small> {sideLabel(parseNode(hover.node).side).toLowerCase()}</small>}
+                    </strong>
+                    {latinOf(latin, parseNode(hover.node).name) && (
+                      <span className="atlas-hover-latin" lang="la">
+                        {latinWithSide(latinOf(latin, parseNode(hover.node).name) ?? "", parseNode(hover.node).side)}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {Object.keys(progress).length > 0 && (
+                  <div className="atlas-loading" role="status">
+                    <span className="atlas-spinner" aria-hidden="true" />
+                    Loading {Object.entries(progress).map(([id, f]) => `${labelOf(id).toLowerCase()} ${Math.round(f * 100)}%`).join(", ")}
+                  </div>
+                )}
+              </div>
+              <div className="map-3d-tools atlas-3d-tools">
+                <canvas ref={gizmo} className="map-gizmo atlas-gizmo" role="img" aria-label="Axis gizmo: click anterior, posterior, superior, inferior, sinistra or dextra to look from that side" />
+                <div className="map-3d-buttons" role="group" aria-label="3D view">
+                  <button type="button" className={autoRotate ? "obs-chip is-on" : "obs-chip"} aria-pressed={autoRotate} onClick={() => { setAutoRotate((on) => !on); }} title="Turn slowly around the body (R)">
+                    Auto-rotate
+                  </button>
+                  <button type="button" className={grid ? "obs-chip is-on" : "obs-chip"} aria-pressed={grid} onClick={() => { patchPrefs({ grid: !grid }); }} title="Floor grid (G)">
+                    Grid
+                  </button>
+                  <button type="button" className={showControls ? "obs-chip is-on" : "obs-chip"} aria-expanded={showControls} onClick={() => { setShowControls((v) => !v); }}>
+                    Controls
+                  </button>
+                </div>
+                {showControls && (
+                  <dl className="map-3d-help">
+                    {CONTROLS.map(([how, what]) => (
+                      <div key={how} className="atlas-help-row">
+                        <dt>{how}</dt>
+                        <dd>{what}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+              </div>
+              {selected && sel && (
+                // On a phone the panel is further down: the name shows on the model, and leads there.
+                <button type="button" className="atlas-picked" onClick={() => { infoPanel.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>
+                  <strong>{selTitle}</strong>
+                  {sel.side && <small> {sideLabel(sel.side)}</small>}
+                  <span aria-hidden="true"> ↓</span>
+                </button>
+              )}
+              <div className="atlas-tools" role="toolbar" aria-label="Anatomical views">
+                {VIEW_BUTTONS.map(([v, label, english, key]) => (
+                  <button key={v} type="button" className="obs-chip" title={`${english} view (${key})`} onClick={() => { view(v); }}>
+                    {label}
+                  </button>
+                ))}
+                {(isolating || hiddenCount > 0) && (
+                  <button type="button" className="obs-chip is-on" onClick={showEverything}>
+                    Show all{hiddenCount > 0 ? ` (${hiddenCount} hidden)` : ""}
+                  </button>
+                )}
+              </div>
+              <div className="obs-zoom atlas-zoom">
+                <button type="button" className="obs-icon-btn" onClick={() => viewer.current?.orbit(TURN)} title="Turn left (←)" aria-label="Turn left">
+                  <TurnLeftIcon />
+                </button>
+                <button type="button" className="obs-icon-btn" onClick={() => viewer.current?.orbit(-TURN)} title="Turn right (→)" aria-label="Turn right">
+                  <TurnRightIcon />
+                </button>
+                <button type="button" className="obs-icon-btn" onClick={() => viewer.current?.zoom(0.75)} title="Zoom in (+)" aria-label="Zoom in">
+                  <PlusIcon />
+                </button>
+                <button type="button" className="obs-icon-btn" onClick={() => viewer.current?.zoom(1 / 0.75)} title="Zoom out (−)" aria-label="Zoom out">
+                  <MinusIcon />
+                </button>
+                <button type="button" className="obs-icon-btn" onClick={() => viewer.current?.frameAll()} title="Whole body (0)" aria-label="Whole body">
+                  <FitIcon />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <aside className="obs-note-pane atlas-note-pane" aria-live="polite" ref={infoPanel}>
+            <div className="obs-tabbar">
+              <span className="obs-tab is-active">
+                <FileIcon />
+                <span className="obs-tab-title">{selected && sel ? selTitle : "New tab"}</span>
+                {selected && (
+                  <button type="button" className="obs-tab-close" onClick={() => { setAlso([]); select(null); }} aria-label="Close this structure" title="Close (Esc)">
+                    <CloseIcon />
+                  </button>
+                )}
+              </span>
+            </div>
+            {selected && sel ? (
+              <div className="obs-note">
+                <div className="obs-view-header">
+                  <nav className="obs-breadcrumb" aria-label="Where this structure is">
+                    <span>{labelOf(selected.system)}</span>
+                    {sel.side && (
+                      <>
+                        <span aria-hidden="true">/</span>
+                        <span title={sideEnglish(sel.side)}>{sideLabel(sel.side)}</span>
+                      </>
+                    )}
+                  </nav>
+                  <div className="obs-view-actions">
+                    <button type="button" className="obs-icon-btn" disabled={!backTo} onClick={() => { step(-1); }} title={backTo ? `Back to ${nameOf(backTo)} (Backspace)` : "Back"} aria-label={backTo ? `Back to ${nameOf(backTo)}` : "Back"}>
+                      <BackIcon />
+                    </button>
+                    <button type="button" className="obs-icon-btn" disabled={!forwardTo} onClick={() => { step(1); }} title={forwardTo ? `Forward to ${nameOf(forwardTo)}` : "Forward"} aria-label={forwardTo ? `Forward to ${nameOf(forwardTo)}` : "Forward"}>
+                      <ForwardIcon />
+                    </button>
+                  </div>
+                </div>
+
+                <article className="obs-note-body">
+                  <h2 className="obs-inline-title">{selTitle}</h2>
+                  {(selLatin || selGreek) && (
+                    <p className="atlas-latin" lang="la">
+                      {selLatin && <em>{selLatin}</em>}
+                      {selGreek && (
+                        <span className="atlas-greek" lang="grc-Latn" title="The Greek root behind the clinical terms">
+                          {selLatin ? " · " : ""}Gr. {selGreek}
+                        </span>
+                      )}
+                    </p>
+                  )}
+                  {config?.ai === true && (
+                    <button
+                      type="button"
+                      className="obs-ask"
+                      onClick={() => {
+                        askAlfondAbout(`Explain the ${sel.name.toLowerCase()}${selLatin ? ` (${selLatin})` : ""}: what it is, where it is, what it does and what it relates to. Keep it short and exam-focused.`, () => {
+                          navigate("/alfond");
+                        });
+                      }}
+                    >
+                      <span className="obs-ask-icon" aria-hidden="true">
+                        <AlfondIcon />
+                      </span>
+                      <span className="obs-ask-text">
+                        <strong>Ask Alfond about {sel.name}</strong>
+                        <small>{selLatin ? `${selLatin}: where it is, what it does` : "Explained short and exam-focused"}</small>
+                      </span>
+                      <span className="obs-ask-go" aria-hidden="true">
+                        →
+                      </span>
+                    </button>
+                  )}
+                  {description ? (
+                    <div className="obs-callout">
+                      <p className="obs-callout-title">What it is</p>
+                      {description.split("\n\n").map((p, i) => (
+                        <p key={i}>{p}</p>
+                      ))}
+                      <p className="atlas-source">From Z-Anatomy, after Wikipedia (CC BY-SA).</p>
+                    </div>
+                  ) : (
+                    <p className="obs-faint">{descriptions ? "No description for this one yet." : "Loading the description…"}</p>
+                  )}
+
+                  <div className="obs-properties" aria-label="Properties">
+                    <div className="obs-prop">
+                      <span className="obs-prop-key">
+                        <TagIcon />
+                        systema
+                      </span>
+                      <span className="obs-prop-value">
+                        <span className="obs-tag">#{labelOf(selected.system).toLowerCase().replace(/\s+/g, "-")}</span>
+                        {sel.side && <span className="obs-tag" title={sideEnglish(sel.side)}>#{sideLabel(sel.side).toLowerCase()}</span>}
+                      </span>
+                    </div>
+                    {selLatin && (
+                      <div className="obs-prop">
+                        <span className="obs-prop-key">
+                          <HashIcon />
+                          nomen
+                        </span>
+                        <span className="obs-prop-value" lang="la">
+                          <em>{selLatin}</em>
+                        </span>
+                      </div>
+                    )}
+                    {selGreek && (
+                      <div className="obs-prop">
+                        <span className="obs-prop-key">
+                          <HashIcon />
+                          Greek
+                        </span>
+                        <span className="obs-prop-value" lang="grc-Latn">
+                          {selGreek}
+                        </span>
+                      </div>
+                    )}
+                    {selPath >= 0 && index && (index.paths[selPath]?.length ?? 0) > 0 && (
+                      <div className="obs-prop">
+                        <span className="obs-prop-key">
+                          <FolderIcon />
+                          group
+                        </span>
+                        <span className="obs-prop-value atlas-path">
+                          {index.paths[selPath]?.map((g, i) => (
+                            <span key={g}>
+                              {i > 0 && <span className="obs-faint"> › </span>}
+                              <button
+                                type="button"
+                                className="obs-internal-link"
+                                title={`${latinOf(latin, g) ? `${latinOf(latin, g)}: ` : ""}everything in ${g}`}
+                                onClick={() => {
+                                  setQuery(g);
+                                  findStructure();
+                                }}
+                              >
+                                {g}
+                              </button>
+                            </span>
+                          ))}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="obs-chip-row atlas-actions">
+                    <button type="button" className="obs-chip" onClick={() => viewer.current?.focus(selected)} aria-keyshortcuts="F">
+                      Focus
+                    </button>
+                    <button type="button" className={isolating ? "obs-chip is-on" : "obs-chip"} onClick={toggleIsolate} aria-keyshortcuts="O">
+                      {isolating ? "Show the rest" : also.length > 0 ? "Only these" : "Only this"}
+                    </button>
+                    <button type="button" className="obs-chip" onClick={hideSelected} aria-keyshortcuts="H">
+                      {also.length > 0 ? "Hide these" : "Hide"}
+                    </button>
+                    {otherPicked && (
+                      <button type="button" className="obs-chip" onClick={() => { select(otherPicked, true); }}>
+                        {sel.side === "r" ? "Sinistra" : "Dextra"}
+                      </button>
+                    )}
+                    {muscleAttachments.length > 0 && (
+                      <button type="button" className="obs-chip" onClick={showAttachments}>
+                        Where it attaches
+                      </button>
+                    )}
+                  </div>
+
+                  {stack.length > 1 && stack.some((p) => toKey(p) === toKey(selected)) && (
+                    <>
+                      <h3>At this spot, front to back</h3>
+                      <div className="obs-chip-row">
+                        {stack.map((p) => {
+                          const parsed = parseNode(p.node);
+                          const on = toKey(p) === toKey(selected);
+                          return (
+                            <button
+                              key={toKey(p)}
+                              type="button"
+                              className={on ? "obs-chip is-on" : "obs-chip"}
+                              aria-pressed={on}
+                              title={latinOf(latin, parsed.name) ? latinWithSide(latinOf(latin, parsed.name) ?? "", parsed.side) : parsed.name}
+                              onClick={() => { setAlso([]); select(p); }}
+                            >
+                              {parsed.name}
+                              {parsed.side ? <small> {sideShort(parsed.side)}</small> : null}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+                  {also.length > 0 && (
+                    <>
+                      <h3>Also selected ({also.length})</h3>
+                      <div className="obs-chip-row">
+                        {also.map((p) => {
+                          const parsed = parseNode(p.node);
+                          return (
+                            <span key={toKey(p)} className="obs-chip atlas-also-item">
+                              <button type="button" className="atlas-also-name" onClick={() => { setAlso((prev) => [selected, ...prev.filter((x) => toKey(x) !== toKey(p))]); select(p); }}>
+                                {parsed.name}
+                                {parsed.side ? <small> {sideShort(parsed.side)}</small> : null}
+                              </button>
+                              <button type="button" className="atlas-also-remove" aria-label={`Take ${parsed.name} out of the selection`} onClick={() => { setAlso((prev) => prev.filter((x) => toKey(x) !== toKey(p))); }}>
+                                ×
+                              </button>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+
+                  {landmarks.length > 0 && (
+                    <>
+                      <h3>
+                        Landmarks <span className="obs-count">{landmarks.length}</span>
+                      </h3>
+                      <ul className="obs-bridges atlas-landmarks">
+                        {landmarks.map(([name, x, y, z]) => {
+                          const la = latinOf(latin, parseNode(name).name);
+                          return (
+                            <li key={name}>
+                              <button
+                                type="button"
+                                aria-pressed={landmark === name}
+                                className={landmark === name ? "obs-internal-link is-on" : "obs-internal-link"}
+                                onClick={() => {
+                                  setLandmark(name);
+                                  viewer.current?.focusPoint([x, y, z]);
+                                }}
+                              >
+                                {name}
+                              </button>
+                              {la && la.toLowerCase() !== parseNode(name).name.toLowerCase() && (
+                                <small lang="la">
+                                  <em>{la}</em>
+                                </small>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </>
+                  )}
+                  <Link to={`/search?q=${encodeURIComponent(sel.name)}`} className="obs-callout-more">
+                    Find “{sel.name}” in your notes →
+                  </Link>
+                </article>
+              </div>
+            ) : (
+              <div className="obs-empty">
+                <p className="obs-empty-title">No structure is open</p>
+                <button type="button" className="obs-empty-action" onClick={findStructure}>
+                  Find a structure <kbd>/</kbd>
+                </button>
+                <button type="button" className="obs-empty-action" onClick={openRandom}>
+                  Open a random structure
+                </button>
+                <p className="obs-empty-hint">
+                  Or click any part of the body. Drag to orbit, right-drag to pan, scroll to zoom, <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> to fly; click
+                  an end of the axis gizmo to look from anterior, posterior, superior, inferior, sinistra or dextra. Search finds any of the{" "}
+                  {structureCount ? structureCount.toLocaleString() : "1,800"} structures, in English or Latin.
+                </p>
+                <h3 className="obs-empty-head">Start with</h3>
+                <ul className="obs-bridges">
+                  {quick.map((hit) => (
+                    <li key={hit.name}>
+                      <button type="button" className="obs-internal-link" onClick={() => { select({ system: hit.system, node: hit.node }, true); }}>
+                        {hit.name}
+                      </button>
+                      {hit.latin && hit.latin.toLowerCase() !== hit.name.toLowerCase() && (
+                        <small lang="la">
+                          <em>{hit.latin}</em>
+                        </small>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                {recent.length > 0 && (
+                  <>
+                    <h3 className="obs-empty-head">Recently opened</h3>
+                    <ul className="obs-bridges">
+                      {recent.map((p) => (
+                        <li key={toKey(p)}>
+                          <button type="button" className="obs-internal-link" onClick={() => { select(p, true); }}>
+                            {parseNode(p.node).name}
+                            {parseNode(p.node).side ? ` (${sideShort(parseNode(p.node).side)})` : ""}
+                          </button>
+                          <small>{labelOf(p.system)}</small>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            )}
+          </aside>
+
+          <footer className="obs-status">
+            <span>{sideText}</span>
+            {(isolating || hiddenCount > 0) && <span>{isolating ? "Showing only the selection" : `${hiddenCount} hidden`}</span>}
+            <span>
+              {layers.filter((l) => l !== ATTACHMENTS).length} systems · {shownCount.toLocaleString()} structures
+            </span>
+          </footer>
+        </div>
       </div>
 
       <p className="atlas-credit">

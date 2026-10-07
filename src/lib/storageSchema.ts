@@ -50,7 +50,7 @@ export const KEY_TYPES = {
   theme: { id: null, sync: false, keepOnClear: true, about: "Light or dark theme" },
   sidebarcollapsed: { id: null, sync: false, about: "Sidebar collapsed on desktop" },
   mapsettings: { id: null, sync: "latest", about: "Knowledge map: filters, colors, display and forces" },
-  atlas: { id: null, sync: "latest", about: "3D anatomy: recently opened structures, and whether the view turns around the selection" },
+  atlas: { id: null, sync: "latest", about: "3D anatomy: recently opened structures, whether the view turns around the selection, perspective or orthographic, and the floor grid" },
   alfond: { id: null, sync: "latest", about: "Alfond settings: whether its floating button shows on every page" },
   alfondchat: { id: null, sync: false, about: "Alfond's recent conversation (device-only)" },
   lastexport: { id: null, sync: false, about: "When progress was last exported (backup nudge)" },
