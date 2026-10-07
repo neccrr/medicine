@@ -4,8 +4,9 @@ import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { ATLAS_BASE, defaultOpacity, tissueColor } from "../../lib/atlas/model";
 
-// The 3D anatomy atlas's viewer: three.js with an orbit camera, one glTF per body system loaded
-// the first time it's shown, structures coloured by tissue. Each system is drawn as a few
+// The 3D anatomy atlas's viewer: three.js with an Unreal Engine-style camera (or a plain orbit
+// camera), one glTF per body system loaded the first time it's shown, structures coloured by
+// tissue. Each system is drawn as a few
 // BatchedMeshes (one per colour), so thousands of structures cost a handful of draw calls. It
 // draws only when something changes (a camera move, a selection, a load), so an idle atlas
 // costs nothing.
@@ -15,8 +16,22 @@ export interface Picked {
   node: string;
 }
 
+/** How a click selected: with Ctrl/⌘/Shift held (add to the selection), and everything under it. */
+export interface SelectInfo {
+  additive: boolean;
+  /** The structures under the pointer, nearest first (the picked one included). */
+  stack: Picked[];
+}
+
+/**
+ * The mouse scheme. "unreal": left-drag turns and moves forward, right-drag looks around and
+ * W A S D Q E fly, middle-drag pans, Alt+left orbits. "orbit": left-drag orbits, right-drag pans.
+ * Touch is the same in both.
+ */
+export type NavMode = "unreal" | "orbit";
+
 export interface ViewerEvents {
-  onSelect: (picked: Picked | null) => void;
+  onSelect: (picked: Picked | null, info: SelectInfo) => void;
   onHover: (hover: (Picked & { x: number; y: number }) | null) => void;
   onProgress: (system: string, fraction: number | null) => void;
   onError: (system: string) => void;
@@ -24,7 +39,15 @@ export interface ViewerEvents {
   onFocus?: (picked: Picked) => void;
   /** Which side of the body is facing you now ("Anterior", "Sinistra"…), when it changes. */
   onView?: (side: ViewSide) => void;
+  /** The right mouse button went down or up (Unreal: free look and W A S D flying). */
+  onFlying?: (flying: boolean) => void;
+  /** The flying speed changed (1–8, with the wheel while flying). */
+  onSpeed?: (speed: number) => void;
 }
+
+const FLY_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "KeyQ", "KeyE"]);
+/** Metres per second at each speed step, as Unreal's 1–8 camera speed. */
+const flySpeed = (step: number) => 0.35 * 1.5 ** (step - 4);
 
 export type ViewSide = "Anterior" | "Posterior" | "Sinistra" | "Dextra" | "Superior" | "Inferior";
 
@@ -65,9 +88,30 @@ const keyOf = (system: string, node: string) => `${system}/${node}`;
 const BODY_CENTRE = new THREE.Vector3(0, 0.9, 0);
 const MIRROR = new THREE.Matrix4().makeScale(-1, 1, 1);
 const HIGHLIGHT = 0x2fd3a5;
+const OUTLINE = 0x1fe0ae;
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let decoderWorkers = false;
+
+/** The selection outline: back faces pushed out along the normals by a width set each frame. */
+function outlineMaterial(): THREE.MeshBasicMaterial {
+  const m = new THREE.MeshBasicMaterial({ color: OUTLINE, side: THREE.BackSide });
+  m.userData = { own: true, width: { value: 0.002 } };
+  m.onBeforeCompile = (shader) => {
+    shader.uniforms.outlineWidth = m.userData.width as { value: number };
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nuniform float outlineWidth;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\ntransformed += normalize(normal) * outlineWidth;");
+  };
+  return m;
+}
+
+/** The x-ray tint: drawn only where something nearer covers the selected structure. */
+function xrayMaterial(): THREE.MeshBasicMaterial {
+  const m = new THREE.MeshBasicMaterial({ color: HIGHLIGHT, transparent: true, opacity: 0.3, depthWrite: false, depthFunc: THREE.GreaterDepth });
+  m.userData = { own: true };
+  return m;
+}
 
 /** Downloads a model, reporting progress, and unzips it if it came gzipped. */
 async function fetchModel(file: ModelFile, onProgress: (fraction: number) => void): Promise<ArrayBuffer> {
@@ -117,10 +161,12 @@ export class AtlasViewer {
   private isolated: Set<string> | null = null;
   /** Per system, the only structures to show (null: all of them). */
   private readonly filters = new Map<string, Set<string> | null>();
+  /** The selection: the structure the panel shows first, and any added with Ctrl/⌘+click. */
   private selected: string | null = null;
+  private readonly selection = new Map<string, THREE.Group>();
   private hovered: string | null = null;
-  /** The selected and hovered structures, drawn on their own over a hole in their batch. */
-  private readonly overlays = { selected: new THREE.Group(), hovered: new THREE.Group() };
+  /** The hovered structure, drawn on its own over a hole in its batch (the selection likewise). */
+  private hoverOverlay = new THREE.Group();
   /** Geometry views into a batch's buffers, one per piece, reused by the overlays. */
   private readonly views = new Map<string, THREE.BufferGeometry>();
   private markers = new THREE.Group();
@@ -131,7 +177,17 @@ export class AtlasViewer {
   private running = false;
   private hoverTimer = 0;
   private down: { x: number; y: number } | null = null;
-  private lastClick = { at: 0, key: "" };
+  private lastClick = { at: 0, key: "", x: 0, y: 0 };
+  private nav: NavMode = "unreal";
+  /** A mouse drag under way (Unreal scheme): the last position and how far it has gone. */
+  private drag: { x: number; y: number; moved: number } | null = null;
+  private flying = false;
+  private readonly keys = new Set<string>();
+  private boost = false;
+  private speed = 4;
+  private lastFrame = 0;
+  /** What Alt+left-drag orbits around in the Unreal scheme: the clicked structure, or the view's centre. */
+  private pivot: THREE.Vector3 | null = null;
   private readonly resize: ResizeObserver;
   private disposed = false;
 
@@ -184,6 +240,13 @@ export class AtlasViewer {
     el.addEventListener("pointermove", this.onMove);
     el.addEventListener("pointerleave", this.onLeave);
     el.addEventListener("wheel", this.onWheel, { passive: true });
+    el.addEventListener("contextmenu", this.onContextMenu);
+    // Before OrbitControls sees them: in the Unreal scheme the mouse is ours, touch stays its.
+    host.addEventListener("pointerdown", this.onCapture, true);
+    host.addEventListener("wheel", this.onWheelCapture, { capture: true, passive: false });
+    window.addEventListener("keydown", this.onKeyDown, true);
+    window.addEventListener("keyup", this.onKeyUp, true);
+    window.addEventListener("blur", this.onBlur);
     this.resize = new ResizeObserver(() => { this.fit(); });
     this.resize.observe(host);
     this.fit();
@@ -331,21 +394,32 @@ export class AtlasViewer {
     m.needsUpdate = true;
   }
 
-  /** Highlights a structure (or none). */
-  select(picked: Picked | null): void {
+  /**
+   * Highlights a structure (or none), and any others selected with it: each gets a glow, an
+   * outline, and an x-ray tint where other structures hide it.
+   */
+  select(picked: Picked | null, also: Picked[] = []): void {
     this.selected = picked ? keyOf(picked.system, picked.node) : null;
-    this.drawOverlay("selected", this.selected);
-    if (this.hovered === this.selected) {
-      this.hovered = null;
-      this.drawOverlay("hovered", null);
+    const want = new Set([...(picked ? [picked] : []), ...also].map((p) => keyOf(p.system, p.node)));
+    for (const [key, group] of this.selection) {
+      if (want.has(key)) continue;
+      this.dropOverlay(group);
+      this.selection.delete(key);
     }
+    for (const key of want) {
+      if (this.selection.has(key)) continue;
+      const group = this.buildOverlay(key, "selected");
+      if (group) this.selection.set(key, group);
+    }
+    if (this.hovered && want.has(this.hovered)) this.setHovered(null);
     this.applyVisibility();
   }
 
   private setHovered(key: string | null) {
     if (key === this.hovered) return;
     this.hovered = key;
-    this.drawOverlay("hovered", key === this.selected ? null : key);
+    this.dropOverlay(this.hoverOverlay);
+    this.hoverOverlay = (key && !this.selection.has(key) ? this.buildOverlay(key, "hovered") : null) ?? new THREE.Group();
     this.applyVisibility();
   }
 
@@ -367,27 +441,55 @@ export class AtlasViewer {
     return g;
   }
 
-  private drawOverlay(kind: "selected" | "hovered", key: string | null) {
-    const overlay = this.overlays[kind];
-    // The views share the batches' buffers, so they're let go rather than disposed.
-    overlay.clear();
-    overlay.removeFromParent();
-    const part = key ? this.parts.get(key) : undefined;
-    if (!part) return;
+  /** A structure drawn on its own: tinted, and for the selection outlined and x-rayed too. */
+  private buildOverlay(key: string, kind: "selected" | "hovered"): THREE.Group | null {
+    const part = this.parts.get(key);
+    if (!part) return null;
+    const overlay = new THREE.Group();
+    overlay.userData = { key };
     for (const inst of part.instances) {
       const base = inst.batch.material as THREE.MeshStandardMaterial;
       const set = [...this.materials.values()].find((m) => m.base === base);
-      const mesh = new THREE.Mesh(this.viewOf(inst), set ? set[kind] : base);
-      mesh.matrixAutoUpdate = false;
-      inst.batch.getMatrixAt(inst.id, mesh.matrix);
-      mesh.matrix.premultiply(inst.batch.matrix);
-      mesh.userData = { system: part.system, node: part.node };
-      mesh.frustumCulled = false;
-      overlay.add(mesh);
+      const geometry = this.viewOf(inst);
+      const matrix = new THREE.Matrix4();
+      inst.batch.getMatrixAt(inst.id, matrix);
+      matrix.premultiply(inst.batch.matrix);
+      const add = (material: THREE.Material, order: number, pick: boolean) => {
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.matrixAutoUpdate = false;
+        mesh.matrix.copy(matrix);
+        mesh.userData = pick ? { system: part.system, node: part.node, pick: true } : {};
+        mesh.frustumCulled = false;
+        mesh.renderOrder = order;
+        overlay.add(mesh);
+        return mesh;
+      };
+      add(set ? set[kind] : base, 0, true);
+      if (kind !== "selected") continue;
+      // The outline: the back faces pushed out along their normals, a constant width on screen.
+      const outline = add(outlineMaterial(), 1, false);
+      const scale = matrix.getMaxScaleOnAxis() || 1;
+      const centre = (geometry.boundingSphere?.center ?? new THREE.Vector3()).clone().applyMatrix4(matrix);
+      outline.onBeforeRender = (_r, _s, camera) => {
+        (outline.material as THREE.MeshBasicMaterial).userData.width.value = (camera.position.distanceTo(centre) * 0.0032) / scale;
+      };
+      // The x-ray: drawn only where something nearer hides it, so a nerve under a muscle shows.
+      add(xrayMaterial(), 2, false);
     }
     // In its system's group, so it comes and goes with the system.
     this.systems.get(part.system)?.add(overlay);
     overlay.updateMatrixWorld(true);
+    return overlay;
+  }
+
+  private dropOverlay(overlay: THREE.Group) {
+    overlay.removeFromParent();
+    // The geometry views share the batches' buffers, so only the overlay's own materials go.
+    for (const mesh of overlay.children as THREE.Mesh[]) {
+      const m = mesh.material as THREE.Material;
+      if (m.userData.own) m.dispose();
+    }
+    overlay.clear();
   }
 
   /** Whether a structure is loaded (so it can be selected and focused). */
@@ -458,6 +560,7 @@ export class AtlasViewer {
   }
 
   private flyTo(target: THREE.Vector3, position: THREE.Vector3, ms = 550) {
+    this.pivot = null;
     if (reducedMotion()) {
       this.controls.target.copy(target);
       this.camera.position.copy(position);
@@ -504,11 +607,18 @@ export class AtlasViewer {
     this.flyTo(target.add(step), position.add(step), 260);
   }
 
-  /** Turns around a structure from now on: the view slides to it, without zooming. */
+  /**
+   * Turns around a structure from now on. With the orbit camera the view slides to it, without
+   * zooming; with the Unreal camera it stays put and Alt+drag orbits around the structure.
+   */
   centreOn(picked: Picked): void {
     const part = this.parts.get(keyOf(picked.system, picked.node));
     if (!part) return;
     const centre = this.boxOf(part.instances).getCenter(new THREE.Vector3());
+    if (this.nav === "unreal") {
+      this.pivot = centre;
+      return;
+    }
     const [target, position] = this.goal();
     const step = centre.sub(target);
     this.flyTo(target.add(step), position.add(step), 450);
@@ -558,11 +668,11 @@ export class AtlasViewer {
   private applyVisibility() {
     for (const [key, part] of this.parts) {
       const on = this.visible(part);
-      // The selected and hovered structures are drawn by their overlay instead.
-      const inBatch = on && key !== this.selected && key !== this.hovered;
+      // The selected and hovered structures are drawn by their overlays instead.
+      const overlay = this.selection.get(key) ?? (key === this.hovered ? this.hoverOverlay : undefined);
+      const inBatch = on && !overlay;
       for (const inst of part.instances) if (inst.batch.getVisibleAt(inst.id) !== inBatch) inst.batch.setVisibleAt(inst.id, inBatch);
-      if (key === this.selected) this.overlays.selected.visible = on;
-      if (key === this.hovered) this.overlays.hovered.visible = on;
+      if (overlay) overlay.visible = on;
     }
     this.request();
   }
@@ -613,6 +723,14 @@ export class AtlasViewer {
 
   /** The structure under a point of the canvas: nearest opaque one, else nearest at all. */
   private pick(clientX: number, clientY: number): Picked | null {
+    return this.pickStack(clientX, clientY)[0] ?? null;
+  }
+
+  /**
+   * Every structure under a point of the canvas, nearest first, each once; the nearest opaque
+   * one leads, so a see-through skin doesn't get in the way.
+   */
+  private pickStack(clientX: number, clientY: number): Picked[] {
     const rect = this.renderer.domElement.getBoundingClientRect();
     const ndc = new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
     const ray = new THREE.Raycaster();
@@ -622,38 +740,59 @@ export class AtlasViewer {
       if (!g.visible) continue;
       for (const c of g.children) {
         if ((c as THREE.BatchedMesh).isBatchedMesh) targets.push(c);
-        else if (c.visible) targets.push(...c.children);
+        else if (c.visible) targets.push(...c.children.filter((m) => (m.userData as { pick?: boolean }).pick));
       }
     }
     const hits = ray.intersectObjects(targets, false);
+    const keyAt = (h: THREE.Intersection): string | undefined => {
+      const batch = h.object as THREE.BatchedMesh;
+      if (batch.isBatchedMesh) return (batch.userData as { owners: string[] }).owners[h.batchId ?? -1];
+      const { system, node } = h.object.userData as Picked;
+      return keyOf(system, node);
+    };
     const solid = hits.find((h) => ((h.object as THREE.Mesh).material as THREE.Material).opacity >= 0.6) ?? hits[0];
-    if (!solid) return null;
-    const batch = solid.object as THREE.BatchedMesh;
-    if (batch.isBatchedMesh) {
-      const key = (batch.userData as { owners: string[] }).owners[solid.batchId ?? -1];
-      const part = key ? this.parts.get(key) : undefined;
-      return part ? { system: part.system, node: part.node } : null;
-    }
-    const { system, node } = solid.object.userData as Picked;
-    return { system, node };
+    const keys = [...new Set([solid, ...hits].filter((h) => h !== undefined).map(keyAt).filter((k) => k !== undefined))];
+    return keys.flatMap((k) => {
+      const part = this.parts.get(k);
+      return part ? [{ system: part.system, node: part.node }] : [];
+    }).slice(0, 12);
   }
 
   private onDown = (e: PointerEvent) => {
     this.down = { x: e.clientX, y: e.clientY };
     this.tween = null;
     window.clearTimeout(this.hoverTimer);
+    if (this.nav === "unreal" && e.pointerType === "mouse") {
+      this.drag = { x: e.clientX, y: e.clientY, moved: 0 };
+      this.renderer.domElement.setPointerCapture(e.pointerId);
+      this.setFlying((e.buttons & 2) !== 0 && !e.altKey);
+    }
   };
 
   private onUp = (e: PointerEvent) => {
+    if (this.drag && e.buttons === 0) {
+      this.drag = null;
+      if (this.renderer.domElement.hasPointerCapture(e.pointerId)) this.renderer.domElement.releasePointerCapture(e.pointerId);
+      this.setFlying(false);
+    } else if (this.drag) {
+      this.setFlying((e.buttons & 2) !== 0 && !e.altKey);
+    }
     const d = this.down;
-    this.down = null;
+    if (e.buttons === 0) this.down = null;
     if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 5 || e.button !== 0) return;
-    const hit = this.pick(e.clientX, e.clientY);
-    const key = hit ? keyOf(hit.system, hit.node) : "";
+    const stack = this.pickStack(e.clientX, e.clientY);
+    let hit = stack[0] ?? null;
     const now = performance.now();
-    const double = hit !== null && key === this.lastClick.key && now - this.lastClick.at < 350;
-    this.lastClick = { at: now, key };
-    this.events.onSelect(hit);
+    const samePlace = Math.hypot(e.clientX - this.lastClick.x, e.clientY - this.lastClick.y) < 6;
+    // Clicking the selected structure's place again (not a double-click) goes one deeper.
+    if (hit && samePlace && now - this.lastClick.at >= 350 && this.selected) {
+      const at = stack.findIndex((p) => keyOf(p.system, p.node) === this.selected);
+      if (at >= 0) hit = stack[(at + 1) % stack.length] ?? hit;
+    }
+    const key = hit ? keyOf(hit.system, hit.node) : "";
+    const double = hit !== null && samePlace && key === this.lastClick.key && now - this.lastClick.at < 350;
+    this.lastClick = { at: now, key, x: e.clientX, y: e.clientY };
+    this.events.onSelect(hit, { additive: e.ctrlKey || e.metaKey || e.shiftKey, stack });
     // A second click on the same part flies to it.
     if (double) {
       this.focus(hit);
@@ -663,6 +802,15 @@ export class AtlasViewer {
 
   private onMove = (e: PointerEvent) => {
     window.clearTimeout(this.hoverTimer);
+    if (this.drag && e.pointerType === "mouse" && e.buttons) {
+      const dx = e.clientX - this.drag.x;
+      const dy = e.clientY - this.drag.y;
+      this.drag.x = e.clientX;
+      this.drag.y = e.clientY;
+      this.drag.moved += Math.abs(dx) + Math.abs(dy);
+      this.setFlying((e.buttons & 2) !== 0 && (e.buttons & 1) === 0 && !e.altKey);
+      this.unrealDrag(e.buttons, e.altKey, dx, dy);
+    }
     if (e.pointerType !== "mouse" || e.buttons) {
       this.setHovered(null);
       this.events.onHover(null);
@@ -680,6 +828,160 @@ export class AtlasViewer {
   private onWheel = () => {
     this.tween = null;
   };
+
+  private onContextMenu = (e: Event) => {
+    e.preventDefault();
+  };
+
+  /** In the Unreal scheme the mouse belongs to the viewer, touch to OrbitControls. */
+  private onCapture = (e: PointerEvent) => {
+    this.controls.enabled = !(this.nav === "unreal" && e.pointerType === "mouse");
+  };
+
+  /** The wheel zooms toward the pointer as usual, but while flying it sets the speed. */
+  private onWheelCapture = (e: WheelEvent) => {
+    if (this.nav !== "unreal") {
+      this.controls.enabled = true;
+      return;
+    }
+    if (this.flying) {
+      e.preventDefault();
+      this.controls.enabled = false;
+      const next = THREE.MathUtils.clamp(this.speed + (e.deltaY < 0 ? 1 : -1), 1, 8);
+      if (next !== this.speed) {
+        this.speed = next;
+        this.events.onSpeed?.(next);
+      }
+      return;
+    }
+    this.controls.enabled = true;
+  };
+
+  private onKeyDown = (e: KeyboardEvent) => {
+    this.boost = e.shiftKey;
+    if (!this.flying || !FLY_KEYS.has(e.code)) return;
+    // While flying, W A S D Q E steer the camera and nothing else on the page.
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    this.keys.add(e.code);
+    this.lastFrame = 0;
+    this.request();
+  };
+
+  private onKeyUp = (e: KeyboardEvent) => {
+    this.boost = e.shiftKey;
+    this.keys.delete(e.code);
+  };
+
+  private onBlur = () => {
+    this.keys.clear();
+    this.setFlying(false);
+  };
+
+  private setFlying(on: boolean) {
+    if (on === this.flying) return;
+    this.flying = on;
+    if (!on) this.keys.clear();
+    this.renderer.domElement.classList.toggle("is-flying", on);
+    this.events.onFlying?.(on);
+  }
+
+  /** Whether the camera is flying (right button held): the page's own keys stay quiet. */
+  get isFlying(): boolean {
+    return this.flying;
+  }
+
+  /** The mouse scheme: Unreal Engine's viewport controls, or a plain orbit camera. */
+  setNavigation(mode: NavMode): void {
+    this.nav = mode;
+    this.controls.enabled = true;
+    this.drag = null;
+    this.setFlying(false);
+  }
+
+  get flyingSpeed(): number {
+    return this.speed;
+  }
+
+  /**
+   * One step of an Unreal-style mouse drag (dx, dy in pixels):
+   * left: turn and move forward or back; right: look around; left+right or middle: pan;
+   * Alt+left: orbit the point looked at; Alt+right: move toward or away from it.
+   */
+  private unrealDrag(buttons: number, alt: boolean, dx: number, dy: number) {
+    const target = this.controls.target;
+    const position = this.camera.position;
+    const distance = Math.max(0.05, position.distanceTo(target));
+    const forward = target.clone().sub(position).normalize();
+    const right = new THREE.Vector3().crossVectors(forward, this.camera.up).normalize();
+    const left = (buttons & 1) !== 0;
+    const rightButton = (buttons & 2) !== 0;
+    const middle = (buttons & 4) !== 0;
+    if (alt && left) {
+      // The whole camera swings around the pivot (the clicked structure, else the view's centre).
+      const pivot = this.pivot ?? target;
+      const yaw = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -dx * 0.006);
+      const pitch = new THREE.Quaternion().setFromAxisAngle(right, -dy * 0.006);
+      const turn = yaw.multiply(pitch);
+      const nextPosition = position.clone().sub(pivot).applyQuaternion(turn).add(pivot);
+      const nextTarget = target.clone().sub(pivot).applyQuaternion(turn).add(pivot);
+      // Stop short of looking straight up or down, where the view would flip.
+      if (Math.abs(nextTarget.clone().sub(nextPosition).normalize().y) < 0.985) {
+        position.copy(nextPosition);
+        target.copy(nextTarget);
+      } else {
+        position.copy(position.clone().sub(pivot).applyQuaternion(yaw).add(pivot));
+        target.copy(target.clone().sub(pivot).applyQuaternion(yaw).add(pivot));
+      }
+    } else if (alt && rightButton) {
+      const d = THREE.MathUtils.clamp(distance * Math.exp((dy - dx) * 0.005), this.controls.minDistance, this.controls.maxDistance);
+      position.copy(target).addScaledVector(forward, -d);
+    } else if (middle || (left && rightButton) || (alt && middle)) {
+      const up = new THREE.Vector3().crossVectors(right, forward).normalize();
+      const metres = distance * 0.0016;
+      const step = right.multiplyScalar(-dx * metres).add(up.multiplyScalar(dy * metres));
+      position.add(step);
+      target.add(step);
+    } else if (rightButton) {
+      this.turn(dx, dy, distance);
+    } else if (left) {
+      // Unreal: sideways turns, up and down move along the ground.
+      this.turn(dx, 0, distance);
+      const ground = new THREE.Vector3(forward.x, 0, forward.z);
+      if (ground.lengthSq() < 1e-6) ground.copy(this.camera.up).multiplyScalar(-Math.sign(forward.y));
+      const step = ground.normalize().multiplyScalar(-dy * Math.max(0.002, distance * 0.003));
+      position.add(step);
+      target.add(step);
+    }
+    this.request();
+  }
+
+  /** Turns the camera where it stands (dx, dy in pixels), keeping the point looked at as far away. */
+  private turn(dx: number, dy: number, distance: number) {
+    const position = this.camera.position;
+    const look = new THREE.Spherical().setFromVector3(this.controls.target.clone().sub(position));
+    look.theta -= dx * 0.004;
+    look.phi = THREE.MathUtils.clamp(look.phi + dy * 0.004, 0.05, Math.PI - 0.05);
+    look.radius = distance;
+    this.controls.target.copy(position).add(new THREE.Vector3().setFromSpherical(look));
+  }
+
+  /** W A S D Q E while flying: along the view, sideways, and straight down or up. */
+  private fly(seconds: number): boolean {
+    if (!this.flying || this.keys.size === 0) return false;
+    const forward = this.controls.target.clone().sub(this.camera.position).normalize();
+    const right = new THREE.Vector3().crossVectors(forward, this.camera.up).normalize();
+    const has = (code: string) => (this.keys.has(code) ? 1 : 0);
+    const move = forward
+      .multiplyScalar(has("KeyW") - has("KeyS"))
+      .add(right.multiplyScalar(has("KeyD") - has("KeyA")))
+      .add(new THREE.Vector3(0, has("KeyE") - has("KeyQ"), 0));
+    if (move.lengthSq() === 0) return true;
+    move.normalize().multiplyScalar(flySpeed(this.speed) * (this.boost ? 3 : 1) * seconds);
+    this.camera.position.add(move);
+    this.controls.target.add(move);
+    return true;
+  }
 
   private onLeave = () => {
     window.clearTimeout(this.hoverTimer);
@@ -707,6 +1009,9 @@ export class AtlasViewer {
 
   private tick = (now: number) => {
     let busy = false;
+    const seconds = this.lastFrame ? Math.min(0.05, (now - this.lastFrame) / 1000) : 1 / 60;
+    this.lastFrame = now;
+    if (this.fly(seconds)) busy = true;
     const tw = this.tween;
     if (tw) {
       const t = Math.min(1, (now - tw.start) / tw.ms);
@@ -736,7 +1041,10 @@ export class AtlasViewer {
       this.events.onView?.(side);
     }
     if (busy) this.frame = requestAnimationFrame(this.tick);
-    else this.running = false;
+    else {
+      this.running = false;
+      this.lastFrame = 0;
+    }
   };
 
   dispose(): void {
@@ -745,8 +1053,13 @@ export class AtlasViewer {
     window.clearTimeout(this.hoverTimer);
     this.resize.disconnect();
     this.controls.dispose();
-    this.overlays.selected.clear();
-    this.overlays.hovered.clear();
+    this.host.removeEventListener("pointerdown", this.onCapture, true);
+    this.host.removeEventListener("wheel", this.onWheelCapture, true);
+    window.removeEventListener("keydown", this.onKeyDown, true);
+    window.removeEventListener("keyup", this.onKeyUp, true);
+    window.removeEventListener("blur", this.onBlur);
+    for (const group of this.selection.values()) this.dropOverlay(group);
+    this.dropOverlay(this.hoverOverlay);
     for (const g of this.systems.values()) for (const c of g.children) if ((c as THREE.BatchedMesh).isBatchedMesh) (c as THREE.BatchedMesh).dispose();
     for (const m of this.materials.values()) for (const x of [m.base, m.selected, m.hovered]) x.dispose();
     this.clearMarkers();

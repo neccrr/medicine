@@ -84,6 +84,26 @@ instead of about 5,000, so turning the body stays smooth on phones.
   `medicine:atlas` setting with the recently opened structures), a click
   slides the view so the part becomes the point the camera turns around,
   without zooming.
+- **Navigation** follows Unreal Engine's viewport (`NavMode` "unreal", the
+  default; "orbit" is the plain OrbitControls camera, kept in the
+  `medicine:atlas` setting). The viewer keeps OrbitControls for touch and
+  takes the mouse itself: a capture-phase `pointerdown` on the host turns
+  OrbitControls off for mouse input. Right-drag turns the camera in place
+  (`turn`), and while the right button is held W A S D Q E fly at Unreal's
+  1–8 speed steps (`fly`, run each frame; the keys are caught in the capture
+  phase so the page's own shortcuts stay quiet). Left-drag turns and moves
+  along the ground, middle-drag or both buttons pan, Alt+left orbits the
+  clicked structure (`pivot`, set by `centreOn`) and Alt+right dollies. The
+  wheel zooms toward the pointer (OrbitControls), or sets the speed while
+  flying.
+- **Selecting**: each selected structure gets the tinted overlay, an outline
+  (its back faces pushed out along their normals, a constant width on
+  screen) and an x-ray copy drawn with `depthFunc = GreaterDepth`, so it
+  shows only where something nearer covers it. `pickStack` returns every
+  structure under the pointer, nearest opaque one first; clicking the same
+  place again selects the next one down, and the page lists the stack as
+  "At this spot". Ctrl/⌘/Shift+click adds to the selection (`select(primary,
+  also)`), which "Only these" and "Hide these" act on.
 - The models are unpacked in Web Workers (`MeshoptDecoder.useWorkers`), so
   the page doesn't stall while a system loads.
 

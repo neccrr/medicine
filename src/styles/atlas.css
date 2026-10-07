@@ -143,6 +143,211 @@
   display: none;
 }
 
+/* ---- Unreal-style navigation: the scheme switch, the controls card, flying ---- */
+.atlas-canvas.is-flying {
+  cursor: crosshair;
+}
+
+.atlas-nav-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 2rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-2-solid);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.atlas-nav-mode:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.atlas-controls-card {
+  position: absolute;
+  top: 3.1rem;
+  right: 0.6rem;
+  z-index: 3;
+  width: min(22rem, calc(100% - 1.2rem));
+  max-height: calc(100% - 4rem);
+  overflow: auto;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+  box-shadow: var(--glass-shadow);
+  font-size: 0.8rem;
+}
+
+.atlas-controls-title {
+  margin: 0 0 0.45rem;
+  font-weight: 700;
+}
+
+.atlas-controls-card dl {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.atlas-controls-card dl > div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.atlas-controls-card dt {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.atlas-controls-card dd {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.atlas-controls-note {
+  margin: 0.55rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+}
+
+.atlas-fly-hint,
+.atlas-speed {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-solid) 92%, transparent);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.atlas-fly-hint {
+  bottom: 3.2rem;
+}
+
+.atlas-fly-hint kbd {
+  font-size: 0.68rem;
+}
+
+.atlas-speed {
+  top: 3.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.atlas-speed strong {
+  color: var(--text);
+}
+
+.atlas-speed-bar {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.atlas-speed-bar span {
+  width: 0.4rem;
+  height: 0.7rem;
+  border-radius: 2px;
+  background: var(--border);
+}
+
+.atlas-speed-bar span.is-on {
+  background: var(--accent);
+}
+
+.atlas-hover-latin {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+/* ---- Selecting: everything under the click, and several at once ---- */
+.atlas-stack,
+.atlas-also {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.atlas-stack-title {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.atlas-stack-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.atlas-stack-item,
+.atlas-also-name {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.atlas-stack-item small,
+.atlas-also-name small {
+  color: var(--text-muted);
+}
+
+.atlas-stack-item:hover,
+.atlas-also-name:hover {
+  border-color: var(--accent);
+}
+
+.atlas-stack-item.is-on {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+}
+
+.atlas-also-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.atlas-also-name {
+  border-radius: 999px 0 0 999px;
+}
+
+.atlas-also-remove {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--border);
+  border-left: 0;
+  border-radius: 0 999px 999px 0;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.atlas-also-remove:hover {
+  color: var(--accent);
+}
+
 /* ---- View controls on the model: which side faces you, full screen, the move pad ---- */
 .atlas-corner {
   position: absolute;
@@ -636,10 +841,11 @@
   font-size: 0.7rem;
 }
 
-/* Touch screens have no keys or hover. */
+/* Touch screens have no keys, hover or mouse buttons. */
 @media (hover: none) {
   .atlas-keys,
-  .atlas-key {
+  .atlas-key,
+  .atlas-nav-mode {
     display: none;
   }
 }

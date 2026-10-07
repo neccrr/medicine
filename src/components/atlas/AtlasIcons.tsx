@@ -86,3 +86,17 @@ export const PivotIcon = () => (
     <path d="m20.5 3.5.2 5.4-5.3-.6M3.5 20.5l-.2-5.4 5.3.6" />
   </Icon>
 );
+
+export const MouseIcon = () => (
+  <Icon>
+    <rect x="6" y="3" width="12" height="18" rx="6" />
+    <path d="M12 7v4" />
+  </Icon>
+);
+
+export const HelpIcon = () => (
+  <Icon>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01" />
+  </Icon>
+);

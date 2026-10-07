@@ -7,9 +7,24 @@ skin and body regions: about 1,800 named structures.
 
 ## Moving around
 
-- **Drag** to turn the body.
-- **Right-drag**, or drag with two fingers, to move it.
-- **Scroll** or pinch to zoom.
+The atlas moves like the viewport of Unreal Engine. The **Unreal** button at
+the top of the model switches to a simpler **Orbit** camera and back; the
+**?** button beside it lists the controls.
+
+| With the mouse | Unreal (the default) | Orbit |
+| --- | --- | --- |
+| Right-drag | Look around where you stand | Move the body sideways |
+| Right button held + <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> | Fly forward, left, back, right; <kbd>Q</kbd> <kbd>E</kbd> down and up; <kbd>Shift</kbd> faster | |
+| Right button held + wheel | Flying speed, 1 to 8 | |
+| Left-drag | Turn, and move forward or back | Turn the body |
+| Middle-drag, or left and right together | Pan | |
+| <kbd>Alt</kbd> + left-drag | Orbit around the structure you clicked | |
+| <kbd>Alt</kbd> + right-drag | Move in or out | |
+| Wheel | Zoom toward the pointer | Zoom toward the pointer |
+
+On a touch screen it's the same in both: drag to turn the body, drag with two
+fingers to move it, and pinch to zoom.
+
 - The buttons under the model turn it to face you from the front
   (**Anterior**), back (**Posterior**), left (**Sinistra**), right
   (**Dextra**) or top (**Superior**).
@@ -43,11 +58,22 @@ with the skeleton only.
 
 ## Naming a structure
 
-**Hover** over a part to see its name, and **click** it to open it on the
-right. **Double-click** it to fly to it. You can also type a name into **Find
-a structure**, in English or Latin: "femur" or "os femoris", "deltoid",
-"vagus", or a group such as "cranial nerves". <kbd>Enter</kbd> opens the
-first match, and the arrow keys move through the list.
+**Hover** over a part to see its name in English and Latin, and **click** it
+to open it on the right. The selected part glows, gets an outline, and shows
+through in green where other structures cover it, so a nerve under a muscle
+stays visible. **Double-click** it to fly to it.
+
+- **Click the same place again** to select the structure beneath, then the
+  one beneath that: skin, muscle, bone. The panel lists everything at that
+  spot, front to back, under **At this spot**; click any of them.
+- **Ctrl** (⌘ on a Mac) **+ click** adds a structure to the selection, or
+  takes it out. With several selected, **Only these** shows just them and
+  **Hide these** hides them all. <kbd>Esc</kbd> clears the extra ones first.
+
+You can also type a name into **Find a structure**, in English or Latin:
+"femur" or "os femoris", "deltoid", "vagus", or a group such as "cranial
+nerves". <kbd>Enter</kbd> opens the first match, and the arrow keys move
+through the list.
 
 On a phone, tap a part. Its name shows at the top of the model; tap the name
 to jump to the panel about it.

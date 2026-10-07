@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AlfondIcon, SearchIcon } from "../components/icons";
-import { AtlasViewer, type Picked, type ViewName, type ViewSide } from "../components/atlas/viewer";
+import { AtlasViewer, type NavMode, type Picked, type SelectInfo, type ViewName, type ViewSide } from "../components/atlas/viewer";
 import {
   BackIcon,
   ExpandIcon,
+  HelpIcon,
+  MouseIcon,
   FitIcon,
   ForwardIcon,
   PivotIcon,
@@ -61,6 +63,31 @@ function isTyping(target: EventTarget | null): boolean {
 /** The same structure on the other side ("Femur.r" → "Femur.l"), if it has one. */
 const otherSide = (node: string) => (/\.r$/.test(node) ? node.replace(/\.r$/, ".l") : /\.l$/.test(node) ? node.replace(/\.l$/, ".r") : null);
 
+/** The controls card: [how, what], for each mouse scheme and for selecting. */
+const UNREAL_CONTROLS: [string, string][] = [
+  ["Right-drag", "Look around"],
+  ["Right + W A S D", "Fly; Q E down, up; Shift faster"],
+  ["Right + wheel", "Flying speed (1–8)"],
+  ["Left-drag", "Turn and move forward or back"],
+  ["Middle-drag, left + right", "Pan"],
+  ["Alt + left-drag", "Orbit the selected structure"],
+  ["Alt + right-drag", "Move in or out"],
+  ["Wheel", "Zoom toward the pointer"],
+  ["F", "Frame the selection"],
+];
+const ORBIT_CONTROLS: [string, string][] = [
+  ["Left-drag", "Turn the body"],
+  ["Right-drag", "Pan"],
+  ["Wheel", "Zoom toward the pointer"],
+  ["F", "Frame the selection"],
+];
+const SELECT_CONTROLS: [string, string][] = [
+  ["Click", "Select; again in the same place for the one beneath"],
+  ["Ctrl/⌘ + click", "Add to or take from the selection"],
+  ["Double-click", "Fly to it"],
+  ["Esc", "Clear the selection"],
+];
+
 /** The views, named as anatomists name them: [view, label, plain English]. */
 const VIEW_BUTTONS: [ViewName, string, string][] = [
   ["front", "Anterior", "Front"],
@@ -75,6 +102,8 @@ const VIEW_KEYS: Record<string, ViewName> = { "1": "front", "2": "back", "3": "l
 const TURN = Math.PI / 9;
 
 interface AtlasPrefs {
+  /** The mouse scheme: Unreal Engine's viewport controls (the default) or a plain orbit. */
+  nav?: NavMode;
   /** A clicked structure becomes what the view turns around. */
   follow: boolean;
   /** Recently opened structures, newest first, as "system/node". */
@@ -138,6 +167,17 @@ export function Atlas() {
     followRef.current = prefs.follow;
   }, [prefs.follow]);
   const [side, setSide] = useState<ViewSide>("Anterior");
+  // Unreal-style navigation: whether the right button is held (flying), and the speed readout.
+  const [flying, setFlying] = useState(false);
+  const [speedShown, setSpeedShown] = useState<number | null>(null);
+  const speedTimer = useRef(0);
+  const nav: NavMode = storedPrefs.nav ?? "unreal";
+  // Structures added to the selection with Ctrl/⌘+click, and everything under the last click.
+  const [also, setAlso] = useState<Picked[]>([]);
+  const [stack, setStack] = useState<Picked[]>([]);
+  // Kept in a ref too, for the selection effect.
+  const alsoRef = useRef<Picked[]>([]);
+  const [showControls, setShowControls] = useState(false);
 
   // The structures opened on this visit, to step back and forward through.
   const [trail, setTrail] = useState<{ keys: string[]; at: number }>({ keys: [], at: -1 });
@@ -184,11 +224,17 @@ export function Atlas() {
   }, []);
 
   // The viewer lives as long as the page.
-  const selectRef = useRef<(p: Picked | null) => void>(() => {});
+  const selectRef = useRef<(p: Picked | null, info?: SelectInfo) => void>(() => {});
   useEffect(() => {
     if (!webgl || !host.current) return;
     const v = new AtlasViewer(host.current, {
-      onSelect: (p) => { selectRef.current(p); },
+      onSelect: (p, info) => { selectRef.current(p, info); },
+      onFlying: setFlying,
+      onSpeed: (speed) => {
+        setSpeedShown(speed);
+        window.clearTimeout(speedTimer.current);
+        speedTimer.current = window.setTimeout(() => { setSpeedShown(null); }, 1400);
+      },
       onHover: setHover,
       onProgress: (system, fraction) => {
         setProgress((prev) => {
@@ -243,7 +289,7 @@ export function Atlas() {
     const v = viewer.current;
     if (!v) return;
     if (!selected) {
-      v.select(null);
+      v.select(null, alsoRef.current);
       v.setMarkers([]);
       return;
     }
@@ -256,7 +302,7 @@ export function Atlas() {
     let live = true;
     const apply = () => {
       if (!live) return;
-      v.select(selected);
+      v.select(selected, alsoRef.current);
       if (focusOnce.current) {
         focusOnce.current = false;
         v.focus(selected);
@@ -303,12 +349,36 @@ export function Atlas() {
     [setUrl],
   );
   useEffect(() => {
-    selectRef.current = (p) => {
+    selectRef.current = (p, info) => {
+      // Ctrl/⌘/Shift+click adds to (or takes away from) the selection, as in Unreal.
+      // Ctrl/⌘+click on empty space leaves the selection alone.
+      if (info?.additive && !p) return;
+      if (info?.additive && p && selected) {
+        const key = toKey(p);
+        if (key === toKey(selected)) return;
+        setAlso((prev) => (prev.some((x) => toKey(x) === key) ? prev.filter((x) => toKey(x) !== key) : [...prev, p]));
+        return;
+      }
+      setAlso([]);
+      if (info) setStack(p ? info.stack : []);
       select(p);
-      // A clicked part becomes what the view turns around (the view slides to it, no zoom).
+      // A clicked part becomes what the view turns around (the orbit camera slides to it).
       if (p && followRef.current) viewer.current?.centreOn(p);
     };
-  }, [select]);
+  }, [select, selected]);
+
+  // The extra selection lives in the viewer too.
+  useEffect(() => {
+    alsoRef.current = also;
+    viewer.current?.select(selected, also);
+    // selected is applied by the selection effect; this only follows the extras.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [also]);
+
+  // The navigation scheme follows the setting.
+  useEffect(() => {
+    viewer.current?.setNavigation(nav);
+  }, [nav, webgl]);
 
   // Each newly opened structure joins the trail (unless it was reached by stepping along it)
   // and the recent list.
@@ -434,13 +504,14 @@ export function Atlas() {
 
   const toggleIsolate = () => {
     if (!selected) return;
-    viewer.current?.isolate(viewer.current.isolating ? null : [selected]);
+    viewer.current?.isolate(viewer.current.isolating ? null : [selected, ...also]);
     refreshCounts();
   };
   const hideSelected = () => {
     if (!selected) return;
-    viewer.current?.hide(selected);
+    for (const p of [selected, ...also]) viewer.current?.hide(p);
     refreshCounts();
+    setAlso([]);
     select(null);
   };
   const showEverything = () => {
@@ -454,9 +525,10 @@ export function Atlas() {
   const keys = useRef<(e: KeyboardEvent) => void>(() => {});
   useEffect(() => {
     keys.current = (e) => {
-      if (e.ctrlKey || e.metaKey || e.altKey || isTyping(e.target)) return;
+      if (e.ctrlKey || e.metaKey || e.altKey || isTyping(e.target) || viewer.current?.isFlying) return;
       const k = e.key.toLowerCase();
       if (k === "/") searchBox.current?.focus();
+      else if (k === "escape" && also.length > 0) setAlso([]);
       else if (k === "escape" && selected) select(null);
       else if (k === "f" && selected) viewer.current?.focus(selected);
       else if (k === "h" && selected) hideSelected();
@@ -633,6 +705,11 @@ export function Atlas() {
               <div className="atlas-hover" style={{ transform: `translate(${hover.x + 14}px, ${hover.y + 10}px)` }} aria-hidden="true">
                 {parseNode(hover.node).name}
                 {parseNode(hover.node).side && <small> {sideLabel(parseNode(hover.node).side).toLowerCase()}</small>}
+                {latinOf(latin, parseNode(hover.node).name) && (
+                  <em className="atlas-hover-latin" lang="la">
+                    {latinWithSide(latinOf(latin, parseNode(hover.node).name) ?? "", parseNode(hover.node).side)}
+                  </em>
+                )}
               </div>
             )}
             {Object.keys(progress).length > 0 && (
@@ -650,10 +727,50 @@ export function Atlas() {
               <span aria-hidden="true"> ↓</span>
             </button>
           )}
+          {flying && (
+            <div className="atlas-fly-hint" aria-live="polite">
+              <kbd>W</kbd>
+              <kbd>A</kbd>
+              <kbd>S</kbd>
+              <kbd>D</kbd> fly · <kbd>Q</kbd>
+              <kbd>E</kbd> down, up · <kbd>Shift</kbd> fast · speed {viewer.current?.flyingSpeed ?? 4}
+            </div>
+          )}
+          {speedShown !== null && (
+            <div className="atlas-speed" role="status">
+              Camera speed <strong>{speedShown}</strong>
+              <span className="atlas-speed-bar" aria-hidden="true">
+                {Array.from({ length: 8 }, (_, i) => (
+                  <span key={i} className={i < speedShown ? "is-on" : undefined} />
+                ))}
+              </span>
+            </div>
+          )}
           <div className="atlas-corner">
             <span className="atlas-side-label" aria-live="polite">
               {side === "Sinistra" || side === "Dextra" ? `Lateralis ${side.toLowerCase()}` : side}
             </span>
+            <button
+              type="button"
+              className="atlas-nav-mode"
+              onClick={() => { setPrefs((prev) => ({ ...DEFAULT_PREFS, ...prev, nav: nav === "unreal" ? "orbit" : "unreal" })); }}
+              title={nav === "unreal" ? "Unreal Engine controls (click for the orbit camera)" : "Orbit camera (click for Unreal Engine controls)"}
+              aria-label={`Mouse controls: ${nav === "unreal" ? "Unreal Engine" : "orbit"}. Switch.`}
+            >
+              <MouseIcon />
+              {nav === "unreal" ? "Unreal" : "Orbit"}
+            </button>
+            <button
+              type="button"
+              className={showControls ? "atlas-icon-btn is-on" : "atlas-icon-btn"}
+              aria-pressed={showControls}
+              aria-expanded={showControls}
+              onClick={() => { setShowControls((x) => !x); }}
+              title="Controls"
+              aria-label="Show the controls"
+            >
+              <HelpIcon />
+            </button>
             <button
               type="button"
               className="atlas-icon-btn"
@@ -665,6 +782,26 @@ export function Atlas() {
               {fullScreen ? <ShrinkIcon /> : <ExpandIcon />}
             </button>
           </div>
+          {showControls && (
+            <div className="atlas-controls-card" role="dialog" aria-label="Controls">
+              <p className="atlas-controls-title">{nav === "unreal" ? "Unreal Engine controls" : "Orbit camera controls"}</p>
+              <dl>
+                {(nav === "unreal" ? UNREAL_CONTROLS : ORBIT_CONTROLS).map(([how, what]) => (
+                  <div key={how}>
+                    <dt>{how}</dt>
+                    <dd>{what}</dd>
+                  </div>
+                ))}
+                {SELECT_CONTROLS.map(([how, what]) => (
+                  <div key={how}>
+                    <dt>{how}</dt>
+                    <dd>{what}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="atlas-controls-note">Touch: drag to turn, two fingers to move and zoom, tap to select.</p>
+            </div>
+          )}
           <div className="atlas-pad" role="group" aria-label="Move the view">
             <button type="button" className="atlas-icon-btn" onClick={() => viewer.current?.zoom(0.75)} title="Zoom in (+)" aria-label="Zoom in">
               <ZoomInIcon />
@@ -766,15 +903,60 @@ export function Atlas() {
                   ))}
                 </p>
               )}
+              {stack.length > 1 && stack.some((p) => toKey(p) === toKey(selected)) && (
+                <div className="atlas-stack">
+                  <p className="atlas-stack-title">At this spot, front to back</p>
+                  <div className="atlas-stack-list">
+                    {stack.map((p) => {
+                      const parsed = parseNode(p.node);
+                      const on = toKey(p) === toKey(selected);
+                      return (
+                        <button
+                          key={toKey(p)}
+                          type="button"
+                          className={on ? "atlas-stack-item is-on" : "atlas-stack-item"}
+                          aria-pressed={on}
+                          title={latinOf(latin, parsed.name) ? latinWithSide(latinOf(latin, parsed.name) ?? "", parsed.side) : parsed.name}
+                          onClick={() => { setAlso([]); select(p); }}
+                        >
+                          {parsed.name}
+                          {parsed.side ? <small> {sideShort(parsed.side)}</small> : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {also.length > 0 && (
+                <div className="atlas-also">
+                  <p className="atlas-stack-title">Also selected ({also.length})</p>
+                  <div className="atlas-stack-list">
+                    {also.map((p) => {
+                      const parsed = parseNode(p.node);
+                      return (
+                        <span key={toKey(p)} className="atlas-also-item">
+                          <button type="button" className="atlas-also-name" onClick={() => { setAlso((prev) => [selected, ...prev.filter((x) => toKey(x) !== toKey(p))]); select(p); }}>
+                            {parsed.name}
+                            {parsed.side ? <small> {sideShort(parsed.side)}</small> : null}
+                          </button>
+                          <button type="button" className="atlas-also-remove" aria-label={`Take ${parsed.name} out of the selection`} onClick={() => { setAlso((prev) => prev.filter((x) => toKey(x) !== toKey(p))); }}>
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               <div className="atlas-actions">
                 <button type="button" className="atlas-chip" onClick={() => viewer.current?.focus(selected)} aria-keyshortcuts="F">
                   Focus
                 </button>
                 <button type="button" className={isolating ? "atlas-chip is-on" : "atlas-chip"} onClick={toggleIsolate} aria-keyshortcuts="O">
-                  {isolating ? "Show the rest" : "Only this"}
+                  {isolating ? "Show the rest" : also.length > 0 ? "Only these" : "Only this"}
                 </button>
                 <button type="button" className="atlas-chip" onClick={hideSelected} aria-keyshortcuts="H">
-                  Hide
+                  {also.length > 0 ? "Hide these" : "Hide"}
                 </button>
                 {otherPicked && (
                   <button type="button" className="atlas-chip" onClick={() => { select(otherPicked, true); }}>
@@ -849,7 +1031,13 @@ export function Atlas() {
           ) : (
             <div className="atlas-empty">
               <p className="atlas-empty-title">Click any part to name it</p>
-              <p>Drag to turn the body, right-drag (or two fingers) to move it, scroll or pinch to zoom. Double-click a part to fly to it. Search finds any of the {structureCount ? structureCount.toLocaleString() : "1,800"} structures.</p>
+              <p>
+                {nav === "unreal"
+                  ? "Unreal Engine controls: right-drag to look around and W A S D to fly while you hold it, left-drag to move, Alt + left-drag to orbit, scroll to zoom. "
+                  : "Drag to turn the body, right-drag to move it, scroll to zoom. "}
+                On a touch screen, drag with one or two fingers and pinch. Click a part to name it, again for the one beneath; double-click to fly to it. Search finds any of the{" "}
+                {structureCount ? structureCount.toLocaleString() : "1,800"} structures, in English or Latin.
+              </p>
               <div className="atlas-quick">
                 {quick.map((hit) => {
                   const name = hit.name;
