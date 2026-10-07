@@ -108,6 +108,8 @@ export interface ModelFile {
 }
 
 const keyOf = (system: string, node: string) => `${system}/${node}`;
+/** How far back the orthographic camera stands from the point looked at: clear of the whole body. */
+const ORTHO_BACK = 6;
 const BODY_CENTRE = new THREE.Vector3(0, 0.9, 0);
 const MIRROR = new THREE.Matrix4().makeScale(-1, 1, 1);
 const HIGHLIGHT = 0x2fd3a5;
@@ -210,7 +212,7 @@ export class AtlasViewer {
    * flying move, and this camera copies it each frame, with a frustum as tall as the
    * perspective view's at the point looked at.
    */
-  private readonly orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 30);
+  private readonly orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, ORTHO_BACK * 2);
   private ortho = false;
   /** The floor: a grid at the feet, with the lateral and sagittal axes. */
   private readonly grid = new THREE.Group();
@@ -274,6 +276,8 @@ export class AtlasViewer {
     el.addEventListener("pointermove", this.onMove);
     el.addEventListener("pointerleave", this.onLeave);
     el.addEventListener("wheel", this.onWheel, { passive: true });
+    // Orthographic zoom toward the pointer is the viewer's: OrbitControls aims for perspective.
+    host.addEventListener("wheel", this.onOrthoWheel, { capture: true, passive: false });
     el.addEventListener("contextmenu", this.onContextMenu);
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
@@ -502,7 +506,11 @@ export class AtlasViewer {
       const scale = matrix.getMaxScaleOnAxis() || 1;
       const centre = (geometry.boundingSphere?.center ?? new THREE.Vector3()).clone().applyMatrix4(matrix);
       outline.onBeforeRender = (_r, _s, camera) => {
-        (outline.material as THREE.MeshBasicMaterial).userData.width.value = (camera.position.distanceTo(centre) * 0.0032) / scale;
+        // About half a percent of the view's height, in either projection.
+        const viewHeight = (camera as THREE.OrthographicCamera).isOrthographicCamera
+          ? ((camera as THREE.OrthographicCamera).top - (camera as THREE.OrthographicCamera).bottom) * 0.5
+          : camera.position.distanceTo(centre) * 0.63;
+        (outline.material as THREE.MeshBasicMaterial).userData.width.value = (viewHeight * 0.0051) / scale;
       };
       // The x-ray: drawn only where something nearer hides it, so a nerve under a muscle shows.
       add(xrayMaterial(), 2, false);
@@ -867,8 +875,42 @@ export class AtlasViewer {
   /** Draws orthographically (true) or in perspective. */
   setOrthographic(on: boolean): void {
     this.ortho = on;
+    // Pinching zooms to the middle in orthographic; the wheel is handled below.
+    this.controls.zoomToCursor = !on;
     this.request();
   }
+
+  /** The view's height at the point looked at (the orthographic frustum is this tall). */
+  private viewHalfHeight(): number {
+    return this.camera.position.distanceTo(this.controls.target) * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+  }
+
+  /**
+   * The wheel in orthographic: zooms by changing the distance (which sets the frustum's size)
+   * and slides the view so the point under the pointer stays under it.
+   */
+  private onOrthoWheel = (e: WheelEvent) => {
+    if (!this.ortho || !this.controls.enabled) return;
+    e.preventDefault();
+    e.stopPropagation();
+    this.tween = null;
+    const target = this.controls.target;
+    const offset = this.camera.position.clone().sub(target);
+    const distance = offset.length();
+    const next = THREE.MathUtils.clamp(distance * Math.exp(Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 120) * 0.0016), this.controls.minDistance, this.controls.maxDistance);
+    const f = next / distance;
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    const half = this.viewHalfHeight();
+    const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const ny = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    const right = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 0);
+    const up = new THREE.Vector3().setFromMatrixColumn(this.camera.matrixWorld, 1);
+    const shift = right.multiplyScalar(nx * half * this.camera.aspect).add(up.multiplyScalar(ny * half)).multiplyScalar(1 - f);
+    target.add(shift);
+    this.camera.position.copy(target).add(offset.multiplyScalar(f));
+    this.controls.update();
+    this.request();
+  };
 
   /** Turns slowly around the point looked at. */
   setAutoRotate(on: boolean): void {
@@ -882,16 +924,20 @@ export class AtlasViewer {
     this.request();
   }
 
-  /** The camera the scene is drawn with. */
+  /**
+   * The camera the scene is drawn with. The orthographic one looks the same way as the rig but
+   * stands well back, so zooming in shrinks the view without cutting away what lies in front.
+   */
   private drawn(): THREE.Camera {
     if (!this.ortho) return this.camera;
     const o = this.orthoCamera;
-    const half = this.camera.position.distanceTo(this.controls.target) * Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+    const half = this.viewHalfHeight();
     o.top = half;
     o.bottom = -half;
     o.left = -half * this.camera.aspect;
     o.right = half * this.camera.aspect;
-    o.position.copy(this.camera.position);
+    const back = this.camera.position.clone().sub(this.controls.target).normalize();
+    o.position.copy(this.controls.target).addScaledVector(back, ORTHO_BACK);
     o.quaternion.copy(this.camera.quaternion);
     o.updateProjectionMatrix();
     o.updateMatrixWorld();
@@ -1039,17 +1085,22 @@ export class AtlasViewer {
   /** W A S D Q E: along the view, sideways, and straight down or up, faster further out. */
   private fly(seconds: number): boolean {
     if (this.keys.size === 0) return false;
-    const forward = this.controls.target.clone().sub(this.camera.position);
-    const distance = forward.length();
-    forward.normalize();
+    const toTarget = this.controls.target.clone().sub(this.camera.position);
+    const distance = toTarget.length();
+    const forward = toTarget.normalize();
     const right = new THREE.Vector3().crossVectors(forward, this.camera.up).normalize();
     const has = (code: string) => (this.keys.has(code) ? 1 : 0);
-    const move = forward
-      .multiplyScalar(has("KeyW") - has("KeyS"))
-      .add(right.multiplyScalar(has("KeyD") - has("KeyA")))
-      .add(new THREE.Vector3(0, has("KeyE") - has("KeyQ"), 0));
+    const boost = this.boost ? 3 : 1;
+    const ahead = has("KeyW") - has("KeyS");
+    // In orthographic, moving along the view changes nothing on screen, so W and S zoom.
+    if (this.ortho && ahead) {
+      const d = THREE.MathUtils.clamp(distance * Math.exp(-ahead * 0.8 * boost * seconds), this.controls.minDistance, this.controls.maxDistance);
+      this.camera.position.copy(this.controls.target).addScaledVector(forward, -d);
+    }
+    const move = right.multiplyScalar(has("KeyD") - has("KeyA")).add(new THREE.Vector3(0, has("KeyE") - has("KeyQ"), 0));
+    if (!this.ortho) move.addScaledVector(forward, ahead);
     if (move.lengthSq() === 0) return true;
-    move.normalize().multiplyScalar(Math.max(0.15, distance * 0.8) * (this.boost ? 3 : 1) * seconds);
+    move.normalize().multiplyScalar(Math.max(0.15, distance * 0.8) * boost * seconds);
     this.camera.position.add(move);
     this.controls.target.add(move);
     return true;
@@ -1127,6 +1178,7 @@ export class AtlasViewer {
     this.resize.disconnect();
     this.controls.dispose();
     this.attachGizmo(null);
+    this.host.removeEventListener("wheel", this.onOrthoWheel, true);
     window.removeEventListener("keydown", this.onKeyDown);
     window.removeEventListener("keyup", this.onKeyUp);
     window.removeEventListener("blur", this.onBlur);

@@ -91,8 +91,12 @@ instead of about 5,000, so turning the body stays smooth on phones.
   (`fly`, run each frame at 0.8 × the distance to the target per second,
   three times that with Shift; ignored while typing), perspective or
   orthographic drawing (`setOrthographic`: the perspective camera stays the
-  rig the controls move, and an `OrthographicCamera` copies it each frame
-  with a frustum as tall as the perspective view's at the target),
+  rig the controls move, and an `OrthographicCamera` copies its direction
+  each frame, standing 6 m back from the target so zooming in never cuts
+  away what lies in front, with a frustum as tall as the perspective
+  view's at the target; there the wheel zooms toward the pointer by the
+  viewer's own `onOrthoWheel`, W and S zoom instead of moving along the
+  view, and the selection outline is sized from the frustum),
   auto-rotate (`setAutoRotate`) and a floor grid (`setGrid`).
 - **The axis gizmo** (`attachGizmo`) is a 2D canvas the viewer draws each
   frame from the camera's axes, like the knowledge map's, but its ends are
