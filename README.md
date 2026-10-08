@@ -243,9 +243,10 @@ account environment variables it runs as a plain static site.
   mastery, quiz accuracy and coverage, chapters read and timed mock scores (the
   formulas are in [Readiness and the exam
   plan](docs/calculations.md#readiness-and-the-exam-plan))
-- **Today's plan**, also on Home: a checklist sized to the minutes the student
-  has, which ticks itself off as they study and spreads a missed day over the
-  days left
+- **Today's plan**, at the top of Home as the next step with a Start button
+  and at the end of every session as "Up next": a checklist sized to the
+  minutes the student has, which ticks itself off as they study and spreads a
+  missed day over the days left
 - Phases that change the plan as the exam nears: Learn (new material) →
   Strengthen (2 weeks out: weak spots) → Mock exams (last 3 days) → Final review
 - Mock score trend against a target score, projected to exam day
@@ -281,7 +282,8 @@ account environment variables it runs as a plain static site.
   per-attempt, per-day, so nothing studied on either device is lost)
 - Sign out keeps local progress; "sign out and clear" for shared computers;
   download all account data; delete the account
-- A "current block" setting (guests too) that puts your block first on Home
+- A "current block" setting (guests too, asked on the first visit) that puts
+  your block first on Home and drives the daily plan
 - Opt-in **leaderboard**: this week, all time and study streak, for everyone or
   just your cohort. Points are worked out on the server from synced progress (1
   per correct answer, 2 per learned flashcard or label, 10 per finished

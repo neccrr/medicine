@@ -12,6 +12,7 @@ import { FlagIcon, TimerIcon } from "../components/icons";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
 import type { Answers, ExamAttempt, QuizQuestion } from "../types/content";
+import { NextUp } from "../components/plan/Today";
 
 const OPTION_LETTERS = "ABCDEFGH";
 const EMPTY_BANK: QuizQuestion[] = [];
@@ -520,6 +521,8 @@ export function ExamPlay() {
                 Choose another block
               </Link>
             </div>
+
+            <NextUp />
 
             <button
               className="btn btn-secondary quiz-review-toggle"

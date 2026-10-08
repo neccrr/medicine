@@ -4,7 +4,7 @@ import { daysUntil, phaseFor, phaseTimeline } from "./examPlan";
 import { milestones, nextMilestone, type MilestoneInput } from "./milestones";
 import { deckStats, projectScore, quizStats, scoreBlock, scoreSubject, type BlockReadiness, type SubjectReadiness } from "./readiness";
 import { bestStudyTime, dailySeries, weekComparison } from "./studyStats";
-import { buildTodayPlan, planProgress } from "./todayPlan";
+import { buildTodayPlan, planProgress, planStatus } from "./todayPlan";
 import { mergeEntry } from "./syncMerge";
 import type { StudyLog } from "./activity";
 
@@ -109,6 +109,18 @@ describe("today's plan", () => {
     const done = planProgress(plan, log);
     expect(done["due-cards:9.9/anatomy"]).toBe(40);
     expect(done["new-cards:9.9/anatomy"]).toBe(5);
+  });
+
+  it("names the next unfinished item, skipping the page already open, with the minutes left", () => {
+    const plan = buildTodayPlan(block([anatomy]), "learn", 44, 120, day(0));
+    const log: StudyLog = { days: { [plan.date]: { "9.9/anatomy": { cards: 40 } } }, hours: {} };
+    const status = planStatus(plan, planProgress(plan, log));
+    expect(status.done).toBe(1);
+    expect(status.total).toBe(plan.items.length);
+    expect(status.next?.id).toBe(plan.items[1].id);
+    const elsewhere = planStatus(plan, planProgress(plan, log), plan.items[1].to.split("?")[0]);
+    expect(elsewhere.next?.id).not.toBe(plan.items[1].id);
+    expect(status.minutesLeft).toBeLessThanOrEqual(plan.items.reduce((m, i) => m + i.minutes, 0));
   });
 });
 

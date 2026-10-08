@@ -58,6 +58,25 @@
   --obs-weak-text: #b23a32;
 }
 
+/* The workspace pages (knowledge map, 3D anatomy) keep their heading short, so the workspace
+   starts high on the screen. */
+.map-page > h1 {
+  margin-bottom: 0.2rem;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+}
+
+.map-page > .subtitle {
+  max-width: 75ch;
+  margin-bottom: 0.25rem;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 720px) {
+  .map-page > .subtitle {
+    display: none;
+  }
+}
+
 .map-loading {
   color: var(--text-muted);
 }

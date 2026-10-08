@@ -1,14 +1,6 @@
 import { useState } from "react";
-import { keyOf, quizSubjects } from "../lib/content";
-import { readJSON, STORAGE_KEYS } from "../lib/storage";
+import { totalQuizDue } from "../lib/dueCounts";
 import { QuizIcon } from "./icons";
-
-function totalQuizDue(): number {
-  return quizSubjects.reduce(
-    (sum, s) => sum + readJSON<string[]>(STORAGE_KEYS.quizDue(keyOf(s)), []).length,
-    0,
-  );
-}
 
 export function QuizDueBadge() {
   const [due] = useState(totalQuizDue);

@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import { TodayPlanCard } from "../components/plan/TodayPlanCard";
+import { TodayHero } from "../components/plan/Today";
 import {
   ebookMeta,
   ebookSubjects,
@@ -12,34 +12,21 @@ import {
   quizSubjects,
   tips,
 } from "../lib/content";
+import { focusBlockId } from "../lib/examPlan";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { tipOfDay } from "../lib/tipOfDay";
 import { getActivityDays, getCurrentStreak, getLongestStreak } from "../lib/activity";
 import { readJSON, STORAGE_KEYS } from "../lib/storage";
-import { INITIAL_CARD_STATE, isDue } from "../lib/sm2";
+import { isDue } from "../lib/sm2";
 import { subjectAccent, subjectHueStyle } from "../lib/subjectStyle";
 import { groupByBlock } from "../lib/blocks";
-import { PulseLine } from "../components/PulseLine";
 import { SubjectBadge } from "../components/SubjectBadge";
 import { SubjectCover } from "../components/SubjectCover";
 import { RadialGauge } from "../components/RadialGauge";
-import { useCountUp } from "../hooks/useCountUp";
 import { ActivityHeatmap } from "../components/ActivityHeatmap";
-import { EmptyState } from "../components/EmptyState";
 import { BackupNudge } from "../components/BackupNudge";
 import { buildSubjectOverviews } from "../lib/subjectOverview";
-import {
-  AtomIcon,
-  BookIcon,
-  CalendarIcon,
-  CardsIcon,
-  FlameIcon,
-  LinkIcon,
-  PlayCircleIcon,
-  QuizIcon,
-  SearchIcon,
-  SummaryIcon,
-  TimerIcon,
-} from "../components/icons";
+import { AtomIcon, BodyIcon, CalendarIcon, FlaskIcon, LinkIcon, MapIcon, PlayCircleIcon, SearchIcon, TimerIcon } from "../components/icons";
 import type { CardStateMap, ExamAttempt, QuizAttempt, ReadingPosition } from "../types/content";
 
 interface ContinueItem {
@@ -79,7 +66,11 @@ function buildContinueItems(): ContinueItem[] {
     .map((s) => {
       const deck = flashcardDecks.get(keyOf(s)) ?? [];
       const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
-      const due = deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
+      // Reviews only: a deck never opened isn't "due".
+      const due = deck.filter((c) => {
+        const state = stateMap[c.id];
+        return state !== undefined && isDue(state);
+      }).length;
       return { s, due };
     })
     .filter((x) => x.due > 0)
@@ -144,23 +135,12 @@ function orderByCurrentBlock<T extends { block: { id: string } }>(groups: T[], c
 }
 
 export function Home() {
-  const currentBlock = readJSON<string>(STORAGE_KEYS.currentBlock, "");
+  const [currentBlock, setCurrentBlock] = useLocalStorage<string>(STORAGE_KEYS.currentBlock, "");
   const tip = tipOfDay(tips);
   const activityDays = getActivityDays();
   const streak = getCurrentStreak(activityDays);
   const longest = getLongestStreak(activityDays);
   const hasActivity = activityDays.length > 0;
-
-  const totalDue = flashcardSubjects.reduce((sum, s) => {
-    const deck = flashcardDecks.get(keyOf(s)) ?? [];
-    const stateMap = readJSON<CardStateMap>(STORAGE_KEYS.cardState(keyOf(s)), {});
-    return sum + deck.filter((c) => isDue(stateMap[c.id] ?? INITIAL_CARD_STATE)).length;
-  }, 0);
-
-  const totalQuizAttempts = quizSubjects.reduce(
-    (sum, s) => sum + readJSON<QuizAttempt[]>(STORAGE_KEYS.quizProgress(keyOf(s)), []).length,
-    0,
-  );
 
   const continueItems = buildContinueItems();
   const subjects = buildSubjectOverviews();
@@ -168,67 +148,123 @@ export function Home() {
     subjects.length > 1
       ? subjects.reduce((top, s) => (s.activityScore > top.activityScore ? s : top), subjects[0]).key
       : null;
+  // The student's block first; the others fold away under it.
+  const focus = currentBlock || focusBlockId() || "";
+  const groups = orderByCurrentBlock(groupByBlock(subjects), focus);
+  const mine = groups.filter((g) => g.block.id === focus);
+  const others = groups.filter((g) => g.block.id !== focus);
+  const shownGroups = mine.length > 0 ? mine : groups;
+  const foldedGroups = mine.length > 0 ? others : [];
 
-  const heroTitle = streak > 0
-    ? `${streak}-day streak. Keep it going.`
-    : hasActivity
-      ? "Welcome back."
-      : "Study like the data's on a monitor.";
-
-  const streakCount = useCountUp(streak);
-  const dueCount = useCountUp(totalDue);
-  const studyDaysCount = useCountUp(activityDays.length);
-  const quizAttemptsCount = useCountUp(totalQuizAttempts);
+  const blockSection = ({ block, subjects: blockSubjects, upcoming }: (typeof groups)[number]) => {
+    const packages = examPackagesByBlock.get(block.id) ?? [];
+    const examPool =
+      packages.length > 0
+        ? Math.max(...packages.map((p) => p.questionCount))
+        : quizQuestionsInBlock(block.id).length;
+    // With more than one package, "last score" isn't a single number — the exam link
+    // just sends the user to the picker instead of surfacing one package's history.
+    // (Matches ExamPlay's own key convention: a lone package keeps the plain block key.)
+    const examHistory =
+      packages.length > 1 ? [] : readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
+    const lastExam = examHistory.at(-1);
+    return (
+      <div key={block.id} className="dashboard-section block-section">
+        <div className="block-section-head">
+          <h2 className="section-heading">
+            <AtomIcon />
+            {block.label}
+            {block.id === currentBlock && <span className="your-block-pill">Your block</span>}
+          </h2>
+          {examPool > 0 && (
+            <Link to={`/exam/${block.id}`} className="block-exam-link">
+              <TimerIcon />
+              {lastExam ? `Exam · last ${lastExam.score}/${lastExam.total}` : "Take the exam"}
+            </Link>
+          )}
+        </div>
+        <div className="subject-grid">
+          {blockSubjects.map((subject) => (
+            <div
+              key={subject.key}
+              className={
+                subject.key === featuredId
+                  ? "subject-card subject-card-featured subject-tinted"
+                  : "subject-card subject-tinted"
+              }
+              style={
+                {
+                  borderLeftColor: subjectAccent(subject.id),
+                  "--subject-glow": subjectAccent(subject.id),
+                  ...subjectHueStyle(subject.id),
+                } as CSSProperties
+              }
+            >
+              <SubjectCover subjectKey={subject.key} />
+              <div className="subject-card-head">
+                <SubjectBadge id={subject.id} label={subject.label} />
+                <h3>
+                  <Link to={`/subjects/${subject.key}`} className="subject-card-title-link">
+                    {subject.label}
+                    <span aria-hidden="true"> →</span>
+                  </Link>
+                </h3>
+                {subject.mastery !== null && (
+                  <RadialGauge
+                    percent={subject.mastery}
+                    label={`${Math.round(subject.mastery)}% of ${subject.label} flashcards mastered`}
+                  />
+                )}
+              </div>
+              <div className="subject-links">
+                {subject.facets.map((facet) => (
+                  <Link
+                    key={facet.to + facet.label}
+                    to={facet.to}
+                    className={`subject-pill subject-pill-${facet.label.toLowerCase()}`}
+                  >
+                    <span className="subject-pill-icon">{facet.icon}</span>
+                    <span className="subject-pill-text">
+                      <span className="subject-pill-label">{facet.label}</span>
+                      <span className="subject-pill-detail">{facet.detail}</span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+          {upcoming.map((u) => (
+            <div
+              key={u.id}
+              className="subject-card subject-card-upcoming subject-tinted"
+              style={subjectHueStyle(u.id) as CSSProperties}
+            >
+              <div className="subject-card-head">
+                <SubjectBadge id={u.id} label={u.label} />
+                <h3>{u.label}</h3>
+              </div>
+              <p className="subject-card-upcoming-note">Content coming soon.</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <section className="page dashboard">
-      <div className={hasActivity ? "hero hero-returning" : "hero"}>
-        <PulseLine width={640} height={120} className="hero-pulse" />
-        <span className="kicker">Offline-first study tool</span>
-        <h1 className="hero-title">{heroTitle}</h1>
-        <p className="subtitle hero-subtitle">
-          Flashcards, image occlusion, quizzes, timed exams, ebooks, summaries and a virtual lab, organised by
-          block and subject. Works offline; progress saves on this device and syncs when you sign in.
-        </p>
-      </div>
+      <TodayHero streak={streak} firstVisit={!hasActivity} current={currentBlock} onPickBlock={setCurrentBlock} />
 
       <BackupNudge />
 
-      <div className="streak-stats dashboard-stats">
-        <div className="stat-tile">
-          <span className="stat-tile-icon"><FlameIcon /></span>
-          <span className="stat-label">Streak</span>
-          <span className="stat-value">{streakCount}</span>
-        </div>
-        <div className="stat-tile">
-          <span className="stat-tile-icon"><CardsIcon /></span>
-          <span className="stat-label">Cards due</span>
-          <span className="stat-value">{dueCount}</span>
-        </div>
-        <div className="stat-tile">
-          <span className="stat-tile-icon"><CalendarIcon /></span>
-          <span className="stat-label">Study days</span>
-          <span className="stat-value">{studyDaysCount}</span>
-        </div>
-        <div className="stat-tile">
-          <span className="stat-tile-icon"><QuizIcon /></span>
-          <span className="stat-label">Quiz attempts</span>
-          <span className="stat-value">{quizAttemptsCount}</span>
-        </div>
-      </div>
-
-      <hr className="section-divider" />
-
       <div className="dashboard-layout">
         <div className="dashboard-main">
-          <TodayPlanCard />
-
-          <div className="dashboard-section">
-            <h2 className="section-heading">
-              <PlayCircleIcon />
-              Continue
-            </h2>
-            {continueItems.length > 0 ? (
+          {continueItems.length > 0 && (
+            <div className="dashboard-section">
+              <h2 className="section-heading">
+                <PlayCircleIcon />
+                Pick up where you left off
+              </h2>
               <div className="continue-list">
                 {continueItems.map((item) => (
                   <Link key={item.to} to={item.to} className="continue-item">
@@ -250,122 +286,23 @@ export function Home() {
                   </Link>
                 ))}
               </div>
-            ) : (
-              <EmptyState title="Nothing in progress yet">
-                <Link to="/flashcards" className="btn empty-state-action">
-                  Start a study session
-                </Link>
-              </EmptyState>
-            )}
-          </div>
-
-          {orderByCurrentBlock(groupByBlock(subjects), currentBlock).map(({ block, subjects: blockSubjects, upcoming }) => {
-            const packages = examPackagesByBlock.get(block.id) ?? [];
-            const examPool =
-              packages.length > 0
-                ? Math.max(...packages.map((p) => p.questionCount))
-                : quizQuestionsInBlock(block.id).length;
-            // With more than one package, "last score" isn't a single number — the exam link
-            // just sends the user to the picker instead of surfacing one package's history.
-            // (Matches ExamPlay's own key convention: a lone package keeps the plain block key.)
-            const examHistory =
-              packages.length > 1 ? [] : readJSON<ExamAttempt[]>(STORAGE_KEYS.examHistory(block.id), []);
-            const lastExam = examHistory.at(-1);
-            return (
-          <div key={block.id} className="dashboard-section block-section">
-            <div className="block-section-head">
-              <h2 className="section-heading">
-                <AtomIcon />
-                {block.label}
-                {block.id === currentBlock && <span className="your-block-pill">Your block</span>}
-              </h2>
-              {examPool > 0 && (
-                <Link to={`/exam/${block.id}`} className="block-exam-link">
-                  <TimerIcon />
-                  {lastExam ? `Exam · last ${lastExam.score}/${lastExam.total}` : "Take the exam"}
-                </Link>
-              )}
-            </div>
-            <div className="subject-grid">
-              {blockSubjects.map((subject) => (
-                <div
-                  key={subject.key}
-                  className={
-                    subject.key === featuredId
-                      ? "subject-card subject-card-featured subject-tinted"
-                      : "subject-card subject-tinted"
-                  }
-                  style={
-                    {
-                      borderLeftColor: subjectAccent(subject.id),
-                      "--subject-glow": subjectAccent(subject.id),
-                      ...subjectHueStyle(subject.id),
-                    } as CSSProperties
-                  }
-                >
-                  <SubjectCover subjectKey={subject.key} />
-                  <div className="subject-card-head">
-                    <SubjectBadge id={subject.id} label={subject.label} />
-                    <h3>
-                      <Link to={`/subjects/${subject.key}`} className="subject-card-title-link">
-                        {subject.label}
-                        <span aria-hidden="true"> →</span>
-                      </Link>
-                    </h3>
-                    {subject.mastery !== null && (
-                      <RadialGauge
-                        percent={subject.mastery}
-                        label={`${Math.round(subject.mastery)}% of ${subject.label} flashcards mastered`}
-                      />
-                    )}
-                  </div>
-                  <div className="subject-links">
-                    {subject.facets.map((facet) => (
-                      <Link
-                        key={facet.to + facet.label}
-                        to={facet.to}
-                        className={`subject-pill subject-pill-${facet.label.toLowerCase()}`}
-                      >
-                        <span className="subject-pill-icon">{facet.icon}</span>
-                        <span className="subject-pill-text">
-                          <span className="subject-pill-label">{facet.label}</span>
-                          <span className="subject-pill-detail">{facet.detail}</span>
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              {upcoming.map((u) => (
-                <div
-                  key={u.id}
-                  className="subject-card subject-card-upcoming subject-tinted"
-                  style={subjectHueStyle(u.id) as CSSProperties}
-                >
-                  <div className="subject-card-head">
-                    <SubjectBadge id={u.id} label={u.label} />
-                    <h3>{u.label}</h3>
-                  </div>
-                  <p className="subject-card-upcoming-note">Content coming soon.</p>
-                </div>
-              ))}
-            </div>
-          </div>
-            );
-          })}
-        </div>
-
-        <aside className="dashboard-aside">
-          {tip && (
-            <div className="tip-card">
-              <span className="tip-dot" aria-hidden="true" />
-              <div>
-                <span className="tip-label">Tip of the day</span>
-                <p>{tip}</p>
-              </div>
             </div>
           )}
 
+          {shownGroups.map(blockSection)}
+
+          {foldedGroups.length > 0 && (
+            <details className="other-blocks">
+              <summary>
+                Other blocks
+                <span>{foldedGroups.map((g) => `Block ${g.block.id}`).join(", ")}</span>
+              </summary>
+              {foldedGroups.map(blockSection)}
+            </details>
+          )}
+        </div>
+
+        <aside className="dashboard-aside">
           <div className="dashboard-widget">
             <h2 className="section-heading">
               <CalendarIcon />
@@ -374,7 +311,7 @@ export function Home() {
             <div className="mini-stats">
               <div>
                 <span className="stat-value">{streak}</span>
-                <span className="stat-label">Current</span>
+                <span className="stat-label">Current streak</span>
               </div>
               <div>
                 <span className="stat-value">{longest}</span>
@@ -394,30 +331,46 @@ export function Home() {
           <div className="dashboard-widget">
             <h2 className="section-heading">
               <LinkIcon />
-              Quick links
+              Explore
             </h2>
-            <nav className="quick-links">
+            <nav className="quick-links" aria-label="Explore">
+              <Link to="/atlas">
+                <span className="quick-links-label">
+                  <BodyIcon />
+                  3D anatomy
+                </span>
+              </Link>
+              <Link to="/map">
+                <span className="quick-links-label">
+                  <MapIcon />
+                  Knowledge map
+                </span>
+              </Link>
+              <Link to="/lab">
+                <span className="quick-links-label">
+                  <FlaskIcon />
+                  Virtual Lab
+                </span>
+              </Link>
               <Link to="/search">
                 <span className="quick-links-label">
                   <SearchIcon />
-                  Search
+                  Search everything
                 </span>
                 <kbd>⌘K</kbd>
               </Link>
-              <Link to="/ebooks">
-                <span className="quick-links-label">
-                  <BookIcon />
-                  Ebooks
-                </span>
-              </Link>
-              <Link to="/summaries">
-                <span className="quick-links-label">
-                  <SummaryIcon />
-                  Summaries
-                </span>
-              </Link>
             </nav>
           </div>
+
+          {tip && (
+            <div className="tip-card">
+              <span className="tip-dot" aria-hidden="true" />
+              <div>
+                <span className="tip-label">Tip of the day</span>
+                <p>{tip}</p>
+              </div>
+            </div>
+          )}
         </aside>
       </div>
     </section>

@@ -107,8 +107,7 @@ export function KnowledgeMap() {
     <section className="page map-page">
       <h1>Knowledge map</h1>
       <p className="subtitle">
-        Every concept in your blocks and subjects as one graph, linked where they're taught together. Open a concept to see its links and where to
-        study it.
+        Every concept in your subjects as one graph, linked where they're taught together. Open one to see its links and where to study it.
       </p>
       {graph ? <Workspace graph={graph} /> : <p className="map-loading">{failed ? "The map couldn't be loaded. Check your connection and reload." : "Loading the map…"}</p>}
     </section>

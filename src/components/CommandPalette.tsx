@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
+import { recentPages } from "../lib/recentPages";
 import { buildNavigationDocs, type SearchDoc } from "../lib/searchIndex";
+import { unfinishedToday } from "../lib/todayPlan";
 import { HighlightText } from "./HighlightText";
 
 export const OPEN_COMMAND_PALETTE_EVENT = "medicine:open-command-palette";
@@ -30,16 +32,33 @@ export function CommandPalette() {
   );
 
   interface RankedDoc {
-    doc: SearchDoc;
+    doc: Pick<SearchDoc, "id" | "title" | "to">;
+    /** The small label on the left: "next", "recent", "page", "flashcard"… */
+    label: string;
     titleRanges?: readonly (readonly [number, number])[];
   }
+
+  // With nothing typed: what's next on today's plan, the pages opened last, then the main pages.
+  const suggestions = useMemo((): RankedDoc[] => {
+    if (!open) return [];
+    const next = unfinishedToday(3).map((i) => ({ doc: { id: `next-${i.id}`, title: i.title, to: i.to }, label: "next" }));
+    const recent = recentPages()
+      .slice(0, 5)
+      .map((p) => ({ doc: { id: `recent-${p.path}`, title: p.title, to: p.path }, label: "recent" }));
+    const seen = new Set([...next, ...recent].map((r) => r.doc.to.split("?")[0]));
+    const pages = docs
+      .filter((d) => d.type === "page" && !seen.has(d.to))
+      .slice(0, Math.max(3, 10 - next.length - recent.length))
+      .map((doc) => ({ doc, label: doc.type }));
+    return [...next, ...recent, ...pages];
+  }, [open, docs]);
 
   const results: RankedDoc[] = query.trim()
     ? fuse
         .search(query)
         .slice(0, 8)
-        .map((r) => ({ doc: r.item, titleRanges: r.matches?.find((m) => m.key === "title")?.indices }))
-    : docs.filter((d) => d.type === "page").slice(0, 8).map((doc) => ({ doc }));
+        .map((r) => ({ doc: r.item, label: r.item.type, titleRanges: r.matches?.find((m) => m.key === "title")?.indices }))
+    : suggestions;
 
   const openPalette = () => {
     setQuery("");
@@ -71,7 +90,7 @@ export function CommandPalette() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  const go = (doc: SearchDoc) => {
+  const go = (doc: Pick<SearchDoc, "to">) => {
     navigate(doc.to);
     setOpen(false);
   };
@@ -109,21 +128,21 @@ export function CommandPalette() {
         <input
           ref={inputRef}
           className="command-input"
-          placeholder="Jump to a page or subject..."
+          placeholder="Jump to a page, subject, card or question…"
           value={query}
           onChange={(e) => { onQueryChange(e.target.value); }}
           onKeyDown={onInputKeyDown}
           aria-label="Command palette search"
         />
         <ul className="command-results">
-          {results.map(({ doc, titleRanges }, i) => (
-            <li key={`${doc.type}-${doc.id}`}>
+          {results.map(({ doc, label, titleRanges }, i) => (
+            <li key={`${label}-${doc.id}`}>
               <button
                 className={i === activeIndex ? "command-item active" : "command-item"}
                 onClick={() => { go(doc); }}
                 onMouseEnter={() => { setActiveIndex(i); }}
               >
-                <span className="command-item-type">{doc.type}</span>
+                <span className={`command-item-type command-item-${label}`}>{label}</span>
                 <span className="command-item-title">
                   <HighlightText text={doc.title} ranges={titleRanges} />
                 </span>
@@ -142,6 +161,9 @@ export function CommandPalette() {
           </span>
           <span>
             <kbd>Esc</kbd> close
+          </span>
+          <span>
+            <kbd>?</kbd> all shortcuts
           </span>
         </div>
       </div>

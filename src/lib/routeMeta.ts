@@ -82,6 +82,20 @@ export function subjectSections(key: string): { name: string; path: string }[] {
   return out;
 }
 
+export type MaterialKind = "flashcards" | "occlusion" | "quizzes" | "ebooks" | "summaries" | "modules";
+
+/** A subject's materials by short name, in study order: the switcher on each study page. */
+export function subjectMaterials(key: string): { kind: MaterialKind; name: string; path: string }[] {
+  const out: { kind: MaterialKind; name: string; path: string }[] = [];
+  if (flashcardDecks.has(key)) out.push({ kind: "flashcards", name: "Flashcards", path: `/flashcards/${key}` });
+  if (occlusionKeys.includes(key)) out.push({ kind: "occlusion", name: "Image occlusion", path: `/occlusion/${key}` });
+  if (quizBanks.has(key)) out.push({ kind: "quizzes", name: "Quiz", path: `/quizzes/${key}` });
+  if (ebookMeta.has(key)) out.push({ kind: "ebooks", name: "Ebook", path: `/ebooks/${key}` });
+  if (summaries.has(key)) out.push({ kind: "summaries", name: "Summary", path: `/summaries/${key}` });
+  if (modulesByBlockSubject.has(key)) out.push({ kind: "modules", name: "Modules", path: `/modules/${key}` });
+  return out;
+}
+
 // A Map, not an object: the section comes from the URL, and /constructor isn't a section.
 const SECTIONS = new Map<string, { name: string; meta: PageMeta }>(Object.entries({
   subjects: {

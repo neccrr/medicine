@@ -74,6 +74,28 @@
   flex-shrink: 0;
 }
 
+/* How many reviews are due, beside Flashcards and Quizzes */
+.nav-due {
+  flex: none;
+  min-width: 1.35rem;
+  margin-left: auto;
+  padding: 0.05rem 0.4rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.sidebar-link.active .nav-due {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
 .sidebar-link-label {
   white-space: nowrap;
   overflow: hidden;
@@ -322,6 +344,21 @@
   }
 
   .sidebar.collapsed .sidebar-brand-name,
+  /* On the icon rail a due count shrinks to a dot on the icon. */
+  .sidebar.collapsed .nav-due {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.5rem;
+    min-width: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    padding: 0;
+    overflow: hidden;
+    background: var(--accent);
+    color: transparent;
+    font-size: 0;
+  }
+
   .sidebar.collapsed .sidebar-link-label {
     opacity: 0;
     max-width: 0;
@@ -749,6 +786,35 @@
     color: var(--accent);
   }
 
+  .tabsheet-subtitle {
+    margin: 0.75rem 0 0.4rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .tabsheet-link .nav-due {
+    margin-left: auto;
+  }
+
+  .tabbar-item {
+    position: relative;
+  }
+
+  .tabbar-dot {
+    position: absolute;
+    top: 0.3rem;
+    left: calc(50% + 0.55rem);
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px var(--surface-solid);
+  }
+
   /* Room for the tab bar under the last content and the footer. */
   .app-content {
     padding-bottom: calc(4.2rem + env(safe-area-inset-bottom));
@@ -783,6 +849,8 @@
   }
 
   .back-link,
+  .trail a,
+  .material-tab,
   .site-footer a,
   .widget-link,
   .io-read,

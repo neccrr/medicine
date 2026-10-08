@@ -119,3 +119,80 @@
 .command-footer kbd {
   margin-right: 0.2rem;
 }
+
+/* What the empty palette offers first: today's next step, then pages opened recently */
+.command-item-type.command-item-next {
+  padding: 0.05rem 0.4rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.command-item-type.command-item-recent {
+  color: var(--text-muted);
+}
+
+/* "?": the keyboard shortcuts */
+.shortcuts-panel {
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: min(76vh, 40rem);
+  overflow: auto;
+  padding: 1rem 1.25rem 1.25rem;
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface-solid);
+  box-shadow: var(--glass-shadow);
+}
+
+.shortcuts-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shortcuts-head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.shortcuts-panel h3 {
+  margin: 1rem 0 0.4rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.shortcuts-list {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.shortcuts-row {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  font-size: 0.88rem;
+}
+
+.shortcuts-row dt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  color: var(--text-muted);
+}
+
+.shortcuts-row dd {
+  margin: 0;
+}
+
+.shortcuts-more {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--accent);
+  font-size: 0.85rem;
+}

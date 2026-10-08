@@ -223,3 +223,39 @@ export function planProgress(plan: TodayPlan, log: StudyLog = getStudyLog()): Re
   }
   return out;
 }
+
+/** Where today's plan stands: the next unfinished item, how many are done, and the minutes left. */
+export interface PlanStatus {
+  next: PlanItem | null;
+  done: number;
+  total: number;
+  minutesLeft: number;
+}
+
+/**
+ * The first unfinished item of today's plan (skipping any that lead to `exceptPath`, the page
+ * the student is already on), with the day's tally.
+ */
+export function planStatus(plan: TodayPlan, progress: Record<string, number>, exceptPath?: string): PlanStatus {
+  let done = 0;
+  let minutesLeft = 0;
+  let next: PlanItem | null = null;
+  for (const item of plan.items) {
+    const have = Math.min(item.target, progress[item.id] ?? 0);
+    if (have >= item.target) {
+      done++;
+      continue;
+    }
+    minutesLeft += item.minutes * (1 - have / item.target);
+    if (!next && item.to.split("?")[0] !== exceptPath) next = item;
+  }
+  return { next, done, total: plan.items.length, minutesLeft: Math.round(minutesLeft) };
+}
+
+/** Today's unfinished items from the plan as drawn up this morning (none if not drawn up today). */
+export function unfinishedToday(limit = 3, log: StudyLog = getStudyLog()): PlanItem[] {
+  const saved = readJSON<TodayPlan | null>(STORAGE_KEYS.todayPlan, null);
+  if (!saved || saved.date !== localDateKey(new Date()) || !Array.isArray(saved.items)) return [];
+  const progress = planProgress(saved, log);
+  return saved.items.filter((i) => (progress[i.id] ?? 0) < i.target).slice(0, limit);
+}

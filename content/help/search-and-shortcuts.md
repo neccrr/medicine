@@ -16,15 +16,24 @@ mitochondria.
 ## The command palette
 
 Press <kbd>Ctrl</kbd> + <kbd>K</kbd> (<kbd>⌘</kbd> + <kbd>K</kbd> on a Mac)
-anywhere. Type part of a page or subject name and press <kbd>Enter</kbd>. With
-nothing typed it lists the main pages. It also finds these help pages: try
-"help streak".
+anywhere. With nothing typed it offers, in order:
+
+- **Next**: what's left on today's plan;
+- **Recent**: the pages you opened last on this device;
+- the main pages.
+
+Type part of a page, subject, card or question and press <kbd>Enter</kbd>. It
+also finds these help pages: try "help streak".
+
+Press <kbd>?</kbd> anywhere (outside a text box) for the shortcuts of the page
+you're on.
 
 ## Keyboard shortcuts
 
 | Where | Keys |
 | --- | --- |
 | Anywhere | <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd>: command palette |
+| Anywhere | <kbd>?</kbd>: the shortcuts of this page |
 | Anywhere (desktop) | <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>\\</kbd>: collapse or expand the sidebar |
 | Flashcards | <kbd>Space</kbd> or <kbd>Enter</kbd>: flip · <kbd>1</kbd>–<kbd>5</kbd>: grade (Blackout → Easy) |
 | Image occlusion | <kbd>Space</kbd>: reveal · <kbd>1</kbd>–<kbd>5</kbd>: grade · <kbd>←</kbd> <kbd>→</kbd>: previous/next label |

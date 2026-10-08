@@ -11,6 +11,7 @@ const MAX_LINKED_LOADS = 6;
 import type { DriveFile } from "../lib/driveTypes";
 import { groupModules } from "../lib/moduleSections";
 import { subjectHueStyle } from "../lib/subjectStyle";
+import { SubjectTrail } from "../components/SubjectTrail";
 
 function ExternalIcon() {
   return (
@@ -158,9 +159,7 @@ export function ModuleViewer() {
 
   return (
     <section className="page ebook-page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
-      <Link to="/modules" className="back-link">
-        ← All modules
-      </Link>
+      <SubjectTrail blockId={blockId} subjectId={subjectId} current="modules" />
 
       {pdfs.length === 0 && !driveSection ? (
         <p>No PDFs yet for this subject — drop one into its module folder.</p>

@@ -23,6 +23,8 @@ import { PulseLine } from "../components/PulseLine";
 import { subjectHueStyle } from "../lib/subjectStyle";
 import type { CardState, CardStateMap, OcclusionNote } from "../types/content";
 import { entry, own } from "../lib/records";
+import { NextUp } from "../components/plan/Today";
+import { SubjectTrail } from "../components/SubjectTrail";
 
 type Mode = "review" | "browse";
 
@@ -384,9 +386,7 @@ export function OcclusionStudy() {
 
   return (
     <section className="page subject-tinted io-page" style={subjectHueStyle(subjectId) as CSSProperties}>
-      <Link to="/occlusion" className="back-link">
-        ← Image occlusion
-      </Link>
+      <SubjectTrail blockId={blockId} subjectId={subjectId} current="occlusion" />
       <h1>{subjectLabel}</h1>
       <p className="subtitle">
         {notes === null
@@ -462,6 +462,7 @@ export function OcclusionStudy() {
               </button>
             )}
           </div>
+          <NextUp />
         </div>
       ) : (
         <div className="io-layout">

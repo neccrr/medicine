@@ -23,21 +23,34 @@ An account is optional. It adds:
 
 ## Find your way around
 
-- **Home** shows your streak, cards due, what you were last doing ("continue"),
-  the tip of the day and a card for every subject, block by block.
-- **Subjects** gives each subject one page with everything it has and what's
-  due next. It's the quickest way into a subject.
-- The **sidebar** groups the rest: _Study_ (exam plan, flashcards, image
-  occlusion, quizzes, exams, Virtual Lab), _Read_ (ebooks, summaries, modules,
-  Class Drive, 3D anatomy, knowledge map) and _You_ (progress, leaderboard,
-  account, this help). On a phone the same groups are in the tab bar at the bottom.
+- **Home** answers "what should I do now?". The card at the top shows the
+  next thing on today's plan with a **Start** button, and how much of the day
+  is done. Open **Today's whole plan** to see the rest. Under it: what you
+  were last doing, then your block's subjects. Other blocks are folded away
+  under **Other blocks**.
+- When you finish a deck, a quiz, a set of figures or an exam, **Up next**
+  takes you straight to the next thing on the plan.
+- Every study page starts with where you are, such as _Block 1.2 › Anatomy ›
+  Flashcards_, and tabs for that subject's other material (flashcards, image
+  occlusion, quiz, ebook, summary, modules). Click the subject's name for its
+  own page, with everything it has and what's due next.
+- The **sidebar** groups the rest: _Study_ (flashcards and quizzes, with how
+  many reviews are due, image occlusion, mock exams, the exam plan), _Library_
+  (ebooks, summaries, modules, Class Drive), _Explore_ (3D anatomy, the
+  knowledge map, Virtual Lab) and _You_ (progress, leaderboard, account, this
+  help). On a phone the same groups are in the tab bar at the bottom; a dot on
+  _Study_ means reviews are due.
 - Press <kbd>Ctrl</kbd> + <kbd>K</kbd> (<kbd>⌘</kbd> + <kbd>K</kbd> on a Mac)
-  anywhere to jump to any page or subject by typing its name.
+  anywhere. With nothing typed it offers today's next steps and the pages you
+  opened last; type to find any page, subject, card or question.
+- Press <kbd>?</kbd> for the keyboard shortcuts of the page you're on.
 
 ## Put your block first
 
-On the **Account** page, set **Current block**. Home then shows that block
-first. It works for guests too, and you can change it any time.
+The first time you open the app, Home asks which block you're in. Your daily
+plan, the exam countdown and the order of Home follow it. You can change it
+any time on the **Account** page (**Current block**). It works for guests
+too.
 
 ## Install it and use it offline
 

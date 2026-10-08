@@ -38,7 +38,10 @@ content/*.json, *.md, *.pdf ──► Vite bundle ──► browser (React SPA, 
 ```text
 src/
   pages/        one component per route (lazy-loaded)
-  components/   sidebar, command palette, heatmap, badges, nudges, error boundary…
+  components/   sidebar, command palette, shortcuts overlay (?), subject
+                trail, heatmap, badges, nudges, error boundary…
+    plan/       Today.tsx: Home's next step and "Up next" after a session;
+                the exam plan's parts
     map/        the knowledge map: GraphCanvas (2D), Graph3D, GraphControls,
                 render.ts (palette, sphere sprites, label placement, hover card)
     atlas/      viewer.ts: the 3D anatomy atlas's three.js viewer
@@ -88,7 +91,7 @@ Every page is its own lazily loaded chunk (`src/App.tsx`). The pages:
 
 | Route | What's there |
 | --- | --- |
-| `/` | Home: streak, stat tiles, "continue" list, tip of the day, per-block subject cards |
+| `/` | Home: today's next step (Start), the day's plan, block picker on a first visit, "continue" list, the current block's subject cards (others folded), activity, explore links |
 | `/subjects` → `/subjects/:blockId/:subjectId` | Every subject → its page: cover, what's due next, every section, chapters and labs |
 | `/flashcards` → `/flashcards/:blockId/:subjectId` | Subject list with due counts → SM-2 review session |
 | `/occlusion` → `/occlusion/:blockId/:subjectId` | Subjects with figures → image occlusion (review or browse, figure gallery) |
@@ -175,7 +178,10 @@ pure function with a `*.test.ts` beside it. The formulas are written out in
 | `activity.ts` | Study days and streaks, and the study log (what was studied each day, per subject) |
 | `readiness.ts` | Readiness per subject and block, mock-score projection |
 | `examPlan.ts` | Exam dates, days left and the plan's phases |
-| `todayPlan.ts` | Today's plan, sized to the student's minutes |
+| `todayPlan.ts` | Today's plan, sized to the student's minutes; `planStatus` (the next unfinished item, for Home's Start and "Up next") and `unfinishedToday` (the palette's suggestions) |
+| `dueCounts.ts` | Reviews due now across every deck and quiz bank (the sidebar and tab-bar counts) |
+| `recentPages.ts` | The pages opened last on this device, for the command palette |
+| `keys.ts` | `isTyping`: whether a key press is going into a text box (single-key shortcuts stay quiet) |
 | `weakSpots.ts` | Weakest flashcard topics, most-missed questions, slipping labels |
 | `studyStats.ts` | Daily series, this week against last, best study time, heatmap amounts |
 | `milestones.ts` | Milestones and the next one to earn |
@@ -194,7 +200,7 @@ pure function with a `*.test.ts` beside it. The formulas are written out in
 | `tipOfDay.ts` | Deterministic daily tip (same for everyone, no server) |
 | `subjectStyle.ts` | Stable per-subject hue from the subject id, avoiding the red and green used for wrong/right |
 | `storageSchema.ts` | The registry of every `localStorage` key type: id, sync and merge rule, clearing (shared with the server) |
-| `routeMeta.ts` | Title, description, breadcrumbs and indexability for every route (the app and the prerendered pages) |
+| `routeMeta.ts` | Title, description, breadcrumbs and indexability for every route (the app and the prerendered pages), and each subject's materials for the study pages' tabs (`subjectMaterials`) |
 | `storage.ts` | `localStorage` helpers, the key builders, and export/import of all `medicine:*` keys |
 | `progressMigration.ts` | Renames progress saved under old subject-only keys to per-block keys |
 | `syncMerge.ts` | How two copies of one key are merged, by the key's rule in the registry (shared with the server) |

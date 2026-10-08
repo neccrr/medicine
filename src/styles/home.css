@@ -1,59 +1,5 @@
-/* Home dashboard: hero, tip card, nav-card grid, dashboard layout/stats/widgets,
+/* Home dashboard: Today, tip card, nav-card grid, dashboard layout/stats/widgets,
    subject grid/card/pill, quick links */
-
-.hero {
-  position: relative;
-  padding: 1.5rem 0 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.hero-pulse {
-  position: absolute;
-  top: -18px;
-  right: -20px;
-  opacity: 0.16;
-  color: var(--accent);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.kicker {
-  position: relative;
-  z-index: 1;
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.85rem;
-}
-
-.hero-title {
-  position: relative;
-  z-index: 1;
-  font-size: clamp(2.2rem, 5vw, 3.4rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
-  max-width: 15ch;
-  margin: 0 0 1rem;
-}
-
-.hero-subtitle {
-  position: relative;
-  z-index: 1;
-  max-width: 48ch;
-  font-size: 1.05rem;
-  line-height: 1.65;
-  margin-bottom: 0;
-}
-
-@media (max-width: 640px) {
-  .hero-pulse {
-    display: none;
-  }
-}
 
 .tip-card {
   display: flex;
@@ -260,10 +206,6 @@
 }
 
 /* Home dashboard */
-
-.dashboard-stats {
-  margin-top: 1.75rem;
-}
 
 .dashboard-layout {
   display: grid;
@@ -655,57 +597,5 @@
 
   .dashboard-aside {
     position: static;
-  }
-}
-
-/* Phones, returning students: a short greeting and one row of numbers, so Continue is on the
-   first screen. */
-@media (max-width: 720px) {
-  .hero-returning {
-    padding-top: 0.25rem;
-  }
-
-  .hero-returning .kicker,
-  .hero-returning .hero-subtitle,
-  .hero-returning .hero-pulse {
-    display: none;
-  }
-
-  .hero-returning .hero-title {
-    font-size: 1.7rem;
-    max-width: none;
-    margin-bottom: 0.25rem;
-  }
-
-  .hero-returning ~ .dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.4rem;
-    margin-top: 0.75rem;
-  }
-
-  .hero-returning ~ .dashboard-stats .stat-tile {
-    min-width: 0;
-    padding: 0.55rem 0.4rem 0.5rem;
-    align-items: center;
-    text-align: center;
-  }
-
-  .hero-returning ~ .dashboard-stats .stat-tile::before,
-  .hero-returning ~ .dashboard-stats .stat-tile-icon {
-    display: none;
-  }
-
-  .hero-returning ~ .dashboard-stats .stat-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.04em;
-  }
-
-  .hero-returning ~ .dashboard-stats .stat-value {
-    font-size: 1.35rem;
-  }
-
-  .hero-returning ~ .section-divider {
-    margin: 0.75rem 0;
   }
 }

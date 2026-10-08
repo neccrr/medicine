@@ -3,6 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import { ATLAS_BASE, defaultOpacity, tissueColor } from "../../lib/atlas/model";
+import { isTyping } from "../../lib/keys";
 
 // The 3D anatomy atlas's viewer: three.js, navigated like the knowledge map's 3D view and a 3D
 // editor's viewport (orbit, pan, dolly, fly with W A S D Q E, an axis gizmo named in anatomical
@@ -38,12 +39,6 @@ export interface ViewerEvents {
 /** W A S D fly forward, left, back and right, Q E down and up. */
 const FLY_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "KeyQ", "KeyE"]);
 
-/** Typing in a text box (so single-key shortcuts stay out of the way). */
-export function isTyping(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
-  if (target.isContentEditable || target.tagName === "TEXTAREA" || target.tagName === "SELECT") return true;
-  return target instanceof HTMLInputElement && !["checkbox", "radio", "range", "button"].includes(target.type);
-}
 
 export type ViewSide = "Anterior" | "Posterior" | "Sinistra" | "Dextra" | "Superior" | "Inferior";
 

@@ -7,6 +7,7 @@ import { writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { useReadingPrefs } from "../hooks/useReadingPrefs";
 import { ReadingControls } from "../components/ReadingControls";
 import { subjectHueStyle } from "../lib/subjectStyle";
+import { SubjectTrail } from "../components/SubjectTrail";
 
 export function SummaryDetail() {
   const { blockId = "", subjectId = "" } = useParams();
@@ -32,9 +33,7 @@ export function SummaryDetail() {
 
   return (
     <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
-      <Link to="/summaries" className="back-link">
-        ← All summaries
-      </Link>
+      <SubjectTrail blockId={blockId} subjectId={subjectId} current="summaries" />
       <ReadingControls prefs={readingPrefs} onChange={setReadingPrefs} />
       <div
         className="summary-content"

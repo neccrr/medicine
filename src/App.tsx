@@ -1,10 +1,12 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { MobileTabBar, Sidebar } from "./components/Sidebar";
 import { ScrollManager } from "./components/ScrollManager";
 import { SiteFooter } from "./components/SiteFooter";
 import { AlfondOverlay } from "./components/alfond/AlfondOverlay";
 import { CommandPalette } from "./components/CommandPalette";
+import { ShortcutsHelp } from "./components/ShortcutsHelp";
+import { rememberPage } from "./lib/recentPages";
 import { PulseLine } from "./components/PulseLine";
 import { UpdateNudge } from "./components/UpdateNudge";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -90,6 +92,8 @@ function AppRoutes() {
   // re-read it instead of showing the guest numbers until the next navigation.
   const { dataVersion } = useAccount();
   usePageMeta(pathname);
+  // Remembered for the command palette's "recent".
+  useEffect(() => { rememberPage(pathname); }, [pathname]);
 
   return (
     <ErrorBoundary key={`${pathname}#${dataVersion}`}>
@@ -151,6 +155,7 @@ export default function App() {
             <Sidebar />
             <div className="app-content">
               <CommandPalette />
+              <ShortcutsHelp />
               <UpdateNudge />
               <main className="main" id="main-content">
                 <AppRoutes />

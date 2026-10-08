@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { AlfondIcon } from "../components/icons";
-import { AtlasViewer, isTyping, OPPOSITE, type Picked, type SelectInfo, type ViewName, type ViewSide } from "../components/atlas/viewer";
+import { AtlasViewer, OPPOSITE, type Picked, type SelectInfo, type ViewName, type ViewSide } from "../components/atlas/viewer";
 import { BackIcon, BodyIcon, ForwardIcon, PivotIcon, TurnLeftIcon, TurnRightIcon } from "../components/atlas/AtlasIcons";
 import {
   CloseIcon,
@@ -20,6 +20,7 @@ import {
   TagIcon,
 } from "../components/map/ObsIcons";
 import { useAccount } from "../hooks/useAccount";
+import { isTyping } from "../lib/keys";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { STORAGE_KEYS } from "../lib/storage";
 import { askAlfondAbout } from "../lib/alfond";
@@ -667,8 +668,7 @@ export function Atlas() {
     <section className="page map-page atlas-page">
       <h1>3D anatomy</h1>
       <p className="subtitle">
-        The whole body in 3D: bones, joints, muscles, vessels, nerves and organs. Turn systems on and off, click any part to name it, and fly around it as in
-        the knowledge map.
+        The whole body in 3D, named in English and Latin. Switch systems on, click any part to open it, press <kbd>?</kbd> for the controls.
       </p>
 
       {!webgl ? (

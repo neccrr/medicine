@@ -20,8 +20,10 @@ turn the plan into a week (signed in).
 
 ## Today's plan
 
-A checklist of what to do today, also shown on **Home**. Items tick themselves
-off as you study; you don't have to tick anything.
+A checklist of what to do today. **Home** leads with its next item and a
+**Start** button, and the end of every study session offers the one after
+(**Up next**). Items tick themselves off as you study; you don't have to tick
+anything.
 
 What goes in, roughly in this order:
 

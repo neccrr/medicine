@@ -11,6 +11,8 @@ import { EmptyState } from "../components/EmptyState";
 import { SpeakerIcon } from "../components/icons";
 import { subjectHue, subjectHueStyle } from "../lib/subjectStyle";
 import type { Flashcard } from "../types/content";
+import { NextUp } from "../components/plan/Today";
+import { SubjectTrail } from "../components/SubjectTrail";
 
 function tagHueStyle(tag: string): CSSProperties {
   return { "--tag-hue": String(subjectHue(tag)) } as CSSProperties;
@@ -151,9 +153,7 @@ export function FlashcardStudy() {
 
   return (
     <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
-      <Link to="/flashcards" className="back-link">
-        ← All subjects
-      </Link>
+      <SubjectTrail blockId={blockId} subjectId={subjectId} current="flashcards" />
       <h1>{subjectLabel}</h1>
       <p className="subtitle">
         {stats.due} due · {stats.mastered}/{stats.total} mastered
@@ -278,6 +278,8 @@ export function FlashcardStudy() {
               </button>
             </EmptyState>
           )}
+
+          <NextUp />
 
           {hardestCards.length > 0 && (
             <div className="hardest-cards">

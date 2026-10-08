@@ -49,6 +49,7 @@ export const KEY_TYPES = {
   labdata: { id: "name", sync: "latest", about: "Virtual Lab data table per activity, e.g. skeletal-muscle/voltage" },
   theme: { id: null, sync: false, keepOnClear: true, about: "Light or dark theme" },
   sidebarcollapsed: { id: null, sync: false, about: "Sidebar collapsed on desktop" },
+  recentpages: { id: null, sync: false, about: "Pages opened recently, offered first in the command palette (device-only)" },
   mapsettings: { id: null, sync: "latest", about: "Knowledge map: filters, colors, display and forces" },
   atlas: { id: null, sync: "latest", about: "3D anatomy: recently opened structures, whether the view turns around the selection, perspective or orthographic, and the floor grid" },
   alfond: { id: null, sync: "latest", about: "Alfond settings: whether its floating button shows on every page" },

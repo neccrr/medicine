@@ -56,6 +56,8 @@ export const STORAGE_KEYS = {
   todayPlan: storageKey("todayplan"),
   readingPrefs: storageKey("readingprefs"),
   sidebarCollapsed: storageKey("sidebarcollapsed"),
+  /** The last pages opened: [{ path, title }], newest first. */
+  recentPages: storageKey("recentpages"),
   mapSettings: storageKey("mapsettings"),
   /** The 3D atlas's settings: { follow, ortho, grid, recent: ["skeletal/Femur.r", …] }. */
   atlasPrefs: storageKey("atlas"),

@@ -6,6 +6,7 @@ import { QuizDueBadge } from "./QuizDueBadge";
 import { PulseLine } from "./PulseLine";
 import { OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useDueCounts } from "../hooks/useDueCounts";
 import { STORAGE_KEYS } from "../lib/storage";
 import {
   AlfondIcon,
@@ -35,6 +36,8 @@ interface NavItem {
   label: string;
   end?: boolean;
   icon: ReactNode;
+  /** Shows how many reviews are due here. */
+  due?: "cards" | "questions";
 }
 
 interface NavGroup {
@@ -43,8 +46,9 @@ interface NavGroup {
   items: NavItem[];
 }
 
-// Grouped by what the student is doing. Search lives in the sidebar footer (and the phone tab
-// bar), so it isn't repeated here.
+// Grouped by what the student is doing: studying (with what's due), reading, exploring, and
+// their own pages. Search lives in the sidebar footer (and the phone tab bar), so it isn't
+// repeated here.
 const groups: NavGroup[] = [
   {
     items: [
@@ -56,25 +60,30 @@ const groups: NavGroup[] = [
   {
     label: "Study",
     items: [
-      { to: "/plan", label: "Exam plan", icon: <CalendarIcon /> },
-      { to: "/flashcards", label: "Flashcards", icon: <CardsIcon /> },
+      { to: "/flashcards", label: "Flashcards", icon: <CardsIcon />, due: "cards" },
+      { to: "/quizzes", label: "Quizzes", icon: <QuizIcon />, due: "questions" },
       { to: "/occlusion", label: "Image Occlusion", icon: <OcclusionIcon /> },
-      { to: "/quizzes", label: "Quizzes", icon: <QuizIcon /> },
-      { to: "/exam", label: "Exam", icon: <TimerIcon /> },
+      { to: "/exam", label: "Mock exam", icon: <TimerIcon /> },
+      { to: "/plan", label: "Exam plan", icon: <CalendarIcon /> },
     ],
   },
   {
-    label: "Read",
+    label: "Library",
     items: [
       { to: "/ebooks", label: "Ebooks", icon: <BookIcon /> },
       { to: "/summaries", label: "Summaries", icon: <SummaryIcon /> },
       { to: "/modules", label: "Modules", icon: <SlidesIcon /> },
       { to: "/drive", label: "Class Drive", icon: <DriveIcon /> },
-      { to: "/atlas", label: "3D anatomy", icon: <BodyIcon /> },
-      { to: "/map", label: "Knowledge map", icon: <MapIcon /> },
     ],
   },
-  { label: "Practise", items: [{ to: "/lab", label: "Virtual Lab", icon: <FlaskIcon /> }] },
+  {
+    label: "Explore",
+    items: [
+      { to: "/atlas", label: "3D anatomy", icon: <BodyIcon /> },
+      { to: "/map", label: "Knowledge map", icon: <MapIcon /> },
+      { to: "/lab", label: "Virtual Lab", icon: <FlaskIcon /> },
+    ],
+  },
   {
     label: "You",
     items: [
@@ -86,20 +95,35 @@ const groups: NavGroup[] = [
   },
 ];
 
-/** The phone tab bar: two direct tabs and three that open their group as a sheet. */
-const tabs: { id: string; label: string; icon: ReactNode; to?: string; items?: NavItem[] }[] = [
+/** The phone tab bar: two direct tabs and three that open their groups as a sheet. */
+const tabs: { id: string; label: string; icon: ReactNode; to?: string; sections?: NavGroup[] }[] = [
   { id: "home", label: "Home", icon: <HomeIcon />, to: "/" },
-  { id: "study", label: "Study", icon: <CardsIcon />, items: [...groups[1].items, ...groups[3].items] },
-  { id: "read", label: "Read", icon: <BookIcon />, items: groups[2].items },
+  { id: "study", label: "Study", icon: <CardsIcon />, sections: [{ items: [groups[0].items[1], ...groups[1].items] }] },
+  { id: "library", label: "Library", icon: <BookIcon />, sections: [groups[2], groups[3]] },
   { id: "search", label: "Search", icon: <SearchIcon />, to: "/search" },
-  { id: "me", label: "Me", icon: <UserIcon />, items: [groups[0].items[2], ...groups[4].items] },
+  { id: "me", label: "Me", icon: <UserIcon />, sections: [{ items: [groups[0].items[2], ...groups[4].items] }] },
 ];
+
+/** The due count for a link, if it has one and anything is due. */
+function dueFor(item: NavItem, counts: { cards: number; questions: number }): number {
+  return item.due ? counts[item.due] : 0;
+}
+
+function DueCount({ n, label }: { n: number; label: string }) {
+  if (n <= 0) return null;
+  return (
+    <span className="nav-due" aria-label={`${n} ${label} due`} title={`${n} ${label} due for review`}>
+      {n > 99 ? "99+" : n}
+    </span>
+  );
+}
 
 const inSection = (pathname: string, to: string) => (to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`));
 
 /** Bottom navigation for phones; the sidebar stays reachable from the top bar's menu button. */
 export function MobileTabBar() {
   const { pathname } = useLocation();
+  const counts = useDueCounts();
   const [open, setOpen] = useState<string | null>(null);
   // A new page closes the sheet that led to it.
   const [lastPath, setLastPath] = useState(pathname);
@@ -119,28 +143,34 @@ export function MobileTabBar() {
   const sheet = tabs.find((t) => t.id === open);
   return (
     <>
-      {sheet?.items && (
+      {sheet?.sections && (
         <div className="tabsheet-backdrop" onClick={() => { setOpen(null); }}>
           <div className="tabsheet" role="dialog" aria-modal="true" aria-label={sheet.label} onClick={(e) => { e.stopPropagation(); }}>
             <span className="tabsheet-handle" aria-hidden="true" />
             <h2 className="tabsheet-title">{sheet.label}</h2>
-            <div className="tabsheet-grid">
-              {sheet.items.map((item) => (
-                <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? "tabsheet-link active" : "tabsheet-link")}>
-                  <span className="tabsheet-icon">{item.icon}</span>
-                  {item.label}
-                </NavLink>
-              ))}
-            </div>
+            {sheet.sections.map((section, si) => (
+              <Fragment key={section.label ?? si}>
+                {section.label && section.label !== sheet.label && <h3 className="tabsheet-subtitle">{section.label}</h3>}
+                <div className="tabsheet-grid">
+                  {section.items.map((item) => (
+                    <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? "tabsheet-link active" : "tabsheet-link")}>
+                      <span className="tabsheet-icon">{item.icon}</span>
+                      {item.label}
+                      <DueCount n={dueFor(item, counts)} label={item.due === "cards" ? "flashcards" : "quiz questions"} />
+                    </NavLink>
+                  ))}
+                </div>
+              </Fragment>
+            ))}
           </div>
         </div>
       )}
       <nav className="tabbar" aria-label="Sections">
         {tabs.map((tab) => {
           // Subject pages sit under Home: they're reached from its subject cards.
-          const active = tab.to
-            ? inSection(pathname, tab.to) || (tab.id === "home" && inSection(pathname, "/subjects"))
-            : (tab.items ?? []).some((i) => inSection(pathname, i.to));
+          const items = (tab.sections ?? []).flatMap((s) => s.items);
+          const active = tab.to ? inSection(pathname, tab.to) : items.some((i) => inSection(pathname, i.to));
+          const due = items.reduce((n, i) => n + dueFor(i, counts), 0);
           const cls = `tabbar-item${active ? " active" : ""}${open === tab.id ? " open" : ""}`;
           return tab.to ? (
             <NavLink key={tab.id} to={tab.to} end={tab.to === "/"} className={cls} aria-current={active ? "page" : undefined}>
@@ -151,6 +181,7 @@ export function MobileTabBar() {
             <button key={tab.id} type="button" className={cls} aria-expanded={open === tab.id} aria-haspopup="dialog" onClick={() => { setOpen((o) => (o === tab.id ? null : tab.id)); }}>
               {tab.icon}
               <span>{tab.label}</span>
+              {due > 0 && <span className="tabbar-dot" aria-label={`${due} reviews due`} />}
             </button>
           );
         })}
@@ -180,6 +211,7 @@ export function Sidebar() {
   const navRef = useRef<HTMLElement>(null);
   const hoveredLink = useRef<HTMLElement | null>(null);
   const { pathname } = useLocation();
+  const counts = useDueCounts();
   // On the collapsed rail, the hovered or focused link's name, shown beside it right away
   // (a title attribute takes a second to appear and can't be styled).
   const [tip, setTip] = useState<{ label: string; x: number; y: number; path: string } | null>(null);
@@ -404,6 +436,7 @@ export function Sidebar() {
                 >
                   <span className="sidebar-link-icon">{link.icon}</span>
                   <span className="sidebar-link-label">{link.label}</span>
+                  <DueCount n={dueFor(link, counts)} label={link.due === "cards" ? "flashcards" : "quiz questions"} />
                 </NavLink>
               ))}
             </Fragment>

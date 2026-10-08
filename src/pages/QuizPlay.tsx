@@ -13,6 +13,8 @@ import { readJSON, writeJSON, STORAGE_KEYS } from "../lib/storage";
 import { buildSessionBank } from "../lib/quizShuffle";
 import { buildSections, type QuizSection } from "../lib/quizSections";
 import type { Answers, QuizAttempt, QuizQuestion } from "../types/content";
+import { NextUp } from "../components/plan/Today";
+import { SubjectTrail } from "../components/SubjectTrail";
 
 const OPTION_LETTERS = "ABCDEFGH";
 const EMPTY_BANK: QuizQuestion[] = [];
@@ -258,9 +260,7 @@ export function QuizPlay() {
   if (fullBank.length === 0) {
     return (
       <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
-        <Link to="/quizzes" className="back-link">
-          ← All quizzes
-        </Link>
+        <SubjectTrail blockId={blockId} subjectId={subjectId} current="quizzes" />
         <div className="quiz-header">
           <h1>{subjectLabel}</h1>
         </div>
@@ -282,9 +282,7 @@ export function QuizPlay() {
   if (!started) {
     return (
       <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
-        <Link to="/quizzes" className="back-link">
-          ← All quizzes
-        </Link>
+        <SubjectTrail blockId={blockId} subjectId={subjectId} current="quizzes" />
         <div className="quiz-start">
           <div className="quiz-start-badge">
             <SubjectBadge id={subjectId} label={subjectLabel} />
@@ -369,9 +367,7 @@ export function QuizPlay() {
 
   return (
     <section className="page subject-tinted" style={subjectHueStyle(subjectId) as CSSProperties}>
-      <Link to="/quizzes" className="back-link">
-        ← All quizzes
-      </Link>
+      <SubjectTrail blockId={blockId} subjectId={subjectId} current="quizzes" />
       <div className="quiz-header">
         <div>
           <h1>{subjectLabel}</h1>
@@ -610,6 +606,8 @@ export function QuizPlay() {
                 </button>
               )}
             </div>
+
+            <NextUp />
 
             <button
               className="btn btn-secondary quiz-review-toggle"
