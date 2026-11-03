@@ -22,7 +22,7 @@
     "docs:wiki": "node scripts/wiki.mjs"
   },
   "dependencies": {
-    "better-auth": "^1.7.6",
+    "better-auth": "^1.7.15",
     "d3-force": "^3.0.0",
     "fuse.js": "^7.5.0",
     "marked": "^18.0.13",
